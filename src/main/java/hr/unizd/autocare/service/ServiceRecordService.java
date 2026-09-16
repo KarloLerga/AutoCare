@@ -1,112 +1,269 @@
 package hr.unizd.autocare.service;
-import hr.unizd.autocare.domain.*;
-import hr.unizd.autocare.model.Data.*;
+
+import hr.unizd.autocare.domain.Checks;
+import hr.unizd.autocare.domain.Problem;
+import hr.unizd.autocare.domain.ServiceItem;
+import hr.unizd.autocare.domain.ServiceRecord;
+import hr.unizd.autocare.domain.Vehicle;
+import hr.unizd.autocare.domain.WorkDefinition;
+import hr.unizd.autocare.model.Data.ItemInput;
+import hr.unizd.autocare.model.Data.ItemRow;
+import hr.unizd.autocare.model.Data.ServiceDetail;
+import hr.unizd.autocare.model.Data.ServiceInput;
+import hr.unizd.autocare.model.Data.ServiceRow;
 import hr.unizd.autocare.repository.Repositories;
-import java.time.*;
-import java.util.*;
-/** Spremanje servisa, stavki, kilometraze i rjesenja problema je jedna transakcija. */
+import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+
+/** Poslovna granica za servis, njegove stavke, kilometrazu i rijesene probleme. */
 public final class ServiceRecordService {
-    private final TransactionRunner tx;
+
+    private final TransactionRunner transactions;
     private final Clock clock;
-    public ServiceRecordService(TransactionRunner tx, Clock clock) {
-        this.tx=tx;
-        this.clock=clock;
+
+    public ServiceRecordService(TransactionRunner transactions, Clock clock) {
+        this.transactions = Objects.requireNonNull(transactions);
+        this.clock = Objects.requireNonNull(clock);
     }
+
     /**
-     * Sprema servis, stavke, rast kilometraze i rjesavanje problema atomarno.
-     * Isti requestKey s istim sadrzajem vraca vec spremljeni ID.
-     * @param owner ID prijavljenog korisnika; vlasnistvo se ponovno provjerava u transakciji
-     * @param vehicle ID konkretnog vlastitog vozila
-     * @param input nepromjenjivi snapshot lokalnog drafta
-     * @return ID potvrdenog servisa; GUI zatim posebno ucitava svjezi prikaz
-     * @throws AppException za nevaljan/vise nedostupan podatak ili nepoznat ishod commita
+     * Sprema cijeli servis u jednoj transakciji koju odredjuje ovaj use-case.
+     * Ponovljeni isti zahtjev vraca postojeci ID, ne stvara novi servis.
+     *
+     * @param owner ID prijavljenog korisnika
+     * @param vehicle ID njegova vozila
+     * @param input nepromjenjivi snapshot forme, a ne managed entitet
+     * @return ID nakon uspjesnog commita; osvjezavanje GUI-ja zasebno je citanje
+     * @throws AppException za nevaljan unos, konflikt ili nepotvrdjen ishod commita
      */
     public long create(long owner, long vehicle, ServiceInput input) {
-        return tx.write(r-> {
-            r.users().lock(owner);
+        return transactions.write(repositories -> {
+            repositories.users().lock(owner);
             validate(input, false, clock);
-            Optional<ServiceRecord> existing=r.services().byRequest(owner, input.getRequestKey());
-            if(existing.isPresent()) {
-                if(!existing.get().getVehicle().getId().equals(vehicle))throw AppException.conflict("Ključ zahtjeva pripada drugom vozilu.");
-                ensureSameRequest(r, owner, existing.get(), input);
-                return existing.get().getId();
+
+            String requestKey = canonicalRequestKey(input.getRequestKey());
+            Optional<ServiceRecord> existing = repositories.services().byRequest(owner, requestKey);
+
+            if (existing.isPresent()) {
+                ServiceRecord saved = existing.get();
+
+                if (!saved.getVehicle().getId().equals(vehicle)) {
+                    throw AppException.conflict("Kljuc zahtjeva pripada drugom vozilu.");
+                }
+
+                ensureSameRequest(repositories, owner, saved, input);
+                return saved.getId();
             }
-            Vehicle v=r.vehicles().requireOwned(owner, vehicle);
-            return saveInside(r, v, input, false, clock).getId();
+
+            Vehicle ownedVehicle = repositories.vehicles().requireOwned(owner, vehicle);
+            ServiceRecord saved = saveInside(repositories, ownedVehicle, input, false, clock);
+            return saved.getId();
         });
     }
-    private static void ensureSameRequest(Repositories r, long owner, ServiceRecord saved, ServiceInput input) {
-        boolean same=saved.getDate().equals(input.getDate())&&saved.getMileage()==input.getMileage()&&Objects.equals(saved.getNote(), Checks.optional(input.getNote(), 2000, "Napomena"))&&saved.getItems().size()==input.getItems().size();
-        Map<Long, java.math.BigDecimal> requested=new HashMap<>();
-        for(ItemInput i:input.getItems())requested.put(i.getWorkId(), i.getActualPrice());
-        for(ServiceItem i:saved.getItems()) {
-            java.math.BigDecimal expected=requested.get(i.getWork().getId());
-            if(expected==null||i.getActualPrice()==null||expected.compareTo(i.getActualPrice())!=0)same=false;
+
+    private static void ensureSameRequest(
+            Repositories repositories, long owner, ServiceRecord saved, ServiceInput input) {
+        boolean same = saved.getDate().equals(input.getDate())
+                && saved.getMileage() == input.getMileage()
+                && Objects.equals(saved.getNote(), Checks.optional(input.getNote(), 2000, "Napomena"))
+                && saved.getItems().size() == input.getItems().size();
+
+        Map<Long, BigDecimal> requestedPrices = new HashMap<>();
+
+        for (ItemInput item : input.getItems()) {
+            requestedPrices.put(item.getWorkId(), item.getActualPrice());
         }
-        if(r.problems().resolvedDescriptions(owner, saved.getId()).size()!=input.getResolvedProblemIds().size())same=false;
-        for(Long id:input.getResolvedProblemIds()) {
-            Problem p=r.problems().requireOwned(owner, id);
-            if(p.getResolvedByService()==null||!p.getResolvedByService().getId().equals(saved.getId()))same=false;
+
+        for (ServiceItem item : saved.getItems()) {
+            BigDecimal requestedPrice = requestedPrices.get(item.getWork().getId());
+            BigDecimal savedPrice = item.getActualPrice();
+
+            if (requestedPrice == null || savedPrice == null || requestedPrice.compareTo(savedPrice) != 0) {
+                same = false;
+            }
         }
-        if(!same)throw AppException.conflict("Isti zahtjev vec je spremljen s drugim podacima. Otvorite spremljeni servis; ne prepisujte povijest.");
+
+        int savedProblemCount = repositories.problems().resolvedDescriptions(owner, saved.getId()).size();
+
+        if (savedProblemCount != input.getResolvedProblemIds().size()) {
+            same = false;
+        }
+
+        for (Long problemId : input.getResolvedProblemIds()) {
+            Problem problem = repositories.problems().requireOwned(owner, problemId);
+            ServiceRecord resolvingService = problem.getResolvedByService();
+
+            if (resolvingService == null || !resolvingService.getId().equals(saved.getId())) {
+                same = false;
+            }
+        }
+
+        if (!same) {
+            throw AppException.conflict(
+                    "Isti zahtjev vec je spremljen s drugim podacima. "
+                            + "Otvorite spremljeni servis; ne prepisujte povijest.");
+        }
     }
-    static ServiceRecord saveInside(Repositories r, Vehicle vehicle, ServiceInput input, boolean historical, Clock clock) {
+
+    /**
+     * Koristi VEC OTVORENU Service transakciju. Poziva ga i registracija za pocetnu povijest.
+     * Ne otvara novi EntityManager i ne radi zaseban commit.
+     */
+    static ServiceRecord saveInside(
+            Repositories repositories, Vehicle vehicle, ServiceInput input, boolean historical, Clock clock) {
         validate(input, historical, clock);
-        if(input.getDate().getYear()<vehicle.getYear())throw AppException.validation("Servis ne moze biti prije godine proizvodnje.");
-        ServiceRecord record=new ServiceRecord(vehicle, input.getRequestKey(), input.getDate(), input.getMileage(), input.getNote());
-        for(ItemInput i:input.getItems()) {
-            WorkDefinition work=r.catalog().work(i.getWorkId());
-            if(work.getCode().startsWith("OTHER_") && (input.getNote()==null || input.getNote().isBlank()))
+
+        if (input.getDate().getYear() < vehicle.getYear()) {
+            throw AppException.validation("Servis ne moze biti prije godine proizvodnje.");
+        }
+
+        ServiceRecord serviceRecord = new ServiceRecord(
+                vehicle,
+                canonicalRequestKey(input.getRequestKey()),
+                input.getDate(),
+                input.getMileage(),
+                input.getNote());
+
+        for (ItemInput item : input.getItems()) {
+            WorkDefinition work = repositories.catalog().work(item.getWorkId());
+
+            if (work.getCode().startsWith("OTHER_")
+                    && (input.getNote() == null || input.getNote().isBlank())) {
                 throw AppException.validation("Za drugi rad upisite stvarni opis zahvata u napomenu.");
-            record.addItem(work,i.getActualPrice());
+            }
+
+            serviceRecord.addItem(work, item.getActualPrice());
         }
-        r.services().add(record);
-        if(input.getMileage()>vehicle.getCurrentMileage())vehicle.updateMileage(input.getMileage());
-        Set<Long> selected=new HashSet<>();
-        for(Long id:input.getResolvedProblemIds()) {
-            if(!selected.add(id))throw AppException.validation("Problem je odabran vise puta.");
-            Problem p=r.problems().requireOwned(vehicle.getOwner().getId(), id);
-            if(!Objects.equals(p.getVehicle().getId(), vehicle.getId()))throw AppException.validation("Problem pripada drugom vozilu.");
-            p.resolve(record);
+
+        repositories.services().add(serviceRecord);
+
+        if (input.getMileage() > vehicle.getCurrentMileage()) {
+            vehicle.updateMileage(input.getMileage());
         }
-        return record;
+
+        resolveSelectedProblems(repositories, vehicle, serviceRecord, input.getResolvedProblemIds());
+        return serviceRecord;
     }
-    /** Provjerava lokalni ugovor unosa; vlasnistvo i stanje baze provjerava create.
+
+    private static void resolveSelectedProblems(
+            Repositories repositories, Vehicle vehicle, ServiceRecord serviceRecord, List<Long> problemIds) {
+        Set<Long> selected = new HashSet<>();
+
+        for (Long problemId : problemIds) {
+            if (!selected.add(problemId)) {
+                throw AppException.validation("Problem je odabran vise puta.");
+            }
+
+            Problem problem = repositories.problems().requireOwned(vehicle.getOwner().getId(), problemId);
+
+            if (!Objects.equals(problem.getVehicle().getId(), vehicle.getId())) {
+                throw AppException.validation("Problem pripada drugom vozilu.");
+            }
+
+            // Promjena managed domenskog objekta dio je iste transakcije kao i servis.
+            problem.resolve(serviceRecord);
+        }
+    }
+
+    /**
+     * Provjerava unos; vlasnistvo i aktualno stanje dodatno provjerava use-case.
+     *
      * @param input snapshot forme
      * @param historical dopusta nepoznatu cijenu samo u pocetnoj povijesti
-     * @param clock izvor danasnjeg datuma, zamjenjiv u testu
+     * @param clock izvor danasnjeg datuma
      */
     public static void validate(ServiceInput input, boolean historical, Clock clock) {
-        if(input==null || input.getDate()==null || input.getDate().isAfter(LocalDate.now(clock)))throw AppException.validation("Unesite datum koji nije u buducnosti.");
+        if (input == null || input.getDate() == null || input.getDate().isAfter(LocalDate.now(clock))) {
+            throw AppException.validation("Unesite datum koji nije u buducnosti.");
+        }
+
         Checks.mileage(input.getMileage());
         Checks.optional(input.getNote(), 2000, "Napomena");
-        UUID.fromString(input.getRequestKey());
-        if(input.getItems().isEmpty() || input.getItems().size()>100)throw AppException.validation("Servis treba imati 1 - 100 stavki.");
-        Set<Long> seen=new HashSet<>();
-        for(ItemInput i:input.getItems()) {
-            if(!seen.add(i.getWorkId()))throw AppException.validation("Isti rad nije moguce dodati dvaput.");
-            Checks.money(i.getActualPrice(), historical);
+        canonicalRequestKey(input.getRequestKey());
+
+        if (input.getItems().isEmpty() || input.getItems().size() > 100) {
+            throw AppException.validation("Servis treba imati 1 - 100 stavki.");
         }
-        if(historical && !input.getResolvedProblemIds().isEmpty())throw AppException.validation("Pocetna povijest ne rjesava postojece probleme.");
+
+        Set<Long> selectedWorks = new HashSet<>();
+
+        for (ItemInput item : input.getItems()) {
+            if (!selectedWorks.add(item.getWorkId())) {
+                throw AppException.validation("Isti rad nije moguce dodati dvaput.");
+            }
+            Checks.money(item.getActualPrice(), historical);
+        }
+
+        if (historical && !input.getResolvedProblemIds().isEmpty()) {
+            throw AppException.validation("Pocetna povijest ne rjesava postojece probleme.");
+        }
     }
+
+    private static String canonicalRequestKey(String requestKey) {
+        if (requestKey == null || requestKey.length() != 36) {
+            throw AppException.validation("Nevaljan kljuc zahtjeva za spremanje.");
+        }
+
+        try {
+            String canonical = UUID.fromString(requestKey).toString();
+
+            if (!canonical.equalsIgnoreCase(requestKey)) {
+                throw new IllegalArgumentException("Non-canonical UUID");
+            }
+            return canonical;
+        } catch (IllegalArgumentException exception) {
+            throw AppException.validation("Nevaljan kljuc zahtjeva za spremanje.");
+        }
+    }
+
     public List<ServiceRow> page(long owner, long vehicle, int offset) {
-        if(offset<0)throw AppException.validation("Nevaljana stranica.");
-        return tx.read(r-> {
-            r.vehicles().requireOwned(owner, vehicle);
-            List<ServiceRow> rows=new ArrayList<>();
-            for(ServiceRecord s:r.services().page(owner, vehicle, offset, 50))rows.add(Mapping.service(s));
+        if (offset < 0) {
+            throw AppException.validation("Nevaljana stranica.");
+        }
+
+        return transactions.read(repositories -> {
+            repositories.vehicles().requireOwned(owner, vehicle);
+            List<ServiceRow> rows = new ArrayList<>();
+
+            for (ServiceRecord serviceRecord : repositories.services().page(owner, vehicle, offset, 50)) {
+                rows.add(Mapping.service(serviceRecord));
+            }
             return List.copyOf(rows);
         });
     }
+
     public ServiceDetail detail(long owner, long service) {
-        return tx.read(r-> {
-            ServiceRecord s=r.services().requireOwned(owner, service);
-            List<ItemRow> items=new ArrayList<>();
-            for(ServiceItem i:s.getItems())items.add(new ItemRow(i.getWork().getName(), i.getWork().getCategory(), i.getActualPrice()));
-            return new ServiceDetail(Mapping.service(s), items, r.problems().resolvedDescriptions(owner, service));
+        return transactions.read(repositories -> {
+            ServiceRecord serviceRecord = repositories.services().requireOwned(owner, service);
+            List<ItemRow> items = new ArrayList<>();
+
+            for (ServiceItem item : serviceRecord.getItems()) {
+                WorkDefinition work = item.getWork();
+                items.add(new ItemRow(work.getName(), work.getCategory(), item.getActualPrice()));
+            }
+
+            return new ServiceDetail(
+                    Mapping.service(serviceRecord),
+                    items,
+                    repositories.problems().resolvedDescriptions(owner, service));
         });
     }
+
     public Long findSaved(long owner, String key) {
-        return tx.read(r->r.services().byRequest(owner, key).map(ServiceRecord::getId).orElse(null));
+        String requestKey = canonicalRequestKey(key);
+        return transactions.read(repositories -> repositories.services()
+                .byRequest(owner, requestKey)
+                .map(ServiceRecord::getId)
+                .orElse(null));
     }
 }
