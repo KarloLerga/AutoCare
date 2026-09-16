@@ -15,7 +15,7 @@ import jakarta.persistence.UniqueConstraint;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-/** Pravilo za tocnu varijantu i zahvat; nepoznat interval ostaje nepoznat. */
+/** Pravilo za tocnu varijantu vozila i jedan zahvat. */
 @Entity
 @Table(
     uniqueConstraints =
@@ -38,6 +38,10 @@ public class VehicleWorkRule {
 
   private Integer intervalKm;
 
+  /*
+   * Legacy persistence metadata kept for compatibility with existing seed data.
+   * Maintenance calculation uses only the nullable kilometre/month intervals.
+   */
   @Enumerated(EnumType.STRING)
   @Column(nullable = false, length = 24)
   private ScheduleKind scheduleKind = ScheduleKind.UNKNOWN;
@@ -99,25 +103,6 @@ public class VehicleWorkRule {
     if (estimatedPrice != null && this.estimateNote == null) {
       throw new IllegalArgumentException("Cijena zahtijeva izvor ili DEMO oznaku.");
     }
-  }
-
-  public void defineScheduleKind(ScheduleKind scheduleKind) {
-    Objects.requireNonNull(scheduleKind);
-    boolean hasInterval = intervalKm != null || intervalMonths != null;
-
-    if (scheduleKind == ScheduleKind.FIXED && !hasInterval) {
-      throw new IllegalArgumentException("Fiksni plan treba interval.");
-    }
-
-    if (scheduleKind != ScheduleKind.FIXED && hasInterval) {
-      throw new IllegalArgumentException("Nefiksni plan nema brojcani interval.");
-    }
-
-    if (work.getCategory() == WorkCategory.REPAIR && scheduleKind == ScheduleKind.FIXED) {
-      throw new IllegalArgumentException("Popravak nema preventivni rok.");
-    }
-
-    this.scheduleKind = scheduleKind;
   }
 
   public Long getId() {

@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 
 /** Identitet kataloske varijante vozila, bez podataka o korisnikovim servisima. */
 @Entity
-@Table(indexes = @Index(name = "idx_variant_picker", columnList = "make,model,yearFrom"))
+@Table(indexes = @Index(name = "idx_variant_picker", columnList = "make,model,year_from"))
 public class VehicleVariant {
 
   @Id
