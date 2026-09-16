@@ -1,0 +1,123 @@
+code,name,category,default_estimated_price,estimate_note
+OIL_SERVICE,Motorno ulje i filtar ulja - kompletna izmjena,MAINTENANCE,,AC-WORK-2.0 | oil+filter+washer; entire engine; no engine flush | No global vehicle-agnostic price.
+AIR_FILTER,Zamjena filtra zraka motora,MAINTENANCE,,AC-WORK-2.0 | one filter | No global vehicle-agnostic price.
+CABIN_FILTER,Zamjena filtra kabine,MAINTENANCE,,AC-WORK-2.0 | standard cabin filter set; no special HEPA system | No global vehicle-agnostic price.
+FUEL_FILTER,Zamjena filtra goriva,MAINTENANCE,,AC-WORK-2.0 | one diesel fuel filter; no pump | No global vehicle-agnostic price.
+BRAKE_FLUID,Izmjena kočione tekućine,MAINTENANCE,,AC-WORK-2.0 | standard passenger-car brake circuit; bleeding included | No global vehicle-agnostic price.
+COOLANT,Izmjena rashladne tekućine motora,MAINTENANCE,,AC-WORK-2.0 | engine circuit; no flush of contaminated system | No global vehicle-agnostic price.
+TIMING_BELT_PUMP,"Zupčasti remen, natezači i vodena pumpa",MAINTENANCE,,AC-WORK-2.0 | belt kit+rollers+compatible pump+coolant; only if this engine has this arrangement | No global vehicle-agnostic price.
+SPARK_PLUGS,Zamjena kompleta svjećica,MAINTENANCE,,AC-WORK-2.0 | all conventional spark plugs; number of cylinders modelled; no seized-plug extraction | No global vehicle-agnostic price.
+AUX_BELT,Pomoćni remen i natezač,MAINTENANCE,,AC-WORK-2.0 | one accessory drive belt+tensioner; no alternator | No global vehicle-agnostic price.
+MANUAL_GEARBOX_OIL,Izmjena ulja ručnog mjenjača,MAINTENANCE,,AC-WORK-2.0 | drain/refill; ordinary manual gearbox; no differential service | No global vehicle-agnostic price.
+AUTO_GEARBOX_OIL,Servis ulja automatskog mjenjača,MAINTENANCE,,AC-WORK-2.0 | drain/refill+serviceable filter; not a guaranteed full fluid exchange; gearbox type must be confirmed | No global vehicle-agnostic price.
+FRONT_BRAKES,Prednje kočione pločice - par kotača,REPAIR,,AC-WORK-2.0 | pads for front axle; ordinary steel discs retained | No global vehicle-agnostic price.
+REAR_BRAKES,Stražnje kočione pločice - par kotača,REPAIR,,AC-WORK-2.0 | pads for rear axle; ordinary steel discs retained | No global vehicle-agnostic price.
+FRONT_DISCS_PADS,Prednji diskovi i pločice - par kotača,REPAIR,,AC-WORK-2.0 | two ordinary steel front discs+front pad set | No global vehicle-agnostic price.
+REAR_DISCS_PADS,Stražnji diskovi i pločice - par kotača,REPAIR,,AC-WORK-2.0 | two ordinary steel rear discs+rear pad set | No global vehicle-agnostic price.
+REAR_DRUM_SHOES,Stražnje kočione pakne - par kotača,REPAIR,,AC-WORK-2.0 | rear shoes set; existing drums retained | No global vehicle-agnostic price.
+AC_COMPRESSOR,Zamjena kompresora klime,REPAIR,,"AC-WORK-2.0 | one conventional compressor+ordinary recharge/oil; no major contamination, condenser or evaporator repair | No global vehicle-agnostic price."
+RADIATOR_FAN,Zamjena ventilatora hladnjaka,REPAIR,,AC-WORK-2.0 | one fan assembly; not complete radiator | No global vehicle-agnostic price.
+AC_R134A,Servis klime R134a,REPAIR,,AC-WORK-2.0 | ordinary passenger-car charge up to 600 g; no leak repair | No global vehicle-agnostic price.
+AC_R1234YF,Servis klime R1234yf,REPAIR,,AC-WORK-2.0 | ordinary passenger-car charge; no leak repair; confirm charge quantity | No global vehicle-agnostic price.
+BATTERY,Zamjena 12 V akumulatora,REPAIR,,AC-WORK-2.0 | one conventional lead-acid/EFB/AGM low-voltage battery; never traction battery or 16/48 V lithium system | No global vehicle-agnostic price.
+GLOW_PLUGS,Zamjena kompleta grijača dizela,REPAIR,,AC-WORK-2.0 | one ordinary glow plug per cylinder; no broken-plug extraction | No global vehicle-agnostic price.
+DIAGNOSIS,Osnovno očitanje OBD kodova,REPAIR,,AC-WORK-2.0 | scan/readout only; not guaranteed root-cause diagnosis or unlimited troubleshooting | No global vehicle-agnostic price.
+STARTER,Zamjena elektropokretača,REPAIR,,AC-WORK-2.0 | one conventional starter; no belt starter generator | No global vehicle-agnostic price.
+ALTERNATOR,Zamjena alternatora,REPAIR,,AC-WORK-2.0 | one conventional alternator; not hybrid motor generator | No global vehicle-agnostic price.
+TURBO,Zamjena jednog turbopunjača,REPAIR,,AC-WORK-2.0 | one quality remanufactured turbo with standard seals/oil; no internal engine damage | No global vehicle-agnostic price.
+EGR_VALVE,Zamjena EGR ventila,REPAIR,,AC-WORK-2.0 | one EGR valve; cooler not included | No global vehicle-agnostic price.
+DPF_CLEAN,"Demontaža, čišćenje i montaža DPF-a",REPAIR,,"AC-WORK-2.0 | serviceable intact filter; legal cleaning, not removal or ECU disabling | No global vehicle-agnostic price."
+DPF_REPLACEMENT,Zamjena DPF filtra,REPAIR,,AC-WORK-2.0 | one homologated replacement filter; no SCR/AdBlue system repair | No global vehicle-agnostic price.
+DIESEL_INJECTOR,Zamjena jedne dizelske brizgaljke,REPAIR,,AC-WORK-2.0 | one remanufactured compatible injector with ordinary coding; not the entire injector set | No global vehicle-agnostic price.
+IGNITION_COIL,Zamjena jedne bobine,REPAIR,,AC-WORK-2.0 | one compatible coil; no full ignition harness | No global vehicle-agnostic price.
+WHEEL_BEARING,Zamjena jednog ležaja kotača,REPAIR,,AC-WORK-2.0 | one ordinary wheel bearing/hub; axle and exact side must be confirmed | No global vehicle-agnostic price.
+FRONT_SHOCKS,Prednji amortizeri - par,REPAIR,,AC-WORK-2.0 | two conventional passive dampers+basic mounts+alignment; no air/adaptive suspension | No global vehicle-agnostic price.
+REAR_SHOCKS,Stražnji amortizeri - par,REPAIR,,AC-WORK-2.0 | two conventional passive dampers; no air/adaptive suspension | No global vehicle-agnostic price.
+CLUTCH_KIT,Zamjena kompleta spojke,REPAIR,,AC-WORK-2.0 | manual gearbox clutch kit; flywheel retained; no robotic/DCT clutch pack | No global vehicle-agnostic price.
+CLUTCH_DMF,Komplet spojke i dvomaseni zamašnjak,REPAIR,,AC-WORK-2.0 | manual clutch kit+dual-mass flywheel only if fitted | No global vehicle-agnostic price.
+WATER_PUMP,Zamjena vodene pumpe motora,REPAIR,,AC-WORK-2.0 | one conventional mechanically driven pump+coolant; excludes timing belt kit | No global vehicle-agnostic price.
+THERMOSTAT,Zamjena termostata motora,REPAIR,,AC-WORK-2.0 | one ordinary engine thermostat/housing and coolant top-up | No global vehicle-agnostic price.
+LAMBDA_SENSOR,Zamjena jedne lambda sonde,REPAIR,,AC-WORK-2.0 | one exhaust oxygen sensor; no catalytic converter | No global vehicle-agnostic price.
+SCHEDULED_INSPECTION,Redovni servisni pregled prema planu proizvodaca,MAINTENANCE,,"AC-WORK-2.0 | OEM scheduled visit; exact included work requires model schedule, not an oil package | No global vehicle-agnostic price."
+BRAKE_FLUID_CHECK,Provjera stanja kocione tekucine,MAINTENANCE,,AC-WORK-2.0 | brake-fluid condition test only; replacement not included | No global vehicle-agnostic price.
+WIPER_REPLACE,Zamjena prednjih metlica brisaca - par,MAINTENANCE,,AC-WORK-2.0 | front wiper pair; rear blade excluded | No global vehicle-agnostic price.
+TYRE_ROTATION,Rotacija kotaca - kompatibilne dimenzije,MAINTENANCE,,AC-WORK-2.0 | rotate four wheels only if front/rear dimensions and directional rules permit | No global vehicle-agnostic price.
+TYRE_PRESSURE_CHECK,Provjera tlaka i stanja guma,MAINTENANCE,,AC-WORK-2.0 | pressure and visible condition check; no tyre replacement | No global vehicle-agnostic price.
+TYRE_MOUNT_BALANCE,Montaza i balansiranje cetiri gume,MAINTENANCE,,"AC-WORK-2.0 | labour for four standard tyres, valves and balance; tyres themselves excluded | No global vehicle-agnostic price."
+TYRE_REPLACE_SET,Zamjena kompleta cetiriju guma,MAINTENANCE,,AC-WORK-2.0 | four correct-size tyres and fitting; size/load/speed index must be quoted | No global vehicle-agnostic price.
+WHEEL_ALIGNMENT,Kontrola i podesavanje geometrije kotaca,MAINTENANCE,,AC-WORK-2.0 | alignment on adjustable points; repairs and seized parts excluded | No global vehicle-agnostic price.
+AC_DISINFECTION,Dezinfekcija ventilacijskog sustava,MAINTENANCE,,"AC-WORK-2.0 | ventilation disinfection only, no refrigerant or cabin filter | No global vehicle-agnostic price."
+BATTERY_TEST,Test niskonaponskog akumulatora,MAINTENANCE,,AC-WORK-2.0 | low voltage battery electrical test only; correct technology required | No global vehicle-agnostic price.
+BRAKE_INSPECTION,Pregled kocnica,MAINTENANCE,,"AC-WORK-2.0 | visual/mechanical brake inspection, no replacement parts | No global vehicle-agnostic price."
+BRAKE_CALIPER_CLEAN,Ciscenje i podmazivanje kocionih celjusti,MAINTENANCE,,"AC-WORK-2.0 | one axle, sliders/approved lubrication; no piston overhaul | No global vehicle-agnostic price."
+BODY_CORROSION_CHECK,Pregled podvozja i korozije,MAINTENANCE,,"AC-WORK-2.0 | inspection only, not corrosion repair or warranty validation | No global vehicle-agnostic price."
+HYBRID_BATTERY_FILTER,Ciscenje ili zamjena filtra hladenja hibridne baterije,MAINTENANCE,,AC-WORK-2.0 | only vehicles with serviceable battery cooling air filter | No global vehicle-agnostic price.
+TRACTION_BATTERY_TEST,Dijagnostika stanja pogonske baterije,MAINTENANCE,,AC-WORK-2.0 | professional diagnostic health report; not a guaranteed capacity certification | No global vehicle-agnostic price.
+EV_DRIVE_FLUID,Zamjena ulja reduktora elektricnog pogona,MAINTENANCE,,AC-WORK-2.0 | only when manufacturer requires service; correct drive unit/quantity mandatory | No global vehicle-agnostic price.
+DIFFERENTIAL_OIL,Zamjena ulja zasebnog diferencijala,MAINTENANCE,,"AC-WORK-2.0 | separately serviceable differential only, not integrated transaxle oil | No global vehicle-agnostic price."
+TRANSFER_CASE_OIL,Zamjena ulja razvodnika pogona,MAINTENANCE,,AC-WORK-2.0 | mechanical transfer case only; electric AWD is not sufficient evidence | No global vehicle-agnostic price.
+ENGINE_OIL_LEAK_TEST,Dijagnostika curenja motornog ulja,REPAIR,,AC-WORK-2.0 | inspection/UV test; fixing leak not included | No global vehicle-agnostic price.
+COOLING_PRESSURE_TEST,Ispitivanje nepropusnosti hladenja motora,REPAIR,,AC-WORK-2.0 | liquid-cooled combustion engine circuit; no parts replacement | No global vehicle-agnostic price.
+OIL_PAN_GASKET,Zamjena brtve ili brtvljenje kartera,REPAIR,,"AC-WORK-2.0 | accessible oil-pan reseal, oil replenishment allowance; major subframe work excluded | No global vehicle-agnostic price."
+VALVE_COVER_GASKET,Zamjena brtve poklopca ventila,REPAIR,,AC-WORK-2.0 | one valve-cover gasket; broken cover or complex removal quoted separately | No global vehicle-agnostic price.
+ENGINE_MOUNT,Zamjena jednog nosaca motora,REPAIR,,AC-WORK-2.0 | one conventional mount; active/electrohydraulic hardware must be checked | No global vehicle-agnostic price.
+ENGINE_REBUILD,Obnova ili zamjena motora,REPAIR,,AC-WORK-2.0 | individual quote after diagnosis and definition of engine/short-block scope | No global vehicle-agnostic price.
+HEAD_GASKET,Popravak brtve glave motora,REPAIR,,"AC-WORK-2.0 | quote after leak/compression tests, machining and related parts assessment | No global vehicle-agnostic price."
+TIMING_CHAIN,Zamjena kompleta razvodnog lanca,REPAIR,,"AC-WORK-2.0 | confirmed chain-driven engine; complete matching kit, no invented periodic interval | No global vehicle-agnostic price."
+AUX_TENSIONER,Zamjena natezaca pomocnog remena,REPAIR,,AC-WORK-2.0 | confirmed accessory belt drive; belt included only when explicitly quoted | No global vehicle-agnostic price.
+RADIATOR,Zamjena hladnjaka rashladne tekucine motora,REPAIR,,AC-WORK-2.0 | engine radiator and coolant refill; not EV battery chiller | No global vehicle-agnostic price.
+COOLANT_HOSE,Zamjena jednog crijeva hladenja motora,REPAIR,,"AC-WORK-2.0 | one accessible engine coolant hose, clamps and top-up | No global vehicle-agnostic price."
+MAF_SENSOR,Zamjena mjeraca protoka zraka,REPAIR,,AC-WORK-2.0 | only if a separate MAF sensor exists and is diagnosed faulty | No global vehicle-agnostic price.
+MAP_SENSOR,Zamjena senzora tlaka usisa,REPAIR,,AC-WORK-2.0 | one confirmed MAP sensor; not automatic symptom diagnosis | No global vehicle-agnostic price.
+CRANKSHAFT_SENSOR,Zamjena senzora polozaja radilice,REPAIR,,AC-WORK-2.0 | one sensor on confirmed electronic engine-management system | No global vehicle-agnostic price.
+CAMSHAFT_SENSOR,Zamjena senzora polozaja bregaste,REPAIR,,AC-WORK-2.0 | one confirmed sensor; not all classic engines have one | No global vehicle-agnostic price.
+THROTTLE_BODY,Zamjena kucista zaklopke usisa,REPAIR,,AC-WORK-2.0 | confirmed electronic throttle body and basic adaptation | No global vehicle-agnostic price.
+PETROL_INJECTOR,Zamjena jednog benzinskog injektora,REPAIR,,"AC-WORK-2.0 | one injector; injection type, sealing and coding must be confirmed | No global vehicle-agnostic price."
+FUEL_PUMP,Zamjena niskotlacne pumpe goriva,REPAIR,,"AC-WORK-2.0 | one confirmed low-pressure fuel pump, not direct-injection high-pressure pump | No global vehicle-agnostic price."
+HIGH_PRESSURE_PUMP,Zamjena visokotlacne pumpe goriva,REPAIR,,"AC-WORK-2.0 | individual quote, including contamination checks; hardware confirmation required | No global vehicle-agnostic price."
+DIESEL_INJECTOR_SEAL,Zamjena brtve jednog dizelskog injektora,REPAIR,,AC-WORK-2.0 | one seal and seat cleaning; seized/broken injector extraction excluded | No global vehicle-agnostic price.
+GLOW_CONTROLLER,Zamjena upravljacke jedinice grijaca,REPAIR,,AC-WORK-2.0 | confirmed glow plug controller; not the glow plugs themselves | No global vehicle-agnostic price.
+TURBO_HOSE,Zamjena jednog crijeva turbopunjenja,REPAIR,,AC-WORK-2.0 | one boost hose on confirmed turbo engine | No global vehicle-agnostic price.
+EXHAUST_MUFFLER,Zamjena zavrsnog lonca ispuha,REPAIR,,AC-WORK-2.0 | conventional rear exhaust silencer; active valves and custom exhaust excluded | No global vehicle-agnostic price.
+CATALYTIC_CONVERTER,Zamjena katalizatora,REPAIR,,AC-WORK-2.0 | correct emissions-approved part after diagnosis; quote depends on exact type | No global vehicle-agnostic price.
+GPF_REPLACEMENT,Zamjena benzinskog filtra cestica,REPAIR,,"AC-WORK-2.0 | only a confirmed GPF-equipped vehicle, never inferred from fuel alone | No global vehicle-agnostic price."
+DPF_PRESSURE_SENSOR,Zamjena senzora diferencijalnog tlaka DPF-a,REPAIR,,"AC-WORK-2.0 | confirmed DPF pressure sensor; includes basic adaptation, not DPF replacement | No global vehicle-agnostic price."
+NOX_SENSOR,Zamjena jednog NOx senzora,REPAIR,,AC-WORK-2.0 | correct upstream/downstream sensor; SCR/NOx system must be confirmed | No global vehicle-agnostic price.
+ADBLUE_PUMP,Popravak ili zamjena AdBlue modula,REPAIR,,AC-WORK-2.0 | only confirmed SCR system; pump/tank/heater scope requires quote | No global vehicle-agnostic price.
+FRONT_CALIPER,Zamjena jedne prednje kocione celjusti,REPAIR,,"AC-WORK-2.0 | one conventional caliper, fitting and bleeding; pads/discs excluded | No global vehicle-agnostic price."
+REAR_CALIPER,Zamjena jedne straznje kocione celjusti,REPAIR,,AC-WORK-2.0 | one rear caliper; electronic parking-brake design must be verified | No global vehicle-agnostic price.
+BRAKE_HOSE,Zamjena jednog fleksibilnog kocionog crijeva,REPAIR,,AC-WORK-2.0 | one conventional hose and bleeding; damaged hard lines excluded | No global vehicle-agnostic price.
+BRAKE_MASTER_CYLINDER,Zamjena glavnog kocionog cilindra,REPAIR,,"AC-WORK-2.0 | individual quote, especially integrated electrohydraulic braking systems | No global vehicle-agnostic price."
+ABS_SENSOR,Zamjena jednog ABS senzora,REPAIR,,"AC-WORK-2.0 | one confirmed wheel speed sensor, not a hub-integrated assembly | No global vehicle-agnostic price."
+ABS_HYDRAULIC_UNIT,Popravak ABS/ESP hidraulicne jedinice,REPAIR,,"AC-WORK-2.0 | module-specific diagnosis, repair/replacement and coding quote | No global vehicle-agnostic price."
+PARKING_BRAKE_CABLE,Zamjena sajle parkirne kocnice,REPAIR,,AC-WORK-2.0 | mechanical cable only; not an electric parking brake actuator | No global vehicle-agnostic price.
+CONTROL_ARM,Zamjena jednog prednjeg ramena ovjesa,REPAIR,,AC-WORK-2.0 | one conventional control arm; alignment is a separate operation | No global vehicle-agnostic price.
+BALL_JOINT,Zamjena jednog kuglastog zgloba,REPAIR,,"AC-WORK-2.0 | separately replaceable ball joint only, not integrated control arm | No global vehicle-agnostic price."
+STABILIZER_LINK,Zamjena jedne spone stabilizatora,REPAIR,,AC-WORK-2.0 | one conventional stabilizer link; active anti-roll systems excluded | No global vehicle-agnostic price.
+STEERING_TIE_ROD,Zamjena jednog krajnika upravljaca,REPAIR,,AC-WORK-2.0 | one tie-rod end; geometry adjustment separate | No global vehicle-agnostic price.
+STEERING_RACK,Popravak ili zamjena letve upravljaca,REPAIR,,"AC-WORK-2.0 | rack type, assist electronics and coding need individual quote | No global vehicle-agnostic price."
+COIL_SPRINGS_AXLE,Zamjena opruga na jednoj osovini,REPAIR,,"AC-WORK-2.0 | pair of conventional coil springs, not air struts or adaptive assembly | No global vehicle-agnostic price."
+STRUT_TOP_MOUNT,Zamjena jednog gornjeg lezaja amortizera,REPAIR,,AC-WORK-2.0 | one replaceable strut top mount; suspension layout must be confirmed | No global vehicle-agnostic price.
+CV_JOINT,Zamjena jednog homokinetickog zgloba,REPAIR,,AC-WORK-2.0 | one matching CV joint; not a whole half-shaft | No global vehicle-agnostic price.
+CV_BOOT,Zamjena jedne manzete poluosovine,REPAIR,,AC-WORK-2.0 | one boot and grease; worn CV joint excluded | No global vehicle-agnostic price.
+TRANSMISSION_REBUILD,Popravak ili zamjena mjenjaca,REPAIR,,AC-WORK-2.0 | individual transmission/drive-unit quote after diagnosis | No global vehicle-agnostic price.
+WINDOW_REGULATOR,Zamjena podizaca jednog prozora,REPAIR,,AC-WORK-2.0 | one electric regulator mechanism; glass and door module excluded | No global vehicle-agnostic price.
+WIPER_MOTOR,Zamjena motora prednjih brisaca,REPAIR,,AC-WORK-2.0 | one front wiper motor; linkage repairs excluded | No global vehicle-agnostic price.
+DOOR_LOCK_ACTUATOR,Zamjena aktuatora brave vrata,REPAIR,,AC-WORK-2.0 | one powered door-lock actuator; latch coding if applicable requires confirmation | No global vehicle-agnostic price.
+BLOWER_MOTOR,Zamjena ventilatora kabine,REPAIR,,AC-WORK-2.0 | one conventional cabin blower; dashboard-out work excluded | No global vehicle-agnostic price.
+BLOWER_CONTROLLER,Zamjena regulatora ventilatora kabine,REPAIR,,AC-WORK-2.0 | one confirmed resistor or control module | No global vehicle-agnostic price.
+AC_CONDENSER,Zamjena kondenzatora klime,REPAIR,,"AC-WORK-2.0 | matching condenser and refrigerant service, fill mass must be verified | No global vehicle-agnostic price."
+WINDSCREEN_REPLACE,Zamjena vjetrobranskog stakla,REPAIR,,"AC-WORK-2.0 | glass, sensors, heating and ADAS calibration specification required | No global vehicle-agnostic price."
+ADAS_CALIBRATION,Kalibracija kamere ili radara asistencije,REPAIR,,AC-WORK-2.0 | only equipped vehicles; static/dynamic procedures differ | No global vehicle-agnostic price.
+HEADLAMP_UNIT,Zamjena jednog prednjeg svjetla,REPAIR,,AC-WORK-2.0 | halogen/LED/matrix/laser type and module coding require a quote | No global vehicle-agnostic price.
+TPMS_SENSOR,Zamjena jednog senzora tlaka u gumi,REPAIR,,AC-WORK-2.0 | direct TPMS only; indirect ABS-based systems do not have this component | No global vehicle-agnostic price.
+HV_BATTERY_REPLACE,Zamjena pogonske baterije,REPAIR,,"AC-WORK-2.0 | complete traction battery, professionally isolated; pack identity/capacity/reman/new warranty quote required | No global vehicle-agnostic price."
+EV_DRIVE_UNIT,Zamjena jednog elektricnog pogonskog sklopa,REPAIR,,AC-WORK-2.0 | one electric drive unit; not the entire AWD system | No global vehicle-agnostic price.
+ONBOARD_CHARGER,Zamjena ugradjenog AC punjaca,REPAIR,,AC-WORK-2.0 | plug-in vehicles only; exact onboard charger variant required | No global vehicle-agnostic price.
+DC_DC_CONVERTER,Zamjena DC/DC pretvaraca,REPAIR,,AC-WORK-2.0 | traction-to-low-voltage converter; integrated modules need individual scope | No global vehicle-agnostic price.
+CHARGE_PORT,Popravak ili zamjena prikljucka punjenja,REPAIR,,AC-WORK-2.0 | plug-in charge inlet only; cable and onboard charger not included | No global vehicle-agnostic price.
+HV_INVERTER,Popravak ili zamjena pogonskog invertera,REPAIR,,"AC-WORK-2.0 | confirmed inverter assembly, sometimes part of drive unit | No global vehicle-agnostic price."
+HV_ISOLATION_TEST,Dijagnostika izolacije visokonaponskog sustava,REPAIR,,"AC-WORK-2.0 | professional HV isolation diagnosis only, no user repair instructions | No global vehicle-agnostic price."
+HV_COOLANT,Servis rashladne tekucine pogonske baterije,MAINTENANCE,,AC-WORK-2.0 | only liquid-cooled packs and an explicit manufacturer need; not periodic by assumption | No global vehicle-agnostic price.
+OTHER_MAINTENANCE,Drugo odrzavanje - opis u napomeni,MAINTENANCE,,AC-WORK-2.0 | manual history fallback; no automatic price or interval | No global vehicle-agnostic price.
+OTHER_REPAIR,Drugi popravak - opis u napomeni,REPAIR,,AC-WORK-2.0 | manual history fallback; no automatic price or diagnosis | No global vehicle-agnostic price.

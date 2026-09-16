@@ -1,0 +1,69 @@
+classDiagram
+    User "1" <-- "1..*" Vehicle : owner
+    User "0..1" --> "0..1" Vehicle : activeVehicle
+    Vehicle "*" --> "1" VehicleVariant : variant
+    ServiceRecord "*" --> "1" Vehicle : vehicle
+    ServiceRecord "1" *-- "1..*" ServiceItem : items
+    ServiceItem "*" --> "1" WorkDefinition : work
+    VehicleWorkRule "*" --> "1" VehicleVariant : variant
+    VehicleWorkRule "*" --> "1" WorkDefinition : work
+    Problem "*" --> "1" Vehicle : vehicle
+    Problem "*" --> "0..1" WorkDefinition : suggestedRepair
+    Problem "*" --> "0..1" ServiceRecord : resolvedByService
+    DiagnosticRule "*" --> "1" WorkDefinition : candidate REPAIR
+    WorkDefinition --> WorkCategory
+    Problem --> ProblemStatus
+    DiagnosticStrategy <|.. KeywordDiagnosticStrategy
+    class User {
+        Long id
+        long version
+        String name
+        String email
+        String passwordHash
+        activate(Vehicle)
+    }
+    class Vehicle {
+        Long id
+        long version
+        int year
+        int currentMileage
+        updateMileage(int)
+    }
+    class ServiceRecord {
+        Long id
+        String requestKey
+        LocalDate date
+        int mileage
+        addItem(WorkDefinition, BigDecimal)
+        total() CostSummary
+    }
+    class ServiceItem {
+        Long id
+        BigDecimal actualPrice
+    }
+    class WorkDefinition {
+        String code
+        String name
+        WorkCategory category
+        BigDecimal defaultEstimatedPrice
+        String estimateNote
+    }
+    class VehicleWorkRule {
+        ScheduleKind scheduleKind
+        Integer intervalKm
+        Integer intervalMonths
+        BigDecimal estimatedPrice
+        String intervalSource
+        String estimateNote
+    }
+    class Problem {
+        ProblemStatus status
+        String description
+        BigDecimal matchPercent
+        BigDecimal estimatedCost
+        resolve(ServiceRecord)
+    }
+    class DiagnosticStrategy {
+        <<interface>>
+        analyze(description, rules)
+    }

@@ -1,0 +1,99 @@
+erDiagram
+    APP_USER ||--o{ VEHICLE : owns
+    APP_USER }o--o| VEHICLE : active_vehicle
+    VEHICLE_VARIANT ||--o{ VEHICLE : identifies
+    VEHICLE ||--o{ SERVICE_RECORD : history
+    SERVICE_RECORD ||--|{ SERVICE_ITEM : contains
+    WORK_DEFINITION ||--o{ SERVICE_ITEM : describes
+    VEHICLE_VARIANT ||--o{ VEHICLE_WORK_RULE : covers
+    WORK_DEFINITION ||--o{ VEHICLE_WORK_RULE : applies
+    VEHICLE ||--o{ PROBLEM : reports
+    SERVICE_RECORD o|--o{ PROBLEM : resolves
+    WORK_DEFINITION o|--o{ PROBLEM : suggested_repair
+    WORK_DEFINITION ||--o{ DIAGNOSTIC_RULE : candidate
+    APP_USER {
+        bigint id PK
+        bigint version
+        string name
+        string email UK
+        string password_hash
+        bigint active_vehicle_id FK
+    }
+    VEHICLE_VARIANT {
+        bigint id PK
+        string code UK
+        string make
+        string model
+        string generation
+        string engine_label
+        string body_type
+        string fuel_type
+        int power_hp
+        string transmission
+        int year_from
+        int year_to
+        string image_path
+    }
+    VEHICLE {
+        bigint id PK
+        bigint version
+        bigint owner_id FK
+        bigint variant_id FK
+        int production_year
+        int current_mileage
+    }
+    WORK_DEFINITION {
+        bigint id PK
+        string code UK
+        string name
+        string category
+        decimal default_estimated_price
+        string estimate_note
+    }
+    VEHICLE_WORK_RULE {
+        bigint id PK
+        bigint variant_id FK
+        bigint work_id FK
+        string schedule_kind
+        int interval_km
+        int interval_months
+        decimal estimated_price
+        string interval_source
+        string estimate_note
+    }
+    SERVICE_RECORD {
+        bigint id PK
+        bigint vehicle_id FK
+        string request_key UK
+        date service_date
+        int mileage
+        string note
+    }
+    SERVICE_ITEM {
+        bigint id PK
+        bigint service_record_id FK
+        bigint work_id FK
+        decimal actual_price
+    }
+    PROBLEM {
+        bigint id PK
+        bigint version
+        bigint vehicle_id FK
+        string request_key UK
+        string description
+        string status
+        datetime created_at
+        bigint suggested_repair_id FK
+        decimal match_percent
+        decimal estimated_cost
+        string estimate_note
+        bigint resolved_by_service_id FK
+    }
+    DIAGNOSTIC_RULE {
+        bigint id PK
+        string code UK
+        bigint candidate_id FK
+        string phrase
+        int weight
+        boolean active
+    }

@@ -1,0 +1,165 @@
+{
+  "model_version": "AC-MODEL-1.0",
+  "as_of": "2026-09-15",
+  "currency": "EUR",
+  "price_label": "Procijenjena ukupna cijena",
+  "price_includes": "parts+labour+ordinary consumables; gross consumer amount",
+  "rounding": "nearest 10 EUR, HALF_UP",
+  "labour_hour_gross_eur": "60",
+  "labour_source": "HR_AKR_2026",
+  "parts_and_hours_basis": "Explicit scenario assumptions, not a collected national mean or VIN-specific quote. Foreign price lists are sanity checks only. No fitted regression or claimed statistical accuracy.",
+  "tier_parts": {
+    "ECONOMY": "0.90",
+    "MAINSTREAM": "1.00",
+    "PREMIUM": "1.35",
+    "PERFORMANCE": "1.80",
+    "EXOTIC": "3.50"
+  },
+  "tier_hours": {
+    "ECONOMY": "1.00",
+    "MAINSTREAM": "1.00",
+    "PREMIUM": "1.12",
+    "PERFORMANCE": "1.30",
+    "EXOTIC": "1.80"
+  },
+  "economy_makes": [
+    "Dacia",
+    "Lada",
+    "Daewoo",
+    "Tata",
+    "Proton",
+    "Perodua",
+    "Maruti Suzuki"
+  ],
+  "premium_makes": [
+    "Acura",
+    "Alfa Romeo",
+    "Audi",
+    "BMW",
+    "Cadillac",
+    "DS",
+    "Genesis",
+    "Infiniti",
+    "Jaguar",
+    "Land Rover",
+    "Lexus",
+    "Lincoln",
+    "MINI",
+    "Mercedes-Benz",
+    "Polestar",
+    "Tesla",
+    "Volvo"
+  ],
+  "performance_makes": [
+    "Alpine",
+    "Lotus",
+    "Maserati",
+    "Mercedes-AMG",
+    "Porsche"
+  ],
+  "exotic_makes": [
+    "AC",
+    "Ariel",
+    "Artega",
+    "Aston Martin",
+    "Aurus",
+    "Bentley",
+    "Bristol",
+    "Bufori",
+    "Bugatti",
+    "Caterham",
+    "Donkervoort",
+    "Ferrari",
+    "Gordon Murray Automotive",
+    "GTA",
+    "KTM",
+    "Koenigsegg",
+    "Lamborghini",
+    "Marussia",
+    "Maybach",
+    "McLaren",
+    "Morgan",
+    "Pagani",
+    "Panoz",
+    "Pininfarina",
+    "Rimac",
+    "Rolls-Royce",
+    "Saleen",
+    "Spyker",
+    "TVR",
+    "Wiesmann",
+    "Zenvo"
+  ],
+  "local_market_uncertain_makes": [
+    "Arcfox",
+    "BAIC",
+    "Borgward",
+    "Chery",
+    "FSO",
+    "Hindustan",
+    "Lightyear",
+    "Lucid",
+    "NIO",
+    "Omoda",
+    "Rivian",
+    "Samsung",
+    "Santana",
+    "Togg",
+    "VinFast",
+    "XPeng",
+    "Xiaomi",
+    "Zeekr"
+  ],
+  "legacy_cutoff_end_year": 1995,
+  "conditions": "Normal independent garage access. No corroded/seized fasteners, accident damage, unusual tooling, parts shortages, emergency surcharges or consequential repairs. Repair selection is not a diagnosis.",
+  "overlap_pairs": [
+    [
+      "OIL_SERVICE",
+      "ENGINE_OIL"
+    ],
+    [
+      "OIL_SERVICE",
+      "OIL_FILTER"
+    ],
+    [
+      "FRONT_BRAKES",
+      "FRONT_DISCS_PADS"
+    ],
+    [
+      "REAR_BRAKES",
+      "REAR_DISCS_PADS"
+    ],
+    [
+      "CLUTCH_KIT",
+      "CLUTCH_DMF"
+    ],
+    [
+      "TIMING_BELT_PUMP",
+      "WATER_PUMP"
+    ],
+    [
+      "TIMING_BELT_PUMP",
+      "COOLANT"
+    ],
+    [
+      "WATER_PUMP",
+      "COOLANT"
+    ],
+    [
+      "AC_R134A",
+      "AC_R1234YF"
+    ],
+    [
+      "AC_COMPRESSOR",
+      "AC_R134A"
+    ],
+    [
+      "AC_COMPRESSOR",
+      "AC_R1234YF"
+    ],
+    [
+      "DPF_CLEAN",
+      "DPF_REPLACEMENT"
+    ]
+  ]
+}

@@ -1,0 +1,8 @@
+provider,location,valid_from,scope,amount_eur,vat_basis,membership,source_url,reviewed_on,import_as_all_vehicle_price
+Auto Kantoci,Zagreb,2026-01-07,Passenger mechanical labour per normative hour,47.00,EXCLUDED,standard,https://www.autokantoci.hr/wp-content/uploads/2026/01/Cjenik_Auto_Kantoci_07_01_2026.pdf,2026-09-15,NO
+Auto Kantoci,Zagreb,2026-01-07,AC R134a refill with dye up to 500 g,42.00,EXCLUDED,standard,https://www.autokantoci.hr/wp-content/uploads/2026/01/Cjenik_Auto_Kantoci_07_01_2026.pdf,2026-09-15,NO
+Auto Kantoci,Zagreb,2026-01-07,AC R1234yf refill up to 500 g,111.00,EXCLUDED,standard,https://www.autokantoci.hr/wp-content/uploads/2026/01/Cjenik_Auto_Kantoci_07_01_2026.pdf,2026-09-15,NO
+Autoklub Rijeka,Rijeka,2026-01-02,Passenger mechanical labour per hour,60.00,INCLUDED,standard,https://www.ak-rijeka.hr/wp-content/uploads/Cjenik-autoservis-2026.pdf,2026-09-15,NO
+Autoklub Rijeka,Rijeka,2026-01-02,Passenger mechanical labour per hour,54.00,INCLUDED,HAK or AK Rijeka member,https://www.ak-rijeka.hr/wp-content/uploads/Cjenik-autoservis-2026.pdf,2026-09-15,NO
+Autoklub Rijeka,Rijeka,2026-01-02,Diagnostic device connection,30.00,INCLUDED,standard,https://www.ak-rijeka.hr/wp-content/uploads/Cjenik-autoservis-2026.pdf,2026-09-15,NO
+Autoklub Rijeka,Rijeka,2026-01-02,AC R134a refill up to 600 g,70.00,INCLUDED,standard,https://www.ak-rijeka.hr/wp-content/uploads/Cjenik-autoservis-2026.pdf,2026-09-15,NO

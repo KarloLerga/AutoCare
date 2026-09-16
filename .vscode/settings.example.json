@@ -1,0 +1,10 @@
+{
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-25",
+      "path": "C:\\REPLACE_WITH_YOUR_JDK_25_PATH",
+      "default": true
+    }
+  ],
+  "java.configuration.updateBuildConfiguration": "automatic"
+}

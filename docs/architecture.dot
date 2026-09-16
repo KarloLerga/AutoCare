@@ -1,0 +1,28 @@
+digraph G { graph [rankdir=TB, bgcolor="white", pad="0.3", nodesep="0.5", ranksep="0.7", fontname="Helvetica"]; node [fontname="Helvetica", shape=box, style="rounded,filled", fillcolor="#F4F7FB", color="#176B87", margin="0.18"]; edge [fontname="Helvetica", fontsize=10, color="#526477"];
+label="AutoCare AF-3 - granice odgovornosti"; labelloc=t;
+view [label="VIEW
+Swing paneli, forme i draft
+FlatLaf je samo izgled"];
+controller [label="CONTROLLER
+ActionListener + SwingWorker
+EDT prikaz / background IO"];
+service [label="SERVICE
+Use-case, validacija, transakcijska granica"];
+repo [label="REPOSITORY SUCELJA
+User / Vehicle / ServiceRecord / Problem / Catalog"];
+tx [label="TransactionRunner (sucelje)
+JpaTransactionRunner (implementacija)
+Jedan EntityManager
+Jedna transakcija po operaciji"];
+jpa [label="JPA REPOSITORYJI
+JPQL / persist / remove"];
+domain [label="DOMAIN
+9 entiteta, enum, kalkulatori"];
+strategy [label="DiagnosticStrategy
+KeywordDiagnosticStrategy"];
+db [shape=cylinder,label="Azure SQL Database
+9 tablica"];
+event [label="AppEvents / AppListener
+Nakon potvrdenog commita"];
+view -> controller; controller -> service; service -> repo; service -> tx; service -> domain; service -> strategy; repo -> jpa; tx -> jpa [label="dijeljeni EM"]; jpa -> db; controller -> event; event -> controller [style=dashed,label="osvjezi vidljivo"];
+}
