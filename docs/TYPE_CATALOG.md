@@ -218,7 +218,6 @@ File: `src/main/java/hr/unizd/autocare/domain/MaintenanceCalculator.java`
 Declared types: MaintenanceCalculator
 
 ```java
-public MaintenanceStatus calculate(ScheduleKind kind, Integer km, Integer months, LocalDate date, Integer mileage, int current, LocalDate today) {
 public MaintenanceStatus calculate(Integer intervalKm, Integer intervalMonths, LocalDate lastDate, Integer lastMileage, int currentMileage, LocalDate today) {
 ```
 
@@ -388,7 +387,6 @@ public Long getId() {
 public VehicleVariant getVariant() {
 public WorkDefinition getWork() {
 public ScheduleKind getScheduleKind() {
-public void defineScheduleKind(ScheduleKind kind) {
 public Integer getIntervalKm() {
 public Integer getIntervalMonths() {
 public BigDecimal getEstimatedPrice() {

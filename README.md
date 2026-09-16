@@ -25,10 +25,9 @@ Skript po defaultu uvozi mali uzorak, ne 1,65 milijuna pravila. Nakon testiranja
 .\mvnw.cmd clean verify
 . .\scripts\Load-Connection.ps1 -ConfigPath 'C:\private-autocare\connection.local.json'
 java -jar tools/setup/target/autocare-setup-1.0.0.jar sql-check
-$env:AUTOCARE_SCHEMA_TARGET=$env:AUTOCARE_DB_NAME
-java -jar tools/setup/target/autocare-setup-1.0.0.jar schema-update --confirm-development-schema
-# Nakon target-name renamea pregledati schema/05_student_simplification_v2.sql;
-# skripta je zadano read-only i dodaje samo dva nullable WorkDefinition intervala.
+# Normalni runtime koristi postojece snake_case SQL nazive; ne pokretati schema/02_rename_reviewed.sql.
+# U Azure Query Editoru prvo otvoriti schema/06_student_runtime_compat.sql s @Apply = 0.
+# Nakon provjere tocne baze, backupa i ovisnosti promjenu primijeniti samo na tu bazu.
 java -jar tools/setup/target/autocare-setup-1.0.0.jar db-check
 java -Xmx768m -jar tools/setup/target/autocare-setup-1.0.0.jar seed-validate tools/reference-data/data
 $env:AUTOCARE_SEED_TARGET=$env:AUTOCARE_DB_NAME
@@ -40,7 +39,7 @@ Runtime distribucija je `target/autocare-1.0.0.jar` s `target/lib/`; setup distr
 ## Podaci i istinitost
 Katalog 30.366 varijanti; 122 radova; 1.282.916 modeliranih brojcanih procjena; 1.650.435 redaka za uvoz ukljucuje NULL iznose za individualnu ponudu. Jedna planska cijena sadrzi dijelove/rad, najblizih 10 EUR. To nije statisticki hrvatski prosjek ni servisna ponuda. Stvarno placeno cuva cente i nikad se ne preuzima iz procjene.
 
-34 referencirana intervala predstavljaju uzak OEM modelski podskup, 676 kandidata zahtijeva dodatnu provjeru. `ScheduleKind` i izvorni podaci sprjecavaju izmisljanje perioda za bateriju, kocnice i nepoznate izvedbe. U korisnickom prikazu postoje samo statusi `NO_DATA`, `OK`, `SOON` i `DUE`; `NO_DATA` nije preporuka niti potvrda da je rad nepotreban. Evidencija stvarnog servisa ostaje moguca kada cijena/interval nedostaje. Posebna OTHER_ stavka uz napomenu pokriva rad izvan kataloga.
+34 referencirana intervala predstavljaju uzak OEM modelski podskup, 676 kandidata zahtijeva dodatnu provjeru. `ScheduleKind` ostaje legacy metadata zbog postojece baze i seeda; maintenance racun koristi samo kilometarski i mjesecni interval. U korisnickom prikazu postoje samo statusi `NO_DATA`, `OK`, `SOON` i `DUE`; `NO_DATA` nije preporuka niti potvrda da je rad nepotreban. Evidencija stvarnog servisa ostaje moguca kada cijena/interval nedostaje. Posebna OTHER_ stavka uz napomenu pokriva rad izvan kataloga.
 
 ## Dokumentacija
 - `docs/ARCHITECTURE_FREEZE_AF3.md`: odluke A-O, transakcije, GUI, validacija.
@@ -56,4 +55,4 @@ Katalog 30.366 varijanti; 122 radova; 1.282.916 modeliranih brojcanih procjena; 
 Ne commitati local JSON, lozinke, tokene ni cijeli isporuceni ZIP. Provjera certifikata ostaje ukljucena. SQL Server Object Explorer i aplikaciju zatvoriti kada nisu potrebni da konekcije ne ometaju serverless mirovanje. Ne ukljucivati placeni nastavak koristenja radi prolaza testa. Detalji i izvori su u Azure vodicu (AZURE_SETUP.md).
 
 ## Test status
-Cleanup faza mijenja JPA/SQL nazive prema `schema/naming_manifest.json`; trenutno dostupna Azure baza je prethodni snake_case ugovor i nije migrirana. Offline Java/Python provjere nisu dokaz stvarnog JPA mapiranja, performansi importa ni GUI rada. Tocne izvrsene i neizvrsene provjere nalaze se u `docs/VERIFICATION.md` i `docs/IMPLEMENTATION_STATUS.md`; ne oznacavaj izolirani SQL/GUI scenarij kao PASS bez stvarnog prolaza.
+Runtime Java koristi camelCase logicka imena, a Hibernate `CamelCaseToUnderscoresNamingStrategy` ih mapira na postojeci snake_case Azure SQL ugovor. `schema/06_student_runtime_compat.sql` je jedini mali runtime patch i zadano je read-only; ne radi se masovni rename. Offline Java/Python provjere nisu dokaz stvarnog JPA mapiranja, performansi importa ni GUI rada. Tocne izvrsene i neizvrsene provjere nalaze se u `docs/VERIFICATION.md` i `docs/IMPLEMENTATION_STATUS.md`; ne oznacavaj izolirani SQL/GUI scenarij kao PASS bez stvarnog prolaza.

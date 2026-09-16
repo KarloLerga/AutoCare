@@ -51,7 +51,7 @@ ServiceRecord sadrzi ServiceItem: stavka nema samostalan zivotni ciklus, zato ko
 ## Pitanja koja student treba znati odgovoriti
 
 1. Zasto @Id na polju znaci field access? Zasto je no-arg protected?
-2. Zasto mappedBy sadrzi Java ime serviceRecord, a defaultni FK stupac je serviceRecord_id?
+2. Zasto mappedBy sadrzi Java ime serviceRecord, a physical naming strategy FK mapira na service_record_id?
 3. Sto se dogadja ako svaki repository commit-a zasebno? Pokazi izgubljenu atomicnost na primjeru servisa/problema.
 4. Zasto to-one LAZY nije problem kad se DTO sastavi prije zatvaranja EM-a?
 5. Zasto se actual NULL ne pretvara u0 niti u estimate?
@@ -75,4 +75,6 @@ V2 zadrzava Strategy za dijagnostiku, Observer, JPA/EntityManager i pet reposito
 JPA implementacija. Slozenost koja nije potrebna za studentski use-case uklonjena je iz servisnog
 spremanja, povijesti, sessiona i background helpera. `Problem` dijagnostika ostaje zamrznuta,
 ukljucujuci svoj `requestKey`; `ServiceRecord` ga vise nema. Maintenance prikaz koristi samo
-`NO_DATA`, `OK`, `SOON` i `DUE`, a `WorkDefinition` moze imati nullable default intervale.
+`NO_DATA`, `OK`, `SOON` i `DUE`, a `WorkDefinition` moze imati nullable default intervale. Runtime
+camelCase Java imena Hibernate physical naming strategy mapira na postojecu snake_case Azure shemu;
+`ScheduleKind` ostaje samo legacy persistence metadata i ne sudjeluje u maintenance izracunu.
