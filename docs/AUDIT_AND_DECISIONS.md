@@ -1,5 +1,14 @@
 # Audit prilozenog koda i odluke REVIEW-CLEAN-2
 
+## V2 napomena
+
+Ovaj audit opisuje raniji REVIEW-CLEAN-2 snapshot. Nakon njega je stvarno integriran V2 studentski
+pass: servisni `ServiceRecord.requestKey`/idempotency tok, owner lockovi, DTO verzije, session ticketi,
+service-history paging i `EstimateSelection` uklonjeni su; dijagnosticki `Problem.requestKey` ostaje
+zamrznut. Odrzavanje sada koristi `NO_DATA`, `OK`, `SOON`, `DUE`, uz nullable WorkDefinition
+default intervale. Zato tvrdnje nize o tim uklonjenim mehanizmima citaj kao povijest odluke, ne kao
+aktualni API.
+
 ## 1. Izvori i red prvenstva
 
 1. Zadnja profesorova poruka koju je korisnik prenio u razgovoru (sources/PROFESSOR_REVIEW.md).

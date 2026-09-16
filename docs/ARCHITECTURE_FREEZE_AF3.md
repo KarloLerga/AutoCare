@@ -1,5 +1,17 @@
 # AutoCare AF3 - finalna objedinjena arhitekturna odluka
 
+## V2 napomena o aktualnom kodu
+
+Ovaj dokument cuva AF3 odluke kao povijesni kontekst. Za aktualni studentski kod vrijedi V2
+simplifikacija iz zadnjeg predanog plana: dijagnostika (`Problem`, `ProblemService`, `RuleData`,
+`DiagnosticResult`, `Analysis`, Strategy i AnalysisDialog) je zamrznuta, dok su servisno spremanje,
+session, UI background helper, servisna povijest i odrzavanje pojednostavljeni. `ServiceRecord` vise
+nema `requestKey`, servisni flow nema idempotency/retry state machine ni owner pessimistic lock, a
+`Problem.requestKey` ostaje zbog zamrznutog dijagnostickog toka. `MaintenanceStatus` ima samo
+`NO_DATA`, `OK`, `SOON`, `DUE`; `WorkDefinition` moze imati nullable default km/month intervale.
+V2 ne uvodi Maintenance Strategy pattern. Povijesne AF3 tvrdnje nize koje opisuju uklonjene mehanizme
+ne treba citati kao aktualni API ugovor; za tocne potpise vrijedi `docs/TYPE_CATALOG.md` i izvorni kod.
+
 Datum: 16. 9. 2026. Izvor zahtjeva: korisnikova zadnja odluka, obavezni kriteriji kolegija, izvorni handoff/review i dorađeni koncept. Ovo je specifikacija i referentni kod, **ne potvrda izvrsenog Azure/Java25 end-to-end testa**.
 
 ## 0. Sto se mijenja i sto ostaje

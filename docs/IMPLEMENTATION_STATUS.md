@@ -1,4 +1,26 @@
 # Local implementation status (resume point)
+
+## V2 studentska simplifikacija — aktualni zapis
+
+Updated: 2026-09-16. Ovaj odjeljak je aktualan za commitove nakon REVIEW-CLEAN-2 i nadopunjuje
+povijesne AF3/CLEAN redove ispod. Svaka faza je stvarno implementirana u repozitoriju i pushana na
+`main`; dijagnosticki kod je ostao izvan funkcionalnog V2 reza.
+
+| V2 faza | Status | Commit / dokaz |
+|---|---|---|
+| F1 dark FlatLaf i jednostavnija tema | PASS | `9d68dd9`; Maven testovi nakon faze |
+| F2 jednostavan SwingWorker/session tok | PASS | `e053fc4`; Maven testovi nakon faze |
+| F3 servisni save bez request-key flowa | PASS | `e05eb5c`; ServiceRecord/ServiceInput/forma uskladeni |
+| F4 puna servisna povijest bez paging statea | PASS | `2e582ea`; list API i SQL IT uskladeni |
+| F5 repository/runner simplifikacija | PASS | `4f0762d`; runner lifecycle testovi prosli |
+| F6 aplikacijski servisi i DTO version flow | PASS | `e06888c`; auth/vehicle/controller potpisi uskladeni |
+| F7 maintenance model i schema delta | PASS | `1d4bc11`; `mvnw -q test`, dodatne offline provjere: 18 |
+| F8 dokumentacija i završna verifikacija | U TIJEKU | Nakon doc uskladivanja slijede finalni build/Javadoc/secret/package auditi |
+
+V2 SQL promjena nije pokrenuta nad postojećom Azure bazom. `schema/05_student_simplification_v2.sql`
+je read-only po defaultu i dodaje samo nullable `defaultIntervalKm`/`defaultIntervalMonths` na ciljnu
+`dbo.WorkDefinition` tablicu. Target-name Hibernate validate, izolirani SQL Server profil i native
+Windows GUI smoke ostaju `BLOCKED`/`NOT_RUN` bez zasebne odobrene `_test` baze i dostupnog GUI kanala.
 Updated: 2026-09-16 during the local Codex integration and REVIEW-CLEAN-2 cleanup. This file records only commands actually executed on this workstation.
 
 ## REVIEW-CLEAN-2 cleanup status

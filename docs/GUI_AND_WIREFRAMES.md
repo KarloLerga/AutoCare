@@ -1,6 +1,6 @@
 # GUI, wireframeovi i event tokovi - AF3
 
-Prilozeni izvorni PDF ima 12 low-fidelity stranica. To je funkcionalna podloga, ne nepromjenjivi layout. Aktualni kod je standardni Swing uz FlatLaf Light, bez custom nacrtanih kontrola/animacijskog frameworka. Stare preview PNG slike su sintetski Nimbus layout prikazi, NE snimke Azure SQL/Windows/FlatLaf integracije. Za predaju zamijeniti ili dodatno priloziti stvarne lokalne slike s naznacenim porijeklom.
+Prilozeni izvorni PDF ima 12 low-fidelity stranica. To je funkcionalna podloga, ne nepromjenjivi layout. Aktualni kod je standardni Swing uz FlatLaf Dark, bez custom nacrtanih kontrola/animacijskog frameworka. Stare preview PNG slike su sintetski Nimbus layout prikazi, NE snimke Azure SQL/Windows/FlatLaf integracije. Za predaju zamijeniti ili dodatno priloziti stvarne lokalne slike s naznacenim porijeklom.
 
 ## Kontrole
 Godina i km: JSpinner s commitEdit i rasponima. Marka/model: ovisni JComboBoxovi. Veliki popis varijanti: pretraziva JTable sa stabilnim ID-om, model/generacija/motor/snaga/mjenjac. Rad: WorkPicker pretrazivi JTable, ne ogromni dropdown. Datum: formatirano dd.MM.uuuu polje s strict parsingom. Cijena: decimalni unos, zarez ili tocka, najvise dvije decimale za racun. Opis: JTextArea s prelamanjem. Vise problema: checkbox table. Bool nije slobodan tekst. ID ne pokazivati kao naziv vozila.
@@ -48,7 +48,7 @@ Promjena prethodno odabranog vozila zahtijeva svjesno brisanje ili povratak na o
 ```text
  [aktivno vozilo] |  Naslov / loading
  Dashboard       |  [Poznati stvarni trosak] [Otvoreni problemi]
- Vozila          |  [Odrzavanje: due/soon/?] [Kilometraza]
+ Vozila          |  [Odrzavanje: due/soon/no-data] [Kilometraza]
  Odrzavanje      |
  Servisi         |
  Problemi        |
@@ -70,14 +70,14 @@ Aktivacija samo ovdje. Zadnje vozilo ne moze se obrisati; aktivno brisanje trazi
  [Odaberi rad] [Dodaj u procjenu] [Ukloni]
  Procijenjena ukupna cijena: priblizno ... EUR
 ```
-FIXED rok dolazi iz izvora; CONDITION_BASED 'Prema stanju'; VEHICLE_INDICATOR 'Prema indikatoru'; UNKNOWN jasno 'Interval nije poznat'. Ne prikazivati sve kao zdravo. Cijena NULL -> 'Nema procjene'. Planski kalkulator ne sprema servis niti mijenja interval. Zabraniti dvostruko racunanje sadrzaja paketa (diskovi+plocice i plocice iste osovine itd.) uz jasnu poruku. Prikaz cijene zaokruzen na 10 EUR, stvarni racuni nisu.
+Status je jedan od `Nema podataka`, `U redu`, `Uskoro` ili `Dospjelo`; `NO_DATA` pokriva nepoznat interval, nedostajucu povijest i planove prema stanju/indikatoru. WorkDefinition default interval vrijedi samo kada nema specificnog VehicleWorkRulea, a specificni rule je autoritativan kao cjelina. Cijena NULL -> 'Nema procjene'. Planski kalkulator ne sprema servis niti mijenja interval. Obicni multi-select zbroj koristi CostSummary jednom; nema posebne tablice za rucno prepoznavanje preklopa. Prikaz cijene zaokruzen je na 10 EUR, stvarni racuni nisu.
 
 ### 8 Servisna povijest
 ```text
- [Dodaj servis] [Prethodna/sljedeca stranica]
+ [Dodaj servis] [Detalj]
  [Datum | km | Stavke | Stvarno placeno | Napomena]
 ```
-ID paging pa fetch items, bez paginiranja collection fetch joina. Odabir sortiranog retka mora se prevesti view->model. Odabir daje detalj, ne automatski write.
+Povijest se ucitava za aktivno vozilo kao jednostavan sortirani popis s fetchom stavki/radova. Odabir sortiranog retka mora se prevesti view->model. Odabir daje detalj, ne automatski write.
 
 ### 9 Novi servis
 ```text
@@ -113,11 +113,11 @@ Nema podudaranja je valjano stanje; dopustiti spremiti opis bez kandidat/cijena.
  Nova lozinka / potvrda
  [Spremi] [Odjava]
 ```
-Ne slati hash u UI. Dirty warning prije odjave. Reset session epocha odbacuje zaostale rezultate starog korisnika.
+Ne slati hash u UI. Dirty warning prije odjave. Session sadrzi samo vlasnika i aktivni DTO; callbackovi ne nose epoch/ticket stanje.
 
 ## Prikaz / pristupacnost / testiranje
-Pozadina svijetla, kartice bijele, dosljedni razmaci, primarna akcija naglasena, opasna akcija odvojena. Koristiti layout manager, ne absolute position. Status ima tekst, ne samo boju. Tipkovnica Tab/Enter/Escape, fokus u prvo relevantno polje; duge napomene sa scrollom. Native standardni dialogi prihvatljivi.
+Tamna FlatLaf pozadina, kartice s jasnim kontrastom, dosljedni razmaci, primarna akcija naglasena, opasna akcija odvojena. Koristiti layout manager, ne absolute position. Status ima tekst, ne samo boju. Tipkovnica Tab/Enter/Escape, fokus u prvo relevantno polje; duge napomene sa scrollom. Native standardni dialogi prihvatljivi.
 
-Svaki read/write u SwingWorkeru: UI snapshot prije backgrounda, DB/izracun izvan EDT-a, done prikaz na EDT-u. Session epoch + request ticket blokiraju kasni odgovor A nakon izbora B. Observer objava tek nakon commita; hidden panel dirty, visible refresh. Ne osvjezavati svaki panel paralelno na svaki event.
+Svaki read/write u jednostavnom SwingWorkeru: UI snapshot prije backgrounda, DB/izracun izvan EDT-a, done prikaz na EDT-u. Cursor se vraca u `done`, a greska se prikazuje kroz standardni UI helper. Observer objava ide nakon commita; vidljivi paneli se osvjezavaju kroz dogovoreni event tok.
 
 Lokalno ispitati 100/125/150% scaling, 1366x768 i veci ekran, duge modele, 0 rezultata, 30k kataloskih varijanti, prekid mreze, odustajanje, konflikt verzije i izbor drugog auta tijekom ucitavanja. Snimke ne mogu zamijeniti ove akcijske testove.

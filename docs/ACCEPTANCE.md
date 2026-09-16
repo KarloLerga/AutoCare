@@ -14,7 +14,7 @@ BLOCKED. Preskoceni integracijski test nije PASS.
 | Secrets | Privatna lozinka nije u sourceu, buildu, Javadocu, commitu ili release ZIP-u. |
 | Naming | Entityji, scalar stupci i default FK nazivi odgovaraju `schema/naming_manifest.json`. |
 | Schema/migration | Tipovi, NVARCHAR, nullability, identity, FK, unique, check i index potvrdeni na izoliranoj kopiji. |
-| CRUD/rollback | Login, ownership, atomic rollback, idempotency, actualPrice i povijest potvrdeni stvarnim SQL Serverom. |
+| CRUD/rollback | Login, ownership, atomic rollback, actualPrice i povijest potvrdeni stvarnim SQL Serverom; servisni V2 flow nema request-key idempotency. |
 | Standalone app | GUI radi iz odvojene kopije bez `tools/`, Pythona i seed CSV-a. |
 | Developer setup | Setup projekt se builda neovisno nakon `mvnw install`; sample import je ponovljiv. |
 | GUI | Rucni tokovi, DPI, dugi tekst, stale response i shutdown provjereni na Windowsu. |
@@ -33,3 +33,8 @@ jar tf target\autocare-1.0.0.jar
 SQL Server integration profil smije koristiti samo zasebnu odobrenu bazu s nastavkom
 `_test`, `AUTOCARE_TEST_*` varijablama i tocno potvrdenim `AUTOCARE_TEST_SCHEMA_TARGET`.
 Bez nje je status `BLOCKED` ili `NOT_RUN`, nikad `PASS`.
+
+V2 dodatak: ciljna shema mora imati nullable `dbo.WorkDefinition.defaultIntervalKm` i
+`dbo.WorkDefinition.defaultIntervalMonths`; `schema/05_student_simplification_v2.sql` je
+eksplicitni read-only-by-default patch. Dijagnostika ostaje zamrznuta, ukljucujuci
+`Problem.requestKey`; `ServiceRecord.requestKey` vise nije dio runtime mapiranja.

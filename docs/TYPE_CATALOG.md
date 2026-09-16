@@ -1,6 +1,6 @@
 # Actual Java type and API catalogue - AF3
 
-79 production source files. Paths refer to project root. Public/protected signatures below are extracted from actual source, not an invented implementation plan. Package responsibilities/dependencies and entity fields are explained in ARCHITECTURE_FREEZE_AF3.md and DATABASE_AND_JPA.md. Setup-only APIs live in the independent `tools/setup` artifact and are listed with their setup paths below.
+78 production source files. Paths refer to project root. Public/protected signatures below are extracted from the current V2 source, not an invented implementation plan. Package responsibilities/dependencies and entity fields are explained in ARCHITECTURE_FREEZE_AF3.md and DATABASE_AND_JPA.md. Setup-only APIs live in the independent `tools/setup` artifact and are listed with their setup paths below.
 
 ## hr.unizd.autocare.app.DatabaseConfig
 
@@ -33,11 +33,8 @@ Declared types: Session
 public void login(long owner) {
 public void logout() {
 public long owner() {
-public long epoch() {
 public VehicleRow active() {
 public void setActive(VehicleRow value) {
-public boolean isWriting() {
-public void setWriting(boolean writing) {
 ```
 
 ## hr.unizd.autocare.app.SqlSettings
@@ -142,12 +139,9 @@ File: `src/main/java/hr/unizd/autocare/controller/UiTasks.java`
 Declared types: UiTasks
 
 ```java
-public UiTasks(Session session) {
-public void invalidate() {
 public <T>void read(Component parent, Callable<T> work, Consumer<T> success) {
 public <T>void write(Component parent, Callable<T> work, Consumer<T> success) {
-public <T>void run(Component parent, boolean write, Callable<T> work, Consumer<T> success, Consumer<Throwable> failure) {
-public static boolean uncertain(Throwable error) {
+public <T>void run(Component parent, Callable<T> work, Consumer<T> success, Consumer<Throwable> failure) {
 ```
 
 ## hr.unizd.autocare.controller.VehicleFormController
@@ -217,16 +211,6 @@ public int getWeight() {
 public boolean getActive() {
 ```
 
-## hr.unizd.autocare.domain.EstimateSelection
-
-File: `src/main/java/hr/unizd/autocare/domain/EstimateSelection.java`
-
-Declared types: EstimateSelection
-
-```java
-public static Set<String> conflicts(Set<String> selectedCodes, String candidateCode) {
-```
-
 ## hr.unizd.autocare.domain.MaintenanceCalculator
 
 File: `src/main/java/hr/unizd/autocare/domain/MaintenanceCalculator.java`
@@ -245,6 +229,10 @@ File: `src/main/java/hr/unizd/autocare/domain/MaintenanceStatus.java`
 Declared types: MaintenanceStatus
 
 ```java
+NO_DATA,
+OK,
+SOON,
+DUE
 ```
 
 ## hr.unizd.autocare.domain.Problem
@@ -311,12 +299,11 @@ Declared types: ServiceRecord
 
 ```java
 protected ServiceRecord() {
-public ServiceRecord(Vehicle vehicle, String requestKey, LocalDate serviceDate, int mileage, String note) {
+public ServiceRecord(Vehicle vehicle, LocalDate serviceDate, int mileage, String note) {
 public void addItem(WorkDefinition work, BigDecimal actualPrice) {
 public CostSummary total() {
 public Long getId() {
 public Vehicle getVehicle() {
-public String getRequestKey() {
 public LocalDate getServiceDate() {
 public int getMileage() {
 public String getNote() {
@@ -427,10 +414,13 @@ Declared types: WorkDefinition
 ```java
 protected WorkDefinition() {
 public WorkDefinition(String code, String name, WorkCategory category, BigDecimal price, String estimateNote) {
+public WorkDefinition(String code, String name, WorkCategory category, Integer defaultIntervalKm, Integer defaultIntervalMonths, BigDecimal defaultEstimatedPrice, String estimateNote) {
 public Long getId() {
 public String getCode() {
 public String getName() {
 public WorkCategory getCategory() {
+public Integer getDefaultIntervalKm() {
+public Integer getDefaultIntervalMonths() {
 public BigDecimal getDefaultEstimatedPrice() {
 public String getEstimateNote() {
 ```
@@ -470,19 +460,14 @@ Declared types: AppListener
 
 File: `src/main/java/hr/unizd/autocare/model/Data.java`
 
-Declared types: Data, Account, Credentials, VariantRow, VehicleRow, VehicleInput, WorkRow, ItemInput, ServiceInput, ServiceRow, ItemRow, ServiceDetail, ProblemRow, RuleData, DiagnosticResult, Analysis, MaintenanceRow, Dashboard
+Declared types: Data, Account, VariantRow, VehicleRow, VehicleInput, WorkRow, ItemInput, ServiceInput, ServiceRow, ItemRow, ServiceDetail, ProblemRow, RuleData, DiagnosticResult, Analysis, MaintenanceRow, Dashboard
 
 ```java
-public Account(long id, long version, String name, String email, Long activeVehicleId) {
+public Account(long id, String name, String email, Long activeVehicleId) {
 public long getId() {
-public long getVersion() {
 public String getName() {
 public String getEmail() {
 public Long getActiveVehicleId() {
-public Credentials(long id, long version, String hash) {
-public long getId() {
-public long getVersion() {
-public String getHash() {
 public VariantRow(long id, String code, String make, String model, String generation, String engine, String fuel, String transmission, Integer powerHp, int from, Integer to, String imagePath) {
 public long getId() {
 public String getCode() {
@@ -496,9 +481,8 @@ public Integer getPowerHp() {
 public int getFrom() {
 public Integer getTo() {
 public String getImagePath() {
-public VehicleRow(long id, long version, VariantRow variant, int year, int mileage, boolean active) {
+public VehicleRow(long id, VariantRow variant, int year, int mileage, boolean active) {
 public long getId() {
-public long getVersion() {
 public VariantRow getVariant() {
 public int getYear() {
 public int getMileage() {
@@ -517,8 +501,7 @@ public String getPriceNote() {
 public ItemInput(long workId, BigDecimal actualPrice) {
 public long getWorkId() {
 public BigDecimal getActualPrice() {
-public ServiceInput(String requestKey, LocalDate date, int mileage, String note, List<ItemInput> items, List<Long> resolvedProblemIds) {
-public String getRequestKey() {
+public ServiceInput(LocalDate date, int mileage, String note, List<ItemInput> items, List<Long> resolvedProblemIds) {
 public LocalDate getDate() {
 public int getMileage() {
 public String getNote() {
@@ -581,13 +564,13 @@ public MaintenanceStatus getStatus() {
 public BigDecimal getPrice() {
 public String getIntervalSource() {
 public String getPriceNote() {
-public Dashboard(VehicleRow vehicle, CostSummary total, long openProblems, int due, int soon, int unknown, int covered) {
+public Dashboard(VehicleRow vehicle, CostSummary total, long openProblems, int due, int soon, int noData, int covered) {
 public VehicleRow getVehicle() {
 public CostSummary getTotal() {
 public long getOpenProblems() {
 public int getDue() {
 public int getSoon() {
-public int getUnknown() {
+public int getNoData() {
 public int getCovered() {
 ```
 
@@ -635,9 +618,8 @@ Declared types: JpaServiceRecordRepository
 ```java
 public JpaServiceRecordRepository(EntityManager em) {
 public void add(ServiceRecord s) {
-public List<ServiceRecord> page(long owner, long vehicle, int offset, int limit) {
+public List<ServiceRecord> list(long owner, long vehicle) {
 public ServiceRecord requireOwned(long owner, long id) {
-public Optional<ServiceRecord> byRequest(long owner, String key) {
 public List<ServiceItem> historyItems(long owner, long vehicle) {
 public CostSummary total(long owner, long vehicle) {
 public void deleteForVehicle(long vehicle) {
@@ -665,7 +647,6 @@ Declared types: JpaUserRepository
 public JpaUserRepository(EntityManager em) {
 public Optional<AppUser> byEmail(String email) {
 public AppUser require(long id) {
-public AppUser lock(long id) {
 public void add(AppUser u) {
 ```
 
@@ -853,9 +834,8 @@ Declared types: ServiceRecordService
 public ServiceRecordService(TransactionRunner tx, Clock clock) {
 public long create(long owner, long vehicle, ServiceInput input) {
 public static void validate(ServiceInput input, boolean historical, Clock clock) {
-public List<ServiceRow> page(long owner, long vehicle, int offset) {
+public List<ServiceRow> list(long owner, long vehicle) {
 public ServiceDetail detail(long owner, long service) {
-public Long findSaved(long owner, String key) {
 ```
 
 ## hr.unizd.autocare.service.TransactionRunner
@@ -878,10 +858,10 @@ public VehicleService(TransactionRunner tx, Clock clock) {
 public List<VehicleRow> list(long owner) {
 public VehicleRow active(long owner) {
 public long add(long owner, VehicleInput input) {
-public void update(long owner, long vehicle, long expected, VehicleInput input) {
+public void update(long owner, long vehicle, VehicleInput input) {
 public boolean identityEditable(long owner, long vehicle) {
 public void activate(long owner, long vehicle) {
-public void delete(long owner, long vehicle, Long replacement) {
+public void delete(long owner, long vehicle) {
 ```
 
 ## hr.unizd.autocare.strategy.DiagnosticStrategy
@@ -1116,7 +1096,7 @@ public final DateField date=new DateField(LocalDate.now());
 public final JTextArea note=new JTextArea(3, 25);
 public final ServiceItemsModel items=new ServiceItemsModel();
 public final JTable itemTable=new JTable(items);
-public final JButton addMaintenance=Ui.button("Dodaj odrzavanje", false), addRepair=Ui.button("Dodaj popravak", false), remove=Ui.button("Ukloni odabranu stavku", false), save=Ui.button("Spremi servis", true), cancel=Ui.button("Odustani", false), check=Ui.button("Provjeri spremanje", false);
+public final JButton addMaintenance=Ui.button("Dodaj odrzavanje", false), addRepair=Ui.button("Dodaj popravak", false), remove=Ui.button("Ukloni odabranu stavku", false), save=Ui.button("Spremi servis", true), cancel=Ui.button("Odustani", false);
 public ServiceEditorDialog(Window owner, int km, boolean historical, List<ProblemRow> problems) {
 public int getRowCount() {
 public int getColumnCount() {
@@ -1126,7 +1106,6 @@ public Object getValueAt(int r, int c) {
 public boolean isCellEditable(int r, int c) {
 public void setValueAt(Object value, int r, int c) {
 public ServiceInput input() {
-public String requestKey() {
 ```
 
 ## hr.unizd.autocare.view.ServicesView
@@ -1136,8 +1115,7 @@ File: `src/main/java/hr/unizd/autocare/view/ServicesView.java`
 Declared types: ServicesView
 
 ```java
-public final JButton add=Ui.button("Novi servis", true), detail=Ui.button("Detalj", false), previous=Ui.button("Prethodna", false), next=Ui.button("Sljedeca", false);
-public final JLabel page=Ui.hint("1");
+public final JButton add=Ui.button("Novi servis", true), detail=Ui.button("Detalj", false);
 public final DataTable<ServiceRow> table=new DataTable<>(new String[] {
 public ServicesView() {
 ```
@@ -1223,7 +1201,6 @@ File: `src/main/java/hr/unizd/autocare/view/components/Ui.java`
 Declared types: Ui, HintLabel
 
 ```java
-public static final Color BACKGROUND=new Color(0xF4F7FB), INK=new Color(0x172B4D), ACCENT=new Color(0x176B87), MUTED=new Color(0x526477);
 public static final DateTimeFormatter DATE=DateTimeFormatter.ofPattern("dd.MM.uuuu.").withResolverStyle(ResolverStyle.STRICT);
 public static JPanel column() {
 public static JPanel row(Component... controls) {
@@ -1247,8 +1224,6 @@ public static boolean confirm(Component parent, String text) {
 public static void info(Component parent, String text) {
 public static void error(Component parent, Throwable error) {
 public static void escape(JDialog dialog, Runnable close) {
-public static Map<Component, Boolean> disableTree(Component root) {
-public static void restore(Map<Component, Boolean> old) {
 ```
 
 ## hr.unizd.autocare.view.components.VehicleForm

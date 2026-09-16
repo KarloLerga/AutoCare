@@ -18,7 +18,7 @@ Putanje unutar arhive mogu sadrzavati dodatni direktorij raspakiranog projekta; 
 
 ## Sto je inzenjerska dopuna, a ne preuzeta profesorova implementacija
 
-JPA `EntityManager` lifecycle i mali TransactionRunner razrada su dogovorenog Hibernate/JPA koncepta; pregledani MVC primjer koristi i JDBC/DataBase pristup. FlatLaf je dopuna izgleda, ne gradivo koje profesor navodno zahtijeva. PBKDF2/600000, Azure TLS identity, requestKey i row-lock su prakticne sigurnosne/integritetne odluke za ovaj problem. Potrebno ih je razumjeti, ne pripisati predavacu bez izvora.
+JPA `EntityManager` lifecycle i mali TransactionRunner razrada su dogovorenog Hibernate/JPA koncepta; pregledani MVC primjer koristi i JDBC/DataBase pristup. FlatLaf je dopuna izgleda, ne gradivo koje profesor navodno zahtijeva. PBKDF2/600000, Azure TLS identity i dijagnosticki `Problem.requestKey` su prakticne odluke za ovaj problem. Raniji AF3 servisni request-key/row-lock tok uklonjen je u V2 studentskoj simplifikaciji; to nije funkcionalnost koju treba prezentirati kao aktualnu.
 
 Nema Springa, Lomboka, DI frameworka, MapStructa, RxJava, recorda za svaku sitnicu, generic BaseRepositoryja ni odvojenog modela entiteta i ORM modela. JDK25 koristi se kao alat, ne kao razlog za demonstraciju naprednih jezicnih mogucnosti koje problem ne treba.
 
@@ -58,8 +58,8 @@ ServiceRecord sadrzi ServiceItem: stavka nema samostalan zivotni ciklus, zato ko
 6. Zasto datum i kilometraza koriste OR za dospijece? Sto znaci unknown history?
 7. Sto tocno predstavlja75% podudaranja pravila i sto NE predstavlja?
 8. Koji thread izvrsava query/hash, a koji setText? Sto se dogadja ako odgovor A stigne nakon odabira B?
-9. Kako sprjecavamo dva servisa nakon dvostrukog klika ili nepoznatog commita?
-10. Zasto zadnje vozilo nije dovoljno zastititi jednom count provjerom bez koordinacije dvaju klijenata?
+9. Kako jednostavan SwingWorker tok prikazuje uspjeh ili gresku spremanja, i koje napredne retry/idempotency zastite V2 namjerno nema?
+10. Koja je razlika izmedu poslovne provjere zadnjeg vozila u jednoj transakciji i pune zastite od konkurentnih klijenata?
 11. Zasto JPA update nije seed i zasto ne kreira Azure server?
 12. Zasto broj/model auta ne odredjuje tocan hrvatski racun servisa?
 
@@ -68,3 +68,11 @@ O autorstvu i dozvoljenoj pomoci AI-ja izvijesti prema pravilima kolegija. Git m
 
 ## AF3 dopuna
 Baza je korisnikovom zadnjom odlukom Azure SQL Database, ne izvorni MySQL. To nije tvrdnja da je profesor propisao SQL Server. Java JDBC seed sa staging paketima i Python image tooling su razvojna infrastruktura, ne novi runtime slojevi. ScheduleKind je jedan enum/stupac: fiksni, prema stanju, prema indikatoru ili nepoznat plan. Ne uvodimo Strategy za svaki zahvat. Izvorne materijale nosi zasebna privatna mapa source-materials, koja se ne objavljuje u Git.
+
+## V2 aktualno stanje
+
+V2 zadrzava Strategy za dijagnostiku, Observer, JPA/EntityManager i pet repository sucelja s pet
+JPA implementacija. Slozenost koja nije potrebna za studentski use-case uklonjena je iz servisnog
+spremanja, povijesti, sessiona i background helpera. `Problem` dijagnostika ostaje zamrznuta,
+ukljucujuci svoj `requestKey`; `ServiceRecord` ga vise nema. Maintenance prikaz koristi samo
+`NO_DATA`, `OK`, `SOON` i `DUE`, a `WorkDefinition` moze imati nullable default intervale.

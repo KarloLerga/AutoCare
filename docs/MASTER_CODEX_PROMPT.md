@@ -1,5 +1,16 @@
 # MASTER IMPLEMENTATION / INTEGRATION PROMPT - AUTOCARE AF3 AZURE SQL
 
+## Aktualna V2 implementacija
+
+Ovaj AF3 prompt ostaje povijesni ulazni ugovor, ali zadnji V2 plan je autoritativan za trenutno
+stanje izvornog koda. V2 zadrzava Java25/Maven/Swing/FlatLaf/JPA/Hibernate/Azure SQL, pet repository
+sucelja i dijagnosticki tok bez runtime API-ja. Uklonjeni su servisni `ServiceRecord.requestKey`,
+service-save idempotency/retry state, owner lockovi, DTO version flow, session epoch/ticket mehanizam,
+service-history paging i `EstimateSelection`. `Problem.requestKey` i ostali diagnostics tipovi ostaju
+zamrznuti. Odrzavanje koristi samo `NO_DATA`, `OK`, `SOON`, `DUE`, uz nullable WorkDefinition
+default intervale. Za tocne aktualne potpise koristi `docs/TYPE_CATALOG.md`, a za stvarne rezultate
+`docs/IMPLEMENTATION_STATUS.md` i `docs/VERIFICATION.md`.
+
 You are the local implementer, integrator and debugger in Karlo Lerga's VS Code on Windows. Respond to the user in Croatian. This package contains concrete implementation files, not merely a proposed architecture. Work through the phases until the application and course deliverables work on the actual workstation. Do not stop at a plan, copied files or an impressive report. Fix real defects in the supplied implementation and record evidence. Never claim execution when you only inspected code.
 
 ## 0. Inputs and precedence
