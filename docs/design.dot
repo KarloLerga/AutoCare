@@ -1,0 +1,44 @@
+digraph AutoCareDesign {
+    graph [
+        rankdir=LR,
+        bgcolor="white",
+        pad="0.3",
+        nodesep="0.5",
+        ranksep="0.8",
+        fontname="Helvetica",
+        label="AutoCare - application/design UML (non-persistent)",
+        labelloc=t
+    ];
+    node [
+        fontname="Helvetica",
+        shape=box,
+        style="rounded,filled",
+        fillcolor="#F4F7FB",
+        color="#176B87",
+        margin="0.18"
+    ];
+    edge [fontname="Helvetica", fontsize=10, color="#526477"];
+
+    controller [label="Controllers\nMainController\nServicesController\nProblemsController"];
+    services [label="Services\nServiceRecordService\nProblemService\nAuthService\nVehicleService\nMaintenanceService"];
+    tx [label="<<interface>>\nTransactionRunner\nread / write"];
+    repos [label="Repositories\nRepositories aggregate\nUser / Vehicle / ServiceRecord\nProblem / Catalog interfaces"];
+    jpaTx [label="JpaTransactionRunner\nimplements TransactionRunner\ncreates all Jpa repositories\nwith one EntityManager"];
+    jpaRepos [label="Jpa*Repository\nimplements repository interfaces\nJPQL, persist, remove"];
+    strategy [label="<<interface>>\nDiagnosticStrategy"];
+    keyword [label="KeywordDiagnosticStrategy\nnormalization + scoring"];
+    result [label="Data.DiagnosticResult\nplain analysis result\nnot an entity"];
+    data [label="Data inputs/rows\nServiceInput / ServiceDetail\nVehicleInput / Analysis"];
+
+    controller -> services [label="calls use-cases"];
+    controller -> data [label="takes snapshots / displays rows"];
+    services -> tx [label="depends on interface"];
+    services -> repos [label="uses contracts"];
+    services -> strategy [label="ProblemService policy"];
+    services -> data [label="maps to DTO-like rows"];
+    jpaTx -> tx [style=dashed, label="implements"];
+    jpaTx -> jpaRepos [label="shared EM"];
+    jpaRepos -> repos [style=dashed, label="implements"];
+    keyword -> strategy [style=dashed, label="implements"];
+    strategy -> result [label="returns"];
+}

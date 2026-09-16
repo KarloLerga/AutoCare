@@ -131,3 +131,13 @@ Poseban COURSE_ALIGNMENT_AND_DEFENSE.md navodi pregledane izvorne primjere Strat
 |Moguce rasponi u prikazu |Jedna ukupna procjena na10EUR | Korisnikov zahtjev; ruke nisu poseban UI modul. |
 
 Svi aktualni izmijenjeni izvori su u project/. Ako lokalni Codex pronadje stvarni problem, treba ga minimalno popraviti i dodati regresijski dokaz; ne smije odrzavati gresku samo zato sto je u referentnom paketu.
+
+## REVIEW-CLEAN-2 aktualizacija
+
+Ovaj AF3 dokument cuva povijesne odluke i raniji dokazni kontekst. Aktualni cleanup kod koristi ciljna
+standardna Hibernate imena opisana u `docs/DATABASE_AND_JPA.md` i `schema/naming_manifest.json`: `AppUser`,
+`VehicleVariant`, `Vehicle`, `WorkDefinition`, `VehicleWorkRule`, `ServiceRecord`, `ServiceItem`, `Problem`
+i `DiagnosticRule`, s camelCase scalar stupcima i defaultnim relationship FK imenima. Runtime `src/main`
+vise ne sadrzi setup/import alate; oni su u neovisnom `tools/setup` Maven projektu. `domain.*` i `design.*`
+su odvojeni UML prikazi, a `architecture.*` je dependency prikaz. Raniji Azure SQL seed dokazi u ovom dokumentu
+odnose se na staru snake_case shemu i nisu dokaz target-name migracije.

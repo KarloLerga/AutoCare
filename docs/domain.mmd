@@ -1,6 +1,6 @@
 classDiagram
-    User "1" <-- "1..*" Vehicle : owner
-    User "0..1" --> "0..1" Vehicle : activeVehicle
+    AppUser "1" <-- "1..*" Vehicle : owner
+    AppUser "0..1" --> "0..1" Vehicle : activeVehicle
     Vehicle "*" --> "1" VehicleVariant : variant
     ServiceRecord "*" --> "1" Vehicle : vehicle
     ServiceRecord "1" *-- "1..*" ServiceItem : items
@@ -13,8 +13,9 @@ classDiagram
     DiagnosticRule "*" --> "1" WorkDefinition : candidate REPAIR
     WorkDefinition --> WorkCategory
     Problem --> ProblemStatus
-    DiagnosticStrategy <|.. KeywordDiagnosticStrategy
-    class User {
+    VehicleWorkRule --> ScheduleKind
+
+    class AppUser {
         Long id
         long version
         String name
@@ -25,14 +26,15 @@ classDiagram
     class Vehicle {
         Long id
         long version
-        int year
+        int productionYear
         int currentMileage
+        changeIdentity(VehicleVariant, int)
         updateMileage(int)
     }
     class ServiceRecord {
         Long id
         String requestKey
-        LocalDate date
+        LocalDate serviceDate
         int mileage
         addItem(WorkDefinition, BigDecimal)
         total() CostSummary
@@ -55,6 +57,7 @@ classDiagram
         BigDecimal estimatedPrice
         String intervalSource
         String estimateNote
+        defineScheduleKind(ScheduleKind)
     }
     class Problem {
         ProblemStatus status
@@ -63,7 +66,26 @@ classDiagram
         BigDecimal estimatedCost
         resolve(ServiceRecord)
     }
-    class DiagnosticStrategy {
-        <<interface>>
-        analyze(description, rules)
+    class DiagnosticRule {
+        String code
+        String phrase
+        int weight
+        boolean active
+    }
+    class WorkCategory {
+        <<enumeration>>
+        MAINTENANCE
+        REPAIR
+    }
+    class ProblemStatus {
+        <<enumeration>>
+        OPEN
+        RESOLVED
+    }
+    class ScheduleKind {
+        <<enumeration>>
+        FIXED
+        UNKNOWN
+        CONDITION_BASED
+        VEHICLE_INDICATOR
     }

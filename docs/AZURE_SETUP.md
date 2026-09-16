@@ -3,7 +3,7 @@
 ## 1. Postojeci resurs, ne nova MySQL baza
 Korisnik je odabrao Azure SQL Database Free Offer. Poznat host `auto-care.database.windows.net`, port 1433 i SQL korisnik `karlolerga`. Stvarno ime baze nije dostavljeno. NE zakljucivati ga iz servera, resource groupa, imena repozitorija ili starih MySQL primjera.
 
-Ako SQL login moze citati master.sys.databases, `java -jar target/autocare-1.0.0.jar db-list` vraca dostupna imena korisnickih baza. To nije admin Azure API. Ako upit nema dozvolu, portal > SQL databases > postojece ime ili MSSQL ekstenzija daju potreban podatak. Ne stvarati drugi placeni resurs da bi se izbjeglo ovo pitanje.
+Ako SQL login moze citati master.sys.databases, `java -jar tools/setup/target/autocare-setup-1.0.0.jar db-list` vraca dostupna imena korisnickih baza. To nije admin Azure API. Ako upit nema dozvolu, portal > SQL databases > postojece ime ili MSSQL ekstenzija daju potreban podatak. Ne stvarati drugi placeni resurs da bi se izbjeglo ovo pitanje.
 
 Free offer sluzbeno dokumentira mjesecni compute i storage limit. Stvarni portal konfiguracije ima prednost pred prepisanim opisom RAM-a/CPU-a. Drzati opciju auto-pause kad je limit dosegnut; ne ukljucivati Continue using for additional charges. Detaljno: https://learn.microsoft.com/en-us/azure/azure-sql/database/free-offer?view=azuresql (provjereno 16.9.2026.). Monitorirati free amount remaining. Dug uvoz trosi compute; ne obecavati koliko vremena ili sekundi ce potrositi. Prvo mali seed.
 

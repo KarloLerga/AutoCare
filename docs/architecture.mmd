@@ -1,15 +1,14 @@
 flowchart TD
-    V[View: standardni Swing + FlatLaf] --> C[Controller: listener + SwingWorker]
-    C --> S[Service: use-case i transakcijska granica]
-    S --> D[Domain: entiteti i izracuni]
-    S --> R[5 Repository sucelja]
-    S --> T[TransactionRunner]
-    T --> J[TransactionRunner / JpaTransactionRunner: 1 EM / 1 transakcija]
-    R --> P[JPA repository implementacije]
-    P --> EM[EntityManager / Hibernate / JDBC]
-    J --> EM
-    EM --> DB[(Azure SQL Database)]
-    C --> E[AppEvents: nakon potvrdenog commita]
-    E --> C
-    S --> STR[DiagnosticStrategy]
-    STR --> K[KeywordDiagnosticStrategy]
+    V[View<br/>Swing forms and drafts<br/>FlatLaf styles] --> C[Controller<br/>listeners + SwingWorker<br/>EDT/background boundary]
+    C --> S[Service<br/>use-case + validation<br/>business transaction boundary]
+    S --> D[Domain<br/>9 entities, enums, calculators]
+    S --> R[Repository interfaces<br/>query/persist contracts]
+    S --> T[TransactionRunner<br/>technical boundary]
+    S --> STR[DiagnosticStrategy<br/>policy interface]
+    T -. implements .-> JT[JpaTransactionRunner<br/>one EntityManager / operation]
+    JT --> P[JPA repository implementations<br/>shared EntityManager]
+    P -. implements .-> R
+    P --> D
+    JT --> I[JPA / Hibernate / JDBC infrastructure]
+    P --> I
+    I --> DB[(Azure SQL Database<br/>dbo target schema)]

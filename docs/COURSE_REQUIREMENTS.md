@@ -10,7 +10,7 @@ Temelj je tekst koji je korisnik dostavio, ne novo proizvoljno bodovanje. Projek
 | Opis problema | PROJECT_REPORT |
 | Konceptualni model nacina rjesenja | PROJECT_REPORT, architecture/domain dijagrami |
 | Wireframe korisnickog sucelja s opisom | GUI_AND_WIREFRAMES svih12tokova + prilozeni izvorni PDF u privatnoj gradji |
-| Opis dijagrama klasa | domain.mmd/dot/png/svg, TYPE_CATALOG, DATABASE_AND_JPA |
+| Opis dijagrama klasa | domain.mmd/dot/png/svg (persistentna domena), design.mmd/dot/png/svg (aplikacijski odnosi), TYPE_CATALOG, DATABASE_AND_JPA |
 | ERD i opis baze | erd.mmd/dot/png/svg, DATABASE_AND_JPA; uskladiti s pravom shemom |
 | Objasnjenje primijenjenih principa/patterna/visenitnosti | COURSE_ALIGNMENT_AND_DEFENSE, ARCHITECTURE_FREEZE |
 | Vanjske biblioteke, zasto, lokacija, dokumentacija | DEPENDENCIES_AND_SOURCES i actual dependency tree |

@@ -1,5 +1,38 @@
 # Local implementation status (resume point)
-Updated: 2026-09-16 during the local Codex integration and Azure SQL run. This file records only commands actually executed on this workstation.
+Updated: 2026-09-16 during the local Codex integration and REVIEW-CLEAN-2 cleanup. This file records only commands actually executed on this workstation.
+
+## REVIEW-CLEAN-2 cleanup status
+
+The status below applies to the cleanup worktree, not to the earlier Azure run whose schema used the old
+snake_case names. The target JPA contract is in `schema/naming_manifest.json`; the existing Azure database was
+not renamed in this phase.
+
+| Cleanup phase | Status | Evidence / next action |
+|---|---|---|
+| R1 transaction review | PASS | Commit `f821f69`; one transaction boundary remains in the service and the runner preserves original failures. |
+| C1 readability | PASS | Google Java Format 1.27.0 and the final explicit-import/brace audit passed over all repository Java sources. |
+| C2 setup isolation | PASS | Seven developer classes are under `tools/setup`; the root POM has no modules and setup depends on installed `hr.unizd:autocare`. |
+| C3/C4 naming and JPA | PASS (source) | `AppUser`, `productionYear`, `serviceDate`, standard implicit names and preserved constraints are in the runtime sources. |
+| C5 existing-database migration | BLOCKED / NOT_RUN | The available database is the populated old snake_case schema and there is no separately approved copy/restore target. Migration scripts default to read-only. |
+| C6 simplification | PASS | Runtime `Main` is GUI-only; `specific` and the legacy schedule fallback/revise path are removed. |
+| C7 distribution boundary | PASS | Runtime and setup have separate Maven artifacts; the clean runtime JAR has no setup tools or private/reference-data payloads. |
+| C8 final verification | PASS with explicit blockers | Commit `1450b55` passed clean Maven verify, setup test/package, Javadoc, parser, runtime-JAR audit, UTF-8 cleanup-package tests (39/39), secret check and SQL-script safety checks. Target-name SQL/JPA integration and GUI remain NOT_RUN/BLOCKED under C5/F4-F6. |
+
+### REVIEW-CLEAN-2 executed evidence
+
+- Source/setup commit: `1450b55` (`refactor: isolate setup tools and align JPA naming`).
+- `.\mvnw.cmd -q clean verify`: PASS; all Maven tests passed and `Additional offline checks passed: 20`. The expected runner test warning logs a simulated close failure after a successful commit.
+- `.\mvnw.cmd -q install -DskipTests`: PASS; installed the main artifact for the independent setup build.
+- `.\mvnw.cmd -q -f tools\setup\pom.xml clean test package`: PASS.
+- `.\mvnw.cmd -q javadoc:javadoc`: PASS on JDK 25.
+- Cleanup `runtime_audit.py`: PASS; 79 runtime Java files, zero source errors/warnings and zero runtime-JAR errors. Runtime JAR contains no setup tools; setup JAR contains `DatabaseTool`.
+- Cleanup `ParseSources.java`: PASS; 79 main Java sources parsed.
+- Cleanup package tests under UTF-8 Python: PASS, 39/39.
+- `scripts/check-secrets.ps1`: PASS; credentials remain outside the repository.
+- Reviewed SQL scripts: PASS static safety checks; rename/reverse scripts default to `DECLARE @Apply bit = 0`, contain rollback guards and do not execute against the current Azure database.
+
+The F0-F9 rows below preserve earlier implementation evidence. F3 and F7 are historical because they were
+executed before this name-only JPA refactor; they are not validation of the target schema.
 
 | Phase | Status | Evidence / next action |
 |---|---|---|

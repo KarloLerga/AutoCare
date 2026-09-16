@@ -1,24 +1,44 @@
-digraph G { graph [rankdir=TB, bgcolor="white", pad="0.3", nodesep="0.5", ranksep="0.7", fontname="Helvetica"]; node [fontname="Helvetica", shape=box, style="rounded,filled", fillcolor="#F4F7FB", color="#176B87", margin="0.18"]; edge [fontname="Helvetica", fontsize=10, color="#526477"];
-label="AutoCare AF-3 - ERD / mapirani stupci (fizicki DDL provjeriti na Azure SQL-u)"; labelloc=t;
-User [label="app_user\nPK id : Long\nversion : long\nname : String\nUQ email : String\npassword_hash : String\nFK active_vehicle_id : Vehicle ?"];
-User -> Vehicle [label="activeVehicle", arrowsize=0.7];
-VehicleVariant [label="vehicle_variant\nPK id : Long\nUQ code : String\nmake : String\nmodel : String\ngeneration : String\nengine_label : String\nbody_type : String ?\nfuel_type : String ?\npower_hp : Integer ?\ntransmission : String ?\nyear_from : int\nyear_to : Integer ?\nimage_path : String ?"];
-Vehicle [label="vehicle\nPK id : Long\nversion : long\nFK owner_id : User\nFK variant_id : VehicleVariant\nproduction_year : int\ncurrent_mileage : int"];
-Vehicle -> User [label="owner", arrowsize=0.7];
-Vehicle -> VehicleVariant [label="variant", arrowsize=0.7];
-WorkDefinition [label="work_definition\nPK id : Long\nUQ code : String\nname : String\ncategory : WorkCategory\ndefault_estimated_price : BigDecimal ?\nestimate_note : String ?"];
-VehicleWorkRule [label="vehicle_work_rule\nPK id : Long\nFK variant_id : VehicleVariant\nFK work_id : WorkDefinition\nschedule_kind : ScheduleKind\ninterval_km : Integer ?\ninterval_months : Integer ?\nestimated_price : BigDecimal ?\ninterval_source : String ?\nestimate_note : String ?"];
-VehicleWorkRule -> VehicleVariant [label="variant", arrowsize=0.7];
-VehicleWorkRule -> WorkDefinition [label="work", arrowsize=0.7];
-ServiceRecord [label="service_record\nPK id : Long\nFK vehicle_id : Vehicle\nUQ request_key : String\nservice_date : LocalDate\nmileage : int\nnote : String ?"];
-ServiceRecord -> Vehicle [label="vehicle", arrowsize=0.7];
-ServiceItem [label="service_item\nPK id : Long\nFK service_record_id : ServiceRecord\nFK work_id : WorkDefinition\nactual_price : BigDecimal ?"];
-ServiceItem -> ServiceRecord [label="serviceRecord", arrowsize=0.7];
-ServiceItem -> WorkDefinition [label="work", arrowsize=0.7];
-Problem [label="problem\nPK id : Long\nversion : long\nFK vehicle_id : Vehicle\nUQ request_key : String\ndescription : String\nstatus : ProblemStatus\ncreated_at : LocalDateTime\nFK suggested_repair_id : WorkDefinition ?\nmatch_percent : BigDecimal ?\nestimated_cost : BigDecimal ?\nestimate_note : String ?\nFK resolved_by_service_id : ServiceRecord ?"];
-Problem -> Vehicle [label="vehicle", arrowsize=0.7];
-Problem -> WorkDefinition [label="suggestedRepair", arrowsize=0.7];
-Problem -> ServiceRecord [label="resolvedByService", arrowsize=0.7];
-DiagnosticRule [label="diagnostic_rule\nPK id : Long\nUQ code : String\nFK candidate_id : WorkDefinition\nphrase : String\nweight : int\nactive : boolean"];
-DiagnosticRule -> WorkDefinition [label="candidate", arrowsize=0.7];
+digraph AutoCareErD {
+    graph [
+        rankdir=TB,
+        bgcolor="white",
+        pad="0.3",
+        nodesep="0.5",
+        ranksep="0.7",
+        fontname="Helvetica",
+        label="AutoCare - target SQL Server ERD (dbo; validate on Azure SQL)",
+        labelloc=t
+    ];
+    node [
+        fontname="Helvetica",
+        shape=box,
+        style="rounded,filled",
+        fillcolor="#F4F7FB",
+        color="#176B87",
+        margin="0.18"
+    ];
+    edge [fontname="Helvetica", fontsize=10, color="#526477"];
+
+    AppUser [label="dbo.AppUser\nPK id : BIGINT IDENTITY\nversion : BIGINT\nname : NVARCHAR(100)\nUQ email : NVARCHAR(254)\npasswordHash : NVARCHAR(255)\nFK activeVehicle_id : BIGINT ?"];
+    VehicleVariant [label="dbo.VehicleVariant\nPK id : BIGINT IDENTITY\nUQ code : NVARCHAR(80)\nmake : NVARCHAR(100)\nmodel : NVARCHAR(150)\ngeneration : NVARCHAR(200)\nengineLabel : NVARCHAR(240)\nbodyType : NVARCHAR(100) ?\nfuelType : NVARCHAR(80) ?\npowerHp : INT ?\ntransmission : NVARCHAR(120) ?\nyearFrom : INT\nyearTo : INT ?\nimagePath : NVARCHAR(255) ?"];
+    Vehicle [label="dbo.Vehicle\nPK id : BIGINT IDENTITY\nversion : BIGINT\nFK owner_id : BIGINT\nFK variant_id : BIGINT\nproductionYear : INT\ncurrentMileage : INT"];
+    WorkDefinition [label="dbo.WorkDefinition\nPK id : BIGINT IDENTITY\nUQ code : NVARCHAR(80)\nname : NVARCHAR(160)\ncategory : NVARCHAR(20)\ndefaultEstimatedPrice : DECIMAL(9,2) ?\nestimateNote : NVARCHAR(1000) ?"];
+    VehicleWorkRule [label="dbo.VehicleWorkRule\nPK id : BIGINT IDENTITY\nFK variant_id : BIGINT\nFK work_id : BIGINT\nintervalKm : INT ?\nscheduleKind : NVARCHAR(24)\nintervalMonths : INT ?\nestimatedPrice : DECIMAL(9,2) ?\nintervalSource : NVARCHAR(1000) ?\nestimateNote : NVARCHAR(1000) ?"];
+    ServiceRecord [label="dbo.ServiceRecord\nPK id : BIGINT IDENTITY\nFK vehicle_id : BIGINT\nUQ requestKey : NVARCHAR(36)\nserviceDate : DATE\nmileage : INT\nnote : NVARCHAR(2000) ?"];
+    ServiceItem [label="dbo.ServiceItem\nPK id : BIGINT IDENTITY\nFK serviceRecord_id : BIGINT\nFK work_id : BIGINT\nactualPrice : DECIMAL(9,2) ?"];
+    Problem [label="dbo.Problem\nPK id : BIGINT IDENTITY\nversion : BIGINT\nFK vehicle_id : BIGINT\nUQ requestKey : NVARCHAR(36)\ndescription : NVARCHAR(2000)\nstatus : NVARCHAR(20)\ncreatedAt : DATETIME2\nFK suggestedRepair_id : BIGINT ?\nmatchPercent : DECIMAL(5,2) ?\nestimatedCost : DECIMAL(9,2) ?\nestimateNote : NVARCHAR(1000) ?\nFK resolvedByService_id : BIGINT ?"];
+    DiagnosticRule [label="dbo.DiagnosticRule\nPK id : BIGINT IDENTITY\nUQ code : NVARCHAR(80)\nFK candidate_id : BIGINT\nphrase : NVARCHAR(160)\nweight : INT\nactive : BIT"];
+
+    AppUser -> Vehicle [label="activeVehicle", arrowsize=0.7];
+    Vehicle -> AppUser [label="owner", arrowsize=0.7];
+    Vehicle -> VehicleVariant [label="variant", arrowsize=0.7];
+    VehicleWorkRule -> VehicleVariant [label="variant", arrowsize=0.7];
+    VehicleWorkRule -> WorkDefinition [label="work", arrowsize=0.7];
+    ServiceRecord -> Vehicle [label="vehicle", arrowsize=0.7];
+    ServiceItem -> ServiceRecord [label="serviceRecord", arrowsize=0.7];
+    ServiceItem -> WorkDefinition [label="work", arrowsize=0.7];
+    Problem -> Vehicle [label="vehicle", arrowsize=0.7];
+    Problem -> WorkDefinition [label="suggestedRepair", arrowsize=0.7];
+    Problem -> ServiceRecord [label="resolvedByService", arrowsize=0.7];
+    DiagnosticRule -> WorkDefinition [label="candidate", arrowsize=0.7];
 }

@@ -1,10 +1,26 @@
-# Verification evidence - preparation baseline and local run
-Date: 2026-09-16. The first section below is the preserved preparation baseline from the delivered reference package. The later local-run section records the actual Java 25/Azure SQL integration performed afterward; neither section claims GUI or photo work that was not executed.
+# Verification evidence - cleanup, preparation baseline and local run
+Date: 2026-09-16. This file keeps historical evidence separate from the current REVIEW-CLEAN-2 worktree. No
+unexecuted SQL, JPA or GUI scenario is labelled PASS.
 
-## Local integration run (2026-09-16)
+## REVIEW-CLEAN-2 cleanup run (current source)
+
+- R1 is committed as `f821f69`: `JpaTransactionRunner` preserves the first failure, service helpers do not open nested transactions, and request keys are canonicalized consistently.
+- The runtime source contains the nine target entities (`AppUser`, `VehicleVariant`, `Vehicle`, `WorkDefinition`, `VehicleWorkRule`, `ServiceRecord`, `ServiceItem`, `Problem`, `DiagnosticRule`) and no developer tools package. Developer tooling is in `tools/setup`.
+- JPA/XML and native SQL source are aligned with `schema/naming_manifest.json`; runtime XML explicitly uses `hibernate.hbm2ddl.auto=validate` and does not contain a password value.
+- The existing Azure database was not changed by this cleanup. Its populated old snake_case contract is incompatible with target-name `validate` until the reviewed name-only migration is run on an isolated/copy target. `schema/02_rename_reviewed.sql` and `schema/04_reverse_names_reviewed.sql` default to `@Apply = 0`.
+- Cleanup validation is limited to the actual commands recorded below. Real target-name Hibernate validation, target-name SQL seed/CRUD/rollback tests and the separate `_test` profile are `NOT_RUN`/`BLOCKED` without an approved isolated database.
+- Cleanup source/setup commit `1450b55` passed `mvnw -q clean verify`, `mvnw -q install -DskipTests`, independent setup `clean test package`, and `mvnw -q javadoc:javadoc` on JDK 25.
+- The cleanup package test suite passed under UTF-8 Python: 39/39 tests. The source parser passed for 79 runtime Java files; the runtime JAR audit reported zero errors/warnings and no setup classes.
+- `scripts/check-secrets.ps1` passed. Static SQL safety checks confirmed read-only defaults and rollback guards in both reviewed rename directions.
+
+## Pre-cleanup Azure integration run (historical evidence)
+
+The following Azure evidence belongs to the pre-cleanup schema and is retained only as historical context.
+
+### Local integration run (2026-09-16)
 
 - `db-list` reached the configured Azure SQL server after the user allowed the workstation IP and discovered one existing database; its name remains external.
-- `sql-check`, explicit `schema-update --confirm-development-schema`, and `db-check` passed against that existing database.
+- `sql-check`, explicit `schema-update --confirm-development-schema`, and `db-check` passed against that existing database before the naming cleanup.
 - Sample seed and identical sample rerun passed: 8 variants / 122 works / 403 rules / 87 diagnostics.
 - Full AF3 seed resumed after a partial first process and completed idempotently: 30,366 variants / 122 works / 1,650,435 rules / 87 diagnostics. Referenced intervals remained opt-in.
 - Read-only `scripts/verify-database.sql` passed; final counts, indexes, FKs and invariants are in `docs/evidence/azure-seed-validation.md`.
