@@ -73,7 +73,7 @@ class SqlServerIT {
 
       ServiceInput changed = fixture.service(120_001, List.of(firstProblem, secondProblem));
       assertThrows(AppException.class, () -> fixture.services.create(owner, vehicle, changed));
-      assertThrows(AppException.class, () -> fixture.vehicles.delete(owner, vehicle, null));
+      assertThrows(AppException.class, () -> fixture.vehicles.delete(owner, vehicle));
 
       long otherOwner = fixture.register();
       assertThrows(AppException.class, () -> fixture.services.detail(otherOwner, saved));
