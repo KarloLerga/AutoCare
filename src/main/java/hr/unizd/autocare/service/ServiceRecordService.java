@@ -142,18 +142,14 @@ public final class ServiceRecordService {
     }
   }
 
-  public List<ServiceRow> page(long owner, long vehicle, int offset) {
-    if (offset < 0) {
-      throw AppException.validation("Nevaljana stranica.");
-    }
-
+  public List<ServiceRow> list(long owner, long vehicle) {
     return transactions.read(
         repositories -> {
           repositories.vehicles().requireOwned(owner, vehicle);
           List<ServiceRow> rows = new ArrayList<>();
 
           for (ServiceRecord serviceRecord :
-              repositories.services().page(owner, vehicle, offset, 50)) {
+              repositories.services().list(owner, vehicle)) {
             rows.add(Mapping.service(serviceRecord));
           }
           return List.copyOf(rows);

@@ -9,7 +9,7 @@ import java.util.List;
 public interface ServiceRecordRepository {
   void add(ServiceRecord record);
 
-  List<ServiceRecord> page(long owner, long vehicle, int offset, int limit);
+  List<ServiceRecord> list(long owner, long vehicle);
 
   ServiceRecord requireOwned(long owner, long id);
 
