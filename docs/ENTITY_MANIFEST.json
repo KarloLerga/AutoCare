@@ -440,6 +440,34 @@
         "annotationBefore": "@Enumerated(EnumType.STRING) @Column(nullable=false, length=20)"
       },
       {
+        "javaType": "Integer",
+        "fieldBefore": null,
+        "fieldAfter": "defaultIntervalKm",
+        "columnBefore": null,
+        "columnAfter": "defaultIntervalKm",
+        "relation": false,
+        "nullable": true,
+        "unique": false,
+        "length": null,
+        "precision": null,
+        "scale": null,
+        "annotationBefore": null
+      },
+      {
+        "javaType": "Integer",
+        "fieldBefore": null,
+        "fieldAfter": "defaultIntervalMonths",
+        "columnBefore": null,
+        "columnAfter": "defaultIntervalMonths",
+        "relation": false,
+        "nullable": true,
+        "unique": false,
+        "length": null,
+        "precision": null,
+        "scale": null,
+        "annotationBefore": null
+      },
+      {
         "javaType": "BigDecimal",
         "fieldBefore": "defaultEstimatedPrice",
         "fieldAfter": "defaultEstimatedPrice",
@@ -638,20 +666,6 @@
         "precision": null,
         "scale": null,
         "annotationBefore": "@ManyToOne(fetch=FetchType.LAZY, optional=false) @JoinColumn(name=\"vehicle_id\", nullable=false)"
-      },
-      {
-        "javaType": "String",
-        "fieldBefore": "requestKey",
-        "fieldAfter": "requestKey",
-        "columnBefore": "request_key",
-        "columnAfter": "requestKey",
-        "relation": false,
-        "nullable": false,
-        "unique": true,
-        "length": 36,
-        "precision": null,
-        "scale": null,
-        "annotationBefore": "@Column(name=\"request_key\", nullable=false, unique=true, length=36)"
       },
       {
         "javaType": "LocalDate",

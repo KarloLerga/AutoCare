@@ -1,5 +1,13 @@
 # Tko odredjuje transakciju, a tko je tehnicki provodi
 
+## V2 aktualizacija
+
+V2 zadrzava jednu EM/transakciju po poslovnoj write operaciji i pet repository implementacija nad
+istim EM-om, ali uklanja servisni request-key recovery, owner pessimistic lock i dodatnu commit-state
+mašineriju. `ServiceRecordService.create` prima jednostavan `ServiceInput`; `JpaTransactionRunner`
+ima samo begin/commit, rollback aktivne transakcije kod `RuntimeException` i close. Dijagnosticki
+`ProblemService.save` i `Problem.requestKey` nisu dio ove promjene.
+
 ## Kratko objasnjenje za obranu
 
 ServiceRecordService zna da servis, njegove stavke, kilometraza i odabrani problemi moraju uspjeti
@@ -49,8 +57,8 @@ kontekste i razbilo atomarnost registracije.
 - Neuspjela validacija prije commita: rollback aktivne transakcije i jasna pogreska.
 - Greska prilikom flusha: nema naseg commit poziva; best-effort rollback, ne lazni uspjeh.
 - Poznat optimistic/integrity konflikt: korisnik osvjezava, nema automatskog overwritea.
-- Nepoznat ishod potvrde: zadrzati isti zahtjev, provjeriti po requestKey; ne tvrditi da se sigurno nije spremilo.
-- Greska isActive/rollback: zadrzati izvorni uzrok; cleanup problem je dodatan podatak u logu.
+- Nejasan ishod potvrde: V2 ne radi automatski retry servisnog INSERT-a; korisnik treba svjesno provjeriti povijest.
+- Rollback/close greska ne smije biti razlog za lazno prikazivanje uspjeha.
 - Uspjesan commit pa greska zatvaranja/GUI refresha: ne nuditi novi INSERT kao rjesenje refresh problema.
 
 SERVICE_SAVED je in-memory UI dogadjaj. U trenutku gasenja procesa moze izostati iako je commit uspio;

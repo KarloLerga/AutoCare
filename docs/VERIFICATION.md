@@ -1,4 +1,24 @@
 # Verification evidence - cleanup, preparation baseline and local run
+
+## Current V2 implementation evidence
+
+Date: 2026-09-16. V2 phases F1-F7 are committed and pushed through `1d4bc11`. The diagnostics
+implementation remains frozen; this section records the new simplification evidence separately from
+the historical AF3/CLEAN runs below.
+
+- `.\mvnw.cmd -q test`: PASS after F7; `Additional offline checks passed: 18`.
+- `git diff --check`: PASS before the F7 commit; only expected Git line-ending warnings were emitted.
+- Schema manifest and entity manifest: PASS static JSON parse; both contain 69 mapped target columns,
+  including two nullable WorkDefinition defaults and excluding ServiceRecord.requestKey.
+- `schema/05_student_simplification_v2.sql`: REVIEWED, not executed. It defaults to `@Apply = 0`,
+  requires explicit database/recovery/application/dependency confirmation for apply, and has rollback
+  handling. No live Azure schema was changed by V2.
+- Current source counts after F7: 78 production Java files / 6,282 lines and 9 test Java files /
+  1,017 lines. These counts are descriptive, not a quality score.
+
+The final F8 docs/build/package/secret evidence is added after those commands actually run. Target-name
+Hibernate validation against Azure, the isolated `_test` SQL profile and native Windows GUI interaction
+remain `BLOCKED`/`NOT_RUN`; no skipped scenario is labelled PASS.
 Date: 2026-09-16. This file keeps historical evidence separate from the current REVIEW-CLEAN-2 worktree. No
 unexecuted SQL, JPA or GUI scenario is labelled PASS.
 

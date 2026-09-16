@@ -27,6 +27,8 @@ Skript po defaultu uvozi mali uzorak, ne 1,65 milijuna pravila. Nakon testiranja
 java -jar tools/setup/target/autocare-setup-1.0.0.jar sql-check
 $env:AUTOCARE_SCHEMA_TARGET=$env:AUTOCARE_DB_NAME
 java -jar tools/setup/target/autocare-setup-1.0.0.jar schema-update --confirm-development-schema
+# Nakon target-name renamea pregledati schema/05_student_simplification_v2.sql;
+# skripta je zadano read-only i dodaje samo dva nullable WorkDefinition intervala.
 java -jar tools/setup/target/autocare-setup-1.0.0.jar db-check
 java -Xmx768m -jar tools/setup/target/autocare-setup-1.0.0.jar seed-validate tools/reference-data/data
 $env:AUTOCARE_SEED_TARGET=$env:AUTOCARE_DB_NAME
@@ -38,7 +40,7 @@ Runtime distribucija je `target/autocare-1.0.0.jar` s `target/lib/`; setup distr
 ## Podaci i istinitost
 Katalog 30.366 varijanti; 122 radova; 1.282.916 modeliranih brojcanih procjena; 1.650.435 redaka za uvoz ukljucuje NULL iznose za individualnu ponudu. Jedna planska cijena sadrzi dijelove/rad, najblizih 10 EUR. To nije statisticki hrvatski prosjek ni servisna ponuda. Stvarno placeno cuva cente i nikad se ne preuzima iz procjene.
 
-34 referencirana intervala predstavljaju uzak OEM modelski podskup, 676 kandidata zahtijeva dodatnu provjeru. FIXED, CONDITION_BASED, VEHICLE_INDICATOR i UNKNOWN sprjecavaju izmisljanje perioda za bateriju, kocnice i nepoznate izvedbe. Evidencija stvarnog servisa ostaje moguca kada cijena/interval nedostaje. Posebna OTHER_ stavka uz napomenu pokriva rad izvan kataloga.
+34 referencirana intervala predstavljaju uzak OEM modelski podskup, 676 kandidata zahtijeva dodatnu provjeru. `ScheduleKind` i izvorni podaci sprjecavaju izmisljanje perioda za bateriju, kocnice i nepoznate izvedbe. U korisnickom prikazu postoje samo statusi `NO_DATA`, `OK`, `SOON` i `DUE`; `NO_DATA` nije preporuka niti potvrda da je rad nepotreban. Evidencija stvarnog servisa ostaje moguca kada cijena/interval nedostaje. Posebna OTHER_ stavka uz napomenu pokriva rad izvan kataloga.
 
 ## Dokumentacija
 - `docs/ARCHITECTURE_FREEZE_AF3.md`: odluke A-O, transakcije, GUI, validacija.
