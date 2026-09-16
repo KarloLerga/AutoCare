@@ -84,7 +84,7 @@ public final class MainFrame extends JFrame {
         return page;
     }
     public void context(VehicleRow v) {
-        vehicleImage.showPath(v.getVariant().getImagePath());
+        vehicleImage.showVehicle(v.getVariant().getImagePath(), v.getVariant().getFuel());
         vehicleName.setText(v.getVariant().getMake()+" "+v.getVariant().getModel());
         vehicleDetails.setText(v.getYear()+" / "+Ui.km(v.getMileage()));
         vehicleName.setToolTipText(v.getVariant().getGeneration()+" / "+v.getVariant().getEngine());

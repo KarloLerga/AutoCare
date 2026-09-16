@@ -9,7 +9,7 @@ Date: 2026-09-16. The first section below is the preserved preparation baseline 
 - Full AF3 seed resumed after a partial first process and completed idempotently: 30,366 variants / 122 works / 1,650,435 rules / 87 diagnostics. Referenced intervals remained opt-in.
 - Read-only `scripts/verify-database.sql` passed; final counts, indexes, FKs and invariants are in `docs/evidence/azure-seed-validation.md`.
 - Real `.\mvnw.cmd clean verify` and `.\mvnw.cmd javadoc:javadoc` passed on Java 25. Python AF3/data validators passed under Python 3.12.4 with explicit UTF-8 and resource-safe file handling.
-- GUI/manual flows, isolated `_test` SQL profile and image enrichment remain NOT_RUN.
+- GUI/manual flows are BLOCKED by the unavailable Windows Computer Use native pipe, and the isolated `_test` SQL profile remains NOT_RUN because no separate approved database exists. Local generated category illustrations were added and verified as classpath resources; exact model-specific image lookup, manual generation review and licence approval remain NOT_RUN.
 
 ## Preserved preparation baseline
 
