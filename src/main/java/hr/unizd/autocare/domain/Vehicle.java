@@ -1,60 +1,95 @@
 package hr.unizd.autocare.domain;
-import jakarta.persistence.*;
-import java.math.BigDecimal;
-import java.time.*;
-import java.util.*;
-/** Konkretno vozilo korisnika; kilometraza nikada ne pada. */
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
+import java.util.Objects;
+
+/** Konkretno vozilo korisnika; trenutna kilometraza ne smije se smanjiti. */
 @Entity
-@Table(name="vehicle", indexes= {
-    @Index(name="idx_vehicle_owner", columnList="owner_id")
-})
+@Table(indexes = @Index(name = "idx_vehicle_owner", columnList = "owner_id"))
 public class Vehicle {
-    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long id;
-    @Version @Column(nullable=false)
-    private long version;
-    @ManyToOne(fetch=FetchType.LAZY, optional=false) @JoinColumn(name="owner_id", nullable=false)
-    private User owner;
-    @ManyToOne(fetch=FetchType.LAZY, optional=false) @JoinColumn(name="variant_id", nullable=false)
-    private VehicleVariant variant;
-    @Column(name="production_year", nullable=false)
-    private int year;
-    @Column(name="current_mileage", nullable=false)
-    private int currentMileage;
-    protected Vehicle() {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @Version
+  @Column(nullable = false)
+  private long version;
+
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(nullable = false)
+  private AppUser owner;
+
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(nullable = false)
+  private VehicleVariant variant;
+
+  @Column(nullable = false)
+  private int productionYear;
+
+  @Column(nullable = false)
+  private int currentMileage;
+
+  protected Vehicle() {}
+
+  public Vehicle(AppUser owner, VehicleVariant variant, int productionYear, int currentMileage) {
+    this.owner = Objects.requireNonNull(owner);
+    changeIdentity(variant, productionYear);
+    this.currentMileage = Checks.mileage(currentMileage);
+  }
+
+  public void changeIdentity(VehicleVariant variant, int productionYear) {
+    Objects.requireNonNull(variant);
+
+    if (!variant.covers(productionYear)) {
+      throw new IllegalArgumentException("Godina nije u rasponu varijante.");
     }
-    public Vehicle(User owner, VehicleVariant variant, int year, int mileage) {
-        this.owner=Objects.requireNonNull(owner);
-        changeIdentity(variant, year);
-        currentMileage=Checks.mileage(mileage);
+
+    this.variant = variant;
+    this.productionYear = productionYear;
+  }
+
+  public void updateMileage(int mileage) {
+    Checks.mileage(mileage);
+
+    if (mileage < currentMileage) {
+      throw new IllegalArgumentException("Trenutna kilometraza ne moze se smanjiti.");
     }
-    public void changeIdentity(VehicleVariant variant, int year) {
-        Objects.requireNonNull(variant);
-        if(!variant.covers(year))throw new IllegalArgumentException("Godina nije u rasponu varijante.");
-        this.variant=variant;
-        this.year=year;
-    }
-    public void updateMileage(int mileage) {
-        Checks.mileage(mileage);
-        if(mileage<currentMileage)throw new IllegalArgumentException("Trenutna kilometraza ne moze se smanjiti.");
-        currentMileage=mileage;
-    }
-    public Long getId() {
-        return id;
-    }
-    public long getVersion() {
-        return version;
-    }
-    public User getOwner() {
-        return owner;
-    }
-    public VehicleVariant getVariant() {
-        return variant;
-    }
-    public int getYear() {
-        return year;
-    }
-    public int getCurrentMileage() {
-        return currentMileage;
-    }
+
+    currentMileage = mileage;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public long getVersion() {
+    return version;
+  }
+
+  public AppUser getOwner() {
+    return owner;
+  }
+
+  public VehicleVariant getVariant() {
+    return variant;
+  }
+
+  public int getProductionYear() {
+    return productionYear;
+  }
+
+  public int getCurrentMileage() {
+    return currentMileage;
+  }
 }

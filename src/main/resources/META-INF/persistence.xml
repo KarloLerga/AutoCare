@@ -2,7 +2,7 @@
 <persistence xmlns="https://jakarta.ee/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_2.xsd" version="3.2">
  <persistence-unit name="autocare" transaction-type="RESOURCE_LOCAL">
   <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-  <class>hr.unizd.autocare.domain.User</class>
+  <class>hr.unizd.autocare.domain.AppUser</class>
   <class>hr.unizd.autocare.domain.VehicleVariant</class>
   <class>hr.unizd.autocare.domain.Vehicle</class>
   <class>hr.unizd.autocare.domain.WorkDefinition</class>
@@ -13,6 +13,23 @@
   <class>hr.unizd.autocare.domain.DiagnosticRule</class>
 
   <exclude-unlisted-classes>true</exclude-unlisted-classes>
-  <properties><property name="hibernate.hbm2ddl.auto" value="validate"/><property name="hibernate.show_sql" value="false"/><property name="hibernate.jdbc.time_zone" value="UTC"/></properties>
+  <properties>
+   <property name="jakarta.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+   <property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect"/>
+   <property name="hibernate.default_schema" value="dbo"/>
+   <property name="hibernate.use_nationalized_character_data" value="true"/>
+   <property name="hibernate.hbm2ddl.auto" value="validate"/>
+   <property name="hibernate.hbm2ddl.halt_on_error" value="true"/>
+   <property name="hibernate.show_sql" value="false"/>
+   <property name="hibernate.jdbc.time_zone" value="UTC"/>
+   <property name="hibernate.connection.provider_class" value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider"/>
+   <property name="hibernate.hikari.maximumPoolSize" value="2"/>
+   <property name="hibernate.hikari.minimumIdle" value="0"/>
+   <property name="hibernate.hikari.idleTimeout" value="30000"/>
+   <property name="hibernate.hikari.keepaliveTime" value="0"/>
+   <property name="hibernate.hikari.connectionTimeout" value="120000"/>
+   <property name="hibernate.hikari.validationTimeout" value="5000"/>
+   <property name="hibernate.hikari.maxLifetime" value="300000"/>
+  </properties>
  </persistence-unit>
 </persistence>

@@ -1,0 +1,12 @@
+{
+    "java.format.settings.url": "${workspaceFolder}/style/eclipse-java-clean.xml",
+    "java.format.settings.profile": "AutoCare Clean",
+    "java.saveActions.organizeImports": true,
+    "[java]": {
+        "editor.defaultFormatter": "redhat.java",
+        "editor.tabSize": 4,
+        "editor.insertSpaces": true,
+        "editor.formatOnSave": true,
+        "editor.rulers": [120]
+    }
+}
