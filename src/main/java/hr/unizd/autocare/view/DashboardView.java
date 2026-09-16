@@ -8,7 +8,7 @@ import java.awt.GridLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-/** Cetiri kartice. Nepoznati intervali nisu prikazani kao ispravno odrzavanje. */
+/** Cetiri kartice s kratkim sazetkom aktivnog vozila. */
 public final class DashboardView extends JPanel {
   private final JLabel total = Ui.hint("-"),
       maintenance = Ui.hint("-"),
@@ -47,8 +47,8 @@ public final class DashboardView extends JPanel {
                 + " dospjelo / "
                 + d.getSoon()
                 + " uskoro / "
-                + d.getUnknown()
-                + " nepoznato");
+                + d.getNoData()
+                + " bez podataka");
     problems.setText(Long.toString(d.getOpenProblems()));
     mileage.setText(Ui.km(d.getVehicle().getMileage()));
   }

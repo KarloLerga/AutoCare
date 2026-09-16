@@ -8,75 +8,151 @@ import hr.unizd.autocare.domain.WorkDefinition;
 import hr.unizd.autocare.model.Data.VariantRow;
 import hr.unizd.autocare.model.Data.WorkRow;
 import hr.unizd.autocare.repository.Repositories;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Ucitaj male izbornike i ograniceni rezultat trazenja, ne cijeli katalog za GUI. */
+/** ÄŒitanje kataloga vozila i radova za GUI. */
 public final class CatalogService {
-  private final TransactionRunner tx;
 
-  public CatalogService(TransactionRunner tx) {
-    this.tx = tx;
-  }
+    private final TransactionRunner transactions;
 
-  public List<String> makes(int year) {
-    return tx.read(r -> r.catalog().makes(year));
-  }
-
-  public List<String> models(int year, String make) {
-    return tx.read(r -> r.catalog().models(year, make));
-  }
-
-  public List<VariantRow> variants(int year, String make, String model, String search) {
-    return tx.read(
-        r -> {
-          List<VariantRow> out = new ArrayList<>();
-          for (VehicleVariant v : r.catalog().variants(year, make, model, search)) {
-            out.add(Mapping.variant(v));
-          }
-          return List.copyOf(out);
-        });
-  }
-
-  public List<WorkRow> works(long owner, long vehicle, WorkCategory category) {
-    return tx.read(
-        r -> {
-          Vehicle v = r.vehicles().requireOwned(owner, vehicle);
-          return workRows(r, v.getVariant().getId(), category);
-        });
-  }
-
-  public List<WorkRow> onboardingWorks(long variant, WorkCategory category) {
-    return tx.read(
-        r -> {
-          r.catalog().variant(variant);
-          return workRows(r, variant, category);
-        });
-  }
-
-  static List<WorkRow> workRows(Repositories r, long variant, WorkCategory category) {
-    Map<Long, VehicleWorkRule> rules = new HashMap<>();
-    for (VehicleWorkRule rule : r.catalog().rules(variant)) {
-      rules.put(rule.getWork().getId(), rule);
+    public CatalogService(TransactionRunner transactions) {
+        this.transactions = transactions;
     }
-    List<WorkRow> out = new ArrayList<>();
-    for (WorkDefinition w : r.catalog().works(category)) {
-      VehicleWorkRule rule = rules.get(w.getId());
-      if (rule == null && !w.getCode().startsWith("OTHER_")) {
-        continue;
-      }
-      boolean specific = rule != null && rule.getEstimatedPrice() != null;
-      out.add(
-          new WorkRow(
-              w.getId(),
-              w.getCode(),
-              w.getName(),
-              w.getCategory(),
-              specific ? rule.getEstimatedPrice() : null,
-              rule != null ? rule.getEstimateNote() : w.getEstimateNote()));
+
+    public List<String> makes(int year) {
+        return transactions.read(
+                repositories -> repositories.catalog().makes(year));
     }
-    return List.copyOf(out);
-  }
+
+    public List<String> models(
+            int year,
+            String make) {
+
+        return transactions.read(
+                repositories ->
+                        repositories.catalog().models(year, make));
+    }
+
+    public List<VariantRow> variants(
+            int year,
+            String make,
+            String model,
+            String search) {
+
+        return transactions.read(repositories -> {
+            List<VariantRow> rows = new ArrayList<>();
+
+            for (VehicleVariant variant
+                    : repositories.catalog().variants(
+                            year,
+                            make,
+                            model,
+                            search)) {
+
+                rows.add(Mapping.variant(variant));
+            }
+
+            return rows;
+        });
+    }
+
+    public List<WorkRow> works(
+            long ownerId,
+            long vehicleId,
+            WorkCategory category) {
+
+        return transactions.read(repositories -> {
+            Vehicle vehicle =
+                    repositories.vehicles()
+                            .requireOwned(ownerId, vehicleId);
+
+            return workRows(
+                    repositories,
+                    vehicle.getVariant().getId(),
+                    category);
+        });
+    }
+
+    public List<WorkRow> onboardingWorks(
+            long variantId,
+            WorkCategory category) {
+
+        return transactions.read(repositories -> {
+            repositories.catalog().variant(variantId);
+            return workRows(repositories, variantId, category);
+        });
+    }
+
+    static List<WorkRow> workRows(
+            Repositories repositories,
+            long variantId,
+            WorkCategory category) {
+
+        Map<Long, VehicleWorkRule> rules = new HashMap<>();
+
+        for (VehicleWorkRule rule
+                : repositories.catalog().rules(variantId)) {
+
+            rules.put(rule.getWork().getId(), rule);
+        }
+
+        List<WorkRow> rows = new ArrayList<>();
+
+        for (WorkDefinition work
+                : repositories.catalog().works(category)) {
+
+            VehicleWorkRule rule = rules.get(work.getId());
+
+            if (!appliesWithoutSpecificRule(work, rule)) {
+                continue;
+            }
+
+            BigDecimal price;
+            String priceNote;
+
+            if (rule != null) {
+                price = rule.getEstimatedPrice();
+                priceNote = rule.getEstimateNote();
+            } else {
+                price = work.getDefaultEstimatedPrice();
+                priceNote = work.getEstimateNote();
+            }
+
+            rows.add(
+                    new WorkRow(
+                            work.getId(),
+                            work.getCode(),
+                            work.getName(),
+                            work.getCategory(),
+                            price,
+                            priceNote));
+        }
+
+        return rows;
+    }
+
+    /**
+     * Ako nema specifiÄnog pravila, WorkDefinition se koristi samo kada
+     * stvarno ima neku zadanu vrijednost ili predstavlja ruÄni OTHER unos.
+     */
+    private static boolean appliesWithoutSpecificRule(
+            WorkDefinition work,
+            VehicleWorkRule rule) {
+
+        if (rule != null) {
+            return true;
+        }
+
+        if (work.getCode().startsWith("OTHER_")) {
+            return true;
+        }
+
+        return work.getDefaultIntervalKm() != null
+                || work.getDefaultIntervalMonths() != null
+                || work.getDefaultEstimatedPrice() != null;
+    }
 }
