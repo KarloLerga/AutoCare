@@ -1,6 +1,6 @@
 # Actual Java type and API catalogue - AF3
 
-86 production source files. Paths refer to project root. Public/protected signatures below are extracted from actual source, not an invented implementation plan. Package responsibilities/dependencies and entity fields are explained in ARCHITECTURE_FREEZE_AF3.md and DATABASE_AND_JPA.md.
+79 production source files. Paths refer to project root. Public/protected signatures below are extracted from actual source, not an invented implementation plan. Package responsibilities/dependencies and entity fields are explained in ARCHITECTURE_FREEZE_AF3.md and DATABASE_AND_JPA.md. Setup-only APIs live in the independent `tools/setup` artifact and are listed with their setup paths below.
 
 ## hr.unizd.autocare.app.DatabaseConfig
 
@@ -9,7 +9,7 @@ File: `src/main/java/hr/unizd/autocare/app/DatabaseConfig.java`
 Declared types: DatabaseConfig
 
 ```java
-public static EntityManagerFactory open(String schemaAction, boolean test) {
+public static EntityManagerFactory open() {
 ```
 ## hr.unizd.autocare.app.Main
 
@@ -47,16 +47,12 @@ File: `src/main/java/hr/unizd/autocare/app/SqlSettings.java`
 Declared types: SqlSettings
 
 ```java
-public static SqlSettings environment(boolean test) {
-public static SqlSettings discovery() {
-public static SqlSettings from(Map<String,String> env, boolean test, boolean discovery) {
-public String database() { return database; }
-public String host() { return host; }
-public String user() { return user; }
-public String password() { return password; }
-public String url() {
-public Connection connect(boolean importer) throws SQLException {
-public void requireSchemaConsent(Map<String,String> env) {
+public static SqlSettings fromEnvironment() {
+public static SqlSettings from(Map<String,String> environment) {
+public String getJdbcUrl() {
+public String getUsername() {
+public String getPassword() {
+public String getDatabase() {
 ```
 
 ## hr.unizd.autocare.controller.AuthController
@@ -315,30 +311,30 @@ Declared types: ServiceRecord
 
 ```java
 protected ServiceRecord() {
-public ServiceRecord(Vehicle vehicle, String key, LocalDate date, int mileage, String note) {
+public ServiceRecord(Vehicle vehicle, String requestKey, LocalDate serviceDate, int mileage, String note) {
 public void addItem(WorkDefinition work, BigDecimal actualPrice) {
 public CostSummary total() {
 public Long getId() {
 public Vehicle getVehicle() {
 public String getRequestKey() {
-public LocalDate getDate() {
+public LocalDate getServiceDate() {
 public int getMileage() {
 public String getNote() {
 public List<ServiceItem> getItems() {
 ```
 
-## hr.unizd.autocare.domain.User
+## hr.unizd.autocare.domain.AppUser
 
-File: `src/main/java/hr/unizd/autocare/domain/User.java`
+File: `src/main/java/hr/unizd/autocare/domain/AppUser.java`
 
-Declared types: User
+Declared types: AppUser
 
 ```java
-protected User() {
-public User(String name, String email, String hash) {
+protected AppUser() {
+public AppUser(String name, String email, String passwordHash) {
 public void activate(Vehicle vehicle) {
 public void changeProfile(String name, String email) {
-public void changePasswordHash(String hash) {
+public void changePasswordHash(String passwordHash) {
 public Long getId() {
 public long getVersion() {
 public String getName() {
@@ -355,14 +351,14 @@ Declared types: Vehicle
 
 ```java
 protected Vehicle() {
-public Vehicle(User owner, VehicleVariant variant, int year, int mileage) {
-public void changeIdentity(VehicleVariant variant, int year) {
+public Vehicle(AppUser owner, VehicleVariant variant, int productionYear, int mileage) {
+public void changeIdentity(VehicleVariant variant, int productionYear) {
 public void updateMileage(int mileage) {
 public Long getId() {
 public long getVersion() {
-public User getOwner() {
+public AppUser getOwner() {
 public VehicleVariant getVariant() {
-public int getYear() {
+public int getProductionYear() {
 public int getCurrentMileage() {
 ```
 
@@ -400,8 +396,7 @@ Declared types: VehicleWorkRule
 
 ```java
 protected VehicleWorkRule() {
-public VehicleWorkRule(VehicleVariant variant, WorkDefinition work, Integer km, Integer months, BigDecimal price, String intervalSource, String estimateNote) {
-public void revise(Integer km, Integer months, BigDecimal price, String source, String priceNote) {
+public VehicleWorkRule(VehicleVariant variant, WorkDefinition work, Integer intervalKm, Integer intervalMonths, BigDecimal estimatedPrice, String intervalSource, String estimateNote) {
 public Long getId() {
 public VehicleVariant getVariant() {
 public WorkDefinition getWork() {
@@ -668,10 +663,10 @@ Declared types: JpaUserRepository
 
 ```java
 public JpaUserRepository(EntityManager em) {
-public Optional<User> byEmail(String email) {
-public User require(long id) {
-public User lock(long id) {
-public void add(User u) {
+public Optional<AppUser> byEmail(String email) {
+public AppUser require(long id) {
+public AppUser lock(long id) {
+public void add(AppUser u) {
 ```
 
 ## hr.unizd.autocare.persistence.JpaVehicleRepository
@@ -908,9 +903,9 @@ Declared types: KeywordDiagnosticStrategy
 public static String normalize(String value) {
 ```
 
-## hr.unizd.autocare.tools.CsvReader
+## hr.unizd.autocare.tools.CsvReader (setup artifact)
 
-File: `src/main/java/hr/unizd/autocare/tools/CsvReader.java`
+File: `tools/setup/src/main/java/hr/unizd/autocare/tools/CsvReader.java`
 
 Declared types: CsvReader
 
@@ -919,19 +914,20 @@ public CsvReader(Reader reader) {
 public List<String> readRow()throws IOException {
 ```
 
-## hr.unizd.autocare.tools.DatabaseTool
+## hr.unizd.autocare.tools.DatabaseTool (setup artifact)
 
-File: `src/main/java/hr/unizd/autocare/tools/DatabaseTool.java`
+File: `tools/setup/src/main/java/hr/unizd/autocare/tools/DatabaseTool.java`
 
 Declared types: DatabaseTool
 
 ```java
+public static void main(String[] args) {
 public static void run(String[] args) {
 ```
 
-## hr.unizd.autocare.tools.DevelopmentSeed
+## hr.unizd.autocare.tools.DevelopmentSeed (setup artifact)
 
-File: `src/main/java/hr/unizd/autocare/tools/DevelopmentSeed.java`
+File: `tools/setup/src/main/java/hr/unizd/autocare/tools/DevelopmentSeed.java`
 
 Declared types: DevelopmentSeed
 
@@ -940,9 +936,9 @@ public static void core(EntityManager em) {
 public static void demo(EntityManager em) {
 ```
 
-## hr.unizd.autocare.tools.ImagePathTool
+## hr.unizd.autocare.tools.ImagePathTool (setup artifact)
 
-File: `src/main/java/hr/unizd/autocare/tools/ImagePathTool.java`
+File: `tools/setup/src/main/java/hr/unizd/autocare/tools/ImagePathTool.java`
 
 Declared types: ImagePathTool
 
@@ -950,9 +946,9 @@ Declared types: ImagePathTool
 public static void run(String[] args) {
 ```
 
-## hr.unizd.autocare.tools.ReviewedIntervalTool
+## hr.unizd.autocare.tools.ReviewedIntervalTool (setup artifact)
 
-File: `src/main/java/hr/unizd/autocare/tools/ReviewedIntervalTool.java`
+File: `tools/setup/src/main/java/hr/unizd/autocare/tools/ReviewedIntervalTool.java`
 
 Declared types: ReviewedIntervalTool
 
@@ -960,9 +956,9 @@ Declared types: ReviewedIntervalTool
 public static void run(String[] args) {
 ```
 
-## hr.unizd.autocare.tools.SeedFiles
+## hr.unizd.autocare.tools.SeedFiles (setup artifact)
 
-File: `src/main/java/hr/unizd/autocare/tools/SeedFiles.java`
+File: `tools/setup/src/main/java/hr/unizd/autocare/tools/SeedFiles.java`
 
 Declared types: SeedFiles
 
@@ -975,9 +971,9 @@ public static Integer integer(Map<String,String> row,String key,int min,int max)
 public static BigDecimal price(Map<String,String> row,String key) {
 ```
 
-## hr.unizd.autocare.tools.SqlSeedTool
+## hr.unizd.autocare.tools.SqlSeedTool (setup artifact)
 
-File: `src/main/java/hr/unizd/autocare/tools/SqlSeedTool.java`
+File: `tools/setup/src/main/java/hr/unizd/autocare/tools/SqlSeedTool.java`
 
 Declared types: SqlSeedTool, BatchFailure
 

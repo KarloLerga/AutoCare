@@ -9,12 +9,12 @@ Preciznost cijena nije izmjerena. Cijena ukljucuje modelirane dijelove, rad i po
 ## Jedan Java importer
 Iz KORIJENA projekta, nakon Hibernate schema-update i validate:
 ```powershell
-java -Xmx768m -jar target/autocare-1.0.0.jar seed-validate tools/reference-data/data
+java -Xmx768m -jar tools/setup/target/autocare-setup-1.0.0.jar seed-validate tools/reference-data/data
 # Bez --apply seed-all je offline DRY RUN.
-java -Xmx768m -jar target/autocare-1.0.0.jar seed-all tools/reference-data/data
+java -Xmx768m -jar tools/setup/target/autocare-setup-1.0.0.jar seed-all tools/reference-data/data
 # AUTOCARE_DB_* ucitati lokalno; exact target potvrda:
 $env:AUTOCARE_SEED_TARGET=$env:AUTOCARE_DB_NAME
-java -Xmx768m -jar target/autocare-1.0.0.jar seed-all tools/reference-data/data --apply --acknowledge-model-estimates --with-diagnostics
+java -Xmx768m -jar tools/setup/target/autocare-setup-1.0.0.jar seed-all tools/reference-data/data --apply --acknowledge-model-estimates --with-diagnostics
 ```
 `data/sample` je8varijanti/403pravila za prvi test. Poslije toga puni uvoz preskace postojece kljuceve. `--plain-jdbc` iskljucuje driver bulk-copy optimizaciju radi usporednog testiranja, ne validacije/TLS. SeedFiles cita gzip CSV streamingom. SHA256 dokaz je integriteta isporuke, ne tocnosti automobilskog podatka.
 
@@ -27,8 +27,8 @@ Uvoz: jedno povezivanje -> provjera cilja/sheme -> session application lock -> #
 
 Za mali pregledani intervalni patch koristi `config/reviewed_intervals.template.csv`. Svaki red mora imati stvarni izvor/review datum/pregledavatelja/APPROVED i potvrdu da vrijedi za CIJELI raspon kataloske varijante. Ako vrijedi samo za dio godina, ne oznaciti YES i ne primijeniti na cijelu varijantu; ne siriti model naslijepo. Tada ga zadrzati kao review candidate.
 ```powershell
-java -jar target/autocare-1.0.0.jar import-intervals C:\reviewed\intervals.csv
-java -jar target/autocare-1.0.0.jar import-intervals C:\reviewed\intervals.csv --apply
+java -jar tools/setup/target/autocare-setup-1.0.0.jar import-intervals C:\reviewed\intervals.csv
+java -jar tools/setup/target/autocare-setup-1.0.0.jar import-intervals C:\reviewed\intervals.csv --apply
 ```
 Ova naredba NIKAD ne mijenja cijenu. Konflikt postojeceg intervala trazi pregled; `--replace-interval-only` je izricita zamjena samo intervalnih polja. Stari `import-rules --replace-existing` zamjenjuje cijeli red i nije preporucen za cisti intervalni patch.
 

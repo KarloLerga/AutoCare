@@ -1,143 +1,200 @@
-# Azure SQL / JPA field and relation contract - AF3
+# Konacna pravila imenovanja i JPA ugovor
 
-Source of truth: actual entity annotations plus this AF3 decision. Hibernate creates dbo tables in an EXISTING database. A successful real provider validate is still required. SQL names are not MySQL aliases. Long @Version is BIGINT, NOT SQL Server rowversion. Text uses nationalized character data; enum strings may use VARCHAR as selected by the dialect. LocalDateTime is datetime2, with provider-selected precision.
+## 1. Odluka, ne univerzalni standard
 
-## User -> dbo.app_user
+Za ovaj novi studentski projekt biramo PascalCase tablice i camelCase osnovne stupce koji su jednaki
+Java imenima. I snake_case bi bio valjan timski izbor; ne tvrdimo da je ovaj stil opcenito jedini najbolji.
+Ovdje smanjuje eksplicitne razlike bez dodatne naming strategije ili nestandardnih Java snake_case polja.
 
-| Java field | SQL column/type | Null | Mapping |
-|---|---|---|---|
-| `id` (Long) | `id` BIGINT IDENTITY PRIMARY KEY | NO | `@Id @GeneratedValue(strategy=GenerationType.IDENTITY)` |
-| `version` (long) | `version` BIGINT | NO | `@Version @Column(nullable=false)` |
-| `name` (String) | `name` NVARCHAR(100) | NO | `@Column(nullable=false,length=100)` |
-| `email` (String) | `email` NVARCHAR(254) | NO | `@Column(nullable=false,unique=true,length=254)` |
-| `passwordHash` (String) | `password_hash` NVARCHAR(255) | NO | `@Column(name="password_hash",nullable=false,length=255)` |
-| `activeVehicle` (Vehicle) | `active_vehicle_id` BIGINT FK | YES | `@ManyToOne(fetch=FetchType.LAZY) @JoinColumn(name="active_vehicle_id")` |
+Standardna Hibernate fizicka strategija zadrzava logicka imena. Ne postoji Spring Boot snake-case
+konfiguracija koja se moze pretpostaviti u ovom obicnom JPA projektu. Provjeri da lokalno nije uveden
+dodatni override. Izvore pogledaj u SOURCES.md (JPA Column/Table/JoinColumn i Hibernate naming).
 
-## VehicleVariant -> dbo.vehicle_variant
+### Razlika izmedu scalar polja i veze
 
-| Java field | SQL column/type | Null | Mapping |
-|---|---|---|---|
-| `id` (Long) | `id` BIGINT IDENTITY PRIMARY KEY | NO | `@Id @GeneratedValue(strategy=GenerationType.IDENTITY)` |
-| `code` (String) | `code` NVARCHAR(80) | NO | `@Column(nullable=false,unique=true,length=80)` |
-| `make` (String) | `make` NVARCHAR(100) | NO | `@Column(nullable=false,length=100)` |
-| `model` (String) | `model` NVARCHAR(150) | NO | `@Column(nullable=false,length=150)` |
-| `generation` (String) | `generation` NVARCHAR(200) | NO | `@Column(nullable=false,length=200)` |
-| `engineLabel` (String) | `engine_label` NVARCHAR(240) | NO | `@Column(name="engine_label",nullable=false,length=240)` |
-| `bodyType` (String) | `body_type` NVARCHAR(100) | YES | `@Column(name="body_type",length=100)` |
-| `fuelType` (String) | `fuel_type` NVARCHAR(80) | YES | `@Column(name="fuel_type",length=80)` |
-| `powerHp` (Integer) | `power_hp` INT | YES | `@Column(name="power_hp")` |
-| `transmission` (String) | `transmission` NVARCHAR(120) | YES | `@Column(length=120)` |
-| `yearFrom` (int) | `year_from` INT | NO | `@Column(name="year_from",nullable=false)` |
-| `yearTo` (Integer) | `year_to` INT | YES | `@Column(name="year_to")` |
-| `imagePath` (String) | `image_path` NVARCHAR(255) | YES | `@Column(name="image_path",length=255)` |
+```java
+// Scalar polje: stupac se zove imagePath, standardna nullable/duljina odgovara ugovoru.
+private String imagePath;
 
-## Vehicle -> dbo.vehicle
+// Isti naziv currentMileage, ali NOT NULL je namjerno ogranicenje i ostaje vidljivo.
+@Column(nullable = false)
+private int currentMileage;
 
-| Java field | SQL column/type | Null | Mapping |
-|---|---|---|---|
-| `id` (Long) | `id` BIGINT IDENTITY PRIMARY KEY | NO | `@Id @GeneratedValue(strategy=GenerationType.IDENTITY)` |
-| `version` (long) | `version` BIGINT | NO | `@Version @Column(nullable=false)` |
-| `owner` (User) | `owner_id` BIGINT FK | NO | `@ManyToOne(fetch=FetchType.LAZY,optional=false) @JoinColumn(name="owner_id",nullable=false)` |
-| `variant` (VehicleVariant) | `variant_id` BIGINT FK | NO | `@ManyToOne(fetch=FetchType.LAZY,optional=false) @JoinColumn(name="variant_id",nullable=false)` |
-| `year` (int) | `production_year` INT | NO | `@Column(name="production_year",nullable=false)` |
-| `currentMileage` (int) | `current_mileage` INT | NO | `@Column(name="current_mileage",nullable=false)` |
+// Isti naziv actualPrice, ali preciznost decimalnog iznosa ne treba prepustiti provider defaultu.
+@Column(precision = 9, scale = 2)
+private BigDecimal actualPrice;
 
-## WorkDefinition -> dbo.work_definition
+// Veza: objekt u Javi, FK variant_id u bazi. Nema duplog Long variantId polja.
+@ManyToOne(fetch = FetchType.LAZY, optional = false)
+@JoinColumn(nullable = false)
+private VehicleVariant variant;
+```
 
-| Java field | SQL column/type | Null | Mapping |
-|---|---|---|---|
-| `id` (Long) | `id` BIGINT IDENTITY PRIMARY KEY | NO | `@Id @GeneratedValue(strategy=GenerationType.IDENTITY)` |
-| `code` (String) | `code` NVARCHAR(80) | NO | `@Column(nullable=false,unique=true,length=80)` |
-| `name` (String) | `name` NVARCHAR(160) | NO | `@Column(nullable=false,length=160)` |
-| `category` (WorkCategory) | `category` WorkCategory STRING | NO | `@Enumerated(EnumType.STRING) @Column(nullable=false,length=20)` |
-| `defaultEstimatedPrice` (BigDecimal) | `default_estimated_price` DECIMAL(9,2) | YES | `@Column(name="default_estimated_price",precision=9,scale=2)` |
-| `estimateNote` (String) | `estimate_note` NVARCHAR(1000) | YES | `@Column(name="estimate_note",length=1000)` |
+`@Id` ne ukljucuje automatski sve ostale postavke i Java sama ne stvara bazu.
+`@Column` bez name uzima naziv polja, ali anotacija jos moze opisivati druge namjerne osobine.
+JPA `optional=false` moze sluziti provideru da izvede NOT NULL; referenca radi sigurnosti zadrzava
+JoinColumn(nullable=false) dok stvarni provider/schema test ne dokaze da je to redundantno.
 
-## VehicleWorkRule -> dbo.vehicle_work_rule
+Jednake nazive s razlicitim velikim/malim slovima ne treba koristiti kao dvije tablice na SQL Serveru.
+Promjena `vehicle` u `Vehicle` je kozmeticka case-only promjena; parser/DB kolacija moraju biti provjereni.
+Za `User` ne uvodimo posebni quoted keyword: domenska klasa i tablica postaju `AppUser`.
 
-| Java field | SQL column/type | Null | Mapping |
-|---|---|---|---|
-| `id` (Long) | `id` BIGINT IDENTITY PRIMARY KEY | NO | `@Id @GeneratedValue(strategy=GenerationType.IDENTITY)` |
-| `variant` (VehicleVariant) | `variant_id` BIGINT FK | NO | `@ManyToOne(fetch=FetchType.LAZY,optional=false) @JoinColumn(name="variant_id",nullable=false)` |
-| `work` (WorkDefinition) | `work_id` BIGINT FK | NO | `@ManyToOne(fetch=FetchType.LAZY,optional=false) @JoinColumn(name="work_id",nullable=false)` |
-| `intervalKm` (Integer) | `interval_km` INT | YES | `@Column(name="interval_km")` |
-| `scheduleKind` (ScheduleKind) | `schedule_kind` ScheduleKind STRING | NO | `@Enumerated(EnumType.STRING) @Column(name="schedule_kind",nullable=false,length=24)` |
-| `intervalMonths` (Integer) | `interval_months` INT | YES | `@Column(name="interval_months")` |
-| `estimatedPrice` (BigDecimal) | `estimated_price` DECIMAL(9,2) | YES | `@Column(name="estimated_price",precision=9,scale=2)` |
-| `intervalSource` (String) | `interval_source` NVARCHAR(1000) | YES | `@Column(name="interval_source",length=1000)` |
-| `estimateNote` (String) | `estimate_note` NVARCHAR(1000) | YES | `@Column(name="estimate_note",length=1000)` |
+## 2. Tablice
 
-## ServiceRecord -> dbo.service_record
+| Java prije | Java poslije / SQL tablica u dbo | SQL prije |
+|---|---|---|
+| User | AppUser | app_user |
+| VehicleVariant | VehicleVariant | vehicle_variant |
+| Vehicle | Vehicle | vehicle |
+| WorkDefinition | WorkDefinition | work_definition |
+| VehicleWorkRule | VehicleWorkRule | vehicle_work_rule |
+| ServiceRecord | ServiceRecord | service_record |
+| ServiceItem | ServiceItem | service_item |
+| Problem | Problem | problem |
+| DiagnosticRule | DiagnosticRule | diagnostic_rule |
 
-| Java field | SQL column/type | Null | Mapping |
-|---|---|---|---|
-| `id` (Long) | `id` BIGINT IDENTITY PRIMARY KEY | NO | `@Id @GeneratedValue(strategy=GenerationType.IDENTITY)` |
-| `vehicle` (Vehicle) | `vehicle_id` BIGINT FK | NO | `@ManyToOne(fetch=FetchType.LAZY,optional=false) @JoinColumn(name="vehicle_id",nullable=false)` |
-| `requestKey` (String) | `request_key` NVARCHAR(36) | NO | `@Column(name="request_key",nullable=false,unique=true,length=36)` |
-| `date` (LocalDate) | `service_date` DATE | NO | `@Column(name="service_date",nullable=false)` |
-| `mileage` (int) | `mileage` INT | NO | `@Column(nullable=false)` |
-| `note` (String) | `note` NVARCHAR(2000) | YES | `@Column(length=2000)` |
-| items | No column on this side | - | inverse mappedBy=serviceRecord, cascade ALL, orphanRemoval |
+## 3. Potpuni inventory persistentnih stupaca
 
-## ServiceItem -> dbo.service_item
+Tipovi i nullability uzeti su iz pregledanih Java anotacija, ne iz live Azure metapodataka.
+NVARCHAR duljine, DECIMAL, DATE/DATETIME2/BIT i identity treba potvrditi stvarnim Hibernate SQL DDL-om.
+Popis ne ukljucuje inverse `ServiceRecord.items`, jer nema svoj stupac u ServiceRecord tablici.
+Podaci i ID-evi ostaju isti; ovo nije specifikacija za rebuild postojece baze.
 
-| Java field | SQL column/type | Null | Mapping |
-|---|---|---|---|
-| `id` (Long) | `id` BIGINT IDENTITY PRIMARY KEY | NO | `@Id @GeneratedValue(strategy=GenerationType.IDENTITY)` |
-| `serviceRecord` (ServiceRecord) | `service_record_id` BIGINT FK | NO | `@ManyToOne(fetch=FetchType.LAZY,optional=false) @JoinColumn(name="service_record_id",nullable=false)` |
-| `work` (WorkDefinition) | `work_id` BIGINT FK | NO | `@ManyToOne(fetch=FetchType.LAZY,optional=false) @JoinColumn(name="work_id",nullable=false)` |
-| `actualPrice` (BigDecimal) | `actual_price` DECIMAL(9,2) | YES | `@Column(name="actual_price",precision=9,scale=2)` |
+### AppUser
 
-## Problem -> dbo.problem
+| Java atribut poslije | SQL prije | SQL poslije | Tip u Javi | NULL | Dodatan ugovor |
+|---|---|---|---|---|---|
+| id | id | id | Long | NE | PK; IDENTITY |
+| version | version | version | long | NE | @Version |
+| name | name | name | String | NE | length=100 |
+| email | email | email | String | NE | UNIQUE; length=254 |
+| passwordHash | password_hash | passwordHash | String | NE | length=255 |
+| activeVehicle | active_vehicle_id | activeVehicle_id | Vehicle | DA | FK; LAZY |
 
-| Java field | SQL column/type | Null | Mapping |
-|---|---|---|---|
-| `id` (Long) | `id` BIGINT IDENTITY PRIMARY KEY | NO | `@Id @GeneratedValue(strategy=GenerationType.IDENTITY)` |
-| `version` (long) | `version` BIGINT | NO | `@Version @Column(nullable=false)` |
-| `vehicle` (Vehicle) | `vehicle_id` BIGINT FK | NO | `@ManyToOne(fetch=FetchType.LAZY,optional=false) @JoinColumn(name="vehicle_id",nullable=false)` |
-| `requestKey` (String) | `request_key` NVARCHAR(36) | NO | `@Column(name="request_key",nullable=false,unique=true,length=36)` |
-| `description` (String) | `description` NVARCHAR(2000) | NO | `@Column(nullable=false,length=2000)` |
-| `status` (ProblemStatus) | `status` ProblemStatus STRING | NO | `@Enumerated(EnumType.STRING) @Column(nullable=false,length=20)` |
-| `createdAt` (LocalDateTime) | `created_at` DATETIME2 | NO | `@Column(name="created_at",nullable=false)` |
-| `suggestedRepair` (WorkDefinition) | `suggested_repair_id` BIGINT FK | YES | `@ManyToOne(fetch=FetchType.LAZY) @JoinColumn(name="suggested_repair_id")` |
-| `matchPercent` (BigDecimal) | `match_percent` DECIMAL(5,2) | YES | `@Column(name="match_percent",precision=5,scale=2)` |
-| `estimatedCost` (BigDecimal) | `estimated_cost` DECIMAL(9,2) | YES | `@Column(name="estimated_cost",precision=9,scale=2)` |
-| `estimateNote` (String) | `estimate_note` NVARCHAR(1000) | YES | `@Column(name="estimate_note",length=1000)` |
-| `resolvedByService` (ServiceRecord) | `resolved_by_service_id` BIGINT FK | YES | `@ManyToOne(fetch=FetchType.LAZY) @JoinColumn(name="resolved_by_service_id")` |
+### VehicleVariant
 
-## DiagnosticRule -> dbo.diagnostic_rule
+| Java atribut poslije | SQL prije | SQL poslije | Tip u Javi | NULL | Dodatan ugovor |
+|---|---|---|---|---|---|
+| id | id | id | Long | NE | PK; IDENTITY |
+| code | code | code | String | NE | UNIQUE; length=80 |
+| make | make | make | String | NE | length=100 |
+| model | model | model | String | NE | length=150 |
+| generation | generation | generation | String | NE | length=200 |
+| engineLabel | engine_label | engineLabel | String | NE | length=240 |
+| bodyType | body_type | bodyType | String | DA | length=100 |
+| fuelType | fuel_type | fuelType | String | DA | length=80 |
+| powerHp | power_hp | powerHp | Integer | DA |  |
+| transmission | transmission | transmission | String | DA | length=120 |
+| yearFrom | year_from | yearFrom | int | NE |  |
+| yearTo | year_to | yearTo | Integer | DA |  |
+| imagePath | image_path | imagePath | String | DA | length=255 |
 
-| Java field | SQL column/type | Null | Mapping |
-|---|---|---|---|
-| `id` (Long) | `id` BIGINT IDENTITY PRIMARY KEY | NO | `@Id @GeneratedValue(strategy=GenerationType.IDENTITY)` |
-| `code` (String) | `code` NVARCHAR(80) | NO | `@Column(nullable=false,unique=true,length=80)` |
-| `candidate` (WorkDefinition) | `candidate_id` BIGINT FK | NO | `@ManyToOne(fetch=FetchType.LAZY,optional=false) @JoinColumn(name="candidate_id",nullable=false)` |
-| `phrase` (String) | `phrase` NVARCHAR(160) | NO | `@Column(nullable=false,length=160)` |
-| `weight` (int) | `weight` INT | NO | `@Column(nullable=false)` |
-| `active` (boolean) | `active` BIT | NO | `@Column(nullable=false)` |
+### Vehicle
 
-## Relacije
+| Java atribut poslije | SQL prije | SQL poslije | Tip u Javi | NULL | Dodatan ugovor |
+|---|---|---|---|---|---|
+| id | id | id | Long | NE | PK; IDENTITY |
+| version | version | version | long | NE | @Version |
+| owner | owner_id | owner_id | AppUser | NE | FK; LAZY |
+| variant | variant_id | variant_id | VehicleVariant | NE | FK; LAZY |
+| productionYear | production_year | productionYear | int | NE |  |
+| currentMileage | current_mileage | currentMileage | int | NE |  |
 
-| Owning side / FK | Target | Fetch | Cascade/delete |
-|---|---|---|---|
-| User.activeVehicle / active_vehicle_id nullable, NOT UNIQUE | Vehicle | LAZY | None. Ownership enforced by service/domain; nullable only during onboarding or explicit deletion choreography. |
-| Vehicle.owner / owner_id | User | LAZY | None; owner row locked before authenticated writes. |
-| Vehicle.variant / variant_id | VehicleVariant | LAZY | Never cascade catalog deletion. |
-| ServiceRecord.vehicle / vehicle_id | Vehicle | LAZY | None. |
-| ServiceItem.serviceRecord / service_record_id | ServiceRecord | LAZY | Owning side; parent items inverse mappedBy, only real ALL + orphanRemoval collection. |
-| ServiceItem.work / work_id | WorkDefinition | LAZY | None, preserve catalog/history. |
-| VehicleWorkRule.variant / variant_id and work / work_id | VehicleVariant, WorkDefinition | LAZY | None; UNIQUE pair. |
-| Problem.vehicle / vehicle_id | Vehicle | LAZY | None. |
-| Problem.suggestedRepair / suggested_repair_id nullable | WorkDefinition | LAZY | None; candidate must REPAIR. |
-| Problem.resolvedByService / resolved_by_service_id nullable | ServiceRecord | LAZY | None; one service can resolve many problems. |
-| DiagnosticRule.candidate / candidate_id | WorkDefinition | LAZY | None; REPAIR only in domain/import validation. |
+### WorkDefinition
 
-FK delete actions are not a replacement for JPA cascade or service choreography. Delete vehicle: lock owner -> enforce not last -> switch active if needed -> delete problems -> items -> records -> vehicle. No deleting shared catalogs. No ManyToMany. No inverse User.vehicles/Vehicle.history collections just for symmetry.
+| Java atribut poslije | SQL prije | SQL poslije | Tip u Javi | NULL | Dodatan ugovor |
+|---|---|---|---|---|---|
+| id | id | id | Long | NE | PK; IDENTITY |
+| code | code | code | String | NE | UNIQUE; length=80 |
+| name | name | name | String | NE | length=160 |
+| category | category | category | WorkCategory | NE | length=20; EnumType.STRING |
+| defaultEstimatedPrice | default_estimated_price | defaultEstimatedPrice | BigDecimal | DA | decimal(9,2) |
+| estimateNote | estimate_note | estimateNote | String | DA | length=1000 |
 
-## Constraints and generation
+### VehicleWorkRule
 
-Unique: canonical email; catalog/work/diagnostic code; service/problem request_key; (variant_id,work_id); (service_record_id,work_id). All declared indexes remain. Hibernate and database enforce FK/unique/null/type boundaries. Cross-row ownership, at-least-one-vehicle, nonempty service, repair classification and schedule semantics are additionally service/domain invariants; do not pretend all are expressible as simple SQL CHECKs.
+| Java atribut poslije | SQL prije | SQL poslije | Tip u Javi | NULL | Dodatan ugovor |
+|---|---|---|---|---|---|
+| id | id | id | Long | NE | PK; IDENTITY |
+| variant | variant_id | variant_id | VehicleVariant | NE | FK; LAZY |
+| work | work_id | work_id | WorkDefinition | NE | FK; LAZY |
+| intervalKm | interval_km | intervalKm | Integer | DA |  |
+| scheduleKind | schedule_kind | scheduleKind | ScheduleKind | NE | length=24; EnumType.STRING |
+| intervalMonths | interval_months | intervalMonths | Integer | DA |  |
+| estimatedPrice | estimated_price | estimatedPrice | BigDecimal | DA | decimal(9,2) |
+| intervalSource | interval_source | intervalSource | String | DA | length=1000 |
+| estimateNote | estimate_note | estimateNote | String | DA | length=1000 |
 
-New database: explicit schema-update, then validate. An existing earlier SQL Server schema may require an explicit reviewed data backfill before making schedule_kind NOT NULL: FIXED when interval_km or interval_months exists, CONDITION_BASED for repairs, otherwise UNKNOWN. Do not run MySQL DDL. Do not drop data to fix migration errors. For this delivery no schema change has actually been executed on Azure.
+### ServiceRecord
 
-Physical ERD active FK allows multiple referencing user rows because there is no UNIQUE. The stricter logical ownership relation is enforced by the application; domain cardinality is not misrepresented as a database unique constraint.
+| Java atribut poslije | SQL prije | SQL poslije | Tip u Javi | NULL | Dodatan ugovor |
+|---|---|---|---|---|---|
+| id | id | id | Long | NE | PK; IDENTITY |
+| vehicle | vehicle_id | vehicle_id | Vehicle | NE | FK; LAZY |
+| requestKey | request_key | requestKey | String | NE | UNIQUE; length=36 |
+| serviceDate | service_date | serviceDate | LocalDate | NE |  |
+| mileage | mileage | mileage | int | NE |  |
+| note | note | note | String | DA | length=2000 |
+
+### ServiceItem
+
+| Java atribut poslije | SQL prije | SQL poslije | Tip u Javi | NULL | Dodatan ugovor |
+|---|---|---|---|---|---|
+| id | id | id | Long | NE | PK; IDENTITY |
+| serviceRecord | service_record_id | serviceRecord_id | ServiceRecord | NE | FK; LAZY |
+| work | work_id | work_id | WorkDefinition | NE | FK; LAZY |
+| actualPrice | actual_price | actualPrice | BigDecimal | DA | decimal(9,2) |
+
+### Problem
+
+| Java atribut poslije | SQL prije | SQL poslije | Tip u Javi | NULL | Dodatan ugovor |
+|---|---|---|---|---|---|
+| id | id | id | Long | NE | PK; IDENTITY |
+| version | version | version | long | NE | @Version |
+| vehicle | vehicle_id | vehicle_id | Vehicle | NE | FK; LAZY |
+| requestKey | request_key | requestKey | String | NE | UNIQUE; length=36 |
+| description | description | description | String | NE | length=2000 |
+| status | status | status | ProblemStatus | NE | length=20; EnumType.STRING |
+| createdAt | created_at | createdAt | LocalDateTime | NE |  |
+| suggestedRepair | suggested_repair_id | suggestedRepair_id | WorkDefinition | DA | FK; LAZY |
+| matchPercent | match_percent | matchPercent | BigDecimal | DA | decimal(5,2) |
+| estimatedCost | estimated_cost | estimatedCost | BigDecimal | DA | decimal(9,2) |
+| estimateNote | estimate_note | estimateNote | String | DA | length=1000 |
+| resolvedByService | resolved_by_service_id | resolvedByService_id | ServiceRecord | DA | FK; LAZY |
+
+### DiagnosticRule
+
+| Java atribut poslije | SQL prije | SQL poslije | Tip u Javi | NULL | Dodatan ugovor |
+|---|---|---|---|---|---|
+| id | id | id | Long | NE | PK; IDENTITY |
+| code | code | code | String | NE | UNIQUE; length=80 |
+| candidate | candidate_id | candidate_id | WorkDefinition | NE | FK; LAZY |
+| phrase | phrase | phrase | String | NE | length=160 |
+| weight | weight | weight | int | NE |  |
+| active | active | active | boolean | NE |  |
+
+## 4. Veze i slozeni ugovori
+
+- AppUser.activeVehicle je opcionalan u SQL-u samo da registracija moze prvo upisati racun pa vozilo
+  u istoj transakciji. Normalno dovrsen racun ima vlastito aktivno vozilo. Nemoj ga naivno pretvoriti u
+  NOT NULL prije rjesavanja ciklusa INSERT-a ili u OneToOne samo radi naziva.
+- ServiceRecord.items ostaje `mappedBy="serviceRecord"`, cascade ALL/orphanRemoval. Nijedan katalog
+  nema cascade remove. @OrderBy("id ASC") cuva redoslijed prikaza koji se vec koristi.
+- ServiceItem ima UNIQUE(serviceRecord_id,work_id); VehicleWorkRule UNIQUE(variant_id,work_id).
+- Problem.resolvedByService ostaje opcionalni FK i stanje OPEN/RESOLVED mora biti uskladeno s njim.
+- Indeksi na vehicle owner, variant picker, service history i problem status ostaju i nakon renamea.
+- JPA `length`/`nullable` nije zamjena za provjeru korisnickog unosa. Constraints u DB-u su dodatna zastita.
+
+## 5. Posljedice izvan entity datoteke
+
+Za User -> AppUser provjeri konkretni tip, constructor, generic type, class literal, persistence.xml,
+JPQL entity name i testne cleanup upite. Ne preimenuj UserRepository bez potrebe.
+Za productionYear/serviceDate provjeri property putanje u JPQL-u, kriterije sortiranja/projekcije,
+domenske gettere i pozivatelje. Nisu sva getYear/getDate imena u projektu isti simbol.
+
+Native SQL, SQLSeedTool, ImagePathTool, ReviewedIntervalTool i INFORMATION_SCHEMA/sys.* provjere
+koriste fizicke nazive. Samo Java refactor ih nece automatski promijeniti. Ulazni CSV headeri ostaju
+stabilni; explicit developer mapping prevodi na ciljna SQL imena. Import ne ulazi u runtime JAR.
+
+Referenca ne preimenuje constraint/index imena, ne brise constraints radi "lijepog" DDL-a i ne dodaje
+nova polja za podatke koji su vec izvedeni. `validate` sam ne provjerava potpunu poslovnu konzistentnost.

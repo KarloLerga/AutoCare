@@ -21,9 +21,9 @@ Review candidates in the generated CSV. Confirm actual make/model/GENERATION, no
 .\.image-venv\Scripts\python.exe tools/images/enrich_images.py download
 # After approved files/credits exist in src/main/resources:
 .\mvnw.cmd package
-java -jar target/autocare-1.0.0.jar import-images tools/images/approved_image_updates.csv
+java -jar tools/setup/target/autocare-setup-1.0.0.jar import-images tools/images/approved_image_updates.csv
 $env:AUTOCARE_SEED_TARGET=$env:AUTOCARE_DB_NAME
-java -jar target/autocare-1.0.0.jar import-images tools/images/approved_image_updates.csv --apply
+java -jar tools/setup/target/autocare-setup-1.0.0.jar import-images tools/images/approved_image_updates.csv --apply
 ```
 The Java import reads classpath images from the rebuilt JAR and verifies SHA. It does not point the DB to an unbundled src/ file. `--replace-existing` is required before replacing a distinct already-approved image path. Normal rerun keeps good existing image bytes/hashes. A same file with changed source/title requires explicit reviewed replacement.
 

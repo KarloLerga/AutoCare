@@ -48,5 +48,5 @@ try:
     a.output.parent.mkdir(parents=True,exist_ok=True)
     with a.output.open('w',encoding='utf-8',newline='') as f:
         w=csv.DictWriter(f,fieldnames=RULE_FIELDS,lineterminator='\n');w.writeheader();w.writerows(prepared)
-    print(f'Prepared {len(prepared)} individually reviewed rows. Import through the existing AF3 Java import-rules command. Never use --replace-existing without checking every existing interval and price.')
+    print(f'Prepared {len(prepared)} individually reviewed rows. Import through the setup JAR DatabaseTool import-rules command. Never use --replace-existing without checking every existing interval and price.')
 except (OSError,ValueError,KeyError) as ex:print('Review preparation stopped: '+str(ex),file=sys.stderr);raise SystemExit(1)

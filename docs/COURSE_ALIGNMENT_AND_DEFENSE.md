@@ -51,7 +51,7 @@ ServiceRecord sadrzi ServiceItem: stavka nema samostalan zivotni ciklus, zato ko
 ## Pitanja koja student treba znati odgovoriti
 
 1. Zasto @Id na polju znaci field access? Zasto je no-arg protected?
-2. Zasto mappedBy sadrzi Java ime serviceRecord, a JoinColumn SQL ime service_record_id?
+2. Zasto mappedBy sadrzi Java ime serviceRecord, a defaultni FK stupac je serviceRecord_id?
 3. Sto se dogadja ako svaki repository commit-a zasebno? Pokazi izgubljenu atomicnost na primjeru servisa/problema.
 4. Zasto to-one LAZY nije problem kad se DTO sastavi prije zatvaranja EM-a?
 5. Zasto se actual NULL ne pretvara u0 niti u estimate?

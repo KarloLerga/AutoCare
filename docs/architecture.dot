@@ -1,28 +1,47 @@
-digraph G { graph [rankdir=TB, bgcolor="white", pad="0.3", nodesep="0.5", ranksep="0.7", fontname="Helvetica"]; node [fontname="Helvetica", shape=box, style="rounded,filled", fillcolor="#F4F7FB", color="#176B87", margin="0.18"]; edge [fontname="Helvetica", fontsize=10, color="#526477"];
-label="AutoCare AF-3 - granice odgovornosti"; labelloc=t;
-view [label="VIEW
-Swing paneli, forme i draft
-FlatLaf je samo izgled"];
-controller [label="CONTROLLER
-ActionListener + SwingWorker
-EDT prikaz / background IO"];
-service [label="SERVICE
-Use-case, validacija, transakcijska granica"];
-repo [label="REPOSITORY SUCELJA
-User / Vehicle / ServiceRecord / Problem / Catalog"];
-tx [label="TransactionRunner (sucelje)
-JpaTransactionRunner (implementacija)
-Jedan EntityManager
-Jedna transakcija po operaciji"];
-jpa [label="JPA REPOSITORYJI
-JPQL / persist / remove"];
-domain [label="DOMAIN
-9 entiteta, enum, kalkulatori"];
-strategy [label="DiagnosticStrategy
-KeywordDiagnosticStrategy"];
-db [shape=cylinder,label="Azure SQL Database
-9 tablica"];
-event [label="AppEvents / AppListener
-Nakon potvrdenog commita"];
-view -> controller; controller -> service; service -> repo; service -> tx; service -> domain; service -> strategy; repo -> jpa; tx -> jpa [label="dijeljeni EM"]; jpa -> db; controller -> event; event -> controller [style=dashed,label="osvjezi vidljivo"];
+digraph AutoCareArchitecture {
+    graph [
+        rankdir=TB,
+        bgcolor="white",
+        pad="0.3",
+        nodesep="0.5",
+        ranksep="0.7",
+        fontname="Helvetica",
+        label="AutoCare - architecture dependencies (not data flow)",
+        labelloc=t
+    ];
+    node [
+        fontname="Helvetica",
+        shape=box,
+        style="rounded,filled",
+        fillcolor="#F4F7FB",
+        color="#176B87",
+        margin="0.18"
+    ];
+    edge [fontname="Helvetica", fontsize=10, color="#526477"];
+
+    view [label="VIEW\nSwing panels, forms and drafts\nFlatLaf only styles the UI"];
+    controller [label="CONTROLLER\nActionListener + SwingWorker\nEDT UI / background I/O"];
+    service [label="SERVICE\nUse-case, validation\nBUSINESS transaction boundary"];
+    domain [label="DOMAIN\n9 persistent entities\nenums and calculators"];
+    repositories [label="REPOSITORY INTERFACES\nUser / Vehicle / ServiceRecord\nProblem / Catalog"];
+    transaction [label="TransactionRunner\ninterface boundary"];
+    strategy [label="DiagnosticStrategy\ninterface"];
+    jpaTransaction [label="JpaTransactionRunner\nTECHNICAL transaction lifecycle\none EntityManager per operation"];
+    jpaRepositories [label="JPA REPOSITORIES\nJPQL / persist / remove\nshared EntityManager"];
+    infrastructure [label="JPA / Hibernate / JDBC\nAzure SQL provider"];
+    database [shape=cylinder, label="Azure SQL Database\ndbo target schema"];
+
+    view -> controller [label="UI dependency"];
+    controller -> service [label="use-case dependency"];
+    service -> domain [label="business model"];
+    service -> repositories [label="query/persist contract"];
+    service -> transaction [label="transaction callback"];
+    service -> strategy [label="diagnostic policy"];
+    jpaTransaction -> transaction [style=dashed, label="implements"];
+    jpaTransaction -> jpaRepositories [label="constructs with one EM"];
+    jpaRepositories -> repositories [style=dashed, label="implements"];
+    jpaRepositories -> domain [label="maps entities"];
+    jpaTransaction -> infrastructure [label="lifecycle"];
+    jpaRepositories -> infrastructure [label="JPA provider"];
+    infrastructure -> database [label="technical resource"];
 }

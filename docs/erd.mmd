@@ -1,95 +1,95 @@
 erDiagram
-    APP_USER ||--o{ VEHICLE : owns
-    APP_USER }o--o| VEHICLE : active_vehicle
-    VEHICLE_VARIANT ||--o{ VEHICLE : identifies
-    VEHICLE ||--o{ SERVICE_RECORD : history
-    SERVICE_RECORD ||--|{ SERVICE_ITEM : contains
-    WORK_DEFINITION ||--o{ SERVICE_ITEM : describes
-    VEHICLE_VARIANT ||--o{ VEHICLE_WORK_RULE : covers
-    WORK_DEFINITION ||--o{ VEHICLE_WORK_RULE : applies
-    VEHICLE ||--o{ PROBLEM : reports
-    SERVICE_RECORD o|--o{ PROBLEM : resolves
-    WORK_DEFINITION o|--o{ PROBLEM : suggested_repair
-    WORK_DEFINITION ||--o{ DIAGNOSTIC_RULE : candidate
-    APP_USER {
+    AppUser ||--o{ Vehicle : owns
+    AppUser }o--o| Vehicle : activeVehicle
+    VehicleVariant ||--o{ Vehicle : identifies
+    Vehicle ||--o{ ServiceRecord : history
+    ServiceRecord ||--|{ ServiceItem : contains
+    WorkDefinition ||--o{ ServiceItem : describes
+    VehicleVariant ||--o{ VehicleWorkRule : covers
+    WorkDefinition ||--o{ VehicleWorkRule : applies
+    Vehicle ||--o{ Problem : reports
+    ServiceRecord o|--o{ Problem : resolves
+    WorkDefinition o|--o{ Problem : suggestedRepair
+    WorkDefinition ||--o{ DiagnosticRule : candidate
+    AppUser {
         bigint id PK
         bigint version
         string name
         string email UK
-        string password_hash
-        bigint active_vehicle_id FK
+        string passwordHash
+        bigint activeVehicle_id FK
     }
-    VEHICLE_VARIANT {
+    VehicleVariant {
         bigint id PK
         string code UK
         string make
         string model
         string generation
-        string engine_label
-        string body_type
-        string fuel_type
-        int power_hp
+        string engineLabel
+        string bodyType
+        string fuelType
+        int powerHp
         string transmission
-        int year_from
-        int year_to
-        string image_path
+        int yearFrom
+        int yearTo
+        string imagePath
     }
-    VEHICLE {
+    Vehicle {
         bigint id PK
         bigint version
         bigint owner_id FK
         bigint variant_id FK
-        int production_year
-        int current_mileage
+        int productionYear
+        int currentMileage
     }
-    WORK_DEFINITION {
+    WorkDefinition {
         bigint id PK
         string code UK
         string name
         string category
-        decimal default_estimated_price
-        string estimate_note
+        decimal defaultEstimatedPrice
+        string estimateNote
     }
-    VEHICLE_WORK_RULE {
+    VehicleWorkRule {
         bigint id PK
         bigint variant_id FK
         bigint work_id FK
-        string schedule_kind
-        int interval_km
-        int interval_months
-        decimal estimated_price
-        string interval_source
-        string estimate_note
+        string scheduleKind
+        int intervalKm
+        int intervalMonths
+        decimal estimatedPrice
+        string intervalSource
+        string estimateNote
     }
-    SERVICE_RECORD {
+    ServiceRecord {
         bigint id PK
         bigint vehicle_id FK
-        string request_key UK
-        date service_date
+        string requestKey UK
+        date serviceDate
         int mileage
         string note
     }
-    SERVICE_ITEM {
+    ServiceItem {
         bigint id PK
-        bigint service_record_id FK
+        bigint serviceRecord_id FK
         bigint work_id FK
-        decimal actual_price
+        decimal actualPrice
     }
-    PROBLEM {
+    Problem {
         bigint id PK
         bigint version
         bigint vehicle_id FK
-        string request_key UK
+        string requestKey UK
         string description
         string status
-        datetime created_at
-        bigint suggested_repair_id FK
-        decimal match_percent
-        decimal estimated_cost
-        string estimate_note
-        bigint resolved_by_service_id FK
+        datetime createdAt
+        bigint suggestedRepair_id FK
+        decimal matchPercent
+        decimal estimatedCost
+        string estimateNote
+        bigint resolvedByService_id FK
     }
-    DIAGNOSTIC_RULE {
+    DiagnosticRule {
         bigint id PK
         string code UK
         bigint candidate_id FK
