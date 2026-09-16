@@ -7,7 +7,6 @@ import hr.unizd.autocare.repository.ServiceRecordRepository;
 import hr.unizd.autocare.service.AppException;
 import jakarta.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 
 /** JPA upiti koriste vezane parametre i postojeci EntityManager. */
 public final class JpaServiceRecordRepository implements ServiceRecordRepository {
@@ -55,16 +54,6 @@ public final class JpaServiceRecordRepository implements ServiceRecordRepository
         .getResultStream()
         .findFirst()
         .orElseThrow(() -> new AppException(AppException.Kind.NOT_FOUND, "Servis nije pronadjen."));
-  }
-
-  public Optional<ServiceRecord> byRequest(long owner, String key) {
-    return em.createQuery(
-            "select s from ServiceRecord s where s.requestKey=:k and s.vehicle.owner.id=:o",
-            ServiceRecord.class)
-        .setParameter("k", key)
-        .setParameter("o", owner)
-        .getResultStream()
-        .findFirst();
   }
 
   public List<ServiceItem> historyItems(long owner, long vehicle) {

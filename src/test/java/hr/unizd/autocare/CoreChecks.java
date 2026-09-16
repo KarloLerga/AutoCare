@@ -22,7 +22,6 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 /** Provjere ciste logike mogu se izvrsiti i bez baze; JUnit ih ukljucuje u Maven test. */
 public final class CoreChecks {
@@ -125,7 +124,7 @@ public final class CoreChecks {
     WorkDefinition work =
         new WorkDefinition("TEST", "Testni rad", WorkCategory.MAINTENANCE, null, null);
     ServiceRecord record =
-        new ServiceRecord(v, UUID.randomUUID().toString(), LocalDate.now(), 1000, null);
+        new ServiceRecord(v, LocalDate.now(), 1000, null);
     record.addItem(work, null);
     eq(1L, record.total().getUnknownCount());
     fails(() -> record.addItem(work, BigDecimal.ZERO));

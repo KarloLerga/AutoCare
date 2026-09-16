@@ -11,7 +11,6 @@ import java.awt.Window;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -34,11 +33,9 @@ public final class ServiceEditorDialog extends JDialog {
       addRepair = Ui.button("Dodaj popravak", false),
       remove = Ui.button("Ukloni odabranu stavku", false),
       save = Ui.button("Spremi servis", true),
-      cancel = Ui.button("Odustani", false),
-      check = Ui.button("Provjeri spremanje", false);
+      cancel = Ui.button("Odustani", false);
   private final List<ProblemRow> problems;
   private final boolean[] selected;
-  private final String requestKey = UUID.randomUUID().toString();
   private final boolean historical;
 
   public ServiceEditorDialog(Window owner, int km, boolean historical, List<ProblemRow> problems) {
@@ -115,8 +112,7 @@ public final class ServiceEditorDialog extends JDialog {
     }
     middle.add(lower, BorderLayout.SOUTH);
     root.add(middle);
-    check.setVisible(false);
-    root.add(Ui.actions(cancel, check, save), BorderLayout.SOUTH);
+    root.add(Ui.actions(cancel, save), BorderLayout.SOUTH);
     setContentPane(root);
     getRootPane().setDefaultButton(save);
   }
@@ -132,7 +128,6 @@ public final class ServiceEditorDialog extends JDialog {
       }
     }
     return new ServiceInput(
-        requestKey,
         date.date(),
         Ui.integer(mileage),
         note.getText(),
@@ -140,7 +135,4 @@ public final class ServiceEditorDialog extends JDialog {
         ids);
   }
 
-  public String requestKey() {
-    return requestKey;
-  }
 }

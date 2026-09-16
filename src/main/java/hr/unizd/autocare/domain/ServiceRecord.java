@@ -7,23 +7,19 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
-import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 /** Servis i njegove stavke cine jednu cjelinu za spremanje. */
 @Entity
-@Table(indexes = @Index(name = "idx_service_vehicle_date", columnList = "vehicle_id,serviceDate"))
 public class ServiceRecord {
 
   @Id
@@ -33,9 +29,6 @@ public class ServiceRecord {
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(nullable = false)
   private Vehicle vehicle;
-
-  @Column(nullable = false, unique = true, length = 36)
-  private String requestKey;
 
   @Column(nullable = false)
   private LocalDate serviceDate;
@@ -52,10 +45,8 @@ public class ServiceRecord {
 
   protected ServiceRecord() {}
 
-  public ServiceRecord(
-      Vehicle vehicle, String requestKey, LocalDate serviceDate, int mileage, String note) {
+  public ServiceRecord(Vehicle vehicle, LocalDate serviceDate, int mileage, String note) {
     this.vehicle = Objects.requireNonNull(vehicle);
-    this.requestKey = UUID.fromString(requestKey).toString();
     this.serviceDate = Objects.requireNonNull(serviceDate);
     this.mileage = Checks.mileage(mileage);
     this.note = Checks.optional(note, 2000, "Napomena");
@@ -89,10 +80,6 @@ public class ServiceRecord {
 
   public Vehicle getVehicle() {
     return vehicle;
-  }
-
-  public String getRequestKey() {
-    return requestKey;
   }
 
   public LocalDate getServiceDate() {
