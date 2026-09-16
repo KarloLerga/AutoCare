@@ -26,5 +26,9 @@ Date: 2026-09-16
 
 - `clean verify`: PASS on Java 25.
 - Unit tests: PASS, 8 total; 7 `CoreTest` tests and 1 `SqlInfrastructureTest` test.
-- Azure SQL: not yet contacted in this phase. The host is the documented Azure SQL server; the actual database name remains unresolved. No schema or seed write was attempted.
+- Azure SQL: contacted successfully after the user allowed the current client IP. Read-only `db-list` discovered one existing database; its confirmed name remains only in the external private configuration.
+- Azure SQL `sql-check`: PASS with SQL Server 17.0, engine edition 5, and `encrypt=true;trustServerCertificate=false`.
+- Azure SQL schema: PASS via explicit `schema-update --confirm-development-schema`; subsequent `db-check`: PASS with 30,366 catalog variants.
+- Azure SQL seed: PASS for the sample and full AF3 data; see `azure-seed-validation.md` for counts and read-only structural checks.
+- Azure directory: the user confirmed the Azure default directory; the application connection itself uses the supplied SQL authentication settings, not an Azure API token.
 - Credentials: external local configuration only; password intentionally redacted and never written here.
