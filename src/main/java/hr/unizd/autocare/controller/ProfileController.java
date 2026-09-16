@@ -24,7 +24,7 @@ public final class ProfileController {
     this.service = service;
     this.session = session;
     this.events = events;
-    tasks = new UiTasks(session);
+    tasks = new UiTasks();
     frame.profile.save.addActionListener(e -> save());
     frame.profile.logout.addActionListener(
         e -> {
@@ -76,7 +76,6 @@ public final class ProfileController {
     frame.profile.name.setText("");
     frame.profile.email.setText("");
     frame.profile.clearPasswords();
-    tasks.invalidate();
   }
 
   private void discard() {

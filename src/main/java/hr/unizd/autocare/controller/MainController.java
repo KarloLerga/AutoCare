@@ -12,173 +12,221 @@ import hr.unizd.autocare.service.ProblemService;
 import hr.unizd.autocare.service.ServiceRecordService;
 import hr.unizd.autocare.service.VehicleService;
 import hr.unizd.autocare.view.MainFrame;
-import hr.unizd.autocare.view.components.Ui;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-/** Samo shell/navigacija. Svaki use-case ima svoj kontroler i service. */
+/** Glavna navigacija, session i osvjezavanje trenutno otvorenog ekrana. */
 public final class MainController implements AppListener {
-  private final MainFrame frame;
-  private final Session session;
-  private final VehicleService vehicleService;
-  private final DashboardService dashboard;
-  private final AppEvents events;
-  private final UiTasks tasks, dashboardTasks;
-  private final Runnable shutdown;
-  private final VehiclesController vehicles;
-  private final ServicesController services;
-  private final MaintenanceController maintenance;
-  private final ProblemsController problems;
-  private final ProfileController profile;
-  private final Set<String> dirty = new HashSet<>();
 
-  public MainController(
-      MainFrame frame,
-      Session session,
-      AuthService auth,
-      CatalogService catalog,
-      VehicleService vehicleService,
-      ServiceRecordService serviceRecords,
-      MaintenanceService maintenanceService,
-      ProblemService problemService,
-      DashboardService dashboard,
-      AppEvents events,
-      Runnable shutdown) {
-    this.frame = frame;
-    this.session = session;
-    this.vehicleService = vehicleService;
-    this.dashboard = dashboard;
-    this.events = events;
-    this.shutdown = shutdown;
-    tasks = new UiTasks(session);
-    dashboardTasks = new UiTasks(session);
-    vehicles = new VehiclesController(frame, vehicleService, catalog, session, events);
-    services =
-        new ServicesController(frame, serviceRecords, catalog, problemService, session, events);
-    maintenance = new MaintenanceController(frame, maintenanceService, session);
-    problems = new ProblemsController(frame, problemService, session, events);
-    profile = new ProfileController(frame, auth, session, events, this::logout);
-    new AuthController(frame, auth, catalog, session, this::enter);
-    frame.navigation.forEach((name, button) -> button.addActionListener(e -> navigate(name)));
-    frame.refresh.addActionListener(
-        e -> {
-          if (session.isWriting()) {
+    private final MainFrame frame;
+    private final Session session;
+    private final VehicleService vehicleService;
+    private final DashboardService dashboardService;
+    private final AppEvents events;
+    private final UiTasks tasks;
+    private final Runnable shutdown;
+
+    private final VehiclesController vehicles;
+    private final ServicesController services;
+    private final MaintenanceController maintenance;
+    private final ProblemsController problems;
+    private final ProfileController profile;
+
+    public MainController(
+            MainFrame frame,
+            Session session,
+            AuthService authService,
+            CatalogService catalogService,
+            VehicleService vehicleService,
+            ServiceRecordService serviceRecordService,
+            MaintenanceService maintenanceService,
+            ProblemService problemService,
+            DashboardService dashboardService,
+            AppEvents events,
+            Runnable shutdown) {
+
+        this.frame = frame;
+        this.session = session;
+        this.vehicleService = vehicleService;
+        this.dashboardService = dashboardService;
+        this.events = events;
+        this.shutdown = shutdown;
+        this.tasks = new UiTasks();
+
+        vehicles = new VehiclesController(
+                frame,
+                vehicleService,
+                catalogService,
+                session,
+                events);
+
+        services = new ServicesController(
+                frame,
+                serviceRecordService,
+                catalogService,
+                problemService,
+                session,
+                events);
+
+        maintenance = new MaintenanceController(
+                frame,
+                maintenanceService,
+                session);
+
+        problems = new ProblemsController(
+                frame,
+                problemService,
+                session,
+                events);
+
+        profile = new ProfileController(
+                frame,
+                authService,
+                session,
+                events,
+                this::logout);
+
+        new AuthController(
+                frame,
+                authService,
+                catalogService,
+                session,
+                this::enter);
+
+        activateForm();
+        events.add(this);
+        frame.auth();
+    }
+
+    private void activateForm() {
+        frame.navigation.forEach(
+                (name, button) ->
+                        button.addActionListener(
+                                event -> navigate(name)));
+
+        frame.refresh.addActionListener(
+                event -> refreshContext(false));
+
+        frame.addWindowListener(
+                new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent event) {
+                        close();
+                    }
+                });
+    }
+
+    private void enter(long ownerId) {
+        session.login(ownerId);
+        refreshContext(true);
+    }
+
+    private void refreshContext(boolean dashboard) {
+        if (session.owner() == 0) {
             return;
-          }
-          if (frame.page().equals("Profil") && !profile.canLeave()) {
+        }
+
+        tasks.read(
+                frame,
+                () -> vehicleService.active(session.owner()),
+                vehicle -> {
+                    session.setActive(vehicle);
+                    frame.context(vehicle);
+                    frame.application();
+
+                    if (dashboard) {
+                        frame.showPage("Dashboard");
+                    }
+
+                    loadVisible();
+                });
+    }
+
+    private void navigate(String name) {
+        if (frame.page().equals("Profil")
+                && !profile.canLeave()) {
             return;
-          }
-          dirty.add(frame.page());
-          refreshContext(false);
-        });
-    frame.addWindowListener(
-        new WindowAdapter() {
-          public void windowClosing(WindowEvent e) {
-            close();
-          }
-        });
-    events.add(this);
-    frame.auth();
-  }
+        }
 
-  private void enter(long owner) {
-    session.login(owner);
-    dirty.addAll(frame.navigation.keySet());
-    refreshContext(true);
-  }
+        frame.showPage(name);
+        loadVisible();
+    }
 
-  private void refreshContext(boolean showDashboard) {
-    long owner = session.owner();
-    tasks.read(
-        frame,
-        () -> vehicleService.active(owner),
-        vehicle -> {
-          session.setActive(vehicle);
-          frame.context(vehicle);
-          frame.application();
-          if (showDashboard) {
-            frame.showPage("Dashboard");
-          }
-          loadVisible();
-        });
-  }
+    private void loadVisible() {
+        if (session.active() == null) {
+            return;
+        }
 
-  private void navigate(String name) {
-    if (session.isWriting()) {
-      Ui.info(frame, "Pricekajte spremanje.");
-      return;
-    }
-    if (frame.page().equals("Profil") && !profile.canLeave()) {
-      return;
-    }
-    frame.showPage(name);
-    loadVisible();
-  }
+        frame.status.setText(
+                "Aktivno vozilo #"
+                        + session.active().getId());
 
-  private void loadVisible() {
-    if (session.active() == null || !dirty.remove(frame.page())) {
-      return;
+        switch (frame.page()) {
+            case "Dashboard" -> loadDashboard();
+            case "Vozila" -> vehicles.load();
+            case "Servisi" -> services.load();
+            case "Odrzavanje" -> maintenance.load();
+            case "Problemi" -> problems.load();
+            case "Profil" -> profile.load();
+            default -> throw new IllegalArgumentException(
+                    "Nepoznat ekran.");
+        }
     }
-    String page = frame.page();
-    frame.status.setText("Aktivno vozilo #" + session.active().getId());
-    switch (page) {
-      case "Dashboard" -> {
-        long owner = session.owner(), vehicle = session.active().getId();
-        dashboardTasks.read(
-            frame.dashboard,
-            () -> dashboard.get(owner, vehicle),
-            data -> frame.dashboard.show(data));
-      }
-      case "Vozila" -> vehicles.load();
-      case "Servisi" -> services.load();
-      case "Odrzavanje" -> maintenance.load();
-      case "Problemi" -> problems.load();
-      case "Profil" -> profile.load();
-      default -> throw new IllegalArgumentException("Nepoznat ekran.");
-    }
-  }
 
-  @Override
-  public void onChange(AppEvent event) {
-    dirty.addAll(frame.navigation.keySet());
-    boolean activeChanged = event == AppEvent.ACTIVE_VEHICLE_CHANGED;
-    if (event == AppEvent.VEHICLE_CHANGED || activeChanged || event == AppEvent.SERVICE_SAVED) {
-      refreshContext(activeChanged);
-    } else {
-      loadVisible();
-    }
-  }
+    private void loadDashboard() {
+        long ownerId = session.owner();
+        long vehicleId = session.active().getId();
 
-  private void logout() {
-    if (session.isWriting()) {
-      return;
+        tasks.read(
+                frame.dashboard,
+                () -> dashboardService.get(
+                        ownerId,
+                        vehicleId),
+                data -> frame.dashboard.show(data));
     }
-    session.logout();
-    profile.clear();
-    frame.login.password.setText("");
-    frame.vehicles.table.setRows(List.of());
-    frame.services.table.setRows(List.of());
-    frame.maintenance.table.setRows(List.of());
-    frame.problems.table.setRows(List.of());
-    frame.auth();
-    dirty.clear();
-  }
 
-  private void close() {
-    if (session.isWriting()) {
-      Ui.info(frame, "Spremanje je u tijeku; pricekajte potvrdu.");
-      return;
+    @Override
+    public void onChange(AppEvent event) {
+        if (event == AppEvent.ACTIVE_VEHICLE_CHANGED
+                || event == AppEvent.VEHICLE_CHANGED
+                || event == AppEvent.SERVICE_SAVED) {
+
+            refreshContext(
+                    event == AppEvent.ACTIVE_VEHICLE_CHANGED);
+
+            return;
+        }
+
+        loadVisible();
     }
-    if (session.owner() != 0 && frame.page().equals("Profil") && !profile.canLeave()) {
-      return;
+
+    private void logout() {
+        session.logout();
+
+        profile.clear();
+        frame.login.password.setText("");
+
+        frame.vehicles.table.setRows(List.of());
+        frame.services.table.setRows(List.of());
+        frame.maintenance.table.setRows(List.of());
+        frame.problems.table.setRows(List.of());
+
+        frame.auth();
     }
-    events.remove(this);
-    events.clear();
-    session.logout();
-    frame.dispose();
-    shutdown.run();
-  }
+
+    private void close() {
+        if (session.owner() != 0
+                && frame.page().equals("Profil")
+                && !profile.canLeave()) {
+            return;
+        }
+
+        events.remove(this);
+        session.logout();
+        frame.dispose();
+        shutdown.run();
+    }
 }
+
+

@@ -15,10 +15,8 @@ import hr.unizd.autocare.service.ServiceRecordService;
 import hr.unizd.autocare.view.MainFrame;
 import hr.unizd.autocare.view.ServiceEditorDialog;
 import hr.unizd.autocare.view.components.Ui;
-import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -49,7 +47,7 @@ public final class ServicesController {
     this.problems = problems;
     this.session = session;
     this.events = events;
-    tasks = new UiTasks(session);
+    tasks = new UiTasks();
     frame.services.add.addActionListener(e -> create());
     frame.services.detail.addActionListener(e -> detail());
     frame.services.previous.addActionListener(
@@ -133,57 +131,21 @@ public final class ServicesController {
         },
         data -> {
           ServiceEditorDialog dialog = new ServiceEditorDialog(frame, km, false, data.problems);
-          UiTasks editorTask = new UiTasks(session);
-          FrozenForm frozen = new FrozenForm();
+          UiTasks editorTask = new UiTasks();
           new ServiceEditorController(
               dialog,
               data.works,
-              session,
               input ->
                   editorTask.run(
                       dialog,
-                      true,
                       () -> service.create(owner, vehicle, input),
                       id -> {
                         dialog.dispose();
                         events.publish(AppEvent.SERVICE_SAVED);
                       },
-                      error -> {
-                        Ui.error(dialog, error);
-                        if (UiTasks.uncertain(error)) {
-                          frozen.state = Ui.disableTree(dialog.getContentPane());
-                          dialog.check.setVisible(true);
-                          dialog.check.setEnabled(true);
-                          dialog.cancel.setEnabled(true);
-                        }
-                      }));
-          dialog.check.addActionListener(
-              e ->
-                  editorTask.read(
-                      dialog,
-                      () -> service.findSaved(owner, dialog.requestKey()),
-                      id -> {
-                        if (id != null) {
-                          dialog.dispose();
-                          events.publish(AppEvent.SERVICE_SAVED);
-                        } else {
-                          if (frozen.state != null) {
-                            Ui.restore(frozen.state);
-                            frozen.state = null;
-                          }
-                          dialog.save.setEnabled(true);
-                          Ui.info(
-                              dialog,
-                              "Zapis nije pronadjen u uspjesnom novom citanju. Mozete ponoviti isti"
-                                  + " zahtjev; kljuc ostaje isti.");
-                        }
-                      }));
+                      error -> Ui.error(dialog, error)));
           dialog.setVisible(true);
         });
-  }
-
-  private static final class FrozenForm {
-    Map<Component, Boolean> state;
   }
 
   private static final class EditorData {

@@ -39,7 +39,7 @@ public final class AuthController {
     this.catalog = catalog;
     this.session = session;
     this.entered = entered;
-    tasks = new UiTasks(session);
+    tasks = new UiTasks();
     frame.login.login.addActionListener(e -> login());
     frame.login.register.addActionListener(e -> register());
   }
@@ -63,13 +63,12 @@ public final class AuthController {
   }
 
   private void register() {
-    tasks.invalidate(); // Odbaci prethodni kasni login rezultat pri otvaranju drugog toka.
     OnboardingDialog view = new OnboardingDialog(frame);
     List<ServiceInput> history = new ArrayList<>();
     long[] historyVariant = {-1L};
-    VehicleFormController picker = new VehicleFormController(view.vehicle, catalog, session);
+    VehicleFormController picker = new VehicleFormController(view.vehicle, catalog);
     boolean[] pickerStarted = {false};
-    UiTasks wizardTasks = new UiTasks(session);
+    UiTasks wizardTasks = new UiTasks();
     view.next.addActionListener(
         e -> {
           try {
@@ -133,7 +132,6 @@ public final class AuthController {
                 new ServiceEditorController(
                     editor,
                     works,
-                    session,
                     input -> {
                       ServiceRecordService.validate(input, true, Clock.systemDefaultZone());
                       if (input.getMileage() > km) {
@@ -174,7 +172,6 @@ public final class AuthController {
           List<ServiceInput> snapshot = List.copyOf(history);
           wizardTasks.run(
               view,
-              true,
               () -> {
                 try {
                   return auth.register(name, email, password, vehicle, snapshot);
@@ -187,23 +184,10 @@ public final class AuthController {
                 view.dispose();
                 entered.accept(id);
               },
-              error -> {
-                Ui.error(view, error);
-                if (UiTasks.uncertain(error)) {
-                  view.finish.setEnabled(false);
-                  Ui.info(
-                      view,
-                      "Registracija mozda postoji. Zatvorite ovaj obrazac i pokusajte prijavu istim"
-                          + " e-mailom; ne kreirajte drugi racun.");
-                }
-              });
+              error -> Ui.error(view, error));
         });
     Runnable cancel =
         () -> {
-          if (session.isWriting()) {
-            Ui.info(view, "Pricekajte zavrsetak registracije.");
-            return;
-          }
           if (Ui.confirm(view, "Odustati od registracije? Nespremljeni podaci bit ce odbaceni.")) {
             view.clearPasswords();
             view.dispose();

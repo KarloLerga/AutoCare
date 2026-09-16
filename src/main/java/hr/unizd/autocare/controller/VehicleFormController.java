@@ -1,6 +1,5 @@
 package hr.unizd.autocare.controller;
 
-import hr.unizd.autocare.app.Session;
 import hr.unizd.autocare.service.CatalogService;
 import hr.unizd.autocare.view.components.Ui;
 import hr.unizd.autocare.view.components.VehicleForm;
@@ -13,10 +12,10 @@ public final class VehicleFormController {
   private final CatalogService service;
   private final UiTasks tasks;
 
-  public VehicleFormController(VehicleForm view, CatalogService service, Session session) {
+  public VehicleFormController(VehicleForm view, CatalogService service) {
     this.view = view;
     this.service = service;
-    tasks = new UiTasks(session);
+    tasks = new UiTasks();
     view.year.addChangeListener(
         e -> {
           if (!view.updating) {
@@ -72,7 +71,6 @@ public final class VehicleFormController {
     view.model.removeAllItems();
     view.variants.setRows(List.of());
     view.updating = false;
-    tasks.invalidate();
     if (make == null) {
       return;
     }
@@ -94,7 +92,6 @@ public final class VehicleFormController {
         model = (String) view.model.getSelectedItem(),
         query = view.search.getText();
     view.variants.setRows(List.of());
-    tasks.invalidate();
     if (make == null || model == null) {
       return;
     }
