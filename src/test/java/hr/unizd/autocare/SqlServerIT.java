@@ -69,7 +69,7 @@ class SqlServerIT {
       // Svaki poziv je novi studentski zapis; nema request-key idempotency sloja.
       ServiceInput second = fixture.service(120_000, List.of());
       assertNotEquals(saved, fixture.services.create(owner, vehicle, second));
-      assertEquals(2, fixture.services.page(owner, vehicle, 0).size());
+      assertEquals(2, fixture.services.list(owner, vehicle).size());
 
       ServiceInput changed = fixture.service(120_001, List.of(firstProblem, secondProblem));
       assertThrows(AppException.class, () -> fixture.services.create(owner, vehicle, changed));
@@ -109,7 +109,7 @@ class SqlServerIT {
       // Prvi Problem vec je promijenjen kad dohvat drugog namjerno ne uspije.
       assertThrows(AppException.class, () -> fixture.services.create(owner, vehicle, bad));
       assertEquals(100_000, fixture.vehicles.active(owner).getMileage());
-      assertEquals(0, fixture.services.page(owner, vehicle, 0).size());
+      assertEquals(0, fixture.services.list(owner, vehicle).size());
       fixture.assertProblem(firstProblem, ProblemStatus.OPEN, null);
       fixture.inTransaction(
           entityManager -> {

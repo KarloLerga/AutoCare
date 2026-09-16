@@ -20,26 +20,13 @@ public final class JpaServiceRecordRepository implements ServiceRecordRepository
     em.persist(s);
   }
 
-  public List<ServiceRecord> page(long owner, long vehicle, int offset, int limit) {
-    List<Long> ids =
-        em.createQuery(
-                "select s.id from ServiceRecord s where s.vehicle.owner.id=:o and s.vehicle.id=:v"
-                    + " order by s.serviceDate desc,s.mileage desc,s.id desc",
-                Long.class)
-            .setParameter("o", owner)
-            .setParameter("v", vehicle)
-            .setFirstResult(offset)
-            .setMaxResults(limit)
-            .getResultList();
-    if (ids.isEmpty()) {
-      return List.of();
-    }
+  public List<ServiceRecord> list(long owner, long vehicle) {
     return em.createQuery(
             "select distinct s from ServiceRecord s left join fetch s.items i left join fetch"
-                + " i.work where s.id in :ids and s.vehicle.owner.id=:o order by s.serviceDate"
+                + " i.work where s.vehicle.id=:v and s.vehicle.owner.id=:o order by s.serviceDate"
                 + " desc,s.mileage desc,s.id desc",
             ServiceRecord.class)
-        .setParameter("ids", ids)
+        .setParameter("v", vehicle)
         .setParameter("o", owner)
         .getResultList();
   }
