@@ -5,8 +5,13 @@ from collections import Counter
 from decimal import Decimal
 from pathlib import Path
 P=Path(__file__).resolve().parents[1]
-works={r['code']:r for r in csv.DictReader((P/'data/work_definitions.csv').open(encoding='utf-8'))}
-traits={r['variant_code']:r for r in csv.DictReader((P/'base-input/vehicle_traits.csv').open(encoding='utf-8'))}
+
+def read_rows(path):
+ with path.open(encoding='utf-8',newline='') as f:
+  yield from csv.DictReader(f)
+
+works={r['code']:r for r in read_rows(P/'data/work_definitions.csv')}
+traits={r['variant_code']:r for r in read_rows(P/'base-input/vehicle_traits.csv')}
 counts=Counter();last=None;seen=set();ended=set()
 with gzip.open(P/'data/all_pair_decisions.csv.gz','rt',encoding='utf-8',newline='') as f:
  for r in csv.DictReader(f):

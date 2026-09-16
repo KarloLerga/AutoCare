@@ -1,5 +1,19 @@
-# Verification evidence - preparation, not local deployment
-Date: 2026-09-16. This is an honest boundary on what has actually run. No SQL Server authentication, schema change, seed or external photo download was executed in preparation.
+# Verification evidence - preparation baseline and local run
+Date: 2026-09-16. The first section below is the preserved preparation baseline from the delivered reference package. The later local-run section records the actual Java 25/Azure SQL integration performed afterward; neither section claims GUI or photo work that was not executed.
+
+## Local integration run (2026-09-16)
+
+- `db-list` reached the configured Azure SQL server after the user allowed the workstation IP and discovered one existing database; its name remains external.
+- `sql-check`, explicit `schema-update --confirm-development-schema`, and `db-check` passed against that existing database.
+- Sample seed and identical sample rerun passed: 8 variants / 122 works / 403 rules / 87 diagnostics.
+- Full AF3 seed resumed after a partial first process and completed idempotently: 30,366 variants / 122 works / 1,650,435 rules / 87 diagnostics. Referenced intervals remained opt-in.
+- Read-only `scripts/verify-database.sql` passed; final counts, indexes, FKs and invariants are in `docs/evidence/azure-seed-validation.md`.
+- Real `.\mvnw.cmd clean verify` and `.\mvnw.cmd javadoc:javadoc` passed on Java 25. Python AF3/data validators passed under Python 3.12.4 with explicit UTF-8 and resource-safe file handling.
+- GUI/manual flows, isolated `_test` SQL profile and image enrichment remain NOT_RUN.
+
+## Preserved preparation baseline
+
+The following evidence was produced before the local deployment and remains intentionally separate from the later Azure results:
 
 ## Executed
 | Check | Result | Meaning / evidence |
