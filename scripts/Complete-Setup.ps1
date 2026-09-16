@@ -35,8 +35,10 @@ else {
 }
 $mv=Get-NativeVersion $maven
 if($mv -notmatch 'Java version: 25\.') { throw 'Maven is not using JDK 25. Fix JAVA_HOME.' }
-Invoke-Native $maven @('clean','verify')
-$jar=Join-Path $root 'target/autocare-1.0.0.jar'
+Invoke-Native $maven @('clean','install')
+Invoke-Native $maven @('-f','tools/setup/pom.xml','clean','package')
+$appJar=Join-Path $root 'target/autocare-1.0.0.jar'
+$jar=Join-Path $root 'tools/setup/target/autocare-setup-1.0.0.jar'
 if(-not $env:AUTOCARE_DB_NAME) {
  Write-Host 'Discovering database names only; not creating resources or changing billing.'
  $names=@(& java -jar $jar db-list)
@@ -70,4 +72,4 @@ Invoke-Native 'java' @('-jar',$jar,'db-check')
 Invoke-Native $maven @('javadoc:javadoc')
 Write-Host 'Build and selected seed finished. GUI/manual/integration tests still must be recorded separately.'
 Write-Host 'Disconnect SQL Object Explorer and close the application when finished to allow serverless auto-pause.'
-if($Launch) { Invoke-Native 'java' @('-jar',$jar) }
+if($Launch) { Invoke-Native 'java' @('-jar',$appJar) }

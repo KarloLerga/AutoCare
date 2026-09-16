@@ -1,65 +1,113 @@
 package hr.unizd.autocare.domain;
-import jakarta.persistence.*;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
-import java.time.*;
-import java.util.*;
-/** Agregat servisa. Stavke nastaju i spremaju se zajedno. */
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+
+/** Servis i njegove stavke cine jednu cjelinu za spremanje. */
 @Entity
-@Table(name="service_record", indexes=@Index(name="idx_service_vehicle_date", columnList="vehicle_id,service_date"))
+@Table(indexes = @Index(name = "idx_service_vehicle_date", columnList = "vehicle_id,serviceDate"))
 public class ServiceRecord {
-    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long id;
-    @ManyToOne(fetch=FetchType.LAZY, optional=false) @JoinColumn(name="vehicle_id", nullable=false)
-    private Vehicle vehicle;
-    @Column(name="request_key", nullable=false, unique=true, length=36)
-    private String requestKey;
-    @Column(name="service_date", nullable=false)
-    private LocalDate date;
-    @Column(nullable=false)
-    private int mileage;
-    @Column(length=2000)
-    private String note;
-    @OneToMany(mappedBy="serviceRecord", cascade=CascadeType.ALL, orphanRemoval=true) @OrderBy("id ASC")
-    private List<ServiceItem> items;
-    protected ServiceRecord() {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(nullable = false)
+  private Vehicle vehicle;
+
+  @Column(nullable = false, unique = true, length = 36)
+  private String requestKey;
+
+  @Column(nullable = false)
+  private LocalDate serviceDate;
+
+  @Column(nullable = false)
+  private int mileage;
+
+  @Column(length = 2000)
+  private String note;
+
+  @OneToMany(mappedBy = "serviceRecord", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OrderBy("id ASC")
+  private List<ServiceItem> items = new ArrayList<>();
+
+  protected ServiceRecord() {}
+
+  public ServiceRecord(
+      Vehicle vehicle, String requestKey, LocalDate serviceDate, int mileage, String note) {
+    this.vehicle = Objects.requireNonNull(vehicle);
+    this.requestKey = UUID.fromString(requestKey).toString();
+    this.serviceDate = Objects.requireNonNull(serviceDate);
+    this.mileage = Checks.mileage(mileage);
+    this.note = Checks.optional(note, 2000, "Napomena");
+  }
+
+  public void addItem(WorkDefinition work, BigDecimal actualPrice) {
+    Objects.requireNonNull(work);
+
+    for (ServiceItem item : items) {
+      if (Objects.equals(item.getWork().getCode(), work.getCode())) {
+        throw new IllegalArgumentException("Rad je vec dodan u servis.");
+      }
     }
-    public ServiceRecord(Vehicle vehicle, String key, LocalDate date, int mileage, String note) {
-        this.vehicle=Objects.requireNonNull(vehicle);
-        requestKey=UUID.fromString(key).toString();
-        this.date=Objects.requireNonNull(date);
-        this.mileage=Checks.mileage(mileage);
-        this.note=Checks.optional(note, 2000, "Napomena");
-        items=new ArrayList<>();
+
+    items.add(new ServiceItem(this, work, actualPrice));
+  }
+
+  public CostSummary total() {
+    List<BigDecimal> prices = new ArrayList<>();
+
+    for (ServiceItem item : items) {
+      prices.add(item.getActualPrice());
     }
-    public void addItem(WorkDefinition work, BigDecimal actualPrice) {
-        Objects.requireNonNull(work);
-        for(ServiceItem i:items)if(Objects.equals(i.getWork().getCode(), work.getCode()))throw new IllegalArgumentException("Rad je vec dodan u servis.");
-        items.add(new ServiceItem(this, work, actualPrice));
-    }
-    public CostSummary total() {
-        List<BigDecimal> prices=new ArrayList<>();
-        for(ServiceItem item:items)prices.add(item.getActualPrice());
-        return CostSummary.of(prices);
-    }
-    public Long getId() {
-        return id;
-    }
-    public Vehicle getVehicle() {
-        return vehicle;
-    }
-    public String getRequestKey() {
-        return requestKey;
-    }
-    public LocalDate getDate() {
-        return date;
-    }
-    public int getMileage() {
-        return mileage;
-    }
-    public String getNote() {
-        return note;
-    }
-    public List<ServiceItem> getItems() {
-        return Collections.unmodifiableList(items);
-    }
+
+    return CostSummary.of(prices);
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public Vehicle getVehicle() {
+    return vehicle;
+  }
+
+  public String getRequestKey() {
+    return requestKey;
+  }
+
+  public LocalDate getServiceDate() {
+    return serviceDate;
+  }
+
+  public int getMileage() {
+    return mileage;
+  }
+
+  public String getNote() {
+    return note;
+  }
+
+  public List<ServiceItem> getItems() {
+    return Collections.unmodifiableList(items);
+  }
 }
