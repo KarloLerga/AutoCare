@@ -10,9 +10,7 @@ import hr.unizd.autocare.service.ProblemService;
 import hr.unizd.autocare.view.AnalysisDialog;
 import hr.unizd.autocare.view.MainFrame;
 import hr.unizd.autocare.view.components.Ui;
-import java.awt.Component;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import javax.swing.event.DocumentEvent;
@@ -32,7 +30,7 @@ public final class ProblemsController {
     this.service = service;
     this.session = session;
     this.events = events;
-    tasks = new UiTasks(session);
+    tasks = new UiTasks();
     frame.problems.status.addActionListener(
         e -> {
           if (session.active() != null) {
@@ -75,11 +73,10 @@ public final class ProblemsController {
 
   private final class AnalysisFlow {
     private final AnalysisDialog dialog = new AnalysisDialog(frame);
-    private final UiTasks work = new UiTasks(session);
+    private final UiTasks work = new UiTasks();
     private final long owner = session.owner(), vehicle = session.active().getId();
     private final String key = UUID.randomUUID().toString();
     private Analysis preview;
-    private Map<Component, Boolean> frozen;
 
     void open() {
       dialog
@@ -92,7 +89,6 @@ public final class ProblemsController {
                   dialog.save.setEnabled(false);
                   dialog.results.setRows(List.of());
                   dialog.estimate.setText("Opis je promijenjen; ponovno analizirajte.");
-                  work.invalidate();
                 }
 
                 public void insertUpdate(DocumentEvent e) {
@@ -114,6 +110,9 @@ public final class ProblemsController {
                 dialog,
                 () -> service.analyze(owner, vehicle, description),
                 a -> {
+                  if (!description.equals(dialog.description.getText())) {
+                    return;
+                  }
                   preview = a;
                   dialog.results.setRows(a.getResults());
                   dialog.save.setEnabled(true);
@@ -133,49 +132,15 @@ public final class ProblemsController {
             }
             work.run(
                 dialog,
-                true,
                 () -> service.save(owner, vehicle, key, snapshot),
                 id -> {
                   dialog.dispose();
                   events.publish(AppEvent.PROBLEM_SAVED);
                 },
-                error -> {
-                  Ui.error(dialog, error);
-                  if (UiTasks.uncertain(error)) {
-                    frozen = Ui.disableTree(dialog.getContentPane());
-                    dialog.check.setVisible(true);
-                    dialog.check.setEnabled(true);
-                    dialog.cancel.setEnabled(true);
-                  }
-                });
+                error -> Ui.error(dialog, error));
           });
-      dialog.check.addActionListener(
-          e ->
-              work.read(
-                  dialog,
-                  () -> service.findSaved(owner, key),
-                  id -> {
-                    if (id != null) {
-                      dialog.dispose();
-                      events.publish(AppEvent.PROBLEM_SAVED);
-                    } else {
-                      if (frozen != null) {
-                        Ui.restore(frozen);
-                        frozen = null;
-                      }
-                      dialog.save.setEnabled(preview != null);
-                      Ui.info(
-                          dialog,
-                          "Zapis nije pronadjen. Ponovite isti zahtjev tek nakon uspjesne provjere"
-                              + " veze.");
-                    }
-                  }));
       Runnable close =
           () -> {
-            if (session.isWriting()) {
-              Ui.info(dialog, "Pricekajte potvrdu spremanja.");
-              return;
-            }
             if (dialog.description.getText().isBlank()
                 || Ui.confirm(dialog, "Zatvoriti i odbaciti nespremljenu analizu?")) {
               dialog.dispose();

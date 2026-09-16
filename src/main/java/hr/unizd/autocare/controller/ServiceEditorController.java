@@ -1,6 +1,5 @@
 package hr.unizd.autocare.controller;
 
-import hr.unizd.autocare.app.Session;
 import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.model.Data.ServiceInput;
 import hr.unizd.autocare.model.Data.WorkRow;
@@ -16,7 +15,6 @@ public final class ServiceEditorController {
   public ServiceEditorController(
       ServiceEditorDialog view,
       List<WorkRow> works,
-      Session session,
       Consumer<ServiceInput> submit) {
     view.addMaintenance.addActionListener(e -> add(view, works, WorkCategory.MAINTENANCE));
     view.addRepair.addActionListener(e -> add(view, works, WorkCategory.REPAIR));
@@ -40,10 +38,6 @@ public final class ServiceEditorController {
         });
     Runnable cancel =
         () -> {
-          if (session.isWriting()) {
-            Ui.info(view, "Spremanje je u tijeku. Pricekajte rezultat.");
-            return;
-          }
           if (Ui.confirm(view, "Odbaciti nespremljene podatke ovog servisa?")) {
             view.dispose();
           }

@@ -42,7 +42,7 @@ public final class VehiclesController {
     this.catalog = catalog;
     this.session = session;
     this.events = events;
-    tasks = new UiTasks(session);
+    tasks = new UiTasks();
     frame.vehicles.add.addActionListener(e -> edit(null));
     frame.vehicles.edit.addActionListener(
         e -> {
@@ -100,7 +100,7 @@ public final class VehiclesController {
             row == null ? "Dodaj vozilo" : "Uredi vozilo",
             Dialog.ModalityType.APPLICATION_MODAL);
     VehicleForm form = new VehicleForm();
-    VehicleFormController picker = new VehicleFormController(form, catalog, session);
+    VehicleFormController picker = new VehicleFormController(form, catalog);
     JButton save = Ui.button("Spremi vozilo", true), cancel = Ui.button("Odustani", false);
     JPanel root = new JPanel(new BorderLayout(12, 12));
     root.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -110,14 +110,13 @@ public final class VehiclesController {
     dialog.setSize(900, 660);
     dialog.setLocationRelativeTo(frame);
     long owner = session.owner();
-    UiTasks editorTask = new UiTasks(session);
+    UiTasks editorTask = new UiTasks();
     save.addActionListener(
         e -> {
           try {
             VehicleInput input = form.input();
             editorTask.run(
                 dialog,
-                true,
                 () -> {
                   if (row == null) {
                     service.add(owner, input);
@@ -130,24 +129,14 @@ public final class VehiclesController {
                   dialog.dispose();
                   events.publish(AppEvent.VEHICLE_CHANGED);
                 },
-                error -> {
-                  Ui.error(dialog, error);
-                  if (UiTasks.uncertain(error)) {
-                    save.setEnabled(false);
-                    Ui.info(
-                        dialog,
-                        "Ne ponavljajte dodavanje naslijepo. Zatvorite obrazac i osvjezite Vozila"
-                            + " kako biste provjerili stvarno stanje.");
-                  }
-                });
+                error -> Ui.error(dialog, error));
           } catch (RuntimeException ex) {
             Ui.error(dialog, ex);
           }
         });
     Runnable close =
         () -> {
-          if (!session.isWriting()
-              && Ui.confirm(dialog, "Odbaciti nespremljene promjene vozila?")) {
+          if (Ui.confirm(dialog, "Odbaciti nespremljene promjene vozila?")) {
             dialog.dispose();
           }
         };

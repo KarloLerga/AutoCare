@@ -6,7 +6,6 @@ import hr.unizd.autocare.domain.MaintenanceStatus;
 import hr.unizd.autocare.domain.WorkCategory;
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -19,9 +18,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
-import java.util.IdentityHashMap;
 import java.util.Locale;
-import java.util.Map;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -214,23 +211,4 @@ public final class Ui {
         });
   }
 
-  public static Map<Component, Boolean> disableTree(Component root) {
-    Map<Component, Boolean> old = new IdentityHashMap<>();
-    capture(root, old);
-    return old;
-  }
-
-  private static void capture(Component c, Map<Component, Boolean> old) {
-    old.put(c, c.isEnabled());
-    c.setEnabled(false);
-    if (c instanceof Container panel) {
-      for (Component child : panel.getComponents()) {
-        capture(child, old);
-      }
-    }
-  }
-
-  public static void restore(Map<Component, Boolean> old) {
-    old.forEach(Component::setEnabled);
-  }
 }

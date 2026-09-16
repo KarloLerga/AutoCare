@@ -26,7 +26,7 @@ public final class MaintenanceController {
     this.frame = frame;
     this.service = service;
     this.session = session;
-    tasks = new UiTasks(session);
+    tasks = new UiTasks();
     frame.maintenance.estimate.addActionListener(
         e -> {
           int[] selected = frame.maintenance.table.table().getSelectedRows();
