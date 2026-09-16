@@ -15,7 +15,7 @@ povijesne AF3/CLEAN redove ispod. Svaka faza je stvarno implementirana u repozit
 | F5 repository/runner simplifikacija | PASS | `4f0762d`; runner lifecycle testovi prosli |
 | F6 aplikacijski servisi i DTO version flow | PASS | `e06888c`; auth/vehicle/controller potpisi uskladeni |
 | F7 maintenance model i schema delta | PASS | `1d4bc11`; `mvnw -q test`, dodatne offline provjere: 18 |
-| F8 dokumentacija i završna verifikacija | U TIJEKU | Nakon doc uskladivanja slijede finalni build/Javadoc/secret/package auditi |
+| F8 dokumentacija i završna verifikacija | PASS uz blokade | `336a695`; docs uskladeni, `clean verify`, setup package, Javadoc, staged secret-check i runtime-JAR audit prosli |
 
 V2 SQL promjena nije pokrenuta nad postojećom Azure bazom. `schema/05_student_simplification_v2.sql`
 je read-only po defaultu i dodaje samo nullable `defaultIntervalKm`/`defaultIntervalMonths` na ciljnu
@@ -84,5 +84,16 @@ executed before this name-only JPA refactor; they are not validation of the targ
 - 2026-09-16: Added `generic-vehicle.jpg` and `generic-electric.jpg` as local generated category illustrations, with packaged CSV/HTML provenance and classpath regression tests. They are not exact model photos and do not auto-approve any catalog group.
 - 2026-09-16: Real `mvnw -q clean verify` passed after the image phase with 10 tests total (7 `CoreTest`, 1 `SqlInfrastructureTest`, 2 `VehicleImageTest`); all three local vehicle JPEG resources are packaged under `target/classes`.
 - 2026-09-16: Real `mvnw javadoc:javadoc` passed on Java 25. Windows GUI interaction/DPI/cancellation scenarios are BLOCKED because the Computer Use native pipe is unavailable; the isolated SQL Server `_test` profile is NOT_RUN because no separate approved database exists. Exact model-specific Commons photo enrichment remains NOT_RUN; local generic fallback is covered by F8 and its evidence file.
+
+## V2 F8 izvedeni dokazi
+
+- `.\mvnw.cmd -q clean verify`: PASS; Maven/JDK25 testovi i `Additional offline checks passed: 18`.
+- `.\mvnw.cmd -q install -DskipTests`: PASS; runtime artifact instaliran za neovisni setup build.
+- `.\mvnw.cmd -q -f tools\setup\pom.xml clean test package`: PASS.
+- `.\mvnw.cmd -q javadoc:javadoc`: PASS na JDK 25.
+- `scripts/check-secrets.ps1`: PASS nad staged F8 dokumentacijom; nema privatnih/arhivskih datoteka ni credential patterna.
+- Runtime JAR audit: PASS; setup klase nisu u runtime JAR-u, a lokalne fallback slike/provenance su prisutne.
+- Git/DAG: PASS; F1-F8 su stvarni linearni commitovi na `main`, bez force-pusha; F8 je `336a695`.
+- Dijagrami: PASS ocuvani; F8 nije mijenjao `.dot`, `.mmd`, `.png` ni `.svg` datoteke.
 
 Record each future run with date, phase, exact non-secret command, outcome, relevant commit SHA, blocker and next step. Do not replace blocked results with imagined success.

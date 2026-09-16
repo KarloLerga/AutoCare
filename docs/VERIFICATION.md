@@ -16,9 +16,20 @@ the historical AF3/CLEAN runs below.
 - Current source counts after F7: 78 production Java files / 6,282 lines and 9 test Java files /
   1,017 lines. These counts are descriptive, not a quality score.
 
-The final F8 docs/build/package/secret evidence is added after those commands actually run. Target-name
-Hibernate validation against Azure, the isolated `_test` SQL profile and native Windows GUI interaction
-remain `BLOCKED`/`NOT_RUN`; no skipped scenario is labelled PASS.
+F8 final docs/build/package/secret evidence:
+
+- `.\mvnw.cmd -q clean verify`: PASS; Maven/JDK25 tests and `Additional offline checks passed: 18`.
+- `.\mvnw.cmd -q install -DskipTests`: PASS.
+- `.\mvnw.cmd -q -f tools\setup\pom.xml clean test package`: PASS.
+- `.\mvnw.cmd -q javadoc:javadoc`: PASS on JDK 25.
+- `scripts/check-secrets.ps1` on staged docs: PASS.
+- Runtime/package audit: PASS; runtime JAR has no setup classes or private/reference-data payloads and
+  includes the three local vehicle fallback/provenance resources. Setup JAR contains the developer CLI.
+- `git diff --cached --check` before F8 commit: PASS; no diagram files were changed.
+- F8 docs commit is `336a695`; it is pushed to `origin/main`.
+
+Target-name Hibernate validation against Azure, the isolated `_test` SQL profile and native Windows GUI
+interaction remain `BLOCKED`/`NOT_RUN`; no skipped scenario is labelled PASS.
 Date: 2026-09-16. This file keeps historical evidence separate from the current REVIEW-CLEAN-2 worktree. No
 unexecuted SQL, JPA or GUI scenario is labelled PASS.
 
