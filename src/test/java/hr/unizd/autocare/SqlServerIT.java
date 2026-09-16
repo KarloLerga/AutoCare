@@ -1,6 +1,7 @@
 package hr.unizd.autocare;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -32,7 +33,6 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 import java.util.function.Function;
 import org.junit.jupiter.api.Test;
@@ -47,7 +47,7 @@ class SqlServerIT {
       Clock.fixed(Instant.parse("2026-09-16T12:00:00Z"), ZoneOffset.UTC);
 
   @Test
-  void serviceSuccessTwoProblemsRetryOwnershipAndHistoricalMileage() {
+  void serviceSuccessTwoProblemsOwnershipAndHistoricalMileage() {
     try (EntityManagerFactory factory = SqlTestDatabase.open();
         Fixture fixture = new Fixture(factory)) {
       long owner = fixture.register();
@@ -55,8 +55,7 @@ class SqlServerIT {
       long firstProblem = fixture.addProblem(vehicle, "first");
       long secondProblem = fixture.addProblem(vehicle, "second");
       long unselectedProblem = fixture.addProblem(vehicle, "unselected");
-      String key = "abcdef01-2345-4678-9012-" + UUID.randomUUID().toString().substring(24);
-      ServiceInput input = fixture.service(key, 120_000, List.of(firstProblem, secondProblem));
+      ServiceInput input = fixture.service(120_000, List.of(firstProblem, secondProblem));
 
       long saved = fixture.services.create(owner, vehicle, input);
       fixture.assertProblem(firstProblem, ProblemStatus.RESOLVED, saved);
@@ -67,16 +66,12 @@ class SqlServerIT {
           new BigDecimal("63.47"),
           fixture.services.detail(owner, saved).getHeader().getTotal().getKnownTotal());
 
-      // Isti sadrzaj, drukciji casing UUID-a: mora naci isti zapis.
-      ServiceInput retry =
-          fixture.service(
-              key.toUpperCase(Locale.ROOT), 120_000, List.of(firstProblem, secondProblem));
-      assertEquals(saved, fixture.services.create(owner, vehicle, retry));
-      assertEquals(
-          Long.valueOf(saved), fixture.services.findSaved(owner, key.toUpperCase(Locale.ROOT)));
-      assertEquals(1, fixture.services.page(owner, vehicle, 0).size());
+      // Svaki poziv je novi studentski zapis; nema request-key idempotency sloja.
+      ServiceInput second = fixture.service(120_000, List.of());
+      assertNotEquals(saved, fixture.services.create(owner, vehicle, second));
+      assertEquals(2, fixture.services.page(owner, vehicle, 0).size());
 
-      ServiceInput changed = fixture.service(key, 120_001, List.of(firstProblem, secondProblem));
+      ServiceInput changed = fixture.service(120_001, List.of(firstProblem, secondProblem));
       assertThrows(AppException.class, () -> fixture.services.create(owner, vehicle, changed));
       assertThrows(AppException.class, () -> fixture.vehicles.delete(owner, vehicle, null));
 
@@ -88,11 +83,10 @@ class SqlServerIT {
               fixture.services.create(
                   otherOwner,
                   vehicle,
-                  fixture.service(UUID.randomUUID().toString(), 130_000, List.of())));
+                  fixture.service(130_000, List.of())));
 
       ServiceInput older =
           new ServiceInput(
-              UUID.randomUUID().toString(),
               LocalDate.of(2020, 3, 1),
               80_000,
               "Old invoice",
@@ -110,12 +104,10 @@ class SqlServerIT {
       long owner = fixture.register();
       long vehicle = fixture.vehicles.active(owner).getId();
       long firstProblem = fixture.addProblem(vehicle, "must remain open");
-      String key = UUID.randomUUID().toString();
-      ServiceInput bad = fixture.service(key, 120_000, List.of(firstProblem, Long.MAX_VALUE));
+      ServiceInput bad = fixture.service(120_000, List.of(firstProblem, Long.MAX_VALUE));
 
       // Prvi Problem vec je promijenjen kad dohvat drugog namjerno ne uspije.
       assertThrows(AppException.class, () -> fixture.services.create(owner, vehicle, bad));
-      assertNull(fixture.services.findSaved(owner, key));
       assertEquals(100_000, fixture.vehicles.active(owner).getMileage());
       assertEquals(0, fixture.services.page(owner, vehicle, 0).size());
       fixture.assertProblem(firstProblem, ProblemStatus.OPEN, null);
@@ -142,7 +134,6 @@ class SqlServerIT {
       String email = fixture.newEmail();
       ServiceInput good =
           new ServiceInput(
-              UUID.randomUUID().toString(),
               LocalDate.of(2020, 1, 1),
               80_000,
               "Known history",
@@ -151,7 +142,6 @@ class SqlServerIT {
       // OTHER_ bez obavezne napomene: provjera aktualnog lokalnog pravila.
       ServiceInput bad =
           new ServiceInput(
-              UUID.randomUUID().toString(),
               LocalDate.of(2021, 1, 1),
               90_000,
               null,
@@ -192,9 +182,9 @@ class SqlServerIT {
                 0L,
                 entityManager
                     .createQuery(
-                        "select count(s) from ServiceRecord s where s.requestKey in :keys",
+                        "select count(s) from ServiceRecord s where s.vehicle.variant.id=:variant",
                         Long.class)
-                    .setParameter("keys", List.of(good.getRequestKey(), bad.getRequestKey()))
+                    .setParameter("variant", fixture.variant)
                     .getSingleResult());
             return null;
           });
@@ -296,9 +286,8 @@ class SqlServerIT {
           });
     }
 
-    ServiceInput service(String key, int mileage, List<Long> problems) {
+    ServiceInput service(int mileage, List<Long> problems) {
       return new ServiceInput(
-          key,
           LocalDate.now(CLOCK),
           mileage,
           "Test invoice",

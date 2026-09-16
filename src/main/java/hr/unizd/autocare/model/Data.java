@@ -305,7 +305,6 @@ public final class Data {
 
   /** ServiceInput - jednostavan prijenos podataka preko granice slojeva. */
   public static final class ServiceInput {
-    private final String requestKey;
     private final LocalDate date;
     private final int mileage;
     private final String note;
@@ -313,22 +312,16 @@ public final class Data {
     private final List<Long> resolvedProblemIds;
 
     public ServiceInput(
-        String requestKey,
         LocalDate date,
         int mileage,
         String note,
         List<ItemInput> items,
         List<Long> resolvedProblemIds) {
-      this.requestKey = requestKey;
       this.date = date;
       this.mileage = mileage;
       this.note = note;
       this.items = List.copyOf(items);
       this.resolvedProblemIds = List.copyOf(resolvedProblemIds);
-    }
-
-    public String getRequestKey() {
-      return requestKey;
     }
 
     public LocalDate getDate() {

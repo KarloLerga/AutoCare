@@ -12,20 +12,15 @@ import hr.unizd.autocare.model.Data.ServiceDetail;
 import hr.unizd.autocare.model.Data.ServiceInput;
 import hr.unizd.autocare.model.Data.ServiceRow;
 import hr.unizd.autocare.repository.Repositories;
-import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
-/** Poslovna granica za servis, njegove stavke, kilometrazu i rijesene probleme. */
+  /** Poslovna granica za servis, njegove stavke, kilometrazu i rijesene probleme. */
 public final class ServiceRecordService {
 
   private final TransactionRunner transactions;
@@ -36,88 +31,16 @@ public final class ServiceRecordService {
     this.clock = Objects.requireNonNull(clock);
   }
 
-  /**
-   * Sprema cijeli servis u jednoj transakciji koju odredjuje ovaj use-case. Ponovljeni isti zahtjev
-   * vraca postojeci ID, ne stvara novi servis.
-   *
-   * @param owner ID prijavljenog korisnika
-   * @param vehicle ID njegova vozila
-   * @param input nepromjenjivi snapshot forme, a ne managed entitet
-   * @return ID nakon uspjesnog commita; osvjezavanje GUI-ja zasebno je citanje
-   * @throws AppException za nevaljan unos, konflikt ili nepotvrdjen ishod commita
-   */
+  /** Sprema cijeli servis u jednoj transakciji; osvjezavanje GUI-ja zasebno je citanje. */
   public long create(long owner, long vehicle, ServiceInput input) {
     return transactions.write(
         repositories -> {
           repositories.users().lock(owner);
           validate(input, false, clock);
-
-          String requestKey = canonicalRequestKey(input.getRequestKey());
-          Optional<ServiceRecord> existing = repositories.services().byRequest(owner, requestKey);
-
-          if (existing.isPresent()) {
-            ServiceRecord saved = existing.get();
-
-            if (!saved.getVehicle().getId().equals(vehicle)) {
-              throw AppException.conflict("Kljuc zahtjeva pripada drugom vozilu.");
-            }
-
-            ensureSameRequest(repositories, owner, saved, input);
-            return saved.getId();
-          }
-
           Vehicle ownedVehicle = repositories.vehicles().requireOwned(owner, vehicle);
           ServiceRecord saved = saveInside(repositories, ownedVehicle, input, false, clock);
           return saved.getId();
         });
-  }
-
-  private static void ensureSameRequest(
-      Repositories repositories, long owner, ServiceRecord saved, ServiceInput input) {
-    boolean same =
-        saved.getServiceDate().equals(input.getDate())
-            && saved.getMileage() == input.getMileage()
-            && Objects.equals(saved.getNote(), Checks.optional(input.getNote(), 2000, "Napomena"))
-            && saved.getItems().size() == input.getItems().size();
-
-    Map<Long, BigDecimal> requestedPrices = new HashMap<>();
-
-    for (ItemInput item : input.getItems()) {
-      requestedPrices.put(item.getWorkId(), item.getActualPrice());
-    }
-
-    for (ServiceItem item : saved.getItems()) {
-      BigDecimal requestedPrice = requestedPrices.get(item.getWork().getId());
-      BigDecimal savedPrice = item.getActualPrice();
-
-      if (requestedPrice == null
-          || savedPrice == null
-          || requestedPrice.compareTo(savedPrice) != 0) {
-        same = false;
-      }
-    }
-
-    int savedProblemCount =
-        repositories.problems().resolvedDescriptions(owner, saved.getId()).size();
-
-    if (savedProblemCount != input.getResolvedProblemIds().size()) {
-      same = false;
-    }
-
-    for (Long problemId : input.getResolvedProblemIds()) {
-      Problem problem = repositories.problems().requireOwned(owner, problemId);
-      ServiceRecord resolvingService = problem.getResolvedByService();
-
-      if (resolvingService == null || !resolvingService.getId().equals(saved.getId())) {
-        same = false;
-      }
-    }
-
-    if (!same) {
-      throw AppException.conflict(
-          "Isti zahtjev vec je spremljen s drugim podacima. "
-              + "Otvorite spremljeni servis; ne prepisujte povijest.");
-    }
   }
 
   /**
@@ -139,7 +62,6 @@ public final class ServiceRecordService {
     ServiceRecord serviceRecord =
         new ServiceRecord(
             vehicle,
-            canonicalRequestKey(input.getRequestKey()),
             input.getDate(),
             input.getMileage(),
             input.getNote());
@@ -202,8 +124,6 @@ public final class ServiceRecordService {
 
     Checks.mileage(input.getMileage());
     Checks.optional(input.getNote(), 2000, "Napomena");
-    canonicalRequestKey(input.getRequestKey());
-
     if (input.getItems().isEmpty() || input.getItems().size() > 100) {
       throw AppException.validation("Servis treba imati 1 - 100 stavki.");
     }
@@ -219,23 +139,6 @@ public final class ServiceRecordService {
 
     if (historical && !input.getResolvedProblemIds().isEmpty()) {
       throw AppException.validation("Pocetna povijest ne rjesava postojece probleme.");
-    }
-  }
-
-  private static String canonicalRequestKey(String requestKey) {
-    if (requestKey == null || requestKey.length() != 36) {
-      throw AppException.validation("Nevaljan kljuc zahtjeva za spremanje.");
-    }
-
-    try {
-      String canonical = UUID.fromString(requestKey).toString();
-
-      if (!canonical.equalsIgnoreCase(requestKey)) {
-        throw new IllegalArgumentException("Non-canonical UUID");
-      }
-      return canonical;
-    } catch (IllegalArgumentException exception) {
-      throw AppException.validation("Nevaljan kljuc zahtjeva za spremanje.");
     }
   }
 
@@ -275,14 +178,4 @@ public final class ServiceRecordService {
         });
   }
 
-  public Long findSaved(long owner, String key) {
-    String requestKey = canonicalRequestKey(key);
-    return transactions.read(
-        repositories ->
-            repositories
-                .services()
-                .byRequest(owner, requestKey)
-                .map(ServiceRecord::getId)
-                .orElse(null));
-  }
 }
