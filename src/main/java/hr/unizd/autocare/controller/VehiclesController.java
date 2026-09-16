@@ -12,202 +12,252 @@ import hr.unizd.autocare.view.components.Ui;
 import hr.unizd.autocare.view.components.VehicleForm;
 import java.awt.BorderLayout;
 import java.awt.Dialog;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-/** Kontroler vozila; service provjerava vlasnika i invarijante. */
+/** Dodavanje, uredjivanje, aktiviranje i brisanje vozila. */
 public final class VehiclesController {
-  private final MainFrame frame;
-  private final VehicleService service;
-  private final CatalogService catalog;
-  private final Session session;
-  private final AppEvents events;
-  private final UiTasks tasks;
 
-  public VehiclesController(
-      MainFrame frame,
-      VehicleService service,
-      CatalogService catalog,
-      Session session,
-      AppEvents events) {
-    this.frame = frame;
-    this.service = service;
-    this.catalog = catalog;
-    this.session = session;
-    this.events = events;
-    tasks = new UiTasks();
-    frame.vehicles.add.addActionListener(e -> edit(null));
-    frame.vehicles.edit.addActionListener(
-        e -> {
-          VehicleRow row = selected();
-          if (row != null) {
-            edit(row);
-          }
-        });
-    frame.vehicles.activate.addActionListener(
-        e -> {
-          VehicleRow row = selected();
-          if (row != null) {
-            tasks.write(
+    private final MainFrame frame;
+    private final VehicleService service;
+    private final CatalogService catalog;
+    private final Session session;
+    private final AppEvents events;
+    private final UiTasks tasks = new UiTasks();
+
+    public VehiclesController(
+            MainFrame frame,
+            VehicleService service,
+            CatalogService catalog,
+            Session session,
+            AppEvents events) {
+
+        this.frame = frame;
+        this.service = service;
+        this.catalog = catalog;
+        this.session = session;
+        this.events = events;
+
+        activateForm();
+    }
+
+    private void activateForm() {
+        frame.vehicles.add.addActionListener(
+                event -> edit(null));
+
+        frame.vehicles.edit.addActionListener(
+                event -> {
+                    VehicleRow vehicle = selected();
+
+                    if (vehicle != null) {
+                        edit(vehicle);
+                    }
+                });
+
+        frame.vehicles.activate.addActionListener(
+                event -> activate());
+
+        frame.vehicles.delete.addActionListener(
+                event -> delete());
+    }
+
+    public void load() {
+        tasks.read(
+                frame.vehicles,
+                () -> service.list(session.owner()),
+                rows -> frame.vehicles.table.setRows(rows));
+    }
+
+    private VehicleRow selected() {
+        VehicleRow vehicle =
+                frame.vehicles.table.selected();
+
+        if (vehicle == null) {
+            Ui.info(frame, "Odaberite vozilo.");
+        }
+
+        return vehicle;
+    }
+
+    private void activate() {
+        VehicleRow vehicle = selected();
+
+        if (vehicle == null) {
+            return;
+        }
+
+        tasks.write(
                 frame,
                 () -> {
-                  service.activate(session.owner(), row.getId());
-                  return true;
+                    service.activate(
+                            session.owner(),
+                            vehicle.getId());
+
+                    return true;
                 },
-                ok -> events.publish(AppEvent.ACTIVE_VEHICLE_CHANGED));
-          }
-        });
-    frame.vehicles.delete.addActionListener(e -> delete());
-  }
-
-  public void load() {
-    long owner = session.owner();
-    tasks.read(
-        frame.vehicles, () -> service.list(owner), rows -> frame.vehicles.table.setRows(rows));
-  }
-
-  private VehicleRow selected() {
-    VehicleRow row = frame.vehicles.table.selected();
-    if (row == null) {
-      Ui.info(frame, "Odaberite vozilo.");
+                result -> events.publish(
+                        AppEvent.ACTIVE_VEHICLE_CHANGED));
     }
-    return row;
-  }
 
-  private void edit(VehicleRow row) {
-    if (row == null) {
-      showEditor(null, true);
-    } else {
-      long owner = session.owner();
-      tasks.read(
-          frame,
-          () -> service.identityEditable(owner, row.getId()),
-          editable -> showEditor(row, editable));
-    }
-  }
-
-  private void showEditor(VehicleRow row, boolean identityEditable) {
-    JDialog dialog =
-        new JDialog(
-            frame,
-            row == null ? "Dodaj vozilo" : "Uredi vozilo",
-            Dialog.ModalityType.APPLICATION_MODAL);
-    VehicleForm form = new VehicleForm();
-    VehicleFormController picker = new VehicleFormController(form, catalog);
-    JButton save = Ui.button("Spremi vozilo", true), cancel = Ui.button("Odustani", false);
-    JPanel root = new JPanel(new BorderLayout(12, 12));
-    root.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-    root.add(form);
-    root.add(Ui.row(cancel, save), BorderLayout.SOUTH);
-    dialog.setContentPane(root);
-    dialog.setSize(900, 660);
-    dialog.setLocationRelativeTo(frame);
-    long owner = session.owner();
-    UiTasks editorTask = new UiTasks();
-    save.addActionListener(
-        e -> {
-          try {
-            VehicleInput input = form.input();
-            editorTask.run(
-                dialog,
-                () -> {
-                  if (row == null) {
-                    service.add(owner, input);
-                  } else {
-                    service.update(owner, row.getId(), row.getVersion(), input);
-                  }
-                  return true;
-                },
-                ok -> {
-                  dialog.dispose();
-                  events.publish(AppEvent.VEHICLE_CHANGED);
-                },
-                error -> Ui.error(dialog, error));
-          } catch (RuntimeException ex) {
-            Ui.error(dialog, ex);
-          }
-        });
-    Runnable close =
-        () -> {
-          if (Ui.confirm(dialog, "Odbaciti nespremljene promjene vozila?")) {
-            dialog.dispose();
-          }
-        };
-    cancel.addActionListener(e -> close.run());
-    Ui.escape(dialog, close);
-    if (row != null) {
-      form.existing(row, identityEditable);
-    } else {
-      SwingUtilities.invokeLater(picker::loadMakes);
-    }
-    dialog.setVisible(true);
-  }
-
-  private void delete() {
-    VehicleRow row = selected();
-    if (row == null) {
-      return;
-    }
-    List<VehicleRow> rows = frame.vehicles.table.rows();
-    if (rows.size() <= 1) {
-      Ui.info(frame, "Posljednje vozilo nije moguce obrisati.");
-      return;
-    }
-    Long replacement = null;
-    if (row.getActive()) {
-      List<VehicleRow> choices = new ArrayList<>();
-      for (VehicleRow other : rows) {
-        if (other.getId() != row.getId()) {
-          choices.add(other);
+    private void edit(VehicleRow vehicle) {
+        if (vehicle == null) {
+            showEditor(null, true);
+            return;
         }
-      }
-      String[] labels = new String[choices.size()];
-      for (int i = 0; i < labels.length; i++) {
-        VehicleRow v = choices.get(i);
-        labels[i] =
-            v.getVariant().getMake()
-                + " "
-                + v.getVariant().getModel()
-                + " ("
-                + v.getYear()
-                + ", #"
-                + v.getId()
-                + ")";
-      }
-      String answer =
-          (String)
-              JOptionPane.showInputDialog(
-                  frame,
-                  "Odaberite novo aktivno vozilo:",
-                  "Brisanje aktivnog vozila",
-                  JOptionPane.QUESTION_MESSAGE,
-                  null,
-                  labels,
-                  labels[0]);
-      if (answer == null) {
-        return;
-      }
-      replacement = choices.get(Arrays.asList(labels).indexOf(answer)).getId();
+
+        tasks.read(
+                frame,
+                () -> service.identityEditable(
+                        session.owner(),
+                        vehicle.getId()),
+                editable -> showEditor(
+                        vehicle,
+                        editable));
     }
-    if (!Ui.confirm(
-        frame, "Trajno obrisati vozilo #" + row.getId() + ", njegove servise i probleme?")) {
-      return;
+
+    private void showEditor(
+            VehicleRow vehicle,
+            boolean identityEditable) {
+
+        JDialog dialog =
+                new JDialog(
+                        frame,
+                        vehicle == null
+                                ? "Dodaj vozilo"
+                                : "Uredi vozilo",
+                        Dialog.ModalityType.APPLICATION_MODAL);
+
+        VehicleForm form = new VehicleForm();
+
+        VehicleFormController picker =
+                new VehicleFormController(
+                        form,
+                        catalog);
+
+        JButton save =
+                Ui.button("Spremi vozilo", true);
+
+        JButton cancel =
+                Ui.button("Odustani", false);
+
+        JPanel root =
+                new JPanel(
+                        new BorderLayout(
+                                12,
+                                12));
+
+        root.setBorder(
+                BorderFactory.createEmptyBorder(
+                        20,
+                        20,
+                        20,
+                        20));
+
+        root.add(form, BorderLayout.CENTER);
+        root.add(
+                Ui.actions(cancel, save),
+                BorderLayout.SOUTH);
+
+        dialog.setContentPane(root);
+        dialog.setSize(900, 660);
+        dialog.setLocationRelativeTo(frame);
+
+        UiTasks editorTasks = new UiTasks();
+
+        save.addActionListener(event -> {
+            try {
+                VehicleInput input = form.input();
+
+                editorTasks.write(
+                        dialog,
+                        () -> {
+                            if (vehicle == null) {
+                                service.add(
+                                        session.owner(),
+                                        input);
+                            } else {
+                                service.update(
+                                        session.owner(),
+                                        vehicle.getId(),
+                                        input);
+                            }
+
+                            return true;
+                        },
+                        result -> {
+                            dialog.dispose();
+                            events.publish(
+                                    AppEvent.VEHICLE_CHANGED);
+                        });
+            } catch (RuntimeException exception) {
+                Ui.error(dialog, exception);
+            }
+        });
+
+        Runnable close = () -> {
+            if (Ui.confirm(
+                    dialog,
+                    "Odbaciti nespremljene promjene vozila?")) {
+
+                dialog.dispose();
+            }
+        };
+
+        cancel.addActionListener(
+                event -> close.run());
+
+        Ui.escape(dialog, close);
+
+        if (vehicle == null) {
+            SwingUtilities.invokeLater(
+                    picker::loadMakes);
+        } else {
+            form.existing(
+                    vehicle,
+                    identityEditable);
+        }
+
+        dialog.setVisible(true);
     }
-    final Long target = replacement;
-    long owner = session.owner();
-    tasks.write(
-        frame,
-        () -> {
-          service.delete(owner, row.getId(), target);
-          return true;
-        },
-        ok -> events.publish(AppEvent.VEHICLE_CHANGED));
-  }
+
+    private void delete() {
+        VehicleRow vehicle = selected();
+
+        if (vehicle == null) {
+            return;
+        }
+
+        if (frame.vehicles.table.rows().size() <= 1) {
+            Ui.info(
+                    frame,
+                    "Posljednje vozilo nije moguce obrisati.");
+            return;
+        }
+
+        boolean confirmed =
+                Ui.confirm(
+                        frame,
+                        "Trajno obrisati vozilo #"
+                                + vehicle.getId()
+                                + ", njegove servise i probleme?");
+
+        if (!confirmed) {
+            return;
+        }
+
+        tasks.write(
+                frame,
+                () -> {
+                    service.delete(
+                            session.owner(),
+                            vehicle.getId());
+
+                    return true;
+                },
+                result -> events.publish(
+                        AppEvent.VEHICLE_CHANGED));
+    }
 }

@@ -21,7 +21,6 @@ final class Mapping {
   static Account account(AppUser u) {
     return new Account(
         u.getId(),
-        u.getVersion(),
         u.getName(),
         u.getEmail(),
         u.getActiveVehicle() == null ? null : u.getActiveVehicle().getId());
@@ -46,7 +45,6 @@ final class Mapping {
   static VehicleRow vehicle(Vehicle v, Long active) {
     return new VehicleRow(
         v.getId(),
-        v.getVersion(),
         variant(v.getVariant()),
         v.getProductionYear(),
         v.getCurrentMileage(),
@@ -76,9 +74,4 @@ final class Mapping {
         p.getResolvedByService() == null ? null : p.getResolvedByService().getId());
   }
 
-  static void version(long actual, long expected) {
-    if (actual != expected) {
-      throw AppException.conflict("Podaci su u medjuvremenu promijenjeni. Osvjezite obrazac.");
-    }
-  }
 }

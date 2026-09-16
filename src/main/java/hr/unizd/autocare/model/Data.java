@@ -16,14 +16,12 @@ public final class Data {
   /** Account - jednostavan prijenos podataka preko granice slojeva. */
   public static final class Account {
     private final long id;
-    private final long version;
     private final String name;
     private final String email;
     private final Long activeVehicleId;
 
-    public Account(long id, long version, String name, String email, Long activeVehicleId) {
+    public Account(long id, String name, String email, Long activeVehicleId) {
       this.id = id;
-      this.version = version;
       this.name = name;
       this.email = email;
       this.activeVehicleId = activeVehicleId;
@@ -31,10 +29,6 @@ public final class Data {
 
     public long getId() {
       return id;
-    }
-
-    public long getVersion() {
-      return version;
     }
 
     public String getName() {
@@ -47,31 +41,6 @@ public final class Data {
 
     public Long getActiveVehicleId() {
       return activeVehicleId;
-    }
-  }
-
-  /** Credentials - jednostavan prijenos podataka preko granice slojeva. */
-  public static final class Credentials {
-    private final long id;
-    private final long version;
-    private final String hash;
-
-    public Credentials(long id, long version, String hash) {
-      this.id = id;
-      this.version = version;
-      this.hash = hash;
-    }
-
-    public long getId() {
-      return id;
-    }
-
-    public long getVersion() {
-      return version;
-    }
-
-    public String getHash() {
-      return hash;
     }
   }
 
@@ -169,16 +138,13 @@ public final class Data {
   /** VehicleRow - jednostavan prijenos podataka preko granice slojeva. */
   public static final class VehicleRow {
     private final long id;
-    private final long version;
     private final VariantRow variant;
     private final int year;
     private final int mileage;
     private final boolean active;
 
-    public VehicleRow(
-        long id, long version, VariantRow variant, int year, int mileage, boolean active) {
+    public VehicleRow(long id, VariantRow variant, int year, int mileage, boolean active) {
       this.id = id;
-      this.version = version;
       this.variant = variant;
       this.year = year;
       this.mileage = mileage;
@@ -187,10 +153,6 @@ public final class Data {
 
     public long getId() {
       return id;
-    }
-
-    public long getVersion() {
-      return version;
     }
 
     public VariantRow getVariant() {
