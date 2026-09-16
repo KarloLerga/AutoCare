@@ -6,11 +6,14 @@ import build_af3 as b
 IMAGES=ROOT.parent/'images/enrich_images.py'
 spec=importlib.util.spec_from_file_location('image_tool',IMAGES);image=importlib.util.module_from_spec(spec);spec.loader.exec_module(image)
 
+def read_csv(path):
+ with path.open(encoding='utf-8',newline='') as handle:return list(csv.DictReader(handle))
+
 class EnrichmentChecks(unittest.TestCase):
  @classmethod
  def setUpClass(cls):
-  cls.works={w['code']:w for w in json.loads((ROOT/'config/works.json').read_text())}
-  cls.traits=[b.load_traits(r) for r in csv.DictReader((ROOT/'base-input/vehicle_traits.csv').open(encoding='utf-8'))]
+  cls.works={w['code']:w for w in json.loads((ROOT/'config/works.json').read_text(encoding='utf-8'))}
+  cls.traits=[b.load_traits(r) for r in read_csv(ROOT/'base-input/vehicle_traits.csv')]
   cls.ev=next(t for t in cls.traits if t['make']=='Tesla' and t['generation']=='Model 3 (2023)')
   cls.diesel=next(t for t in cls.traits if t['make']=='Renault' and t['fuel_class']=='DIESEL' and t['year_from']==2015)
  def test_catalog_size(self):self.assertEqual(30366,len(self.traits))
@@ -32,14 +35,14 @@ class EnrichmentChecks(unittest.TestCase):
  def test_kia_not_silently_hr(self):
   t=next(t for t in self.traits if t['make']=='Kia' and t['model']=='EV6')
   self.assertFalse(b.referenced(t));self.assertTrue(all(r['review_status'].startswith('DRAFT') for r in b.market_candidates(t)))
- def test_model_y_no_bad_reference(self):self.assertFalse(any('2020_2024_modely' in r['interval_source'] for r in csv.DictReader((ROOT/'data/referenced_intervals.csv').open())))
+ def test_model_y_no_bad_reference(self):self.assertFalse(any('2020_2024_modely' in r['interval_source'] for r in read_csv(ROOT/'data/referenced_intervals.csv')))
  def test_overlaps_not_unrelated(self):
-  m=json.loads((ROOT/'config/model.json').read_text());self.assertNotIn(['WHEEL_ALIGNMENT','SCHEDULED_INSPECTION'],m['overlap_pairs'])
+  m=json.loads((ROOT/'config/model.json').read_text(encoding='utf-8'));self.assertNotIn(['WHEEL_ALIGNMENT','SCHEDULED_INSPECTION'],m['overlap_pairs'])
  def test_data_checksums(self):
-  for line in (ROOT/'data/checksums.sha256').read_text().splitlines():
+  for line in (ROOT/'data/checksums.sha256').read_text(encoding='utf-8').splitlines():
    sha,name=line.split('  ',1);self.assertEqual(sha,hashlib.sha256((ROOT/'data'/name).read_bytes()).hexdigest())
  def test_sample_integrity(self):
-  for line in (ROOT/'data/sample/checksums.sha256').read_text().splitlines():
+  for line in (ROOT/'data/sample/checksums.sha256').read_text(encoding='utf-8').splitlines():
    sha,name=line.split('  ',1);self.assertEqual(sha,hashlib.sha256((ROOT/'data/sample'/name).read_bytes()).hexdigest())
 
 class ImageChecks(unittest.TestCase):

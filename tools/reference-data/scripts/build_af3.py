@@ -106,7 +106,7 @@ def checksums(path):
 
 def build(output):
     output.mkdir(parents=True,exist_ok=True)
-    model=json.loads((ROOT/'config/model.json').read_text());works=json.loads((ROOT/'config/works.json').read_text())
+    model=json.loads((ROOT/'config/model.json').read_text(encoding='utf-8'));works=json.loads((ROOT/'config/works.json').read_text(encoding='utf-8'))
     with (ROOT/'base-input/vehicle_variants.csv').open(encoding='utf-8',newline='') as f:variants=list(csv.DictReader(f));variant_fields=list(variants[0])
     with (ROOT/'base-input/vehicle_traits.csv').open(encoding='utf-8',newline='') as f:traits=[load_traits(x) for x in csv.DictReader(f)]
     assert len(traits)==len(variants) and all(a['code']==b['variant_code'] for a,b in zip(variants,traits))
@@ -169,7 +169,7 @@ def build(output):
             end=int(g['year_to']) if g['year_to'] else 2026;start=int(g['year_from']);rep=min(2026,(start+max(start,end))//2)
             ig.writerow({**{k:g[k] for k in ['group_id','make','model','generation','year_from','year_to']},'representative_year':rep,'variant_count':len(g['variant_codes'])})
             for vc in g['variant_codes']:im.writerow(dict(group_id=g['group_id'],variant_code=vc))
-    diagnostics=json.loads((ROOT/'config/diagnostics.json').read_text())
+    diagnostics=json.loads((ROOT/'config/diagnostics.json').read_text(encoding='utf-8'))
     extra={'HV_BATTERY_REPLACE':['pogonska baterija','neispravna visokonaponska baterija'],'ONBOARD_CHARGER':['ac punjenje ne radi','ugradjeni punjac'],'CHARGE_PORT':['ostecen prikljucak punjenja','konektor punjenja'],'WIPER_MOTOR':['brisaci se ne pokrecu','motor brisaca'],'BLOWER_MOTOR':['ventilator kabine ne radi','nema strujanja zraka'],'ENGINE_OIL_LEAK_TEST':['curenje ulja','trag ulja ispod motora'],'COOLING_PRESSURE_TEST':['gubi rashladnu tekucinu','curenje antifriza'],'FRONT_CALIPER':['prednja kocnica blokira','zagrijavanje prednjeg kotaca'],'CONTROL_ARM':['lupanje ovjesa','osteceno rame ovjesa'],'STEERING_RACK':['lupanje letve upravljaca','nepravilan rad upravljaca']}
     for work,phrases in extra.items():
         for index,phrase in enumerate(phrases,1):diagnostics.append(dict(code='ac-ds2-'+work.lower()+'-'+str(index),work_code=work,phrase=phrase,weight=3,active=1,basis='EDUCATIONAL_RULE_NOT_VALIDATED'))
