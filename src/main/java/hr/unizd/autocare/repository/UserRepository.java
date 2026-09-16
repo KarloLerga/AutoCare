@@ -9,7 +9,5 @@ public interface UserRepository {
 
   AppUser require(long id);
 
-  AppUser lock(long id);
-
   void add(AppUser user);
 }

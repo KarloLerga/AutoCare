@@ -116,7 +116,7 @@ public final class AuthService {
     String hash = next != null && next.length > 0 ? hasher.hash(next) : null;
     tx.write(
         r -> {
-          AppUser u = r.users().lock(owner);
+          AppUser u = r.users().require(owner);
           Mapping.version(u.getVersion(), expected);
           if (!u.getPasswordHash().equals(credentials.getHash())) {
             throw AppException.conflict("Lozinka je promijenjena u drugoj sesiji.");
