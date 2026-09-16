@@ -4,7 +4,6 @@ import hr.unizd.autocare.app.SqlSettings;
 import hr.unizd.autocare.domain.Checks;
 import hr.unizd.autocare.domain.MaintenanceCalculator;
 import hr.unizd.autocare.domain.MaintenanceStatus;
-import hr.unizd.autocare.domain.ScheduleKind;
 import hr.unizd.autocare.view.components.EstimateFormat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -76,14 +75,11 @@ public final class SqlOfflineChecks {
     MaintenanceCalculator calculator = new MaintenanceCalculator();
     LocalDate today = LocalDate.of(2026, 9, 16);
     check(
-        calculator.calculate(ScheduleKind.CONDITION_BASED, null, null, null, null, 90000, today)
-            == MaintenanceStatus.NO_DATA);
+        calculator.calculate(10000, null, today, 90000, 99000, today)
+            == MaintenanceStatus.SOON);
     check(
-        calculator.calculate(ScheduleKind.VEHICLE_INDICATOR, null, null, null, null, 90000, today)
-            == MaintenanceStatus.NO_DATA);
-    check(
-        calculator.calculate(ScheduleKind.UNKNOWN, null, null, null, null, 90000, today)
-            == MaintenanceStatus.NO_DATA);
+        calculator.calculate(null, 12, today, null, 90000, today)
+            == MaintenanceStatus.OK);
 
     System.out.println("Additional offline checks passed: " + checks);
   }

@@ -2,7 +2,6 @@ package hr.unizd.autocare.service;
 
 import hr.unizd.autocare.domain.MaintenanceCalculator;
 import hr.unizd.autocare.domain.MaintenanceStatus;
-import hr.unizd.autocare.domain.ScheduleKind;
 import hr.unizd.autocare.domain.ServiceItem;
 import hr.unizd.autocare.domain.Vehicle;
 import hr.unizd.autocare.domain.VehicleWorkRule;
@@ -84,7 +83,6 @@ public final class MaintenanceService {
             BigDecimal estimatedPrice;
             String intervalSource;
             String estimateNote;
-            ScheduleKind scheduleKind;
 
             if (rule != null) {
                 intervalKm = rule.getIntervalKm();
@@ -92,7 +90,6 @@ public final class MaintenanceService {
                 estimatedPrice = rule.getEstimatedPrice();
                 intervalSource = rule.getIntervalSource();
                 estimateNote = rule.getEstimateNote();
-                scheduleKind = rule.getScheduleKind();
             } else {
                 intervalKm = work.getDefaultIntervalKm();
                 intervalMonths = work.getDefaultIntervalMonths();
@@ -103,8 +100,6 @@ public final class MaintenanceService {
                 if (intervalKm == null && intervalMonths == null) {
                     continue;
                 }
-
-                scheduleKind = ScheduleKind.FIXED;
             }
 
             ServiceItem lastItem = latestItems.get(work.getId());
@@ -130,7 +125,6 @@ public final class MaintenanceService {
 
             MaintenanceStatus status =
                     calculator.calculate(
-                            scheduleKind,
                             intervalKm,
                             intervalMonths,
                             lastDate,

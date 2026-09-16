@@ -19,7 +19,7 @@ import java.util.Objects;
     uniqueConstraints =
         @UniqueConstraint(
             name = "uk_service_work",
-            columnNames = {"serviceRecord_id", "work_id"}))
+            columnNames = {"service_record_id", "work_id"}))
 public class ServiceItem {
 
   @Id

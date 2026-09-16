@@ -7,28 +7,6 @@ import java.time.temporal.ChronoUnit;
 public final class MaintenanceCalculator {
 
     public MaintenanceStatus calculate(
-            ScheduleKind kind,
-            Integer intervalKm,
-            Integer intervalMonths,
-            LocalDate lastDate,
-            Integer lastMileage,
-            int currentMileage,
-            LocalDate today) {
-
-        if (kind != ScheduleKind.FIXED) {
-            return MaintenanceStatus.NO_DATA;
-        }
-
-        return calculate(
-                intervalKm,
-                intervalMonths,
-                lastDate,
-                lastMileage,
-                currentMileage,
-                today);
-    }
-
-    public MaintenanceStatus calculate(
             Integer intervalKm,
             Integer intervalMonths,
             LocalDate lastDate,
