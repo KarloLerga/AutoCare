@@ -22,6 +22,6 @@ with gzip.open(P/'data/all_pair_decisions.csv.gz','rt',encoding='utf-8',newline=
   if state=='NOT_APPLICABLE':assert not r['estimated_price']
   if traits[vc]['fuel_class']=='BEV' and wc in {'OIL_SERVICE','GLOW_PLUGS','TIMING_BELT_PUMP'}:assert state=='NOT_APPLICABLE'
 assert len(seen)==len(works);assert sum(counts.values())==len(works)*len(traits)
-manifest=json.loads((P/'data/build_manifest.json').read_text())
+manifest=json.loads((P/'data/build_manifest.json').read_text(encoding='utf-8'))
 for k,n in counts.items():assert n==manifest['counts'][k]
 print(json.dumps({'status':'PASS_STRUCTURAL_ONLY','pair_counts':dict(counts),'total':sum(counts.values())},indent=2))

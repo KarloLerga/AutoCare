@@ -12,10 +12,19 @@ public final class SqlSeedTool {
     private static final int BATCH=1000;
     private SqlSeedTool() { }
     public static void run(String[] args) {
+        if(args.length==0)throw new IllegalArgumentException("Nedostaje SQL/seed naredba.");
+        String command=args[0];
+        if(command.equals("db-list")) {
+            try { discover(); }
+            catch(Exception ex) { throw new IllegalStateException("Read-only db-list nije uspio: "+ex.getMessage(), ex); }
+            return;
+        }
+        if(command.equals("sql-check")) {
+            try { check(); }
+            catch(Exception ex) { throw new IllegalStateException("SQL provjera nije uspjela: "+ex.getMessage(), ex); }
+            return;
+        }
         try {
-            String command=args[0];
-            if(command.equals("db-list")) { discover(); return; }
-            if(command.equals("sql-check")) { check(); return; }
             if(args.length<2)throw new IllegalArgumentException("Navedite folder seed podataka.");
             Path dir=Path.of(args[1]);
             validate(dir);
