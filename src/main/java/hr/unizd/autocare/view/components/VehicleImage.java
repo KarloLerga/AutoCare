@@ -1,6 +1,5 @@
 package hr.unizd.autocare.view.components;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -29,9 +28,6 @@ public final class VehicleImage extends JLabel {
   public VehicleImage() {
     super("Slika nije dostupna", SwingConstants.CENTER);
     setPreferredSize(new Dimension(150, 90));
-    setOpaque(true);
-    setBackground(new Color(0xEAF0F5));
-    setForeground(Ui.MUTED);
   }
 
   public void showPath(String path) {

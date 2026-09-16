@@ -17,7 +17,6 @@ public final class LoginView extends JPanel {
 
   public LoginView() {
     super(new GridBagLayout());
-    setBackground(Ui.BACKGROUND);
     JPanel card = Ui.card(), form = Ui.form();
     card.add(Ui.heading("AutoCare"), BorderLayout.NORTH);
     Ui.field(form, 0, "E-mail", email);
