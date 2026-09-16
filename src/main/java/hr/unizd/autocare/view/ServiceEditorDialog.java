@@ -54,7 +54,6 @@ public final class ServiceEditorDialog extends JDialog {
     setLocationRelativeTo(owner);
     JPanel root = new JPanel(new BorderLayout(12, 12));
     root.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-    root.setBackground(Ui.BACKGROUND);
     JPanel top = Ui.form();
     Ui.field(top, 0, "Datum", date);
     Ui.field(top, 1, "Kilometraza pri servisu", mileage);

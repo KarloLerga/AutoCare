@@ -5,7 +5,6 @@ import hr.unizd.autocare.domain.CostSummary;
 import hr.unizd.autocare.domain.MaintenanceStatus;
 import hr.unizd.autocare.domain.WorkCategory;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.FlowLayout;
@@ -34,16 +33,10 @@ import javax.swing.JSpinner;
 import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.WindowConstants;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 
 /** Standardni Swing layouti i formatiranje, bez poslovnih pravila. */
 public final class Ui {
-  public static final Color BACKGROUND = new Color(0xF4F7FB),
-      INK = new Color(0x172B4D),
-      ACCENT = new Color(0x176B87),
-      MUTED = new Color(0x526477);
   public static final DateTimeFormatter DATE =
       DateTimeFormatter.ofPattern("dd.MM.uuuu.").withResolverStyle(ResolverStyle.STRICT);
 
@@ -76,47 +69,27 @@ public final class Ui {
 
   public static JPanel card() {
     JPanel p = new JPanel(new BorderLayout(12, 12));
-    p.setBackground(Color.WHITE);
-    p.setBorder(
-        new CompoundBorder(new LineBorder(new Color(0xDCE5ED)), new EmptyBorder(16, 16, 16, 16)));
+    p.setBorder(new EmptyBorder(16, 16, 16, 16));
     return p;
   }
 
   public static JLabel heading(String title) {
     JLabel l = new JLabel(title);
     l.setFont(l.getFont().deriveFont(Font.BOLD, 24f));
-    l.setForeground(INK);
     return l;
   }
 
   public static JLabel hint(String text) {
-    JLabel l = new HintLabel(text);
-    l.setForeground(MUTED);
+    JLabel l = new JLabel(text);
+    if (javax.swing.UIManager.getColor("Label.disabledForeground") != null) {
+      l.setForeground(javax.swing.UIManager.getColor("Label.disabledForeground"));
+    }
     return l;
-  }
-
-  private static final class HintLabel extends JLabel {
-    HintLabel(String value) {
-      super(value);
-    }
-
-    @Override
-    public void setText(String value) {
-      String escaped =
-          value == null
-              ? ""
-              : value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
-      super.setText("<html>" + escaped + "</html>");
-    }
   }
 
   public static JButton button(String title, boolean primary) {
     JButton b = new JButton(title);
     b.setFocusPainted(true);
-    if (primary) {
-      b.setBackground(ACCENT);
-      b.setForeground(Color.WHITE);
-    }
     return b;
   }
 

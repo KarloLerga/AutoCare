@@ -1,6 +1,6 @@
 package hr.unizd.autocare.app;
 
-import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.FlatDarkLaf;
 import hr.unizd.autocare.controller.MainController;
 import hr.unizd.autocare.event.AppEvents;
 import hr.unizd.autocare.persistence.JpaTransactionRunner;
@@ -45,7 +45,7 @@ public final class Main {
   }
 
   private static void initializeLookAndFeel() {
-    FlatLightLaf.setup();
+    FlatDarkLaf.setup();
     UIManager.put("defaultFont", new Font("Segoe UI", Font.PLAIN, 14));
     UIManager.put("Component.arc", 10);
     UIManager.put("Button.arc", 10);

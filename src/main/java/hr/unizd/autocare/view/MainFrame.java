@@ -5,7 +5,6 @@ import hr.unizd.autocare.view.components.Ui;
 import hr.unizd.autocare.view.components.VehicleImage;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -45,10 +44,8 @@ public final class MainFrame extends JFrame {
     setLocationRelativeTo(null);
     root.add(login, "LOGIN");
     JPanel shell = new JPanel(new BorderLayout(0, 0));
-    shell.setBackground(Ui.BACKGROUND);
     JPanel sidebar = Ui.column();
     sidebar.setOpaque(true);
-    sidebar.setBackground(Color.WHITE);
     sidebar.setBorder(BorderFactory.createEmptyBorder(24, 16, 16, 16));
     sidebar.setPreferredSize(new Dimension(220, 700));
     vehicleName.setFont(vehicleName.getFont().deriveFont(Font.BOLD, 16f));
@@ -93,8 +90,9 @@ public final class MainFrame extends JFrame {
   public void showPage(String name) {
     page = name;
     pages.show(content, name);
-    for (Map.Entry<String, JButton> e : navigation.entrySet()) {
-      e.getValue().setBackground(e.getKey().equals(name) ? new Color(0xDFEDF3) : Color.WHITE);
+    for (Map.Entry<String, JButton> entry : navigation.entrySet()) {
+      int style = entry.getKey().equals(name) ? Font.BOLD : Font.PLAIN;
+      entry.getValue().setFont(entry.getValue().getFont().deriveFont(style));
     }
   }
 

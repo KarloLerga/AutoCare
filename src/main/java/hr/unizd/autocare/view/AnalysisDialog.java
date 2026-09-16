@@ -44,7 +44,6 @@ public final class AnalysisDialog extends JDialog {
     setLocationRelativeTo(owner);
     JPanel root = new JPanel(new BorderLayout(12, 12));
     root.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-    root.setBackground(Ui.BACKGROUND);
     description.setLineWrap(true);
     description.setWrapStyleWord(true);
     JPanel top = Ui.column();
