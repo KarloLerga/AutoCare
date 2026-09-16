@@ -3,56 +3,74 @@ package hr.unizd.autocare.domain;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-/** Cisti kalendarski izracun, bez baze i GUI-a; oba kriterija povezuje OR. */
+/** Racuna status odrzavanja prema kilometrima i/ili vremenu. */
 public final class MaintenanceCalculator {
-  public MaintenanceStatus calculate(
-      ScheduleKind kind,
-      Integer km,
-      Integer months,
-      LocalDate date,
-      Integer mileage,
-      int current,
-      LocalDate today) {
-    if (kind == ScheduleKind.CONDITION_BASED) {
-      return MaintenanceStatus.CONDITION_BASED;
-    }
-    if (kind == ScheduleKind.VEHICLE_INDICATOR) {
-      return MaintenanceStatus.VEHICLE_INDICATOR;
-    }
-    return calculate(km, months, date, mileage, current, today);
-  }
 
-  public MaintenanceStatus calculate(
-      Integer intervalKm,
-      Integer intervalMonths,
-      LocalDate lastDate,
-      Integer lastMileage,
-      int currentMileage,
-      LocalDate today) {
-    if (intervalKm == null && intervalMonths == null) {
-      return MaintenanceStatus.UNKNOWN_INTERVAL;
+    public MaintenanceStatus calculate(
+            ScheduleKind kind,
+            Integer intervalKm,
+            Integer intervalMonths,
+            LocalDate lastDate,
+            Integer lastMileage,
+            int currentMileage,
+            LocalDate today) {
+
+        if (kind != ScheduleKind.FIXED) {
+            return MaintenanceStatus.NO_DATA;
+        }
+
+        return calculate(
+                intervalKm,
+                intervalMonths,
+                lastDate,
+                lastMileage,
+                currentMileage,
+                today);
     }
-    if ((intervalKm != null && intervalKm <= 0)
-        || (intervalMonths != null && intervalMonths <= 0)) {
-      throw new IllegalArgumentException("Interval mora biti pozitivan.");
+
+    public MaintenanceStatus calculate(
+            Integer intervalKm,
+            Integer intervalMonths,
+            LocalDate lastDate,
+            Integer lastMileage,
+            int currentMileage,
+            LocalDate today) {
+
+        if (intervalKm == null && intervalMonths == null) {
+            return MaintenanceStatus.NO_DATA;
+        }
+
+        if (intervalKm != null && lastMileage == null) {
+            return MaintenanceStatus.NO_DATA;
+        }
+
+        if (intervalMonths != null && lastDate == null) {
+            return MaintenanceStatus.NO_DATA;
+        }
+
+        Integer remainingKm = null;
+        Long remainingDays = null;
+
+        if (intervalKm != null) {
+            int nextMileage = lastMileage + intervalKm;
+            remainingKm = nextMileage - currentMileage;
+        }
+
+        if (intervalMonths != null) {
+            LocalDate nextDate = lastDate.plusMonths(intervalMonths);
+            remainingDays = ChronoUnit.DAYS.between(today, nextDate);
+        }
+
+        if ((remainingKm != null && remainingKm <= 0)
+                || (remainingDays != null && remainingDays <= 0)) {
+            return MaintenanceStatus.DUE;
+        }
+
+        if ((remainingKm != null && remainingKm <= 3000)
+                || (remainingDays != null && remainingDays <= 30)) {
+            return MaintenanceStatus.SOON;
+        }
+
+        return MaintenanceStatus.OK;
     }
-    if ((intervalKm != null && lastMileage == null)
-        || (intervalMonths != null && lastDate == null)) {
-      return MaintenanceStatus.UNKNOWN_HISTORY;
-    }
-    long remainingKm =
-        intervalKm == null ? Long.MAX_VALUE : (long) lastMileage + intervalKm - currentMileage;
-    LocalDate next = intervalMonths == null ? null : lastDate.plusMonths(intervalMonths);
-    long remainingDays = next == null ? Long.MAX_VALUE : ChronoUnit.DAYS.between(today, next);
-    if (remainingKm <= 0 || remainingDays <= 0) {
-      return MaintenanceStatus.DUE;
-    }
-    long kmThreshold = intervalKm == null ? 0 : Math.min(3000, (intervalKm + 4L) / 5L);
-    long dayThreshold =
-        next == null ? 0 : Math.min(30, (ChronoUnit.DAYS.between(lastDate, next) + 4) / 5);
-    if (remainingKm <= kmThreshold || remainingDays <= dayThreshold) {
-      return MaintenanceStatus.SOON;
-    }
-    return MaintenanceStatus.OK;
-  }
 }

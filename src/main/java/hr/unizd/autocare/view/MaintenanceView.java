@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
 
-/** Izvedeni raspored i privremeni procjenitelj; ovaj ekran nikad ne sprema servis. */
+/** Izvedeni raspored i informativna procjena; ovaj ekran nikad ne sprema servis. */
 public final class MaintenanceView extends JPanel {
   public final JButton estimate = Ui.button("Procijeni odabrana odrzavanja", false);
   public final JLabel coverage = Ui.hint("Ucitajte odrzavanje.");
@@ -38,16 +38,10 @@ public final class MaintenanceView extends JPanel {
               });
 
   private static String remaining(MaintenanceRow row) {
-    if (row.getStatus() == hr.unizd.autocare.domain.MaintenanceStatus.CONDITION_BASED) {
-      return "Prema stanju";
-    }
-    if (row.getStatus() == hr.unizd.autocare.domain.MaintenanceStatus.VEHICLE_INDICATOR) {
-      return "Prema indikatoru";
-    }
     String km = row.getRemainingKm() == null ? null : Ui.km(row.getRemainingKm());
     String days = row.getRemainingDays() == null ? null : row.getRemainingDays() + " dana";
     if (km == null && days == null) {
-      return "Nepoznato";
+      return "Nema podataka";
     }
     return km == null ? days : days == null ? km : km + " / " + days;
   }

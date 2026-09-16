@@ -78,7 +78,6 @@ INSERT INTO @Columns VALUES
     (N'VehicleWorkRule', N'vehicle_work_rule', N'estimateNote', N'estimate_note'),
     (N'ServiceRecord', N'service_record', N'id', N'id'),
     (N'ServiceRecord', N'service_record', N'vehicle_id', N'vehicle_id'),
-    (N'ServiceRecord', N'service_record', N'requestKey', N'request_key'),
     (N'ServiceRecord', N'service_record', N'serviceDate', N'service_date'),
     (N'ServiceRecord', N'service_record', N'mileage', N'mileage'),
     (N'ServiceRecord', N'service_record', N'note', N'note'),

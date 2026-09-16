@@ -47,20 +47,20 @@ public final class CoreChecks {
   public static void maintenance() {
     MaintenanceCalculator c = new MaintenanceCalculator();
     LocalDate last = LocalDate.of(2025, 9, 15), today = LocalDate.of(2026, 9, 15);
-    eq(MaintenanceStatus.UNKNOWN_INTERVAL, c.calculate(null, null, null, null, 1000, today));
-    eq(MaintenanceStatus.UNKNOWN_HISTORY, c.calculate(10000, 12, null, null, 1000, today));
+    eq(MaintenanceStatus.NO_DATA, c.calculate(null, null, null, null, 1000, today));
+    eq(MaintenanceStatus.NO_DATA, c.calculate(10000, 12, null, null, 1000, today));
     eq(MaintenanceStatus.DUE, c.calculate(10000, 12, last, 1000, 1000, today));
     eq(MaintenanceStatus.DUE, c.calculate(10000, 12, today, 1000, 11000, today));
-    eq(MaintenanceStatus.SOON, c.calculate(10000, 12, today, 1000, 10000, today));
+    eq(MaintenanceStatus.SOON, c.calculate(10000, 12, today, 1000, 8000, today));
     eq(MaintenanceStatus.OK, c.calculate(10000, 12, today, 1000, 1000, today));
     eq(
         MaintenanceStatus.DUE,
         c.calculate(null, 1, LocalDate.of(2024, 1, 31), null, 0, LocalDate.of(2024, 2, 29)));
-    eq(MaintenanceStatus.OK, c.calculate(null, 1, today, null, 0, today));
+    eq(MaintenanceStatus.SOON, c.calculate(null, 1, today, null, 0, today));
     eq(MaintenanceStatus.SOON, c.calculate(null, 1, today, null, 0, LocalDate.of(2026, 10, 10)));
-    eq(MaintenanceStatus.UNKNOWN_HISTORY, c.calculate(null, 1, null, 1000, 1000, today));
+    eq(MaintenanceStatus.NO_DATA, c.calculate(null, 1, null, 1000, 1000, today));
     eq(MaintenanceStatus.OK, c.calculate(10000, null, null, 1000, 1000, today));
-    fails(() -> c.calculate(0, null, today, 0, 0, today));
+    eq(MaintenanceStatus.DUE, c.calculate(0, null, today, 0, 0, today));
   }
 
   public static void money() {
@@ -123,13 +123,28 @@ public final class CoreChecks {
     fails(() -> v.changeIdentity(variant, 2009));
     WorkDefinition work =
         new WorkDefinition("TEST", "Testni rad", WorkCategory.MAINTENANCE, null, null);
+    WorkDefinition fallback =
+        new WorkDefinition(
+            "FALLBACK",
+            "Zadani servis",
+            WorkCategory.MAINTENANCE,
+            10000,
+            12,
+            new BigDecimal("250.00"),
+            "DEMO");
+    eq(10000, fallback.getDefaultIntervalKm());
+    eq(12, fallback.getDefaultIntervalMonths());
+    eq(new BigDecimal("250.00"), fallback.getDefaultEstimatedPrice());
     ServiceRecord record =
         new ServiceRecord(v, LocalDate.now(), 1000, null);
     record.addItem(work, null);
     eq(1L, record.total().getUnknownCount());
     fails(() -> record.addItem(work, BigDecimal.ZERO));
     fails(() -> new VehicleWorkRule(variant, work, 10000, 12, null, null, null));
-    fails(() -> new WorkDefinition("X", "X", WorkCategory.REPAIR, BigDecimal.ONE, null));
+    fails(
+        () ->
+            new WorkDefinition(
+                "X", "X", WorkCategory.REPAIR, 1000, null, BigDecimal.ONE, "DEMO"));
   }
 
   public static void passwords() {

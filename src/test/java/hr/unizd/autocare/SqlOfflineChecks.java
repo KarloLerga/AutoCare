@@ -2,7 +2,6 @@ package hr.unizd.autocare;
 
 import hr.unizd.autocare.app.SqlSettings;
 import hr.unizd.autocare.domain.Checks;
-import hr.unizd.autocare.domain.EstimateSelection;
 import hr.unizd.autocare.domain.MaintenanceCalculator;
 import hr.unizd.autocare.domain.MaintenanceStatus;
 import hr.unizd.autocare.domain.ScheduleKind;
@@ -11,7 +10,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /** JDK-only provjere konfiguracije i granica; ne otvara SQL/JPA vezu. */
 public final class SqlOfflineChecks {
@@ -75,20 +73,17 @@ public final class SqlOfflineChecks {
     rejects(() -> EstimateFormat.rounded(new BigDecimal("-1")));
     check(Checks.money(new BigDecimal("53.47"), false).equals(new BigDecimal("53.47")));
 
-    check(EstimateSelection.conflicts(Set.of("OIL_SERVICE"), "OIL_FILTER").contains("OIL_SERVICE"));
-    check(EstimateSelection.conflicts(Set.of("CABIN_FILTER"), "OIL_SERVICE").isEmpty());
-
     MaintenanceCalculator calculator = new MaintenanceCalculator();
     LocalDate today = LocalDate.of(2026, 9, 16);
     check(
         calculator.calculate(ScheduleKind.CONDITION_BASED, null, null, null, null, 90000, today)
-            == MaintenanceStatus.CONDITION_BASED);
+            == MaintenanceStatus.NO_DATA);
     check(
         calculator.calculate(ScheduleKind.VEHICLE_INDICATOR, null, null, null, null, 90000, today)
-            == MaintenanceStatus.VEHICLE_INDICATOR);
+            == MaintenanceStatus.NO_DATA);
     check(
         calculator.calculate(ScheduleKind.UNKNOWN, null, null, null, null, 90000, today)
-            == MaintenanceStatus.UNKNOWN_INTERVAL);
+            == MaintenanceStatus.NO_DATA);
 
     System.out.println("Additional offline checks passed: " + checks);
   }

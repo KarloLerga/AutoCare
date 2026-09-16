@@ -28,6 +28,8 @@ WorkDefinition,WorkDefinition,work_definition,WorkDefinition,id,id,id,id
 WorkDefinition,WorkDefinition,work_definition,WorkDefinition,code,code,code,code
 WorkDefinition,WorkDefinition,work_definition,WorkDefinition,name,name,name,name
 WorkDefinition,WorkDefinition,work_definition,WorkDefinition,category,category,category,category
+WorkDefinition,WorkDefinition,work_definition,WorkDefinition,,defaultIntervalKm,,defaultIntervalKm
+WorkDefinition,WorkDefinition,work_definition,WorkDefinition,,defaultIntervalMonths,,defaultIntervalMonths
 WorkDefinition,WorkDefinition,work_definition,WorkDefinition,defaultEstimatedPrice,defaultEstimatedPrice,default_estimated_price,defaultEstimatedPrice
 WorkDefinition,WorkDefinition,work_definition,WorkDefinition,estimateNote,estimateNote,estimate_note,estimateNote
 VehicleWorkRule,VehicleWorkRule,vehicle_work_rule,VehicleWorkRule,id,id,id,id
@@ -41,7 +43,6 @@ VehicleWorkRule,VehicleWorkRule,vehicle_work_rule,VehicleWorkRule,intervalSource
 VehicleWorkRule,VehicleWorkRule,vehicle_work_rule,VehicleWorkRule,estimateNote,estimateNote,estimate_note,estimateNote
 ServiceRecord,ServiceRecord,service_record,ServiceRecord,id,id,id,id
 ServiceRecord,ServiceRecord,service_record,ServiceRecord,vehicle,vehicle,vehicle_id,vehicle_id
-ServiceRecord,ServiceRecord,service_record,ServiceRecord,requestKey,requestKey,request_key,requestKey
 ServiceRecord,ServiceRecord,service_record,ServiceRecord,date,serviceDate,service_date,serviceDate
 ServiceRecord,ServiceRecord,service_record,ServiceRecord,mileage,mileage,mileage,mileage
 ServiceRecord,ServiceRecord,service_record,ServiceRecord,note,note,note,note

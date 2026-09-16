@@ -108,6 +108,8 @@ Podaci i ID-evi ostaju isti; ovo nije specifikacija za rebuild postojece baze.
 | code | code | code | String | NE | UNIQUE; length=80 |
 | name | name | name | String | NE | length=160 |
 | category | category | category | WorkCategory | NE | length=20; EnumType.STRING |
+| defaultIntervalKm | — | defaultIntervalKm | Integer | DA | MAINTENANCE fallback; pozitivno kada postoji |
+| defaultIntervalMonths | — | defaultIntervalMonths | Integer | DA | MAINTENANCE fallback; pozitivno kada postoji |
 | defaultEstimatedPrice | default_estimated_price | defaultEstimatedPrice | BigDecimal | DA | decimal(9,2) |
 | estimateNote | estimate_note | estimateNote | String | DA | length=1000 |
 
@@ -131,10 +133,14 @@ Podaci i ID-evi ostaju isti; ovo nije specifikacija za rebuild postojece baze.
 |---|---|---|---|---|---|
 | id | id | id | Long | NE | PK; IDENTITY |
 | vehicle | vehicle_id | vehicle_id | Vehicle | NE | FK; LAZY |
-| requestKey | request_key | requestKey | String | NE | UNIQUE; length=36 |
 | serviceDate | service_date | serviceDate | LocalDate | NE |  |
 | mileage | mileage | mileage | int | NE |  |
 | note | note | note | String | DA | length=2000 |
+
+V2 vise ne mapira `ServiceRecord.requestKey`; stari `request_key` se u name-only migraciji ne
+preimenuje niti automatski brise jer je to potencijalni gubitak povijesnih podataka. Na izoliranoj
+kopiji moze se zasebno procijeniti njegovo uklanjanje nakon pregleda ovisnosti. `Problem.requestKey`
+ostaje jer je dijagnosticki tok zamrznut.
 
 ### ServiceItem
 
@@ -195,6 +201,12 @@ domenske gettere i pozivatelje. Nisu sva getYear/getDate imena u projektu isti s
 Native SQL, SQLSeedTool, ImagePathTool, ReviewedIntervalTool i INFORMATION_SCHEMA/sys.* provjere
 koriste fizicke nazive. Samo Java refactor ih nece automatski promijeniti. Ulazni CSV headeri ostaju
 stabilni; explicit developer mapping prevodi na ciljna SQL imena. Import ne ulazi u runtime JAR.
+
+V2 dodaje samo dva nullable `INT` stupca na ciljnu `dbo.WorkDefinition` tablicu. Skripta
+`schema/05_student_simplification_v2.sql` je eksplicitna, idempotentna i zadano read-only; ne radi
+reset baze niti masovni backfill. `hibernate.hbm2ddl.auto=validate` ocekuje ta dva stupca nakon
+target-name migracije. Postojeci `VehicleWorkRule` retci ostaju glavni izvor specificnih intervala,
+a novi defaulti mogu ostati NULL.
 
 Referenca ne preimenuje constraint/index imena, ne brise constraints radi "lijepog" DDL-a i ne dodaje
 nova polja za podatke koji su vec izvedeni. `validate` sam ne provjerava potpunu poslovnu konzistentnost.

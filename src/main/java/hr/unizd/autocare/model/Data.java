@@ -700,7 +700,7 @@ public final class Data {
     private final long openProblems;
     private final int due;
     private final int soon;
-    private final int unknown;
+    private final int noData;
     private final int covered;
 
     public Dashboard(
@@ -709,14 +709,14 @@ public final class Data {
         long openProblems,
         int due,
         int soon,
-        int unknown,
+        int noData,
         int covered) {
       this.vehicle = vehicle;
       this.total = total;
       this.openProblems = openProblems;
       this.due = due;
       this.soon = soon;
-      this.unknown = unknown;
+      this.noData = noData;
       this.covered = covered;
     }
 
@@ -740,8 +740,8 @@ public final class Data {
       return soon;
     }
 
-    public int getUnknown() {
-      return unknown;
+    public int getNoData() {
+      return noData;
     }
 
     public int getCovered() {

@@ -162,13 +162,10 @@ public final class Ui {
 
   public static String status(MaintenanceStatus s) {
     return switch (s) {
-      case CONDITION_BASED -> "Prema stanju";
-      case VEHICLE_INDICATOR -> "Prema indikatoru vozila";
+      case NO_DATA -> "Nema podataka";
       case OK -> "U redu";
       case SOON -> "Uskoro";
       case DUE -> "Dospjelo";
-      case UNKNOWN_HISTORY -> "Nema povijesti";
-      case UNKNOWN_INTERVAL -> "Interval nepoznat";
     };
   }
 
