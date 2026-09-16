@@ -109,7 +109,7 @@ public final class ProblemService {
     }
     return tx.write(
         r -> {
-          r.users().lock(owner);
+          r.users().require(owner);
           Optional<Problem> old = r.problems().byRequest(owner, requestKey);
           if (old.isPresent()) {
             if (!old.get().getVehicle().getId().equals(vehicle)) {

@@ -28,7 +28,7 @@ public interface TransactionRunner {
    * @param action svi koraci koje Service zeli spremiti atomarno
    * @param <T> identifikator/potvrda, ne zivi managed entitet
    * @return rezultat tek nakon uspjesnog commita
-   * @throws AppException ako promjena nije uspjela ili ishod commita nije poznat
+   * @throws RuntimeException ako transakcija ili poslovna operacija nije uspjela
    */
   <T> T write(Function<Repositories, T> action);
 }

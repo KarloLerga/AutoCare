@@ -1,14 +1,13 @@
 package hr.unizd.autocare.service;
 
-/** Ocekivana korisnicka pogreska ili kontrolirano prevedena infrastrukturna pogreska. */
+/** Ocekivana korisnicka pogreska poslovnog sloja. */
 public class AppException extends RuntimeException {
   public enum Kind {
     VALIDATION,
     AUTHENTICATION,
     NOT_FOUND,
     CONFLICT,
-    DATABASE,
-    COMMIT_UNKNOWN
+    DATABASE
   }
 
   private final Kind kind;

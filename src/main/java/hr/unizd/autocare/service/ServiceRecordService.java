@@ -35,7 +35,7 @@ public final class ServiceRecordService {
   public long create(long owner, long vehicle, ServiceInput input) {
     return transactions.write(
         repositories -> {
-          repositories.users().lock(owner);
+          repositories.users().require(owner);
           validate(input, false, clock);
           Vehicle ownedVehicle = repositories.vehicles().requireOwned(owner, vehicle);
           ServiceRecord saved = saveInside(repositories, ownedVehicle, input, false, clock);

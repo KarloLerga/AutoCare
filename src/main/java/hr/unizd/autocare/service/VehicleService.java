@@ -50,7 +50,7 @@ public final class VehicleService {
     validateYear(input);
     return tx.write(
         r -> {
-          AppUser u = r.users().lock(owner);
+          AppUser u = r.users().require(owner);
           Vehicle v =
               new Vehicle(
                   u,
@@ -66,7 +66,7 @@ public final class VehicleService {
     validateYear(input);
     tx.write(
         r -> {
-          r.users().lock(owner);
+          r.users().require(owner);
           Vehicle v = r.vehicles().requireOwned(owner, vehicle);
           Mapping.version(v.getVersion(), expected);
           boolean identityChanged =
@@ -94,7 +94,7 @@ public final class VehicleService {
   public void activate(long owner, long vehicle) {
     tx.write(
         r -> {
-          AppUser u = r.users().lock(owner);
+          AppUser u = r.users().require(owner);
           u.activate(r.vehicles().requireOwned(owner, vehicle));
           return null;
         });
@@ -110,7 +110,7 @@ public final class VehicleService {
   public void delete(long owner, long vehicle, Long replacement) {
     tx.write(
         r -> {
-          AppUser u = r.users().lock(owner);
+          AppUser u = r.users().require(owner);
           List<Vehicle> all = r.vehicles().list(owner);
           if (all.size() <= 1) {
             throw AppException.conflict("Posljednje vozilo nije moguce obrisati.");
