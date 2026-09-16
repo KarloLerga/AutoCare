@@ -18,12 +18,13 @@ Load-Connection.ps1 ucitava privatni JSON u proces. `AUTOCARE_DB_HOST`, `AUTOCAR
 JDBC URL: `jdbc:sqlserver://HOST:1433;databaseName=NAME;encrypt=true;trustServerCertificate=false;loginTimeout=60;socketTimeout=120000;applicationName=AutoCare`. User/password u Properties, ne URL-u. Ne koristiti MySQL `sslMode`, `allowPublicKeyRetrieval`, port 3306 ili mysql driver.
 
 ## 4. Redoslijed
-Pravi JDK25/Maven build -> read-only sql-check -> reviewed target-name migration ->
-`schema/05_student_simplification_v2.sql` na izoliranoj kopiji -> validate/db-check ->
-sample seed -> stvarni transakcijski/GUI test -> full seed -> opcionalni izvorni intervali ->
-kraj, image enrichment. Hibernate `update` je samo eksplicitni developerski alat; GUI uvijek
-koristi `validate`. Ne stvara Azure logical server/database i ne puni seed. Java importer koristi
-JDBC batching/staging jer milijun JPA persist-ova nije prikladno za inicijalno punjenje.
+Pravi JDK25/Maven build -> read-only sql-check -> pregled tocne postojece snake_case baze ->
+`schema/06_student_runtime_compat.sql` s `@Apply=0` -> nakon eksplicitne potvrde minimalni apply ->
+validate/db-check -> sample seed -> stvarni transakcijski/GUI test -> full seed -> opcionalni
+izvorni intervali -> kraj, image enrichment. Ne pokretati masovni `schema/02_rename_reviewed.sql`.
+Hibernate `update` je samo eksplicitni developerski alat; GUI uvijek koristi `validate`. Ne stvara
+Azure logical server/database i ne puni seed. Java importer koristi JDBC batching/staging jer milijun
+JPA persist-ova nije prikladno za inicijalno punjenje.
 
 ## 5. Sigurno testiranje
 Automatski SqlServerIT koristi zaseban config namespace AUTOCARE_TEST_HOST/PORT/NAME/USER/PASSWORD. Ime mora zavrsavati na `_test`, razlikovati se od normalne baze, a AUTOCARE_SCHEMA_TARGET mora izricito imenovati testnu bazu. Test ostavlja DEMO katalog, a cisti vlastite korisnicke retke. Nije test za jedinu bazu s vrijednim korisnickim podacima.
@@ -43,6 +44,6 @@ Ne kreirati Azure testni resurs automatski i ne pretpostavljati da je besplatan.
 Pocetni schema/seed login smije napraviti inicijalizaciju. Za svakodnevni GUI preporucen je zaseban lokalno konfiguriran login: SELECT na katalogu, DML na vlastitim aplikacijskim tablicama, bez schema promjena. Ne postoji zasebna sigurnosna granica korisnika kada se svim desktop klijentima distribuira ista SQL vjerodajnica. Owner-scoped upiti su aplikacijska kontrola; izmijenjeni klijent nije tim putem izoliran. Ovo je kontrolirani studentski deployment, ne tvrdnja o produkcijskoj multi-tenant sigurnosti.
 
 ## 7. Greske i ponavljanje
-DNS failure -> provjeri mrezu/DNS; firewall -> odobri vlastiti IP; login failed -> provjeri SQL auth/login/password/bazu; certificate -> ispravan FQDN/trust store, nikada trustServerCertificate=true; paused/limit -> status u portalu, ne placeni upgrade. Ne ponavljati servisni INSERT slijepo nakon nejasne greske; V2 servisni zapis nema request-key recovery mehanizam. Dijagnosticki `Problem.requestKey` ostaje zaseban zamrznuti tok, a seed se sigurno ponavlja po prirodnim kodovima/unique parovima nakon uspostave veze.
+DNS failure -> provjeri mrezu/DNS; firewall -> odobri vlastiti IP; login failed -> provjeri SQL auth/login/password/bazu; certificate -> ispravan FQDN/trust store, nikada trustServerCertificate=true; paused/limit -> status u portalu, ne placeni upgrade. Ne ponavljati servisni INSERT slijepo nakon nejasne greske; V2 servisni zapis nema request-key recovery mehanizam. Ako legacy `service_record.request_key` postoji, `06_student_runtime_compat.sql` ga popunjava DB defaultom nakon provjerenog applya. Dijagnosticki `Problem.requestKey` ostaje zaseban zamrznuti tok, a seed se sigurno ponavlja po prirodnim kodovima/unique parovima nakon uspostave veze.
 
 Hikari minIdle=0/keepalive=0 i mali pool ogranicavaju nepotrebne stalne veze. Ne pokretati rasporedjeno polling provjeravanje jer trosi besplatni compute. Zatvoriti aplikaciju i SQL explorer po zavrsetku.

@@ -12,6 +12,12 @@ nema `requestKey`, servisni flow nema idempotency/retry state machine ni owner p
 V2 ne uvodi Maintenance Strategy pattern. Povijesne AF3 tvrdnje nize koje opisuju uklonjene mehanizme
 ne treba citati kao aktualni API ugovor; za tocne potpise vrijedi `docs/TYPE_CATALOG.md` i izvorni kod.
 
+Delta nakon F7: Java logicka camelCase imena runtimea mapiraju se Hibernateovom
+`CamelCaseToUnderscoresNamingStrategy` na postojece snake_case Azure SQL tablice i stupce. Ne radi se
+masovni rename baze; `schema/06_student_runtime_compat.sql` je jedini mali kompatibilni DB patch i
+zadano je read-only. `ScheduleKind` ostaje samo legacy persistence/setup metadata, a maintenance
+izracun koristi intervale u kilometrima i mjesecima.
+
 Datum: 16. 9. 2026. Izvor zahtjeva: korisnikova zadnja odluka, obavezni kriteriji kolegija, izvorni handoff/review i dorađeni koncept. Ovo je specifikacija i referentni kod, **ne potvrda izvrsenog Azure/Java25 end-to-end testa**.
 
 ## 0. Sto se mijenja i sto ostaje
@@ -146,10 +152,10 @@ Svi aktualni izmijenjeni izvori su u project/. Ako lokalni Codex pronadje stvarn
 
 ## REVIEW-CLEAN-2 aktualizacija
 
-Ovaj AF3 dokument cuva povijesne odluke i raniji dokazni kontekst. Aktualni cleanup kod koristi ciljna
-standardna Hibernate imena opisana u `docs/DATABASE_AND_JPA.md` i `schema/naming_manifest.json`: `AppUser`,
-`VehicleVariant`, `Vehicle`, `WorkDefinition`, `VehicleWorkRule`, `ServiceRecord`, `ServiceItem`, `Problem`
-i `DiagnosticRule`, s camelCase scalar stupcima i defaultnim relationship FK imenima. Runtime `src/main`
+Ovaj AF3 dokument cuva povijesne odluke i raniji dokazni kontekst. Aktualni cleanup kod koristi Java
+logicka imena opisana u `docs/DATABASE_AND_JPA.md`, a physical naming strategy ih prevodi na postojeci
+snake_case SQL ugovor. `AppUser`, `VehicleVariant`, `Vehicle`, `WorkDefinition`, `VehicleWorkRule`,
+`ServiceRecord`, `ServiceItem`, `Problem` i `DiagnosticRule` ostaju runtime entiteti. Runtime `src/main`
 vise ne sadrzi setup/import alate; oni su u neovisnom `tools/setup` Maven projektu. `domain.*` i `design.*`
-su odvojeni UML prikazi, a `architecture.*` je dependency prikaz. Raniji Azure SQL seed dokazi u ovom dokumentu
-odnose se na staru snake_case shemu i nisu dokaz target-name migracije.
+su odvojeni UML prikazi, a `architecture.*` je dependency prikaz. Povijesni target-name manifesti i
+rename skripte nisu potrebni za normalni runtime; aktualni live DB patch je `schema/06_student_runtime_compat.sql`.

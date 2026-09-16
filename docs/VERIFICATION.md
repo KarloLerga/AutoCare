@@ -1,6 +1,22 @@
 # Verification evidence - cleanup, preparation baseline and local run
 
-## Current V2 implementation evidence
+## Current delta evidence — after F7
+
+Date: 2026-09-17. Delta commit `be08831` is based on the previously pushed V2 history; no reset,
+rebase or force-push was used.
+
+- `git diff --check`: PASS before the code commit; only expected Git line-ending warnings were emitted.
+- `.\mvnw.cmd -q clean verify`: PASS with `Additional offline checks passed: 17`.
+- `.\mvnw.cmd -q package`: PASS.
+- `.\mvnw.cmd -q javadoc:javadoc`: PASS on JDK 25.
+- `.\mvnw.cmd -q install -DskipTests`: PASS; the updated runtime artifact was installed for setup verification.
+- `.\mvnw.cmd -q -f tools\setup\pom.xml clean test package`: PASS.
+- `persistence.xml`: PASS static review; `CamelCaseToUnderscoresNamingStrategy` is configured and runtime remains `validate`.
+- `VehicleVariant`, `ServiceItem` and `Maintenance*` delta: PASS static review and Maven compilation; no diagnostics or diagram file changed.
+- `schema/06_student_runtime_compat.sql`: PASS static safety review; it defaults to `@Apply = 0`, checks the exact database before apply, adds only the two nullable snake_case interval columns and an optional legacy request-key default. It was not executed because no private connection configuration/database target was available in this environment.
+- Actual Hibernate `validate`, compat apply, Azure CRUD/manual GUI and native Windows interaction: `NOT_RUN`/`BLOCKED`; no skipped scenario is labelled PASS.
+
+## V2 baseline evidence (before delta)
 
 Date: 2026-09-16. V2 phases F1-F7 are committed and pushed through `1d4bc11`. The diagnostics
 implementation remains frozen; this section records the new simplification evidence separately from
@@ -33,13 +49,13 @@ interaction remain `BLOCKED`/`NOT_RUN`; no skipped scenario is labelled PASS.
 Date: 2026-09-16. This file keeps historical evidence separate from the current REVIEW-CLEAN-2 worktree. No
 unexecuted SQL, JPA or GUI scenario is labelled PASS.
 
-## REVIEW-CLEAN-2 cleanup run (current source)
+## REVIEW-CLEAN-2 cleanup run (historical source baseline)
 
 - R1 is committed as `f821f69`: `JpaTransactionRunner` preserves the first failure, service helpers do not open nested transactions, and request keys are canonicalized consistently.
 - The runtime source contains the nine target entities (`AppUser`, `VehicleVariant`, `Vehicle`, `WorkDefinition`, `VehicleWorkRule`, `ServiceRecord`, `ServiceItem`, `Problem`, `DiagnosticRule`) and no developer tools package. Developer tooling is in `tools/setup`.
-- JPA/XML and native SQL source are aligned with `schema/naming_manifest.json`; runtime XML explicitly uses `hibernate.hbm2ddl.auto=validate` and does not contain a password value.
-- The existing Azure database was not changed by this cleanup. Its populated old snake_case contract is incompatible with target-name `validate` until the reviewed name-only migration is run on an isolated/copy target. `schema/02_rename_reviewed.sql` and `schema/04_reverse_names_reviewed.sql` default to `@Apply = 0`.
-- Cleanup validation is limited to the actual commands recorded below. Real target-name Hibernate validation, target-name SQL seed/CRUD/rollback tests and the separate `_test` profile are `NOT_RUN`/`BLOCKED` without an approved isolated database.
+- JPA/XML and native SQL source were previously described by `schema/naming_manifest.json`; the current delta adds the runtime physical naming strategy, while that manifest remains a historical before/after map. Runtime XML explicitly uses `hibernate.hbm2ddl.auto=validate` and does not contain a password value.
+- The existing Azure database was not changed by this cleanup. The current runtime is intended for its populated old snake_case contract after the minimal `schema/06_student_runtime_compat.sql` patch; the patch defaults to read-only and was not executed in this pass.
+- Cleanup validation is limited to the actual commands recorded below. Actual Hibernate validation, compat apply, SQL CRUD/rollback tests and the separate `_test` profile are `NOT_RUN`/`BLOCKED` without an available approved target.
 - Cleanup source/setup commit `1450b55` passed `mvnw -q clean verify`, `mvnw -q install -DskipTests`, independent setup `clean test package`, and `mvnw -q javadoc:javadoc` on JDK 25.
 - The cleanup package test suite passed under UTF-8 Python: 39/39 tests. The source parser passed for 79 runtime Java files; the runtime JAR audit reported zero errors/warnings and no setup classes.
 - `scripts/check-secrets.ps1` passed. Static SQL safety checks confirmed read-only defaults and rollback guards in both reviewed rename directions.

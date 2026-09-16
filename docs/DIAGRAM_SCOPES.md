@@ -17,7 +17,7 @@ Jedna jasna legenda strelice: ovisnost. Tok save-a objasnjava se tekstom ili zas
 
 ## 2. Prvi UML class prikaz: persistentna domena
 
-Nakon name cleanupa: AppUser, Vehicle, VehicleVariant, ServiceRecord, ServiceItem, WorkDefinition,
+Za aktualni runtime: AppUser, Vehicle, VehicleVariant, ServiceRecord, ServiceItem, WorkDefinition,
 VehicleWorkRule, Problem, DiagnosticRule; enumove prikazati kao enum, ne kao dodatne SQL tablice.
 Prikazati vazne atribute, domenske metode i stvarne kardinalnosti, ne svih pedeset getter metoda.
 
@@ -44,8 +44,9 @@ Ne prikazivati nasljedivanje gdje je samo konstruktorom predana ovisnost.
 
 ## 4. ERD je treci, razlicit tip dokumenta
 
-ERD prikazuje fizicke SQL tablice i FK stupce nakon naming migracije. Nema Controller/Strategy tablice.
-Ostaje kao obavezni dio dokumentacije, odvojen od dva UML class pogleda. Kratki sequence/save opis
+ERD prikazuje fizicke postojece snake_case SQL tablice i FK stupce koje runtime koristi uz Hibernate
+physical naming strategy. Nema Controller/Strategy tablice. Ostaje kao obavezni dio dokumentacije,
+odvojen od dva UML class pogleda. Kratki sequence/save opis
 moze biti poseban dodatak, ali nije zamjena za arhitekturni dependency prikaz.
 
 ## 5. Sto je profesor stvarno trazio

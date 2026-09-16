@@ -1,14 +1,16 @@
 # Konacna pravila imenovanja i JPA ugovor
 
-## 1. Odluka, ne univerzalni standard
+## 1. Aktualni runtime ugovor
 
-Za ovaj novi studentski projekt biramo PascalCase tablice i camelCase osnovne stupce koji su jednaki
-Java imenima. I snake_case bi bio valjan timski izbor; ne tvrdimo da je ovaj stil opcenito jedini najbolji.
-Ovdje smanjuje eksplicitne razlike bez dodatne naming strategije ili nestandardnih Java snake_case polja.
+Java klase i atributi ostaju citljivi (`AppUser`, `currentMileage`, `serviceDate`). Postojeca Azure SQL
+baza ostaje u snake_case obliku (`app_user`, `current_mileage`, `service_date`). Glavni runtime u
+`persistence.xml` koristi Hibernate `CamelCaseToUnderscoresNamingStrategy`, pa provider tehnicku
+konvenciju mapira bez velikog renamea baze i bez desetaka eksplicitnih `name=...` anotacija.
 
-Standardna Hibernate fizicka strategija zadrzava logicka imena. Ne postoji Spring Boot snake-case
-konfiguracija koja se moze pretpostaviti u ovom obicnom JPA projektu. Provjeri da lokalno nije uveden
-dodatni override. Izvore pogledaj u SOURCES.md (JPA Column/Table/JoinColumn i Hibernate naming).
+`schema/06_student_runtime_compat.sql` dodaje samo dva nullable intervalna stupca ako nedostaju i
+po potrebi DB default za stari `service_record.request_key`. `schema/02_rename_reviewed.sql` i
+`schema/05_student_simplification_v2.sql` ostaju povijesni predlosci za drugu, izoliranu shemu.
+Izvore pogledaj u `DEPENDENCIES_AND_SOURCES.md`.
 
 ### Razlika izmedu scalar polja i veze
 
@@ -41,17 +43,17 @@ Za `User` ne uvodimo posebni quoted keyword: domenska klasa i tablica postaju `A
 
 ## 2. Tablice
 
-| Java prije | Java poslije / SQL tablica u dbo | SQL prije |
+| Java/entity | SQL runtime (postojeci) | Povijesni target-name |
 |---|---|---|
-| User | AppUser | app_user |
-| VehicleVariant | VehicleVariant | vehicle_variant |
-| Vehicle | Vehicle | vehicle |
-| WorkDefinition | WorkDefinition | work_definition |
-| VehicleWorkRule | VehicleWorkRule | vehicle_work_rule |
-| ServiceRecord | ServiceRecord | service_record |
-| ServiceItem | ServiceItem | service_item |
-| Problem | Problem | problem |
-| DiagnosticRule | DiagnosticRule | diagnostic_rule |
+| AppUser | app_user | AppUser |
+| VehicleVariant | vehicle_variant | VehicleVariant |
+| Vehicle | vehicle | Vehicle |
+| WorkDefinition | work_definition | WorkDefinition |
+| VehicleWorkRule | vehicle_work_rule | VehicleWorkRule |
+| ServiceRecord | service_record | ServiceRecord |
+| ServiceItem | service_item | ServiceItem |
+| Problem | problem | Problem |
+| DiagnosticRule | diagnostic_rule | DiagnosticRule |
 
 ## 3. Potpuni inventory persistentnih stupaca
 
@@ -62,7 +64,7 @@ Podaci i ID-evi ostaju isti; ovo nije specifikacija za rebuild postojece baze.
 
 ### AppUser
 
-| Java atribut poslije | SQL prije | SQL poslije | Tip u Javi | NULL | Dodatan ugovor |
+| Java atribut | SQL runtime | Povijesni target-name | Tip u Javi | NULL | Dodatan ugovor |
 |---|---|---|---|---|---|
 | id | id | id | Long | NE | PK; IDENTITY |
 | version | version | version | long | NE | @Version |
@@ -73,7 +75,7 @@ Podaci i ID-evi ostaju isti; ovo nije specifikacija za rebuild postojece baze.
 
 ### VehicleVariant
 
-| Java atribut poslije | SQL prije | SQL poslije | Tip u Javi | NULL | Dodatan ugovor |
+| Java atribut | SQL runtime | Povijesni target-name | Tip u Javi | NULL | Dodatan ugovor |
 |---|---|---|---|---|---|
 | id | id | id | Long | NE | PK; IDENTITY |
 | code | code | code | String | NE | UNIQUE; length=80 |
@@ -91,7 +93,7 @@ Podaci i ID-evi ostaju isti; ovo nije specifikacija za rebuild postojece baze.
 
 ### Vehicle
 
-| Java atribut poslije | SQL prije | SQL poslije | Tip u Javi | NULL | Dodatan ugovor |
+| Java atribut | SQL runtime | Povijesni target-name | Tip u Javi | NULL | Dodatan ugovor |
 |---|---|---|---|---|---|
 | id | id | id | Long | NE | PK; IDENTITY |
 | version | version | version | long | NE | @Version |
@@ -102,20 +104,20 @@ Podaci i ID-evi ostaju isti; ovo nije specifikacija za rebuild postojece baze.
 
 ### WorkDefinition
 
-| Java atribut poslije | SQL prije | SQL poslije | Tip u Javi | NULL | Dodatan ugovor |
+| Java atribut | SQL runtime | Povijesni target-name | Tip u Javi | NULL | Dodatan ugovor |
 |---|---|---|---|---|---|
 | id | id | id | Long | NE | PK; IDENTITY |
 | code | code | code | String | NE | UNIQUE; length=80 |
 | name | name | name | String | NE | length=160 |
 | category | category | category | WorkCategory | NE | length=20; EnumType.STRING |
-| defaultIntervalKm | — | defaultIntervalKm | Integer | DA | MAINTENANCE fallback; pozitivno kada postoji |
-| defaultIntervalMonths | — | defaultIntervalMonths | Integer | DA | MAINTENANCE fallback; pozitivno kada postoji |
+| defaultIntervalKm | default_interval_km | defaultIntervalKm | Integer | DA | MAINTENANCE fallback; pozitivno kada postoji |
+| defaultIntervalMonths | default_interval_months | defaultIntervalMonths | Integer | DA | MAINTENANCE fallback; pozitivno kada postoji |
 | defaultEstimatedPrice | default_estimated_price | defaultEstimatedPrice | BigDecimal | DA | decimal(9,2) |
 | estimateNote | estimate_note | estimateNote | String | DA | length=1000 |
 
 ### VehicleWorkRule
 
-| Java atribut poslije | SQL prije | SQL poslije | Tip u Javi | NULL | Dodatan ugovor |
+| Java atribut | SQL runtime | Povijesni target-name | Tip u Javi | NULL | Dodatan ugovor |
 |---|---|---|---|---|---|
 | id | id | id | Long | NE | PK; IDENTITY |
 | variant | variant_id | variant_id | VehicleVariant | NE | FK; LAZY |
@@ -129,7 +131,7 @@ Podaci i ID-evi ostaju isti; ovo nije specifikacija za rebuild postojece baze.
 
 ### ServiceRecord
 
-| Java atribut poslije | SQL prije | SQL poslije | Tip u Javi | NULL | Dodatan ugovor |
+| Java atribut | SQL runtime | Povijesni target-name | Tip u Javi | NULL | Dodatan ugovor |
 |---|---|---|---|---|---|
 | id | id | id | Long | NE | PK; IDENTITY |
 | vehicle | vehicle_id | vehicle_id | Vehicle | NE | FK; LAZY |
@@ -144,7 +146,7 @@ ostaje jer je dijagnosticki tok zamrznut.
 
 ### ServiceItem
 
-| Java atribut poslije | SQL prije | SQL poslije | Tip u Javi | NULL | Dodatan ugovor |
+| Java atribut | SQL runtime | Povijesni target-name | Tip u Javi | NULL | Dodatan ugovor |
 |---|---|---|---|---|---|
 | id | id | id | Long | NE | PK; IDENTITY |
 | serviceRecord | service_record_id | serviceRecord_id | ServiceRecord | NE | FK; LAZY |
@@ -153,7 +155,7 @@ ostaje jer je dijagnosticki tok zamrznut.
 
 ### Problem
 
-| Java atribut poslije | SQL prije | SQL poslije | Tip u Javi | NULL | Dodatan ugovor |
+| Java atribut | SQL runtime | Povijesni target-name | Tip u Javi | NULL | Dodatan ugovor |
 |---|---|---|---|---|---|
 | id | id | id | Long | NE | PK; IDENTITY |
 | version | version | version | long | NE | @Version |
@@ -170,7 +172,7 @@ ostaje jer je dijagnosticki tok zamrznut.
 
 ### DiagnosticRule
 
-| Java atribut poslije | SQL prije | SQL poslije | Tip u Javi | NULL | Dodatan ugovor |
+| Java atribut | SQL runtime | Povijesni target-name | Tip u Javi | NULL | Dodatan ugovor |
 |---|---|---|---|---|---|
 | id | id | id | Long | NE | PK; IDENTITY |
 | code | code | code | String | NE | UNIQUE; length=80 |
@@ -186,9 +188,10 @@ ostaje jer je dijagnosticki tok zamrznut.
   NOT NULL prije rjesavanja ciklusa INSERT-a ili u OneToOne samo radi naziva.
 - ServiceRecord.items ostaje `mappedBy="serviceRecord"`, cascade ALL/orphanRemoval. Nijedan katalog
   nema cascade remove. @OrderBy("id ASC") cuva redoslijed prikaza koji se vec koristi.
-- ServiceItem ima UNIQUE(serviceRecord_id,work_id); VehicleWorkRule UNIQUE(variant_id,work_id).
+- ServiceItem ima UNIQUE(service_record_id,work_id); VehicleWorkRule UNIQUE(variant_id,work_id).
 - Problem.resolvedByService ostaje opcionalni FK i stanje OPEN/RESOLVED mora biti uskladeno s njim.
-- Indeksi na vehicle owner, variant picker, service history i problem status ostaju i nakon renamea.
+- Indeksi na vehicle owner, variant picker, service history i problem status koriste fizicke snake_case
+  nazive; `VehicleVariant` picker koristi `make,model,year_from`.
 - JPA `length`/`nullable` nije zamjena za provjeru korisnickog unosa. Constraints u DB-u su dodatna zastita.
 
 ## 5. Posljedice izvan entity datoteke
@@ -199,14 +202,15 @@ Za productionYear/serviceDate provjeri property putanje u JPQL-u, kriterije sort
 domenske gettere i pozivatelje. Nisu sva getYear/getDate imena u projektu isti simbol.
 
 Native SQL, SQLSeedTool, ImagePathTool, ReviewedIntervalTool i INFORMATION_SCHEMA/sys.* provjere
-koriste fizicke nazive. Samo Java refactor ih nece automatski promijeniti. Ulazni CSV headeri ostaju
-stabilni; explicit developer mapping prevodi na ciljna SQL imena. Import ne ulazi u runtime JAR.
+koriste fizicke snake_case nazive. JPQL koristi Java property imena, a Hibernate physical naming
+strategy prevodi ih za SQL. Ulazni CSV headeri ostaju stabilni; import ne ulazi u runtime JAR.
 
-V2 dodaje samo dva nullable `INT` stupca na ciljnu `dbo.WorkDefinition` tablicu. Skripta
-`schema/05_student_simplification_v2.sql` je eksplicitna, idempotentna i zadano read-only; ne radi
-reset baze niti masovni backfill. `hibernate.hbm2ddl.auto=validate` ocekuje ta dva stupca nakon
-target-name migracije. Postojeci `VehicleWorkRule` retci ostaju glavni izvor specificnih intervala,
-a novi defaulti mogu ostati NULL.
+V2/delta dodaje samo dva nullable `INT` stupca na postojecu `dbo.work_definition` tablicu. Skripta
+`schema/06_student_runtime_compat.sql` je idempotentna i zadano read-only; ne radi reset baze niti
+masovni backfill. Nakon provjerenog applya `hibernate.hbm2ddl.auto=validate` ocekuje ta dva stupca.
+Postojeci `VehicleWorkRule` retci ostaju glavni izvor specificnih intervala, a novi defaulti mogu
+ostati NULL. Legacy `service_record.request_key` ostaje samo zbog kompatibilnosti i dobiva DB default
+ako je kolona jos prisutna bez njega.
 
 Referenca ne preimenuje constraint/index imena, ne brise constraints radi "lijepog" DDL-a i ne dodaje
 nova polja za podatke koji su vec izvedeni. `validate` sam ne provjerava potpunu poslovnu konzistentnost.
