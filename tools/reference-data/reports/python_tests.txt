@@ -1,0 +1,50 @@
+test_automatic_no_manual_clutch (test_model.ApplicabilityTests.test_automatic_no_manual_clutch) ... ok
+test_bad_engine_source_requires_quote (test_model.ApplicabilityTests.test_bad_engine_source_requires_quote) ... ok
+test_brake_parser (test_model.ApplicabilityTests.test_brake_parser) ... ok
+test_ceramic_no_steel_price (test_model.ApplicabilityTests.test_ceramic_no_steel_price) ... ok
+test_diesel_no_spark (test_model.ApplicabilityTests.test_diesel_no_spark) ... ok
+test_dpf_not_assumed_for_all_diesels (test_model.ApplicabilityTests.test_dpf_not_assumed_for_all_diesels) ... ok
+test_drum_not_disc (test_model.ApplicabilityTests.test_drum_not_disc) ... ok
+test_dual_mass_not_assumed (test_model.ApplicabilityTests.test_dual_mass_not_assumed) ... ok
+test_ev_battery_not_assumed_12v (test_model.ApplicabilityTests.test_ev_battery_not_assumed_12v) ... ok
+test_ev_no_glow (test_model.ApplicabilityTests.test_ev_no_glow) ... ok
+test_ev_no_oil (test_model.ApplicabilityTests.test_ev_no_oil) ... ok
+test_exotic_requires_quote (test_model.ApplicabilityTests.test_exotic_requires_quote) ... ok
+test_hybrid_fuel_not_assumed (test_model.ApplicabilityTests.test_hybrid_fuel_not_assumed) ... ok
+test_hybrid_starter_not_assumed (test_model.ApplicabilityTests.test_hybrid_starter_not_assumed) ... ok
+test_legacy_requires_quote (test_model.ApplicabilityTests.test_legacy_requires_quote) ... ok
+test_petrol_no_glow (test_model.ApplicabilityTests.test_petrol_no_glow) ... ok
+test_rear_shoes_for_drums (test_model.ApplicabilityTests.test_rear_shoes_for_drums) ... ok
+test_refrigerant_not_inferred_from_year (test_model.ApplicabilityTests.test_refrigerant_not_inferred_from_year) ... ok
+test_timing_not_assumed (test_model.ApplicabilityTests.test_timing_not_assumed) ... ok
+test_unknown_plug_count (test_model.ApplicabilityTests.test_unknown_plug_count) ... ok
+test_blank_fill (test_model.ImportPolicyTests.test_blank_fill) ... ok
+test_default_rerun_preserves_model (test_model.ImportPolicyTests.test_default_rerun_preserves_model) ... ok
+test_explicit_refresh_model (test_model.ImportPolicyTests.test_explicit_refresh_model) ... ok
+test_insert (test_model.ImportPolicyTests.test_insert) ... ok
+test_money_validated (test_model.ImportPolicyTests.test_money_validated) ... ok
+test_preserve_reviewed_price (test_model.ImportPolicyTests.test_preserve_reviewed_price) ... ok
+test_sql_identifier_allowlist (test_model.ImportPolicyTests.test_sql_identifier_allowlist) ... ok
+test_tesla_check_not_replacement (test_model.IntervalTests.test_tesla_check_not_replacement) ... ok
+test_toyota_initial_coolant_not_repeating (test_model.IntervalTests.test_toyota_initial_coolant_not_repeating) ... ok
+test_toyota_new_generation_not_inherited (test_model.IntervalTests.test_toyota_new_generation_not_inherited) ... ok
+test_toyota_scope (test_model.IntervalTests.test_toyota_scope) ... ok
+test_unknown_not_fabricated (test_model.IntervalTests.test_unknown_not_fabricated) ... ok
+test_all_outputs_are_tens (test_model.PriceTests.test_all_outputs_are_tens) ... ok
+test_labour_change_changes_output (test_model.PriceTests.test_labour_change_changes_output) ... ok
+test_more_glow_plugs_costs_more (test_model.PriceTests.test_more_glow_plugs_costs_more) ... ok
+test_no_global_price (test_model.PriceTests.test_no_global_price) ... ok
+test_no_negative_nan (test_model.PriceTests.test_no_negative_nan) ... ok
+test_oil_varies_with_engine (test_model.PriceTests.test_oil_varies_with_engine) ... ok
+test_price_includes_parts_hours_consumables (test_model.PriceTests.test_price_includes_parts_hours_consumables) ... ok
+test_round_half_up (test_model.PriceTests.test_round_half_up) ... ok
+test_automatic_manual_mode_not_manual (test_model.SourceTests.test_automatic_manual_mode_not_manual) ... ok
+test_full_af2_id_compatibility (test_model.SourceTests.test_full_af2_id_compatibility) ... ok
+test_json_csv_all_23_columns_parity (test_model.SourceTests.test_json_csv_all_23_columns_parity) ... ok
+test_no_source_row_rejected (test_model.SourceTests.test_no_source_row_rejected) ... ok
+test_optional_normalization_traced (test_model.SourceTests.test_optional_normalization_traced) ... ok
+
+----------------------------------------------------------------------
+Ran 45 tests in 4.729s
+
+OK

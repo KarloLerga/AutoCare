@@ -1,0 +1,1 @@
+PASS: independent complete rebuild from the uploaded ZIP produced an identical manifest and all 17 listed data-file hashes.

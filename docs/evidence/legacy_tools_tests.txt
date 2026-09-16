@@ -1,0 +1,14 @@
+test_cost_approval_does_not_approve_unreviewed_interval (test_calculate_estimates.EstimateTests.test_cost_approval_does_not_approve_unreviewed_interval) ... ok
+test_non_finite_rejected (test_calculate_estimates.EstimateTests.test_non_finite_rejected) ... ok
+test_reversed_bounds_rejected (test_calculate_estimates.EstimateTests.test_reversed_bounds_rejected) ... ok
+test_synthetic_arithmetic (test_calculate_estimates.EstimateTests.test_synthetic_arithmetic) ... ok
+test_vat_mix_rejected (test_calculate_estimates.EstimateTests.test_vat_mix_rejected) ... ok
+test_counts_rejections_and_duplicates (test_prepare_catalog.CatalogueTests.test_counts_rejections_and_duplicates) ... ok
+test_different_specs_remain_distinct (test_prepare_catalog.CatalogueTests.test_different_specs_remain_distinct) ... ok
+test_invalid_rows_are_not_guessed (test_prepare_catalog.CatalogueTests.test_invalid_rows_are_not_guessed) ... ok
+test_normalization_is_stable (test_prepare_catalog.CatalogueTests.test_normalization_is_stable) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.002s
+
+OK

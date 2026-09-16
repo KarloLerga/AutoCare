@@ -1,0 +1,392 @@
+{
+  "User": {
+    "table": "app_user",
+    "fields": [
+      [
+        "Long",
+        "id",
+        "@Id @GeneratedValue(strategy=GenerationType.IDENTITY)"
+      ],
+      [
+        "long",
+        "version",
+        "@Version @Column(nullable=false)"
+      ],
+      [
+        "String",
+        "name",
+        "@Column(nullable=false,length=100)"
+      ],
+      [
+        "String",
+        "email",
+        "@Column(nullable=false,unique=true,length=254)"
+      ],
+      [
+        "String",
+        "passwordHash",
+        "@Column(name=\"password_hash\",nullable=false,length=255)"
+      ],
+      [
+        "Vehicle",
+        "activeVehicle",
+        "@ManyToOne(fetch=FetchType.LAZY) @JoinColumn(name=\"active_vehicle_id\")"
+      ]
+    ]
+  },
+  "VehicleVariant": {
+    "table": "vehicle_variant",
+    "fields": [
+      [
+        "Long",
+        "id",
+        "@Id @GeneratedValue(strategy=GenerationType.IDENTITY)"
+      ],
+      [
+        "String",
+        "code",
+        "@Column(nullable=false,unique=true,length=80)"
+      ],
+      [
+        "String",
+        "make",
+        "@Column(nullable=false,length=100)"
+      ],
+      [
+        "String",
+        "model",
+        "@Column(nullable=false,length=150)"
+      ],
+      [
+        "String",
+        "generation",
+        "@Column(nullable=false,length=200)"
+      ],
+      [
+        "String",
+        "engineLabel",
+        "@Column(name=\"engine_label\",nullable=false,length=240)"
+      ],
+      [
+        "String",
+        "bodyType",
+        "@Column(name=\"body_type\",length=100)"
+      ],
+      [
+        "String",
+        "fuelType",
+        "@Column(name=\"fuel_type\",length=80)"
+      ],
+      [
+        "Integer",
+        "powerHp",
+        "@Column(name=\"power_hp\")"
+      ],
+      [
+        "String",
+        "transmission",
+        "@Column(length=120)"
+      ],
+      [
+        "int",
+        "yearFrom",
+        "@Column(name=\"year_from\",nullable=false)"
+      ],
+      [
+        "Integer",
+        "yearTo",
+        "@Column(name=\"year_to\")"
+      ],
+      [
+        "String",
+        "imagePath",
+        "@Column(name=\"image_path\",length=255)"
+      ]
+    ]
+  },
+  "Vehicle": {
+    "table": "vehicle",
+    "fields": [
+      [
+        "Long",
+        "id",
+        "@Id @GeneratedValue(strategy=GenerationType.IDENTITY)"
+      ],
+      [
+        "long",
+        "version",
+        "@Version @Column(nullable=false)"
+      ],
+      [
+        "User",
+        "owner",
+        "@ManyToOne(fetch=FetchType.LAZY,optional=false) @JoinColumn(name=\"owner_id\",nullable=false)"
+      ],
+      [
+        "VehicleVariant",
+        "variant",
+        "@ManyToOne(fetch=FetchType.LAZY,optional=false) @JoinColumn(name=\"variant_id\",nullable=false)"
+      ],
+      [
+        "int",
+        "year",
+        "@Column(name=\"production_year\",nullable=false)"
+      ],
+      [
+        "int",
+        "currentMileage",
+        "@Column(name=\"current_mileage\",nullable=false)"
+      ]
+    ]
+  },
+  "WorkDefinition": {
+    "table": "work_definition",
+    "fields": [
+      [
+        "Long",
+        "id",
+        "@Id @GeneratedValue(strategy=GenerationType.IDENTITY)"
+      ],
+      [
+        "String",
+        "code",
+        "@Column(nullable=false,unique=true,length=80)"
+      ],
+      [
+        "String",
+        "name",
+        "@Column(nullable=false,length=160)"
+      ],
+      [
+        "WorkCategory",
+        "category",
+        "@Enumerated(EnumType.STRING) @Column(nullable=false,length=20)"
+      ],
+      [
+        "BigDecimal",
+        "defaultEstimatedPrice",
+        "@Column(name=\"default_estimated_price\",precision=9,scale=2)"
+      ],
+      [
+        "String",
+        "estimateNote",
+        "@Column(name=\"estimate_note\",length=1000)"
+      ]
+    ]
+  },
+  "VehicleWorkRule": {
+    "table": "vehicle_work_rule",
+    "fields": [
+      [
+        "Long",
+        "id",
+        "@Id @GeneratedValue(strategy=GenerationType.IDENTITY)"
+      ],
+      [
+        "VehicleVariant",
+        "variant",
+        "@ManyToOne(fetch=FetchType.LAZY,optional=false) @JoinColumn(name=\"variant_id\",nullable=false)"
+      ],
+      [
+        "WorkDefinition",
+        "work",
+        "@ManyToOne(fetch=FetchType.LAZY,optional=false) @JoinColumn(name=\"work_id\",nullable=false)"
+      ],
+      [
+        "Integer",
+        "intervalKm",
+        "@Column(name=\"interval_km\")"
+      ],
+      [
+        "ScheduleKind",
+        "scheduleKind",
+        "@Enumerated(EnumType.STRING) @Column(name=\"schedule_kind\",nullable=false,length=24)"
+      ],
+      [
+        "Integer",
+        "intervalMonths",
+        "@Column(name=\"interval_months\")"
+      ],
+      [
+        "BigDecimal",
+        "estimatedPrice",
+        "@Column(name=\"estimated_price\",precision=9,scale=2)"
+      ],
+      [
+        "String",
+        "intervalSource",
+        "@Column(name=\"interval_source\",length=1000)"
+      ],
+      [
+        "String",
+        "estimateNote",
+        "@Column(name=\"estimate_note\",length=1000)"
+      ]
+    ]
+  },
+  "ServiceRecord": {
+    "table": "service_record",
+    "fields": [
+      [
+        "Long",
+        "id",
+        "@Id @GeneratedValue(strategy=GenerationType.IDENTITY)"
+      ],
+      [
+        "Vehicle",
+        "vehicle",
+        "@ManyToOne(fetch=FetchType.LAZY,optional=false) @JoinColumn(name=\"vehicle_id\",nullable=false)"
+      ],
+      [
+        "String",
+        "requestKey",
+        "@Column(name=\"request_key\",nullable=false,unique=true,length=36)"
+      ],
+      [
+        "LocalDate",
+        "date",
+        "@Column(name=\"service_date\",nullable=false)"
+      ],
+      [
+        "int",
+        "mileage",
+        "@Column(nullable=false)"
+      ],
+      [
+        "String",
+        "note",
+        "@Column(length=2000)"
+      ],
+      [
+        "List<ServiceItem>",
+        "items",
+        "@OneToMany(mappedBy=\"serviceRecord\",cascade=CascadeType.ALL,orphanRemoval=true) @OrderBy(\"id ASC\")"
+      ]
+    ]
+  },
+  "ServiceItem": {
+    "table": "service_item",
+    "fields": [
+      [
+        "Long",
+        "id",
+        "@Id @GeneratedValue(strategy=GenerationType.IDENTITY)"
+      ],
+      [
+        "ServiceRecord",
+        "serviceRecord",
+        "@ManyToOne(fetch=FetchType.LAZY,optional=false) @JoinColumn(name=\"service_record_id\",nullable=false)"
+      ],
+      [
+        "WorkDefinition",
+        "work",
+        "@ManyToOne(fetch=FetchType.LAZY,optional=false) @JoinColumn(name=\"work_id\",nullable=false)"
+      ],
+      [
+        "BigDecimal",
+        "actualPrice",
+        "@Column(name=\"actual_price\",precision=9,scale=2)"
+      ]
+    ]
+  },
+  "Problem": {
+    "table": "problem",
+    "fields": [
+      [
+        "Long",
+        "id",
+        "@Id @GeneratedValue(strategy=GenerationType.IDENTITY)"
+      ],
+      [
+        "long",
+        "version",
+        "@Version @Column(nullable=false)"
+      ],
+      [
+        "Vehicle",
+        "vehicle",
+        "@ManyToOne(fetch=FetchType.LAZY,optional=false) @JoinColumn(name=\"vehicle_id\",nullable=false)"
+      ],
+      [
+        "String",
+        "requestKey",
+        "@Column(name=\"request_key\",nullable=false,unique=true,length=36)"
+      ],
+      [
+        "String",
+        "description",
+        "@Column(nullable=false,length=2000)"
+      ],
+      [
+        "ProblemStatus",
+        "status",
+        "@Enumerated(EnumType.STRING) @Column(nullable=false,length=20)"
+      ],
+      [
+        "LocalDateTime",
+        "createdAt",
+        "@Column(name=\"created_at\",nullable=false)"
+      ],
+      [
+        "WorkDefinition",
+        "suggestedRepair",
+        "@ManyToOne(fetch=FetchType.LAZY) @JoinColumn(name=\"suggested_repair_id\")"
+      ],
+      [
+        "BigDecimal",
+        "matchPercent",
+        "@Column(name=\"match_percent\",precision=5,scale=2)"
+      ],
+      [
+        "BigDecimal",
+        "estimatedCost",
+        "@Column(name=\"estimated_cost\",precision=9,scale=2)"
+      ],
+      [
+        "String",
+        "estimateNote",
+        "@Column(name=\"estimate_note\",length=1000)"
+      ],
+      [
+        "ServiceRecord",
+        "resolvedByService",
+        "@ManyToOne(fetch=FetchType.LAZY) @JoinColumn(name=\"resolved_by_service_id\")"
+      ]
+    ]
+  },
+  "DiagnosticRule": {
+    "table": "diagnostic_rule",
+    "fields": [
+      [
+        "Long",
+        "id",
+        "@Id @GeneratedValue(strategy=GenerationType.IDENTITY)"
+      ],
+      [
+        "String",
+        "code",
+        "@Column(nullable=false,unique=true,length=80)"
+      ],
+      [
+        "WorkDefinition",
+        "candidate",
+        "@ManyToOne(fetch=FetchType.LAZY,optional=false) @JoinColumn(name=\"candidate_id\",nullable=false)"
+      ],
+      [
+        "String",
+        "phrase",
+        "@Column(nullable=false,length=160)"
+      ],
+      [
+        "int",
+        "weight",
+        "@Column(nullable=false)"
+      ],
+      [
+        "boolean",
+        "active",
+        "@Column(nullable=false)"
+      ]
+    ]
+  }
+}

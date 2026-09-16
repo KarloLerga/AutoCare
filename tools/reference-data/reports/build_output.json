@@ -1,0 +1,17 @@
+{
+  "counts": {
+    "input_rows": 30390,
+    "accepted_variants": 30366,
+    "QUOTE_REQUIRED": 114125,
+    "NOT_APPLICABLE": 228865,
+    "IMPORTABLE": 625668,
+    "CONDITIONAL": 215616,
+    "variants_with_price": 26866,
+    "normalization_adjustments": 425,
+    "duplicates": 24
+  },
+  "accepted_makes": 134,
+  "accepted_models": 2423,
+  "work_count": 39,
+  "referenced_interval_rows": 14
+}

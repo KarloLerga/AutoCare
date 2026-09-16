@@ -1,0 +1,538 @@
+[
+  {
+    "code": "ac-ds1-ac-compressor-1",
+    "work_code": "AC_COMPRESSOR",
+    "phrase": "klima slabo hladi",
+    "weight": 4,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-ac-compressor-2",
+    "work_code": "AC_COMPRESSOR",
+    "phrase": "zvuk kompresora",
+    "weight": 4,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-ac-compressor-3",
+    "work_code": "AC_COMPRESSOR",
+    "phrase": "kompresor klime",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-radiator-fan-1",
+    "work_code": "RADIATOR_FAN",
+    "phrase": "ventilator ne radi",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-radiator-fan-2",
+    "work_code": "RADIATOR_FAN",
+    "phrase": "pregrijava u leru",
+    "weight": 4,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-radiator-fan-3",
+    "work_code": "RADIATOR_FAN",
+    "phrase": "temperatura raste u mjestu",
+    "weight": 4,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-battery-1",
+    "work_code": "BATTERY",
+    "phrase": "sporo vergla",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-battery-2",
+    "work_code": "BATTERY",
+    "phrase": "prazan akumulator",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-battery-3",
+    "work_code": "BATTERY",
+    "phrase": "svjetla oslabe pri paljenju",
+    "weight": 3,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-glow-plugs-1",
+    "work_code": "GLOW_PLUGS",
+    "phrase": "tesko pali hladan",
+    "weight": 4,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-glow-plugs-2",
+    "work_code": "GLOW_PLUGS",
+    "phrase": "lampica grijaca",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-glow-plugs-3",
+    "work_code": "GLOW_PLUGS",
+    "phrase": "tesko pali zimi",
+    "weight": 3,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-starter-1",
+    "work_code": "STARTER",
+    "phrase": "ne vergla",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-starter-2",
+    "work_code": "STARTER",
+    "phrase": "klik pri paljenju",
+    "weight": 3,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-starter-3",
+    "work_code": "STARTER",
+    "phrase": "elektropokretac",
+    "weight": 4,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-alternator-1",
+    "work_code": "ALTERNATOR",
+    "phrase": "lampica akumulatora",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-alternator-2",
+    "work_code": "ALTERNATOR",
+    "phrase": "ne puni akumulator",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-alternator-3",
+    "work_code": "ALTERNATOR",
+    "phrase": "slabo punjenje",
+    "weight": 4,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-turbo-1",
+    "work_code": "TURBO",
+    "phrase": "nema snage",
+    "weight": 2,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-turbo-2",
+    "work_code": "TURBO",
+    "phrase": "zvizdi pri ubrzanju",
+    "weight": 4,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-turbo-3",
+    "work_code": "TURBO",
+    "phrase": "gubi tlak turbine",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-egr-valve-1",
+    "work_code": "EGR_VALVE",
+    "phrase": "egr greska",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-egr-valve-2",
+    "work_code": "EGR_VALVE",
+    "phrase": "neravnomjeran ler",
+    "weight": 2,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-egr-valve-3",
+    "work_code": "EGR_VALVE",
+    "phrase": "trza na malim okretajima",
+    "weight": 3,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-dpf-clean-1",
+    "work_code": "DPF_CLEAN",
+    "phrase": "lampica dpf",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-dpf-clean-2",
+    "work_code": "DPF_CLEAN",
+    "phrase": "cesta regeneracija",
+    "weight": 4,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-dpf-clean-3",
+    "work_code": "DPF_CLEAN",
+    "phrase": "dpf zacepljen",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-diesel-injector-1",
+    "work_code": "DIESEL_INJECTOR",
+    "phrase": "korekcija dizni",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-diesel-injector-2",
+    "work_code": "DIESEL_INJECTOR",
+    "phrase": "lupanje dizne",
+    "weight": 4,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-diesel-injector-3",
+    "work_code": "DIESEL_INJECTOR",
+    "phrase": "neravnomjeran rad dizela",
+    "weight": 3,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-ignition-coil-1",
+    "work_code": "IGNITION_COIL",
+    "phrase": "preskace paljenje",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-ignition-coil-2",
+    "work_code": "IGNITION_COIL",
+    "phrase": "misfire",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-ignition-coil-3",
+    "work_code": "IGNITION_COIL",
+    "phrase": "radi na tri cilindra",
+    "weight": 4,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-wheel-bearing-1",
+    "work_code": "WHEEL_BEARING",
+    "phrase": "brujanje kotaca",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-wheel-bearing-2",
+    "work_code": "WHEEL_BEARING",
+    "phrase": "brujanje raste s brzinom",
+    "weight": 4,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-wheel-bearing-3",
+    "work_code": "WHEEL_BEARING",
+    "phrase": "zujanje u zavoju",
+    "weight": 3,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-front-brakes-1",
+    "work_code": "FRONT_BRAKES",
+    "phrase": "prednje kocnice skripe",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-front-brakes-2",
+    "work_code": "FRONT_BRAKES",
+    "phrase": "istrosene prednje plocice",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-front-brakes-3",
+    "work_code": "FRONT_BRAKES",
+    "phrase": "skripanje pri kocenju",
+    "weight": 2,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-rear-brakes-1",
+    "work_code": "REAR_BRAKES",
+    "phrase": "straznje kocnice skripe",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-rear-brakes-2",
+    "work_code": "REAR_BRAKES",
+    "phrase": "istrosene straznje plocice",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-rear-brakes-3",
+    "work_code": "REAR_BRAKES",
+    "phrase": "skripanje pri kocenju",
+    "weight": 2,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-front-discs-pads-1",
+    "work_code": "FRONT_DISCS_PADS",
+    "phrase": "volan trese pri kocenju",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-front-discs-pads-2",
+    "work_code": "FRONT_DISCS_PADS",
+    "phrase": "prednji diskovi",
+    "weight": 4,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-front-discs-pads-3",
+    "work_code": "FRONT_DISCS_PADS",
+    "phrase": "vibracije pri kocenju",
+    "weight": 2,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-rear-discs-pads-1",
+    "work_code": "REAR_DISCS_PADS",
+    "phrase": "straznji diskovi",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-rear-discs-pads-2",
+    "work_code": "REAR_DISCS_PADS",
+    "phrase": "straga trese pri kocenju",
+    "weight": 4,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-rear-discs-pads-3",
+    "work_code": "REAR_DISCS_PADS",
+    "phrase": "vibracije pri kocenju",
+    "weight": 2,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-clutch-kit-1",
+    "work_code": "CLUTCH_KIT",
+    "phrase": "spojka proklizava",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-clutch-kit-2",
+    "work_code": "CLUTCH_KIT",
+    "phrase": "kvacilo proklizava",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-clutch-kit-3",
+    "work_code": "CLUTCH_KIT",
+    "phrase": "okretaji rastu bez ubrzanja",
+    "weight": 4,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-clutch-dmf-1",
+    "work_code": "CLUTCH_DMF",
+    "phrase": "dvomaseni zamasnjak",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-clutch-dmf-2",
+    "work_code": "CLUTCH_DMF",
+    "phrase": "lupanje pri gasenju",
+    "weight": 3,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-clutch-dmf-3",
+    "work_code": "CLUTCH_DMF",
+    "phrase": "vibracije spojke",
+    "weight": 3,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-water-pump-1",
+    "work_code": "WATER_PUMP",
+    "phrase": "curi vodena pumpa",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-water-pump-2",
+    "work_code": "WATER_PUMP",
+    "phrase": "curenje kod pumpe",
+    "weight": 4,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-water-pump-3",
+    "work_code": "WATER_PUMP",
+    "phrase": "gubi rashladnu tekucinu",
+    "weight": 2,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-thermostat-1",
+    "work_code": "THERMOSTAT",
+    "phrase": "motor se ne zagrijava",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-thermostat-2",
+    "work_code": "THERMOSTAT",
+    "phrase": "temperatura pada u voznji",
+    "weight": 4,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-thermostat-3",
+    "work_code": "THERMOSTAT",
+    "phrase": "termostat",
+    "weight": 3,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-lambda-sensor-1",
+    "work_code": "LAMBDA_SENSOR",
+    "phrase": "greska lambda sonde",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-lambda-sensor-2",
+    "work_code": "LAMBDA_SENSOR",
+    "phrase": "lambda sonda",
+    "weight": 4,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-lambda-sensor-3",
+    "work_code": "LAMBDA_SENSOR",
+    "phrase": "povecana potrosnja goriva",
+    "weight": 1,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-front-shocks-1",
+    "work_code": "FRONT_SHOCKS",
+    "phrase": "prednji amortizer curi",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-front-shocks-2",
+    "work_code": "FRONT_SHOCKS",
+    "phrase": "prednji kraj poskakuje",
+    "weight": 3,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-rear-shocks-1",
+    "work_code": "REAR_SHOCKS",
+    "phrase": "straznji amortizer curi",
+    "weight": 5,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  },
+  {
+    "code": "ac-ds1-rear-shocks-2",
+    "work_code": "REAR_SHOCKS",
+    "phrase": "straznji kraj poskakuje",
+    "weight": 3,
+    "active": 1,
+    "basis": "DIAGNOSTIC_DESIGN_NOT_VALIDATED"
+  }
+]

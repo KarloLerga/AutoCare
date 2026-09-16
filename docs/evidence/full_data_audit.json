@@ -1,0 +1,10 @@
+{
+  "status": "PASS_STRUCTURAL_ONLY",
+  "pair_counts": {
+    "QUOTE_REQUIRED": 481644,
+    "NOT_APPLICABLE": 760404,
+    "CONDITIONAL": 1179688,
+    "IMPORTABLE": 1282916
+  },
+  "total": 3704652
+}

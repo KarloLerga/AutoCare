@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "AutoCare",
+      "request": "launch",
+      "mainClass": "hr.unizd.autocare.app.Main",
+      "projectName": "autocare",
+      "console": "integratedTerminal"
+    }
+  ]
+}

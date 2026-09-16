@@ -1,0 +1,1 @@
+PASS: 11 helper assertions. Full Java 25/GUI/JPA testing still required.

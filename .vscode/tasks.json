@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "AutoCare: verify",
+      "type": "shell",
+      "command": "./mvnw.cmd clean verify",
+      "problemMatcher": [
+        "$javac"
+      ]
+    },
+    {
+      "label": "AutoCare: Javadoc",
+      "type": "shell",
+      "command": "./mvnw.cmd javadoc:javadoc",
+      "problemMatcher": []
+    }
+  ]
+}

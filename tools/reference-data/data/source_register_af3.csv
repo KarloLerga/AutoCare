@@ -1,0 +1,9 @@
+source_id,url,accessed,supported_scope,evidence_level
+AF3_SQL_FREE,https://learn.microsoft.com/en-us/azure/azure-sql/database/free-offer?view=azuresql,2026-09-16,Free quotas/pause; never enable paid overage,PRIMARY_SOURCE_LIMITED_SCOPE
+AF3_JDBC,https://learn.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server?view=sql-server-ver17,2026-09-16,Microsoft JDBC 13.4.0 JDK25 support,PRIMARY_SOURCE_LIMITED_SCOPE
+AF3_TOYOTA_YARIS,https://www.toyotaadria.com/hr/pdf/cjenici_servis/2021/plan-servis-Yaris-CRO-2021.pdf,2026-09-16,HR HEV 2021 normal model schedule; historical prices not reused,PRIMARY_SOURCE_LIMITED_SCOPE
+AF3_TOYOTA_RAV4,https://www.toyotaadria.com/hr/pdf/cjenici_servis/2021/plan-servis-RAV4-CRO-2021.pdf,2026-09-16,HR HEV 2021 model schedule; first coolant change not repeated,PRIMARY_SOURCE_LIMITED_SCOPE
+AF3_KIA_DE,https://eu-www.kia.com/content/dam/kwcms/kme/de/de/assets/contents/service/service-wartung/Kia_Wartungsintervalle-Fahrzeuge_Stand-2025-09.pdf,2026-09-16,German market; three pages visually reviewed; candidates not activated as HR facts,PRIMARY_SOURCE_LIMITED_SCOPE
+AF3_TESLA_Y,https://www.tesla.com/ownersmanual/2020_2024_modely/en_eu/GUID-E95DAAD9-646E-4249-9930-B109ED7B1D91.html,2026-09-16,Model year review required; inspection not replacement,PRIMARY_SOURCE_LIMITED_SCOPE
+AF3_MEDIAWIKI,https://www.mediawiki.org/wiki/API:Imageinfo,2026-09-16,"Metadata and thumbnails, not automatic generation matching",PRIMARY_SOURCE_LIMITED_SCOPE
+AF3_WIKIDATA,https://www.wikidata.org/wiki/Wikidata:Data_access,2026-09-16,Offline developer API tooling only,PRIMARY_SOURCE_LIMITED_SCOPE
