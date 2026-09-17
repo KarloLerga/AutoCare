@@ -1,4 +1,29 @@
-# Verification evidence - cleanup, preparation baseline and local run
+# Verification evidence - live delta, cleanup, preparation baseline and local run
+
+## Current delta evidence - live Azure SQL compatibility
+
+Date: 2026-09-17. This is the first live validation of the post-F7 runtime naming delta. No
+history reset, rebase or force-push was used, and no 100-row synthetic seed was inserted.
+
+- `sql-check`: PASS against the selected existing Azure SQL database; SQL Server EngineEdition 5,
+  TLS remained `encrypt=true; trustServerCertificate=false`.
+- `schema/06_student_runtime_compat.sql` with its default `@Apply = 0`: PASS/read-only. The first
+  result showed the existing `dbo.work_definition` and `dbo.service_record`, missing only the two
+  nullable default interval columns and the legacy `request_key` default.
+- After exact database verification, the guarded statements from `06_student_runtime_compat.sql`
+  were applied once. They added only `default_interval_km int NULL`, `default_interval_months int NULL`
+  and `DF_autocare_service_record_request_key`; no rename, drop, truncate, rebuild or data backfill
+  was run. A second read-only execution returned all three compatibility flags present.
+- Hibernate `db-check`: PASS in `validate` mode with the real Microsoft SQL Server driver and
+  Hibernate 7.4.8; it opened the database and reported 30,366 catalog variants.
+- `scripts/verify-database.sql`: PASS after updating its active diagnostics to the current
+  snake_case physical names. Read-only counts were 30,366 vehicle variants, 122 work definitions,
+  1,650,435 scoped rules and 87 diagnostic rules; duplicate variant codes and duplicate
+  variant/work pairs were both 0. The existing database has no user/service rows to exercise GUI
+  ownership CRUD.
+- The isolated Maven `sqlserver-it` profile remains `NOT_RUN` because no separately approved `_test`
+  database is available. Native Windows GUI/manual CRUD, DPI and cancellation checks remain
+  `BLOCKED` because the Computer Use native pipe is unavailable.
 
 ## Current delta evidence — after F7
 
