@@ -11,9 +11,9 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -40,88 +40,88 @@ public final class Ui {
   private Ui() {}
 
   public static JPanel column() {
-    JPanel p = new JPanel();
-    p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-    p.setOpaque(false);
-    return p;
+    JPanel panel = new JPanel();
+    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    panel.setOpaque(false);
+    return panel;
   }
 
   public static JPanel row(Component... controls) {
-    JPanel p = new JPanel(new FlowLayout(FlowLayout.LEADING, 8, 4));
-    p.setOpaque(false);
-    for (Component c : controls) {
-      p.add(c);
+    JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEADING, 8, 4));
+    panel.setOpaque(false);
+    for (Component control : controls) {
+      panel.add(control);
     }
-    return p;
+    return panel;
   }
 
   public static JPanel actions(Component... controls) {
-    JPanel p = new JPanel(new FlowLayout(FlowLayout.TRAILING, 8, 4));
-    p.setOpaque(false);
-    for (Component c : controls) {
-      p.add(c);
+    JPanel panel = new JPanel(new FlowLayout(FlowLayout.TRAILING, 8, 4));
+    panel.setOpaque(false);
+    for (Component control : controls) {
+      panel.add(control);
     }
-    return p;
+    return panel;
   }
 
   public static JPanel card() {
-    JPanel p = new JPanel(new BorderLayout(12, 12));
-    p.setBorder(new EmptyBorder(16, 16, 16, 16));
-    return p;
+    JPanel panel = new JPanel(new BorderLayout(12, 12));
+    panel.setBorder(new EmptyBorder(16, 16, 16, 16));
+    return panel;
   }
 
   public static JLabel heading(String title) {
-    JLabel l = new JLabel(title);
-    l.setFont(l.getFont().deriveFont(Font.BOLD, 24f));
-    return l;
+    JLabel label = new JLabel(title);
+    label.setFont(label.getFont().deriveFont(Font.BOLD, 24f));
+    return label;
   }
 
   public static JLabel hint(String text) {
-    JLabel l = new JLabel(text);
+    JLabel label = new JLabel(text);
     if (javax.swing.UIManager.getColor("Label.disabledForeground") != null) {
-      l.setForeground(javax.swing.UIManager.getColor("Label.disabledForeground"));
+      label.setForeground(javax.swing.UIManager.getColor("Label.disabledForeground"));
     }
-    return l;
+    return label;
   }
 
   public static JButton button(String title, boolean primary) {
-    JButton b = new JButton(title);
-    b.setFocusPainted(true);
-    return b;
+    JButton button = new JButton(title);
+    button.setFocusPainted(true);
+    return button;
   }
 
   public static JPanel form() {
-    JPanel p = new JPanel(new GridBagLayout());
-    p.setOpaque(false);
-    return p;
+    JPanel panel = new JPanel(new GridBagLayout());
+    panel.setOpaque(false);
+    return panel;
   }
 
-  public static void field(JPanel form, int row, String label, JComponent component) {
-    GridBagConstraints c = new GridBagConstraints();
-    c.gridx = 0;
-    c.gridy = row;
-    c.anchor = GridBagConstraints.LINE_START;
-    c.insets = new Insets(6, 0, 6, 16);
-    JLabel l = new JLabel(label);
-    l.setLabelFor(component);
-    form.add(l, c);
-    c.gridx = 1;
-    c.weightx = 1;
-    c.fill = GridBagConstraints.HORIZONTAL;
-    form.add(component, c);
+  public static void field(JPanel form, int row, String title, JComponent component) {
+    GridBagConstraints constraints = new GridBagConstraints();
+    constraints.gridx = 0;
+    constraints.gridy = row;
+    constraints.anchor = GridBagConstraints.LINE_START;
+    constraints.insets = new Insets(6, 0, 6, 16);
+    JLabel label = new JLabel(title);
+    label.setLabelFor(component);
+    form.add(label, constraints);
+    constraints.gridx = 1;
+    constraints.weightx = 1;
+    constraints.fill = GridBagConstraints.HORIZONTAL;
+    form.add(component, constraints);
   }
 
   public static JSpinner mileage(int value) {
-    JSpinner s = new JSpinner(new SpinnerNumberModel(value, 0, 3_000_000, 100));
-    s.setEditor(new JSpinner.NumberEditor(s, "0"));
-    return s;
+    JSpinner spinner = new JSpinner(new SpinnerNumberModel(value, 0, 3_000_000, 100));
+    spinner.setEditor(new JSpinner.NumberEditor(spinner, "0"));
+    return spinner;
   }
 
-  public static int integer(JSpinner s) {
+  public static int integer(JSpinner spinner) {
     try {
-      s.commitEdit();
-      return ((Number) s.getValue()).intValue();
-    } catch (java.text.ParseException ex) {
+      spinner.commitEdit();
+      return ((Number) spinner.getValue()).intValue();
+    } catch (java.text.ParseException exception) {
       throw new IllegalArgumentException("Unesite cijeli broj.");
     }
   }
@@ -133,44 +133,61 @@ public final class Ui {
       }
       throw new IllegalArgumentException("Unesite stvarno placenu cijenu za svaku stavku.");
     }
-    String t = text.strip();
-    if (!t.matches("[0-9]+([.,][0-9]{1,2})?")) {
+    String cleanText = text.strip();
+    if (!cleanText.matches("[0-9]+([.,][0-9]{1,2})?")) {
       throw new IllegalArgumentException(
           "Cijena: npr. 120,50; bez simbola EUR i odvajanja tisucica.");
     }
-    return Checks.money(new BigDecimal(t.replace(',', '.')), optional);
+    return Checks.money(new BigDecimal(cleanText.replace(',', '.')), optional);
   }
 
   public static String money(BigDecimal value) {
-    return value == null
-        ? "Nepoznato"
-        : String.format(Locale.forLanguageTag("hr-HR"), "%,.2f EUR", value);
+    if (value == null) {
+      return "Nepoznato";
+    }
+    return String.format(Locale.forLanguageTag("hr-HR"), "%,.2f EUR", value);
   }
 
-  public static String total(CostSummary c) {
-    return money(c.getKnownTotal())
-        + (c.getUnknownCount() > 0 ? " + " + c.getUnknownCount() + " nepoznatih" : "");
+  public static String total(CostSummary summary) {
+    String result = money(summary.getKnownTotal());
+    if (summary.getUnknownCount() > 0) {
+      result += " + " + summary.getUnknownCount() + " nepoznatih";
+    }
+    return result;
   }
 
-  public static String date(LocalDate d) {
-    return d == null ? "-" : d.format(DATE);
+  public static String date(LocalDate date) {
+    if (date == null) {
+      return "-";
+    }
+    return date.format(DATE);
   }
 
-  public static String km(Integer km) {
-    return km == null ? "-" : String.format(Locale.forLanguageTag("hr-HR"), "%,d km", km);
+  public static String km(Integer mileage) {
+    if (mileage == null) {
+      return "-";
+    }
+    return String.format(Locale.forLanguageTag("hr-HR"), "%,d km", mileage);
   }
 
-  public static String status(MaintenanceStatus s) {
-    return switch (s) {
-      case NO_DATA -> "Nema podataka";
-      case OK -> "U redu";
-      case SOON -> "Uskoro";
-      case DUE -> "Dospjelo";
-    };
+  public static String status(MaintenanceStatus maintenanceStatus) {
+    if (maintenanceStatus == MaintenanceStatus.NO_DATA) {
+      return "Nema podataka";
+    }
+    if (maintenanceStatus == MaintenanceStatus.OK) {
+      return "U redu";
+    }
+    if (maintenanceStatus == MaintenanceStatus.SOON) {
+      return "Uskoro";
+    }
+    return "Dospjelo";
   }
 
-  public static String category(WorkCategory c) {
-    return c == WorkCategory.MAINTENANCE ? "Odrzavanje" : "Popravak";
+  public static String category(WorkCategory category) {
+    if (category == WorkCategory.MAINTENANCE) {
+      return "Odrzavanje";
+    }
+    return "Popravak";
   }
 
   public static boolean confirm(Component parent, String text) {
@@ -184,28 +201,25 @@ public final class Ui {
   }
 
   public static void error(Component parent, Throwable error) {
-    JOptionPane.showMessageDialog(
-        parent,
-        error.getMessage() == null ? "Operacija nije uspjela." : error.getMessage(),
-        "AutoCare",
-        JOptionPane.ERROR_MESSAGE);
+    String message = error.getMessage();
+    if (message == null) {
+      message = "Operacija nije uspjela.";
+    }
+    JOptionPane.showMessageDialog(parent, message, "AutoCare", JOptionPane.ERROR_MESSAGE);
   }
 
-  public static void escape(JDialog dialog, Runnable close) {
+  public static void escape(final JDialog dialog) {
     dialog
         .getRootPane()
         .registerKeyboardAction(
-            e -> close.run(),
+            new ActionListener() {
+              @Override
+              public void actionPerformed(ActionEvent event) {
+                dialog.dispose();
+              }
+            },
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
-    dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-    dialog.addWindowListener(
-        new WindowAdapter() {
-          @Override
-          public void windowClosing(WindowEvent e) {
-            close.run();
-          }
-        });
+    dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
   }
-
 }

@@ -27,27 +27,33 @@ public final class ServiceItemsModel extends AbstractTableModel {
     return 3;
   }
 
-  public String getColumnName(int c) {
-    return new String[] {"Vrsta", "Rad", "Stvarno placeno (EUR)"}[c];
+  public String getColumnName(int column) {
+    return new String[] {"Vrsta", "Rad", "Stvarno placeno (EUR)"}[column];
   }
 
-  public Object getValueAt(int r, int c) {
-    Line line = lines.get(r);
-    return switch (c) {
-      case 0 -> Ui.category(line.work.getCategory());
-      case 1 -> line.work.getName();
-      default -> line.amount;
-    };
+  public Object getValueAt(int row, int column) {
+    Line line = lines.get(row);
+    if (column == 0) {
+      return Ui.category(line.work.getCategory());
+    }
+    if (column == 1) {
+      return line.work.getName();
+    }
+    return line.amount;
   }
 
-  public boolean isCellEditable(int r, int c) {
-    return c == 2;
+  public boolean isCellEditable(int row, int column) {
+    return column == 2;
   }
 
-  public void setValueAt(Object value, int row, int col) {
-    if (col == 2) {
-      lines.get(row).amount = value == null ? "" : value.toString();
-      fireTableCellUpdated(row, col);
+  public void setValueAt(Object value, int row, int column) {
+    if (column == 2) {
+      if (value == null) {
+        lines.get(row).amount = "";
+      } else {
+        lines.get(row).amount = value.toString();
+      }
+      fireTableCellUpdated(row, column);
     }
   }
 
@@ -70,10 +76,10 @@ public final class ServiceItemsModel extends AbstractTableModel {
   }
 
   public List<ItemInput> snapshot(boolean history) {
-    List<ItemInput> out = new ArrayList<>();
+    List<ItemInput> inputs = new ArrayList<>();
     for (Line line : lines) {
-      out.add(new ItemInput(line.work.getId(), Ui.parseMoney(line.amount, history)));
+      inputs.add(new ItemInput(line.work.getId(), Ui.parseMoney(line.amount, history)));
     }
-    return List.copyOf(out);
+    return inputs;
   }
 }

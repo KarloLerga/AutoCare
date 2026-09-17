@@ -1,40 +1,84 @@
 package hr.unizd.autocare.view;
 
 import hr.unizd.autocare.model.Data.VehicleRow;
-import hr.unizd.autocare.view.components.DataTable;
 import hr.unizd.autocare.view.components.Ui;
 import java.awt.BorderLayout;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
 
 /** Upravljanje vozilima; jedino mjesto promjene aktivnog vozila. */
 public final class VehiclesView extends JPanel {
-  public final JButton add = Ui.button("Dodaj vozilo", true),
-      edit = Ui.button("Uredi", false),
-      activate = Ui.button("Aktiviraj", false),
-      delete = Ui.button("Obrisi", false);
-  public final DataTable<VehicleRow> table =
-      new DataTable<>(
-          new String[] {"Vozilo", "Godina", "Motor", "Kilometraza", "Aktivno"},
-          (v, c) ->
-              switch (c) {
-                case 0 -> v.getVariant().getMake() + " " + v.getVariant().getModel();
-                case 1 -> v.getYear();
-                case 2 -> v.getVariant().getEngine();
-                case 3 -> v.getMileage();
-                default -> v.getActive() ? "Da" : "";
-              });
+  public final JButton add = Ui.button("Dodaj vozilo", true);
+  public final JButton edit = Ui.button("Uredi", false);
+  public final JButton activate = Ui.button("Aktiviraj", false);
+  public final JButton delete = Ui.button("Obrisi", false);
+  public final JTable table;
+  private final DefaultTableModel tableModel;
+  private List<VehicleRow> vehicles = new ArrayList<>();
 
   public VehiclesView() {
     super(new BorderLayout(12, 12));
     setOpaque(false);
+    tableModel =
+        new DefaultTableModel(
+            new Object[][] {},
+            new String[] {"Vozilo", "Godina", "Motor", "Kilometraza", "Aktivno"}) {
+          @Override
+          public boolean isCellEditable(int row, int column) {
+            return false;
+          }
+        };
+    table = new JTable(tableModel);
+    configureTable(table);
     JPanel top = Ui.column();
     top.add(Ui.heading("Vozila"));
     top.add(Ui.row(add, edit, activate, delete));
     add(top, BorderLayout.NORTH);
-    add(table);
+    add(new JScrollPane(table), BorderLayout.CENTER);
     add(
         Ui.hint("Brisanje uklanja i servisnu povijest i probleme odabranog vozila."),
         BorderLayout.SOUTH);
+  }
+
+  public void setRows(List<VehicleRow> values) {
+    vehicles = new ArrayList<>(values);
+    tableModel.setRowCount(0);
+    for (VehicleRow vehicle : vehicles) {
+      tableModel.addRow(
+          new Object[] {
+            vehicle.getVariant().getMake() + " " + vehicle.getVariant().getModel(),
+            vehicle.getYear(),
+            vehicle.getVariant().getEngine(),
+            vehicle.getMileage(),
+            vehicle.getActive() ? "Da" : ""
+          });
+    }
+  }
+
+  public List<VehicleRow> rows() {
+    return vehicles;
+  }
+
+  public VehicleRow selected() {
+    int selectedRow = table.getSelectedRow();
+    if (selectedRow < 0) {
+      return null;
+    }
+    int modelRow = table.convertRowIndexToModel(selectedRow);
+    return vehicles.get(modelRow);
+  }
+
+  private static void configureTable(JTable table) {
+    table.setRowHeight(32);
+    table.setAutoCreateRowSorter(true);
+    table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    table.setFillsViewportHeight(true);
+    table.getTableHeader().setReorderingAllowed(false);
   }
 }

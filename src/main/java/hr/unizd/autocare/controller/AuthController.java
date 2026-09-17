@@ -1,8 +1,8 @@
 package hr.unizd.autocare.controller;
 
-import hr.unizd.autocare.app.Session;
 import hr.unizd.autocare.domain.Checks;
 import hr.unizd.autocare.domain.WorkCategory;
+import hr.unizd.autocare.model.Data.Account;
 import hr.unizd.autocare.model.Data.ServiceInput;
 import hr.unizd.autocare.model.Data.VehicleInput;
 import hr.unizd.autocare.model.Data.WorkRow;
@@ -13,188 +13,247 @@ import hr.unizd.autocare.view.MainFrame;
 import hr.unizd.autocare.view.OnboardingDialog;
 import hr.unizd.autocare.view.ServiceEditorDialog;
 import hr.unizd.autocare.view.components.Ui;
-import java.time.Clock;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.LongConsumer;
 
 /** Prijava i trokoracni onboarding bez polovicnog spremanja korisnika. */
 public final class AuthController {
+  public interface LoginListener {
+    void loggedIn(long ownerId);
+  }
+
   private final MainFrame frame;
-  private final AuthService auth;
-  private final CatalogService catalog;
-  private final Session session;
-  private final UiTasks tasks;
-  private final LongConsumer entered;
+  private final AuthService authService;
+  private final CatalogService catalogService;
+  private final LoginListener loginListener;
+  private OnboardingDialog onboardingView;
+  private VehicleFormController vehiclePicker;
+  private List<ServiceInput> registrationHistory;
+  private long historyVariantId;
+  private boolean vehiclePickerStarted;
 
   public AuthController(
       MainFrame frame,
-      AuthService auth,
-      CatalogService catalog,
-      Session session,
-      LongConsumer entered) {
+      AuthService authService,
+      CatalogService catalogService,
+      LoginListener loginListener) {
     this.frame = frame;
-    this.auth = auth;
-    this.catalog = catalog;
-    this.session = session;
-    this.entered = entered;
-    tasks = new UiTasks();
-    frame.login.login.addActionListener(e -> login());
-    frame.login.register.addActionListener(e -> register());
+    this.authService = authService;
+    this.catalogService = catalogService;
+    this.loginListener = loginListener;
+    frame.login.login.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            login();
+          }
+        });
+    frame.login.register.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            openRegistration();
+          }
+        });
   }
 
   private void login() {
     String email = frame.login.email.getText();
     char[] password = frame.login.password.getPassword();
-    tasks.read(
-        frame,
-        () -> {
-          try {
-            return auth.login(email, password);
-          } finally {
-            Arrays.fill(password, '\0');
-          }
-        },
-        account -> {
-          frame.login.password.setText("");
-          entered.accept(account.getId());
-        });
+    try {
+      Account account = authService.login(email, password);
+      frame.login.password.setText("");
+      loginListener.loggedIn(account.getId());
+    } catch (RuntimeException exception) {
+      Ui.error(frame, exception);
+    } finally {
+      Arrays.fill(password, '\0');
+    }
   }
 
-  private void register() {
-    OnboardingDialog view = new OnboardingDialog(frame);
-    List<ServiceInput> history = new ArrayList<>();
-    long[] historyVariant = {-1L};
-    VehicleFormController picker = new VehicleFormController(view.vehicle, catalog);
-    boolean[] pickerStarted = {false};
-    UiTasks wizardTasks = new UiTasks();
-    view.next.addActionListener(
-        e -> {
-          try {
-            if (view.step() == 0) {
-              Checks.text(view.name.getText(), 100, "Ime");
-              Checks.email(view.email.getText());
-              char[] a = view.password.getPassword(), b = view.repeat.getPassword();
-              try {
-                Checks.password(a);
-                if (!Arrays.equals(a, b)) {
-                  throw new IllegalArgumentException("Lozinke se ne podudaraju.");
-                }
-              } finally {
-                Arrays.fill(a, '\0');
-                Arrays.fill(b, '\0');
-              }
-            } else {
-              VehicleInput now = view.vehicle.input();
-              if (!history.isEmpty() && historyVariant[0] != now.getVariantId()) {
-                if (!Ui.confirm(
-                    view, "Promijenili ste varijantu. Odbaciti povijest prethodne varijante?")) {
-                  return;
-                }
-                history.clear();
-                view.history.setRows(history);
-                historyVariant[0] = -1L;
-              }
-            }
-            view.step(view.step() + 1);
-            if (view.step() == 1 && !pickerStarted[0]) {
-              pickerStarted[0] = true;
-              picker.loadMakes();
-            }
-          } catch (RuntimeException ex) {
-            Ui.error(view, ex);
+  private void openRegistration() {
+    onboardingView = new OnboardingDialog(frame);
+    vehiclePicker = new VehicleFormController(onboardingView.vehicle, catalogService);
+    registrationHistory = new ArrayList<>();
+    historyVariantId = -1L;
+    vehiclePickerStarted = false;
+
+    onboardingView.next.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            nextRegistrationStep();
           }
         });
-    view.back.addActionListener(e -> view.step(view.step() - 1));
-    view.addHistory.addActionListener(
-        e -> {
-          int km;
-          long variant;
-          try {
-            VehicleInput selected = view.vehicle.input();
-            km = selected.getMileage();
-            variant = selected.getVariantId();
-          } catch (RuntimeException ex) {
-            Ui.error(view, ex);
+    onboardingView.back.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            previousRegistrationStep();
+          }
+        });
+    onboardingView.addHistory.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            addHistoryItem();
+          }
+        });
+    onboardingView.removeHistory.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            removeHistoryItem();
+          }
+        });
+    onboardingView.finish.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            finishRegistration();
+          }
+        });
+    onboardingView.cancel.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            cancelRegistration();
+          }
+        });
+    Ui.escape(onboardingView);
+    onboardingView.setVisible(true);
+  }
+
+  private void nextRegistrationStep() {
+    try {
+      if (onboardingView.step() == 0) {
+        validateAccountStep();
+      } else {
+        VehicleInput vehicleInput = onboardingView.vehicle.input();
+        if (!registrationHistory.isEmpty() && historyVariantId != vehicleInput.getVariantId()) {
+          boolean discard =
+              Ui.confirm(
+                  onboardingView,
+                  "Promijenili ste varijantu. Odbaciti povijest prethodne varijante?");
+          if (!discard) {
             return;
           }
-          wizardTasks.read(
-              view,
-              () -> {
-                List<WorkRow> w =
-                    new ArrayList<>(catalog.onboardingWorks(variant, WorkCategory.MAINTENANCE));
-                w.addAll(catalog.onboardingWorks(variant, WorkCategory.REPAIR));
-                return w;
-              },
-              works -> {
-                ServiceEditorDialog editor = new ServiceEditorDialog(view, km, true, List.of());
-                new ServiceEditorController(
-                    editor,
-                    works,
-                    input -> {
-                      ServiceRecordService.validate(input, true, Clock.systemDefaultZone());
-                      if (input.getMileage() > km) {
-                        throw new IllegalArgumentException(
-                            "Povijest ne moze imati vise km od trenutnog stanja.");
-                      }
-                      historyVariant[0] = variant;
-                      history.add(input);
-                      view.history.setRows(history);
-                      editor.dispose();
-                    });
-                editor.setVisible(true);
-              });
-        });
-    view.removeHistory.addActionListener(
-        e -> {
-          ServiceInput selected = view.history.selected();
-          if (selected != null) {
-            history.remove(selected);
-            view.history.setRows(history);
-          }
-        });
-    view.finish.addActionListener(
-        e -> {
-          String name = view.name.getText(), email = view.email.getText();
-          VehicleInput vehicle;
-          try {
-            vehicle = view.vehicle.input();
-            if (!history.isEmpty() && historyVariant[0] != vehicle.getVariantId()) {
-              throw new IllegalArgumentException(
-                  "Povijest je za prethodnu varijantu; vratite se i provjerite odabir.");
+          registrationHistory.clear();
+          onboardingView.setHistory(registrationHistory);
+          historyVariantId = -1L;
+        }
+      }
+      int nextStep = onboardingView.step() + 1;
+      onboardingView.step(nextStep);
+      if (nextStep == 1 && !vehiclePickerStarted) {
+        vehiclePickerStarted = true;
+        vehiclePicker.loadMakes();
+      }
+    } catch (RuntimeException exception) {
+      Ui.error(onboardingView, exception);
+    }
+  }
+
+  private void previousRegistrationStep() {
+    if (onboardingView.step() > 0) {
+      onboardingView.step(onboardingView.step() - 1);
+    }
+  }
+
+  private void validateAccountStep() {
+    Checks.text(onboardingView.name.getText(), 100, "Ime");
+    Checks.email(onboardingView.email.getText());
+    char[] password = onboardingView.password.getPassword();
+    char[] repeatedPassword = onboardingView.repeat.getPassword();
+    try {
+      Checks.password(password);
+      if (!Arrays.equals(password, repeatedPassword)) {
+        throw new IllegalArgumentException("Lozinke se ne podudaraju.");
+      }
+    } finally {
+      Arrays.fill(password, '\0');
+      Arrays.fill(repeatedPassword, '\0');
+    }
+  }
+
+  private void addHistoryItem() {
+    try {
+      VehicleInput vehicleInput = onboardingView.vehicle.input();
+      int currentMileage = vehicleInput.getMileage();
+      long variantId = vehicleInput.getVariantId();
+      List<WorkRow> works =
+          new ArrayList<>(catalogService.onboardingWorks(variantId, WorkCategory.MAINTENANCE));
+      works.addAll(catalogService.onboardingWorks(variantId, WorkCategory.REPAIR));
+      ServiceEditorDialog editor =
+          new ServiceEditorDialog(onboardingView, currentMileage, true, new ArrayList<>());
+      new ServiceEditorController(
+          editor,
+          works,
+          new ServiceEditorListener() {
+            @Override
+            public void saveService(ServiceInput serviceInput) {
+              ServiceRecordService.validate(serviceInput, true);
+              if (serviceInput.getMileage() > currentMileage) {
+                throw new IllegalArgumentException(
+                    "Povijest ne moze imati vise km od trenutnog stanja.");
+              }
+              historyVariantId = variantId;
+              registrationHistory.add(serviceInput);
+              onboardingView.setHistory(registrationHistory);
+              editor.dispose();
             }
-          } catch (RuntimeException ex) {
-            Ui.error(view, ex);
-            return;
-          }
-          char[] password = view.password.getPassword();
-          List<ServiceInput> snapshot = List.copyOf(history);
-          wizardTasks.run(
-              view,
-              () -> {
-                try {
-                  return auth.register(name, email, password, vehicle, snapshot);
-                } finally {
-                  Arrays.fill(password, '\0');
-                }
-              },
-              id -> {
-                view.clearPasswords();
-                view.dispose();
-                entered.accept(id);
-              },
-              error -> Ui.error(view, error));
-        });
-    Runnable cancel =
-        () -> {
-          if (Ui.confirm(view, "Odustati od registracije? Nespremljeni podaci bit ce odbaceni.")) {
-            view.clearPasswords();
-            view.dispose();
-          }
-        };
-    view.cancel.addActionListener(e -> cancel.run());
-    Ui.escape(view, cancel);
-    view.setVisible(true);
+          });
+      editor.setVisible(true);
+    } catch (RuntimeException exception) {
+      Ui.error(onboardingView, exception);
+    }
+  }
+
+  private void removeHistoryItem() {
+    ServiceInput selectedService = onboardingView.selectedHistory();
+    if (selectedService != null) {
+      registrationHistory.remove(selectedService);
+      onboardingView.setHistory(registrationHistory);
+      if (registrationHistory.isEmpty()) {
+        historyVariantId = -1L;
+      }
+    }
+  }
+
+  private void finishRegistration() {
+    try {
+      String name = onboardingView.name.getText();
+      String email = onboardingView.email.getText();
+      VehicleInput vehicleInput = onboardingView.vehicle.input();
+      if (!registrationHistory.isEmpty() && historyVariantId != vehicleInput.getVariantId()) {
+        throw new IllegalArgumentException(
+            "Povijest je za prethodnu varijantu; vratite se i provjerite odabir.");
+      }
+      char[] password = onboardingView.password.getPassword();
+      long ownerId;
+      try {
+        ownerId =
+            authService.register(
+                name, email, password, vehicleInput, new ArrayList<>(registrationHistory));
+      } finally {
+        Arrays.fill(password, '\0');
+      }
+      onboardingView.clearPasswords();
+      onboardingView.dispose();
+      loginListener.loggedIn(ownerId);
+    } catch (RuntimeException exception) {
+      Ui.error(onboardingView, exception);
+    }
+  }
+
+  private void cancelRegistration() {
+    if (Ui.confirm(
+        onboardingView, "Odustati od registracije? Nespremljeni podaci bit ce odbaceni.")) {
+      onboardingView.clearPasswords();
+      onboardingView.dispose();
+    }
   }
 }
