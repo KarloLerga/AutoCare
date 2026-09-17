@@ -5,12 +5,15 @@ PASS. Credentials nisu zapisane u dokumentaciju.
 
 ## Maven/JDK25
 
-- `.\mvnw.cmd -q clean verify` — PASS; `Additional offline checks passed: 7`.
+- `.\mvnw.cmd -q clean verify` — PASS; `Additional offline checks passed: 6`.
 - `.\mvnw.cmd -q package` — PASS.
 - `.\mvnw.cmd -q javadoc:javadoc` — PASS.
 - `.\mvnw.cmd -q install -DskipTests` — PASS.
 - `.\mvnw.cmd -q -f tools\setup\pom.xml clean test package` — PASS.
-- `powershell -ExecutionPolicy Bypass -File scripts\check-runtime-style.ps1` — PASS; 72 runtime
+- Završni polish runtime/test promjene (`c78fd49`, `4b7e8ec`, `c842caa`) — PASS; replacement
+  datoteke su integrirane, tri helper klase uklonjene, a `ServiceRecordServiceValidationTest` je
+  usklađen s aktualnim pravilima.
+- `powershell -ExecutionPolicy Bypass -File scripts\check-runtime-style.ps1` — PASS; 69 runtime
   Java datoteke.
 - `scripts\check-secrets.ps1` — PASS nad staged sadržajem; privatna konfiguracija nije u repozitoriju.
 
@@ -27,7 +30,7 @@ PASS. Credentials nisu zapisane u dokumentaciju.
 - `scripts/verify-database.sql` — PASS; 30.366 / 122 / 1.650.435 / 87, bez duplikata varijanti ili
   parova varijanta/rad, svih šest legacy kolona odsutno.
 
-## Što je pojednostavljeno
+## Završne runtime odluke
 
 Runtime nema lambda listenere, Stream API, `Optional`, `var`, generički transaction runner, generički
 `DataTable`, `UiTasks`, `ScheduleKind`, `@Version` ni request-key/idempotency tok. Service write metode
