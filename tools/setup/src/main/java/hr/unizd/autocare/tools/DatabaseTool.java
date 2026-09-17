@@ -62,14 +62,14 @@ public final class DatabaseTool {
     if (!commands.contains(action)) {
       throw new IllegalArgumentException("Naredbe: " + commands);
     }
-    try (EntityManagerFactory emf =
-        SetupDatabaseConfig.open(update ? "update" : "validate", false)) {
+    try (EntityManagerFactory entityManagerFactory =
+        SetupDatabaseConfig.open(update ? "update" : "none", false)) {
       switch (action) {
         case "schema-update" ->
             System.out.println(
                 "Hibernate update dovrsen. Provjerite DB log/strukturu; sljedeca pokretanja koriste"
-                    + " validate.");
-        case "db-check" -> check(emf);
+                    + " hbm2ddl=none.");
+        case "db-check" -> check(entityManagerFactory);
         case "seed-core", "seed-demo" -> {
           boolean demo = action.equals("seed-demo");
           if (demo) {
@@ -82,12 +82,12 @@ public final class DatabaseTool {
             }
           }
           transaction(
-              emf,
-              em -> {
+              entityManagerFactory,
+              entityManager -> {
                 if (demo) {
-                  DevelopmentSeed.demo(em);
+                  DevelopmentSeed.demo(entityManager);
                 } else {
-                  DevelopmentSeed.core(em);
+                  DevelopmentSeed.core(entityManager);
                 }
               });
           System.out.println("Seed je dovrsen. Postojeci zapisi nisu duplicirani.");
@@ -96,14 +96,15 @@ public final class DatabaseTool {
           if (args.length < 2) {
             throw new IllegalArgumentException("Navedite normalized.csv.");
           }
-          importCatalog(emf, Path.of(args[1]));
+          importCatalog(entityManagerFactory, Path.of(args[1]));
         }
         case "import-rules" -> {
           if (args.length < 2 || !Arrays.asList(args).contains("--confirm-reviewed-data")) {
             throw new IllegalArgumentException(
                 "Navedite reviewed_rules.csv i --confirm-reviewed-data.");
           }
-          importRules(emf, Path.of(args[1]), Arrays.asList(args).contains("--replace-existing"));
+          importRules(
+              entityManagerFactory, Path.of(args[1]), Arrays.asList(args).contains("--replace-existing"));
         }
         default -> throw new IllegalStateException();
       }
@@ -251,61 +252,92 @@ public final class DatabaseTool {
     }
   }
 
-  private static void importRules(EntityManagerFactory emf, Path path, boolean replace) {
+  private static void importRules(
+      EntityManagerFactory entityManagerFactory, Path path, boolean replace) {
     try {
       List<Map<String, String>> rows = csv(path);
       transaction(
-          emf,
-          em -> {
+          entityManagerFactory,
+          entityManager -> {
             Set<String> seen = new HashSet<>();
-            for (Map<String, String> r : rows) {
-              if (!"APPROVED".equals(value(r, "review_status"))) {
+            for (Map<String, String> row : rows) {
+              if (!"APPROVED".equals(value(row, "review_status"))) {
                 throw new IllegalArgumentException(
                     "Uvoz odbijen: svaki red mora biti rucno pregledan i APPROVED.");
               }
-              String variantCode = value(r, "variant_code"), workCode = value(r, "work_code");
+              String variantCode = value(row, "variant_code"), workCode = value(row, "work_code");
               if (!seen.add(variantCode + "/" + workCode)) {
                 throw new IllegalArgumentException("Duplicirani par varijanta/rad.");
               }
-              VehicleVariant v =
-                  em.createQuery(
-                          "select v from VehicleVariant v where v.code=:c", VehicleVariant.class)
-                      .setParameter("c", variantCode)
+              VehicleVariant vehicleVariant =
+                  entityManager
+                      .createQuery(
+                          "select vehicleVariant from VehicleVariant vehicleVariant "
+                              + "where vehicleVariant.code=:code",
+                          VehicleVariant.class)
+                      .setParameter("code", variantCode)
                       .getSingleResult();
-              WorkDefinition w =
-                  em.createQuery(
-                          "select w from WorkDefinition w where w.code=:c", WorkDefinition.class)
-                      .setParameter("c", workCode)
+              WorkDefinition workDefinition =
+                  entityManager
+                      .createQuery(
+                          "select workDefinition from WorkDefinition workDefinition "
+                              + "where workDefinition.code=:code",
+                          WorkDefinition.class)
+                      .setParameter("code", workCode)
                       .getSingleResult();
-              Integer km = integer(r, "interval_km"), months = integer(r, "interval_months");
-              String priceText = value(r, "estimated_price");
+              Integer intervalKm = integer(row, "interval_km"),
+                  intervalMonths = integer(row, "interval_months");
+              String priceText = value(row, "estimated_price");
               BigDecimal price = priceText == null ? null : new BigDecimal(priceText);
-              String source = value(r, "interval_source"), priceNote = value(r, "estimate_note");
-              VehicleWorkRule old =
-                  em.createQuery(
-                          "select r from VehicleWorkRule r where r.variant.id=:v and r.work.id=:w",
+              String intervalSource = value(row, "interval_source"),
+                  estimateNote = value(row, "estimate_note");
+              List<VehicleWorkRule> existingRules =
+                  entityManager
+                      .createQuery(
+                          "select vehicleWorkRule from VehicleWorkRule vehicleWorkRule "
+                              + "where vehicleWorkRule.variant.id=:variantId "
+                              + "and vehicleWorkRule.work.id=:workId",
                           VehicleWorkRule.class)
-                      .setParameter("v", v.getId())
-                      .setParameter("w", w.getId())
-                      .getResultStream()
-                      .findFirst()
-                      .orElse(null);
-              if (old == null) {
-                em.persist(new VehicleWorkRule(v, w, km, months, price, source, priceNote));
+                      .setParameter("variantId", vehicleVariant.getId())
+                      .setParameter("workId", workDefinition.getId())
+                      .setMaxResults(1)
+                      .getResultList();
+              VehicleWorkRule existingRule =
+                  existingRules.isEmpty() ? null : existingRules.get(0);
+              if (existingRule == null) {
+                entityManager.persist(
+                    new VehicleWorkRule(
+                        vehicleVariant,
+                        workDefinition,
+                        intervalKm,
+                        intervalMonths,
+                        price,
+                        intervalSource,
+                        estimateNote));
               } else if (replace) {
                 VehicleWorkRule replacement =
-                    new VehicleWorkRule(v, w, km, months, price, source, priceNote);
-                em.createQuery(
-                        "update VehicleWorkRule r set r.intervalKm=:km, r.intervalMonths=:months,"
-                            + " r.estimatedPrice=:price, r.intervalSource=:source,"
-                            + " r.estimateNote=:note, r.scheduleKind=:kind where r.id=:id")
-                    .setParameter("km", replacement.getIntervalKm())
-                    .setParameter("months", replacement.getIntervalMonths())
-                    .setParameter("price", replacement.getEstimatedPrice())
-                    .setParameter("source", replacement.getIntervalSource())
-                    .setParameter("note", replacement.getEstimateNote())
-                    .setParameter("kind", replacement.getScheduleKind())
-                    .setParameter("id", old.getId())
+                    new VehicleWorkRule(
+                        vehicleVariant,
+                        workDefinition,
+                        intervalKm,
+                        intervalMonths,
+                        price,
+                        intervalSource,
+                        estimateNote);
+                entityManager.createQuery(
+                        "update VehicleWorkRule vehicleWorkRule set "
+                            + "vehicleWorkRule.intervalKm=:intervalKm, "
+                            + "vehicleWorkRule.intervalMonths=:intervalMonths, "
+                            + "vehicleWorkRule.estimatedPrice=:estimatedPrice, "
+                            + "vehicleWorkRule.intervalSource=:intervalSource, "
+                            + "vehicleWorkRule.estimateNote=:estimateNote "
+                            + "where vehicleWorkRule.id=:ruleId")
+                    .setParameter("intervalKm", replacement.getIntervalKm())
+                    .setParameter("intervalMonths", replacement.getIntervalMonths())
+                    .setParameter("estimatedPrice", replacement.getEstimatedPrice())
+                    .setParameter("intervalSource", replacement.getIntervalSource())
+                    .setParameter("estimateNote", replacement.getEstimateNote())
+                    .setParameter("ruleId", existingRule.getId())
                     .executeUpdate();
               } else {
                 throw new IllegalArgumentException(
