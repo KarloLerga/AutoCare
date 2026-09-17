@@ -430,7 +430,7 @@
   },
   {
     "code": "SCHEDULED_INSPECTION",
-    "name": "Redovni servisni pregled prema planu proizvodaca",
+    "name": "Redovni servisni pregled prema planu proizvođača",
     "category": "MAINTENANCE",
     "family": "fixed",
     "base_parts": "0",
@@ -443,7 +443,7 @@
   },
   {
     "code": "BRAKE_FLUID_CHECK",
-    "name": "Provjera stanja kocione tekucine",
+    "name": "Provjera stanja kočione tekućine",
     "category": "MAINTENANCE",
     "family": "fixed",
     "base_parts": "0",
@@ -456,7 +456,7 @@
   },
   {
     "code": "WIPER_REPLACE",
-    "name": "Zamjena prednjih metlica brisaca - par",
+    "name": "Zamjena prednjih metlica brisača - par",
     "category": "MAINTENANCE",
     "family": "cabin",
     "base_parts": "35",
@@ -469,7 +469,7 @@
   },
   {
     "code": "TYRE_ROTATION",
-    "name": "Rotacija kotaca - kompatibilne dimenzije",
+    "name": "Rotacija kotača - kompatibilne dimenzije",
     "category": "MAINTENANCE",
     "family": "fixed",
     "base_parts": "0",
@@ -495,7 +495,7 @@
   },
   {
     "code": "TYRE_MOUNT_BALANCE",
-    "name": "Montaza i balansiranje cetiri gume",
+    "name": "Montaža i balansiranje četiri gume",
     "category": "MAINTENANCE",
     "family": "fixed",
     "base_parts": "0",
@@ -508,7 +508,7 @@
   },
   {
     "code": "TYRE_REPLACE_SET",
-    "name": "Zamjena kompleta cetiriju guma",
+    "name": "Zamjena kompleta četiriju guma",
     "category": "MAINTENANCE",
     "family": "chassis",
     "base_parts": "300",
@@ -521,7 +521,7 @@
   },
   {
     "code": "WHEEL_ALIGNMENT",
-    "name": "Kontrola i podesavanje geometrije kotaca",
+    "name": "Kontrola i podešavanje geometrije kotača",
     "category": "MAINTENANCE",
     "family": "fixed",
     "base_parts": "0",
@@ -560,7 +560,7 @@
   },
   {
     "code": "BRAKE_INSPECTION",
-    "name": "Pregled kocnica",
+    "name": "Pregled kočnica",
     "category": "MAINTENANCE",
     "family": "fixed",
     "base_parts": "0",
@@ -573,7 +573,7 @@
   },
   {
     "code": "BRAKE_CALIPER_CLEAN",
-    "name": "Ciscenje i podmazivanje kocionih celjusti",
+    "name": "Čišćenje i podmazivanje kočionih čeljusti",
     "category": "MAINTENANCE",
     "family": "brake",
     "base_parts": "12",
@@ -599,7 +599,7 @@
   },
   {
     "code": "HYBRID_BATTERY_FILTER",
-    "name": "Ciscenje ili zamjena filtra hladenja hibridne baterije",
+    "name": "Čišćenje ili zamjena filtra hlađenja hibridne baterije",
     "category": "MAINTENANCE",
     "family": "cabin",
     "base_parts": "25",
@@ -625,7 +625,7 @@
   },
   {
     "code": "EV_DRIVE_FLUID",
-    "name": "Zamjena ulja reduktora elektricnog pogona",
+    "name": "Zamjena ulja reduktora električnog pogona",
     "category": "MAINTENANCE",
     "family": "gear",
     "base_parts": "70",
@@ -677,7 +677,7 @@
   },
   {
     "code": "COOLING_PRESSURE_TEST",
-    "name": "Ispitivanje nepropusnosti hladenja motora",
+    "name": "Ispitivanje nepropusnosti hlađenja motora",
     "category": "REPAIR",
     "family": "fixed",
     "base_parts": "0",
@@ -716,7 +716,7 @@
   },
   {
     "code": "ENGINE_MOUNT",
-    "name": "Zamjena jednog nosaca motora",
+    "name": "Zamjena jednog nosača motora",
     "category": "REPAIR",
     "family": "engine",
     "base_parts": "130",
@@ -768,7 +768,7 @@
   },
   {
     "code": "AUX_TENSIONER",
-    "name": "Zamjena natezaca pomocnog remena",
+    "name": "Zamjena natezača pomoćnog remena",
     "category": "REPAIR",
     "family": "engine",
     "base_parts": "90",
@@ -781,7 +781,7 @@
   },
   {
     "code": "RADIATOR",
-    "name": "Zamjena hladnjaka rashladne tekucine motora",
+    "name": "Zamjena hladnjaka rashladne tekućine motora",
     "category": "REPAIR",
     "family": "coolant",
     "base_parts": "210",
@@ -794,7 +794,7 @@
   },
   {
     "code": "COOLANT_HOSE",
-    "name": "Zamjena jednog crijeva hladenja motora",
+    "name": "Zamjena jednog crijeva hlađenja motora",
     "category": "REPAIR",
     "family": "coolant",
     "base_parts": "55",
@@ -807,7 +807,7 @@
   },
   {
     "code": "MAF_SENSOR",
-    "name": "Zamjena mjeraca protoka zraka",
+    "name": "Zamjena mjerača protoka zraka",
     "category": "REPAIR",
     "family": "engine",
     "base_parts": "125",
@@ -833,7 +833,7 @@
   },
   {
     "code": "CRANKSHAFT_SENSOR",
-    "name": "Zamjena senzora polozaja radilice",
+    "name": "Zamjena senzora položaja radilice",
     "category": "REPAIR",
     "family": "engine",
     "base_parts": "70",
@@ -846,7 +846,7 @@
   },
   {
     "code": "CAMSHAFT_SENSOR",
-    "name": "Zamjena senzora polozaja bregaste",
+    "name": "Zamjena senzora položaja bregaste",
     "category": "REPAIR",
     "family": "engine",
     "base_parts": "70",
@@ -859,7 +859,7 @@
   },
   {
     "code": "THROTTLE_BODY",
-    "name": "Zamjena kucista zaklopke usisa",
+    "name": "Zamjena kućišta zaklopke usisa",
     "category": "REPAIR",
     "family": "engine",
     "base_parts": "250",
@@ -885,7 +885,7 @@
   },
   {
     "code": "FUEL_PUMP",
-    "name": "Zamjena niskotlacne pumpe goriva",
+    "name": "Zamjena niskotlačne pumpe goriva",
     "category": "REPAIR",
     "family": "engine",
     "base_parts": "180",
@@ -898,7 +898,7 @@
   },
   {
     "code": "HIGH_PRESSURE_PUMP",
-    "name": "Zamjena visokotlacne pumpe goriva",
+    "name": "Zamjena visokotlačne pumpe goriva",
     "category": "REPAIR",
     "family": "engine",
     "base_parts": "0",
@@ -924,7 +924,7 @@
   },
   {
     "code": "GLOW_CONTROLLER",
-    "name": "Zamjena upravljacke jedinice grijaca",
+    "name": "Zamjena upravljačke jedinice grijača",
     "category": "REPAIR",
     "family": "diesel",
     "base_parts": "120",
@@ -950,7 +950,7 @@
   },
   {
     "code": "EXHAUST_MUFFLER",
-    "name": "Zamjena zavrsnog lonca ispuha",
+    "name": "Zamjena završnog lonca ispuha",
     "category": "REPAIR",
     "family": "engine",
     "base_parts": "190",
@@ -976,7 +976,7 @@
   },
   {
     "code": "GPF_REPLACEMENT",
-    "name": "Zamjena benzinskog filtra cestica",
+    "name": "Zamjena benzinskog filtra čestica",
     "category": "REPAIR",
     "family": "engine",
     "base_parts": "0",
@@ -1028,7 +1028,7 @@
   },
   {
     "code": "FRONT_CALIPER",
-    "name": "Zamjena jedne prednje kocione celjusti",
+    "name": "Zamjena jedne prednje kočione čeljusti",
     "category": "REPAIR",
     "family": "brake",
     "base_parts": "130",
@@ -1041,7 +1041,7 @@
   },
   {
     "code": "REAR_CALIPER",
-    "name": "Zamjena jedne straznje kocione celjusti",
+    "name": "Zamjena jedne stražnje kočione čeljusti",
     "category": "REPAIR",
     "family": "brake",
     "base_parts": "140",
@@ -1054,7 +1054,7 @@
   },
   {
     "code": "BRAKE_HOSE",
-    "name": "Zamjena jednog fleksibilnog kocionog crijeva",
+    "name": "Zamjena jednog fleksibilnog kočionog crijeva",
     "category": "REPAIR",
     "family": "brake",
     "base_parts": "35",
@@ -1067,7 +1067,7 @@
   },
   {
     "code": "BRAKE_MASTER_CYLINDER",
-    "name": "Zamjena glavnog kocionog cilindra",
+    "name": "Zamjena glavnog kočionog cilindra",
     "category": "REPAIR",
     "family": "brake",
     "base_parts": "0",
@@ -1093,7 +1093,7 @@
   },
   {
     "code": "ABS_HYDRAULIC_UNIT",
-    "name": "Popravak ABS/ESP hidraulicne jedinice",
+    "name": "Popravak ABS/ESP hidraulične jedinice",
     "category": "REPAIR",
     "family": "brake",
     "base_parts": "0",
@@ -1106,7 +1106,7 @@
   },
   {
     "code": "PARKING_BRAKE_CABLE",
-    "name": "Zamjena sajle parkirne kocnice",
+    "name": "Zamjena sajle parkirne kočnice",
     "category": "REPAIR",
     "family": "chassis",
     "base_parts": "60",
@@ -1158,7 +1158,7 @@
   },
   {
     "code": "STEERING_TIE_ROD",
-    "name": "Zamjena jednog krajnika upravljaca",
+    "name": "Zamjena jednog krajnika upravljača",
     "category": "REPAIR",
     "family": "chassis",
     "base_parts": "55",
@@ -1171,7 +1171,7 @@
   },
   {
     "code": "STEERING_RACK",
-    "name": "Popravak ili zamjena letve upravljaca",
+    "name": "Popravak ili zamjena letve upravljača",
     "category": "REPAIR",
     "family": "chassis",
     "base_parts": "0",
@@ -1197,7 +1197,7 @@
   },
   {
     "code": "STRUT_TOP_MOUNT",
-    "name": "Zamjena jednog gornjeg lezaja amortizera",
+    "name": "Zamjena jednog gornjeg ležaja amortizera",
     "category": "REPAIR",
     "family": "chassis",
     "base_parts": "65",
@@ -1210,7 +1210,7 @@
   },
   {
     "code": "CV_JOINT",
-    "name": "Zamjena jednog homokinetickog zgloba",
+    "name": "Zamjena jednog homokinetičkog zgloba",
     "category": "REPAIR",
     "family": "chassis",
     "base_parts": "100",
@@ -1223,7 +1223,7 @@
   },
   {
     "code": "CV_BOOT",
-    "name": "Zamjena jedne manzete poluosovine",
+    "name": "Zamjena jedne manžete poluosovine",
     "category": "REPAIR",
     "family": "chassis",
     "base_parts": "30",
@@ -1236,7 +1236,7 @@
   },
   {
     "code": "TRANSMISSION_REBUILD",
-    "name": "Popravak ili zamjena mjenjaca",
+    "name": "Popravak ili zamjena mjenjača",
     "category": "REPAIR",
     "family": "gear",
     "base_parts": "0",
@@ -1249,7 +1249,7 @@
   },
   {
     "code": "WINDOW_REGULATOR",
-    "name": "Zamjena podizaca jednog prozora",
+    "name": "Zamjena podizača jednog prozora",
     "category": "REPAIR",
     "family": "cabin",
     "base_parts": "110",
@@ -1262,7 +1262,7 @@
   },
   {
     "code": "WIPER_MOTOR",
-    "name": "Zamjena motora prednjih brisaca",
+    "name": "Zamjena motora prednjih brisača",
     "category": "REPAIR",
     "family": "cabin",
     "base_parts": "130",
@@ -1392,7 +1392,7 @@
   },
   {
     "code": "EV_DRIVE_UNIT",
-    "name": "Zamjena jednog elektricnog pogonskog sklopa",
+    "name": "Zamjena jednog električnog pogonskog sklopa",
     "category": "REPAIR",
     "family": "fixed",
     "base_parts": "0",
@@ -1405,7 +1405,7 @@
   },
   {
     "code": "ONBOARD_CHARGER",
-    "name": "Zamjena ugradjenog AC punjaca",
+    "name": "Zamjena ugrađenog AC punjača",
     "category": "REPAIR",
     "family": "fixed",
     "base_parts": "0",
@@ -1418,7 +1418,7 @@
   },
   {
     "code": "DC_DC_CONVERTER",
-    "name": "Zamjena DC/DC pretvaraca",
+    "name": "Zamjena DC/DC pretvarača",
     "category": "REPAIR",
     "family": "fixed",
     "base_parts": "0",
@@ -1431,7 +1431,7 @@
   },
   {
     "code": "CHARGE_PORT",
-    "name": "Popravak ili zamjena prikljucka punjenja",
+    "name": "Popravak ili zamjena priključka punjenja",
     "category": "REPAIR",
     "family": "fixed",
     "base_parts": "0",
@@ -1470,7 +1470,7 @@
   },
   {
     "code": "HV_COOLANT",
-    "name": "Servis rashladne tekucine pogonske baterije",
+    "name": "Servis rashladne tekućine pogonske baterije",
     "category": "MAINTENANCE",
     "family": "fluid",
     "base_parts": "0",
@@ -1483,7 +1483,7 @@
   },
   {
     "code": "OTHER_MAINTENANCE",
-    "name": "Drugo odrzavanje - opis u napomeni",
+    "name": "Drugo održavanje - opis u napomeni",
     "category": "MAINTENANCE",
     "family": "fixed",
     "base_parts": "0",

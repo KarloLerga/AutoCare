@@ -21,11 +21,11 @@
   "manufacturer_coverage": "Source-referenced model subset only. Never described as complete OEM coverage.",
   "base_variant_sha256": "c14deb984dc5aff6cc58d834cb8922256e2e6797160f43011ddb40999c8d9fb7",
   "base_traits_sha256": "e7c284ac0f858024d9492e6a9e43064288f12c0acc29be41b1a2f4f99e9d8464",
-  "works_sha256": "1078f00c94e060341202e1bb8f4538d684036f204a854efb0e9bf4300df1f3f5",
+  "works_sha256": "17a088900b529bec125dd18a5bdf9895cdaccb3f6fffeae06905b9cf3a3e8504",
   "model_sha256": "580dc486ee9369d927eacdb68a661bbeaeb49189d3a909299192084379a8565d",
   "files": {
     "all_pair_decisions.csv.gz": "c3e1e952b06f62746b2c1af035ac0922f922120aaef36607982237cdf1b5bd6e",
-    "checksums.sha256": "941f9058f2fd54a2273febc03201eb30ef3bb6903181402e308aa09c063558f9",
+    "checksums.sha256": "3f9249ebb3b7ac804f049af42da8e8db1af80b6a00ed0fa6176e8cc6d508fc5b",
     "conditional_estimates.csv.gz": "5caea3fb086e7c275d7872f0ad98bddd3f77c050e4cfe926ff20ecdaad9ff370",
     "coverage_by_make.csv": "4f26bf2c8c786975eeaf1d0573e4251b7ad966a5d9fbce4ee6bf3a14ed37ef52",
     "coverage_by_work.csv": "cb068536192172b03a5d82e82fc1a1d06ce18e96e69e82b616365f4605039e5f",
@@ -44,6 +44,6 @@
     "vehicle_traits.csv": "e7c284ac0f858024d9492e6a9e43064288f12c0acc29be41b1a2f4f99e9d8464",
     "vehicle_variants.csv": "c14deb984dc5aff6cc58d834cb8922256e2e6797160f43011ddb40999c8d9fb7",
     "vehicle_work_rules.csv.gz": "74922133bf336976a3e4627b1e4fcc86221c189a0ff32b6ae30c02d9e731fc61",
-    "work_definitions.csv": "5fc4830d46fa197b408080b9b77c4c4d196ddfd128dbafe6c72787035e811a44"
+    "work_definitions.csv": "6aa3be5742306fd20b1617e707f22462c91d5606cd7c2f894910313d8534a286"
   }
 }

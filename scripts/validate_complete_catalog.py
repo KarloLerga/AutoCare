@@ -6,9 +6,37 @@ import argparse
 import csv
 import gzip
 import json
+import re
 from collections import Counter, defaultdict
 from decimal import Decimal
 from pathlib import Path
+
+COMBUSTION_ONLY = {
+    "OIL_SERVICE",
+    "AIR_FILTER",
+    "FUEL_FILTER",
+    "COOLANT",
+    "TIMING_BELT_PUMP",
+    "SPARK_PLUGS",
+    "AUX_BELT",
+    "GLOW_PLUGS",
+    "TURBO",
+    "EGR_VALVE",
+    "DPF_CLEAN",
+    "DPF_REPLACEMENT",
+    "STARTER",
+    "ALTERNATOR",
+}
+
+
+def drive_flags(row: dict) -> tuple[bool, bool, bool]:
+    text = " ".join(row.get(field, "") for field in ("model", "generation", "engine_label")).lower()
+    awd = bool(re.search(r"\b(awd|4wd|4x4)\b", text)) or any(
+        token in text for token in ("xdrive", "quattro", "4matic", "4motion", "all4", "sh-awd")
+    )
+    rwd = bool(re.search(r"\brwd\b", text))
+    fwd = bool(re.search(r"\bfwd\b", text))
+    return awd, rwd, fwd
 
 
 def main() -> int:
@@ -25,31 +53,39 @@ def main() -> int:
             if work["code"] not in {"OTHER_MAINTENANCE", "OTHER_REPAIR"}:
                 works[work["code"]] = work
 
-    fuel = {}
+    traits = {}
     with args.traits.open(encoding="utf-8-sig", newline="") as handle:
         for row in csv.DictReader(handle):
-            fuel[row["variant_code"]] = row.get("fuel_class", "")
+            awd, rwd, fwd = drive_flags(row)
+            traits[row["variant_code"]] = (row.get("fuel_class", ""), awd, rwd, fwd)
 
-    combustion_only = {"OIL_SERVICE", "SPARK_PLUGS", "TIMING_BELT_PUMP", "DPF_REPLACEMENT"}
-    seen = set()
     by_variant = defaultdict(int)
     counts = Counter()
     errors = []
+    current_variant = None
+    current_works = set()
 
     with gzip.open(args.rules, "rt", encoding="utf-8", newline="") as handle:
         for line_number, row in enumerate(csv.DictReader(handle), 2):
-            key = (row["variant_code"], row["work_code"])
-            if key in seen:
+            variant_code = row["variant_code"]
+            work_code = row["work_code"]
+            key = (variant_code, work_code)
+
+            if variant_code != current_variant:
+                current_variant = variant_code
+                current_works.clear()
+            if work_code in current_works:
                 errors.append(f"duplicate {key}")
                 continue
-            seen.add(key)
+            current_works.add(work_code)
 
-            work = works.get(row["work_code"])
+            work = works.get(work_code)
             if work is None:
-                errors.append(f"unknown/removed work {row['work_code']} line {line_number}")
+                errors.append(f"unknown/removed work {work_code} line {line_number}")
                 continue
-            if row["variant_code"] not in fuel:
-                errors.append(f"unknown variant {row['variant_code']} line {line_number}")
+            variant_traits = traits.get(variant_code)
+            if variant_traits is None:
+                errors.append(f"unknown variant {variant_code} line {line_number}")
                 continue
 
             try:
@@ -70,20 +106,27 @@ def main() -> int:
                 if km or months:
                     errors.append(f"repair with interval {key}")
 
-            if fuel[row["variant_code"]] == "BEV" and row["work_code"] in combustion_only:
+            fuel_class, awd, rwd, fwd = variant_traits
+            if fuel_class == "BEV" and work_code in COMBUSTION_ONLY:
                 errors.append(f"BEV combustion-only work {key}")
+            if fuel_class == "BEV" and work_code == "TRANSMISSION_REBUILD":
+                errors.append(f"BEV conventional transmission rebuild {key}")
+            if fwd and work_code == "DIFFERENTIAL_OIL":
+                errors.append(f"FWD separate differential oil {key}")
+            if (fwd or rwd) and not awd and work_code == "TRANSFER_CASE_OIL":
+                errors.append(f"2WD transfer case oil {key}")
 
-            by_variant[row["variant_code"]] += 1
+            by_variant[variant_code] += 1
             counts["rules"] += 1
 
-    if len(fuel) != 30366:
-        errors.append(f"expected 30366 variants, got {len(fuel)}")
-    missing_variants = [code for code in fuel if by_variant[code] == 0]
+    if len(traits) != 30366:
+        errors.append(f"expected 30366 variants, got {len(traits)}")
+    missing_variants = [code for code in traits if by_variant[code] == 0]
     if missing_variants:
         errors.append(f"variants without rules: {len(missing_variants)}")
 
     result = {
-        "variant_count": len(fuel),
+        "variant_count": len(traits),
         "work_count": len(works),
         "rule_count": counts["rules"],
         "maintenance_rule_count": counts["maintenance"],

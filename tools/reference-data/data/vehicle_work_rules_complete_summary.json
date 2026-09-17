@@ -4,34 +4,40 @@
   "maintenance_work_count": 30,
   "counts": {
     "evaluated_pairs": 3643920,
-    "written_rules": 2944248,
-    "maintenance_rules": 728470,
-    "repair_rules": 2215778,
-    "price_filled_new_rule": 1293813,
-    "interval_filled_modeled_interval": 728470,
-    "not_applicable_pairs": 699672,
-    "interval_repair_no_interval": 2215778,
-    "price_filled_missing_price": 367519,
+    "written_rules": 2908857,
+    "maintenance_rules": 693784,
+    "repair_rules": 2215073,
+    "not_applicable_pairs": 735063,
+    "price_corrected_tier_price": 25083,
+    "price_filled_missing_price": 366814,
+    "price_filled_new_rule": 1259127,
     "price_kept_existing": 1257833,
-    "price_corrected_tier_price": 25083
+    "interval_filled_modeled_interval": 693784,
+    "interval_repair_no_interval": 2215073,
+    "final_obvious_hardware_rules_removed": 35391
+  },
+  "final_hardware_removals_by_work": {
+    "DIFFERENTIAL_OIL": 14799,
+    "TRANSFER_CASE_OIL": 19887,
+    "TRANSMISSION_REBUILD": 705
   },
   "rules_per_variant_min": 56,
   "rules_per_variant_max": 112,
   "tier_counts": {
+    "ECONOMY": {
+      "rules": 43532
+    },
     "EXOTIC": {
-      "rules": 67135
-    },
-    "PREMIUM": {
-      "rules": 940042
-    },
-    "PERFORMANCE": {
-      "rules": 74135
+      "rules": 66877
     },
     "MAINSTREAM": {
-      "rules": 1818724
+      "rules": 1792691
     },
-    "ECONOMY": {
-      "rules": 44212
+    "PERFORMANCE": {
+      "rules": 73842
+    },
+    "PREMIUM": {
+      "rules": 931915
     }
   },
   "policy": {
@@ -42,6 +48,7 @@
     ],
     "not_applicable_rows_stored": false,
     "existing_prices_preserved_unless_low_outlier": true,
-    "existing_intervals_preserved": true
+    "existing_intervals_preserved": true,
+    "obvious_drivetrain_conflicts_removed": true
   }
 }
