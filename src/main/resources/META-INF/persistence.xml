@@ -10,7 +10,6 @@
   <class>hr.unizd.autocare.domain.ServiceRecord</class>
   <class>hr.unizd.autocare.domain.ServiceItem</class>
   <class>hr.unizd.autocare.domain.Problem</class>
-  <class>hr.unizd.autocare.domain.DiagnosticRule</class>
 
   <exclude-unlisted-classes>true</exclude-unlisted-classes>
   <properties>

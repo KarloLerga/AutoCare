@@ -92,12 +92,11 @@ public final class ServiceRecordService {
     for (ItemInput itemInput : input.getItems()) {
       WorkDefinition work = catalogRepository.findWork(itemInput.getWorkId());
       if (work == null) {
-        throw new AppException("Odabrani rad nije pronadjen.");
+        throw new AppException("Odabrani rad nije pronađen.");
       }
 
-      if (work.getCode().startsWith("OTHER_")
-          && (input.getNote() == null || input.getNote().isBlank())) {
-        throw new AppException("Za drugi rad upisite opis zahvata u napomenu.");
+      if (catalogRepository.findRule(vehicle.getVariant().getId(), work.getId()) == null) {
+        throw new AppException("Odabrani rad nije dostupan za ovo vozilo.");
       }
 
       serviceRecord.addItem(work, itemInput.getActualPrice());
@@ -162,7 +161,7 @@ public final class ServiceRecordService {
           new JpaServiceRecordRepository(entityManager);
 
       if (vehicleRepository.findForOwner(ownerId, vehicleId) == null) {
-        throw new AppException("Vozilo nije pronadjeno.");
+        throw new AppException("Vozilo nije pronađeno.");
       }
 
       List<ServiceRow> rows = new ArrayList<>();
@@ -185,7 +184,7 @@ public final class ServiceRecordService {
 
       ServiceRecord serviceRecord = serviceRecordRepository.findForOwner(ownerId, serviceId);
       if (serviceRecord == null) {
-        throw new AppException("Servis nije pronadjen.");
+        throw new AppException("Servis nije pronađen.");
       }
 
       List<ItemRow> items = new ArrayList<>();

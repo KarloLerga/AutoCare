@@ -1,58 +1,43 @@
 package hr.unizd.autocare.service;
 
 import hr.unizd.autocare.domain.Checks;
-import hr.unizd.autocare.domain.DiagnosticRule;
 import hr.unizd.autocare.domain.Problem;
-import hr.unizd.autocare.domain.ProblemStatus;
 import hr.unizd.autocare.domain.Vehicle;
 import hr.unizd.autocare.domain.VehicleWorkRule;
 import hr.unizd.autocare.domain.WorkCategory;
-import hr.unizd.autocare.domain.WorkDefinition;
-import hr.unizd.autocare.model.Data.Analysis;
-import hr.unizd.autocare.model.Data.DiagnosticResult;
+import hr.unizd.autocare.model.Data.ProblemEstimate;
 import hr.unizd.autocare.model.Data.ProblemRow;
-import hr.unizd.autocare.model.Data.RuleData;
-import hr.unizd.autocare.model.Data.WorkRow;
 import hr.unizd.autocare.persistence.JpaCatalogRepository;
 import hr.unizd.autocare.persistence.JpaProblemRepository;
-import hr.unizd.autocare.persistence.JpaUserRepository;
 import hr.unizd.autocare.persistence.JpaVehicleRepository;
 import hr.unizd.autocare.repository.CatalogRepository;
 import hr.unizd.autocare.repository.ProblemRepository;
-import hr.unizd.autocare.repository.UserRepository;
 import hr.unizd.autocare.repository.VehicleRepository;
-import hr.unizd.autocare.strategy.DiagnosticStrategy;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-/** Orkestracija dijagnostike; bodovanje delegira strategiji. */
+/** Ručni unos problema i procjena odabranog konkretnog popravka. */
 public final class ProblemService {
   private final EntityManagerFactory entityManagerFactory;
-  private final DiagnosticStrategy strategy;
 
-  public ProblemService(EntityManagerFactory entityManagerFactory, DiagnosticStrategy strategy) {
+  public ProblemService(EntityManagerFactory entityManagerFactory) {
     this.entityManagerFactory = entityManagerFactory;
-    this.strategy = strategy;
   }
 
-  public List<ProblemRow> list(long ownerId, long vehicleId, ProblemStatus status) {
+  public List<ProblemRow> list(long ownerId, long vehicleId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
       VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
-      ProblemRepository problemRepository = new JpaProblemRepository(entityManager);
       if (vehicleRepository.findForOwner(ownerId, vehicleId) == null) {
-        throw new AppException("Vozilo nije pronadjeno.");
+        throw new AppException("Vozilo nije pronađeno.");
       }
       List<ProblemRow> rows = new ArrayList<>();
-      for (Problem problem : problemRepository.list(ownerId, vehicleId, status)) {
+      for (Problem problem :
+          new JpaProblemRepository(entityManager).list(ownerId, vehicleId)) {
         rows.add(Mapping.problem(problem));
       }
       return rows;
@@ -61,91 +46,46 @@ public final class ProblemService {
     }
   }
 
-  public Analysis analyze(long ownerId, long vehicleId, String description) {
-    String cleanDescription = Checks.text(description, 2000, "Opis simptoma");
+  public ProblemEstimate estimate(long ownerId, long vehicleId, long repairWorkId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
-      VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
-      CatalogRepository catalogRepository = new JpaCatalogRepository(entityManager);
-      Vehicle vehicle = vehicleRepository.findForOwner(ownerId, vehicleId);
+      Vehicle vehicle = new JpaVehicleRepository(entityManager).findForOwner(ownerId, vehicleId);
       if (vehicle == null) {
-        throw new AppException("Vozilo nije pronadjeno.");
+        throw new AppException("Vozilo nije pronađeno.");
       }
-      return analysis(catalogRepository, vehicle, cleanDescription);
+      VehicleWorkRule rule =
+          new JpaCatalogRepository(entityManager)
+              .findRule(vehicle.getVariant().getId(), repairWorkId);
+      requireRepair(rule);
+      return new ProblemEstimate(
+          rule.getWork().getId(), rule.getWork().getName(), rule.getEstimatedPrice());
     } finally {
       entityManager.close();
     }
   }
 
-  private Analysis analysis(
-      CatalogRepository catalogRepository, Vehicle vehicle, String description) {
-    Set<Long> supportedWorkIds = new HashSet<>();
-    for (VehicleWorkRule rule : catalogRepository.rules(vehicle.getVariant().getId())) {
-      if (rule.getWork().getCategory() == WorkCategory.REPAIR) {
-        supportedWorkIds.add(rule.getWork().getId());
-      }
-    }
-
-    Map<Long, WorkRow> prices = new HashMap<>();
-    for (WorkRow workRow :
-        CatalogService.workRows(catalogRepository, vehicle.getVariant().getId(), WorkCategory.REPAIR)) {
-      prices.put(workRow.getId(), workRow);
-    }
-
-    List<RuleData> rules = new ArrayList<>();
-    for (DiagnosticRule diagnosticRule : catalogRepository.diagnosticRules()) {
-      WorkRow workRow = prices.get(diagnosticRule.getCandidate().getId());
-      if (workRow != null && supportedWorkIds.contains(workRow.getId())) {
-        rules.add(
-            new RuleData(
-                workRow.getId(),
-                workRow.getName(),
-                diagnosticRule.getPhrase(),
-                diagnosticRule.getWeight(),
-                workRow.getPrice(),
-                workRow.getPriceNote()));
-      }
-    }
-    return new Analysis(description, strategy.analyze(description, rules));
-  }
-
-  /** Sprema rezultat koji je korisnik upravo vidio; nema retry/idempotency sloj. */
-  public long save(long ownerId, long vehicleId, Analysis preview) {
-    if (preview == null) {
-      throw new AppException("Prvo analizirajte opis.");
-    }
-
+  public long create(long ownerId, long vehicleId, String description, long repairWorkId) {
+    String cleanDescription = Checks.text(description, 2000, "Opis problema");
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();
     try {
       transaction.begin();
-      UserRepository userRepository = new JpaUserRepository(entityManager);
-      VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
-      CatalogRepository catalogRepository = new JpaCatalogRepository(entityManager);
-      ProblemRepository problemRepository = new JpaProblemRepository(entityManager);
-      if (userRepository.findById(ownerId) == null) {
-        throw new AppException("Korisnik nije pronadjen.");
-      }
-      Vehicle vehicle = vehicleRepository.findForOwner(ownerId, vehicleId);
+      Vehicle vehicle = new JpaVehicleRepository(entityManager).findForOwner(ownerId, vehicleId);
       if (vehicle == null) {
-        throw new AppException("Vozilo nije pronadjeno.");
+        throw new AppException("Vozilo nije pronađeno.");
       }
-
-      DiagnosticResult topResult = null;
-      if (!preview.getResults().isEmpty()) {
-        topResult = preview.getResults().get(0);
-      }
-      WorkDefinition suggestedWork = findSuggestedWork(catalogRepository, topResult);
+      CatalogRepository catalogRepository = new JpaCatalogRepository(entityManager);
+      VehicleWorkRule rule =
+          catalogRepository.findRule(vehicle.getVariant().getId(), repairWorkId);
+      requireRepair(rule);
       Problem problem =
           new Problem(
               vehicle,
-              Checks.text(preview.getDescription(), 2000, "Opis simptoma"),
+              cleanDescription,
               LocalDateTime.now(),
-              suggestedWork,
-              topResult == null ? null : topResult.getScore(),
-              topResult == null ? null : topResult.getPrice(),
-              topResult == null ? null : topResult.getPriceNote());
-      problemRepository.add(problem);
+              rule.getWork(),
+              rule.getEstimatedPrice());
+      new JpaProblemRepository(entityManager).add(problem);
       transaction.commit();
       return problem.getId();
     } catch (RuntimeException exception) {
@@ -158,15 +98,9 @@ public final class ProblemService {
     }
   }
 
-  private WorkDefinition findSuggestedWork(
-      CatalogRepository catalogRepository, DiagnosticResult topResult) {
-    if (topResult == null) {
-      return null;
+  private static void requireRepair(VehicleWorkRule rule) {
+    if (rule == null || rule.getWork().getCategory() != WorkCategory.REPAIR) {
+      throw new AppException("Odabrani popravak nije dostupan za ovo vozilo.");
     }
-    WorkDefinition suggestedWork = catalogRepository.findWork(topResult.getCandidateId());
-    if (suggestedWork == null) {
-      throw new AppException("Predlozeni rad vise nije dostupan.");
-    }
-    return suggestedWork;
   }
 }

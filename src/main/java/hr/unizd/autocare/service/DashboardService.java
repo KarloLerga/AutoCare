@@ -1,22 +1,19 @@
 package hr.unizd.autocare.service;
 
 import hr.unizd.autocare.domain.MaintenanceStatus;
-import hr.unizd.autocare.domain.Vehicle;
 import hr.unizd.autocare.model.Data.Dashboard;
 import hr.unizd.autocare.model.Data.MaintenanceRow;
 import hr.unizd.autocare.persistence.JpaCatalogRepository;
 import hr.unizd.autocare.persistence.JpaProblemRepository;
 import hr.unizd.autocare.persistence.JpaServiceRecordRepository;
 import hr.unizd.autocare.persistence.JpaVehicleRepository;
-import hr.unizd.autocare.repository.CatalogRepository;
-import hr.unizd.autocare.repository.ProblemRepository;
-import hr.unizd.autocare.repository.ServiceRecordRepository;
 import hr.unizd.autocare.repository.VehicleRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import java.time.LocalDate;
 import java.util.List;
 
-/** Podaci za dashboard aktivnog vozila. */
+/** Podaci za četiri kartice dashboarda aktivnog vozila. */
 public final class DashboardService {
   private final EntityManagerFactory entityManagerFactory;
 
@@ -28,41 +25,68 @@ public final class DashboardService {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
       VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
-      ServiceRecordRepository serviceRecordRepository =
-          new JpaServiceRecordRepository(entityManager);
-      ProblemRepository problemRepository = new JpaProblemRepository(entityManager);
-      CatalogRepository catalogRepository = new JpaCatalogRepository(entityManager);
-      Vehicle vehicle = vehicleRepository.findForOwner(ownerId, vehicleId);
+      hr.unizd.autocare.domain.Vehicle vehicle =
+          vehicleRepository.findForOwner(ownerId, vehicleId);
       if (vehicle == null) {
-        throw new AppException("Vozilo nije pronadjeno.");
+        throw new AppException("Vozilo nije pronađeno.");
       }
-
       List<MaintenanceRow> maintenance =
           MaintenanceService.calculate(
-              catalogRepository, serviceRecordRepository, ownerId, vehicle);
-      int due = 0;
-      int soon = 0;
-      int noData = 0;
-      for (MaintenanceRow maintenanceRow : maintenance) {
-        if (maintenanceRow.getStatus() == MaintenanceStatus.DUE) {
-          due++;
-        } else if (maintenanceRow.getStatus() == MaintenanceStatus.SOON) {
-          soon++;
-        } else if (maintenanceRow.getStatus() == MaintenanceStatus.NO_DATA) {
-          noData++;
+              new JpaCatalogRepository(entityManager),
+              new JpaServiceRecordRepository(entityManager),
+              ownerId,
+              vehicle);
+      MaintenanceRow next = null;
+      for (MaintenanceRow row : maintenance) {
+        if (next == null || comesBefore(row, next)) {
+          next = row;
         }
       }
-
       return new Dashboard(
           Mapping.vehicle(vehicle, vehicleId),
-          serviceRecordRepository.total(ownerId, vehicleId),
-          problemRepository.openCount(ownerId, vehicleId),
-          due,
-          soon,
-          noData,
-          maintenance.size());
+          new JpaServiceRecordRepository(entityManager).total(ownerId, vehicleId),
+          new JpaProblemRepository(entityManager).openCount(ownerId, vehicleId),
+          next);
     } finally {
       entityManager.close();
     }
+  }
+
+  private static boolean comesBefore(MaintenanceRow first, MaintenanceRow second) {
+    int firstRank = statusRank(first);
+    int secondRank = statusRank(second);
+    if (firstRank != secondRank) {
+      return firstRank < secondRank;
+    }
+    LocalDate firstDate = first.getNextDate();
+    LocalDate secondDate = second.getNextDate();
+    if (firstDate == null && secondDate != null) {
+      return false;
+    }
+    if (firstDate != null && (secondDate == null || firstDate.isBefore(secondDate))) {
+      return true;
+    }
+    if (firstDate != null && secondDate != null && firstDate.isAfter(secondDate)) {
+      return false;
+    }
+    Integer firstMileage = first.getNextMileage();
+    Integer secondMileage = second.getNextMileage();
+    if (firstMileage != null && (secondMileage == null || firstMileage < secondMileage)) {
+      return true;
+    }
+    if (firstMileage != null && secondMileage != null && firstMileage > secondMileage) {
+      return false;
+    }
+    return first.getName().compareTo(second.getName()) < 0;
+  }
+
+  private static int statusRank(MaintenanceRow row) {
+    if (row.getStatus() == MaintenanceStatus.DUE) {
+      return 0;
+    }
+    if (row.getStatus() == MaintenanceStatus.SOON) {
+      return 1;
+    }
+    return 2;
   }
 }

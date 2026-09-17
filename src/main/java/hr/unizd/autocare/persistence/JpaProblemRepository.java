@@ -6,7 +6,7 @@ import hr.unizd.autocare.repository.ProblemRepository;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 
-/** JPA upiti koriste vezane parametre i postojeci EntityManager. */
+/** JPA upiti za ručno unesene probleme. */
 public final class JpaProblemRepository implements ProblemRepository {
   private final EntityManager entityManager;
 
@@ -24,31 +24,30 @@ public final class JpaProblemRepository implements ProblemRepository {
     List<Problem> problems =
         entityManager
             .createQuery(
-                "select problem from Problem problem where problem.id=:problemId "
+                "select problem from Problem problem left join fetch problem.suggestedRepair "
+                    + "left join fetch problem.resolvedByService where problem.id=:problemId "
                     + "and problem.vehicle.owner.id=:ownerId",
                 Problem.class)
             .setParameter("problemId", problemId)
             .setParameter("ownerId", ownerId)
             .setMaxResults(1)
             .getResultList();
-    if (problems.isEmpty()) {
-      return null;
-    }
-    return problems.get(0);
+    return problems.isEmpty() ? null : problems.get(0);
   }
 
   @Override
-  public List<Problem> list(long ownerId, long vehicleId, ProblemStatus status) {
+  public List<Problem> list(long ownerId, long vehicleId) {
     return entityManager
         .createQuery(
             "select problem from Problem problem left join fetch problem.suggestedRepair "
                 + "left join fetch problem.resolvedByService where problem.vehicle.id=:vehicleId "
-                + "and problem.vehicle.owner.id=:ownerId and problem.status=:status "
-                + "order by problem.createdAt desc,problem.id desc",
+                + "and problem.vehicle.owner.id=:ownerId "
+                + "order by case when problem.status=:openStatus then 0 else 1 end, "
+                + "problem.createdAt desc,problem.id desc",
             Problem.class)
         .setParameter("vehicleId", vehicleId)
         .setParameter("ownerId", ownerId)
-        .setParameter("status", status)
+        .setParameter("openStatus", ProblemStatus.OPEN)
         .getResultList();
   }
 

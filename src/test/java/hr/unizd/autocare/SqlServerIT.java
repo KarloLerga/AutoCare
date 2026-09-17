@@ -9,6 +9,7 @@ import hr.unizd.autocare.domain.Problem;
 import hr.unizd.autocare.domain.ProblemStatus;
 import hr.unizd.autocare.domain.Vehicle;
 import hr.unizd.autocare.domain.VehicleVariant;
+import hr.unizd.autocare.domain.VehicleWorkRule;
 import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.domain.WorkDefinition;
 import hr.unizd.autocare.model.Data.ItemInput;
@@ -130,13 +131,13 @@ class SqlServerIT {
               "Known history",
               List.of(new ItemInput(fixture.oilWork, null)),
               List.of());
-      // OTHER_ bez obavezne napomene: provjera aktualnog lokalnog pravila.
+      // Rad bez konkretnog pravila mora blokirati cijelu registraciju.
       ServiceInput bad =
           new ServiceInput(
               LocalDate.of(2021, 1, 1),
               90_000,
               null,
-              List.of(new ItemInput(fixture.otherWork, null)),
+              List.of(new ItemInput(fixture.unavailableWork, null)),
               List.of());
       String password = "test-only-password-buffer";
       assertThrows(
@@ -188,7 +189,7 @@ class SqlServerIT {
     private final long variant;
     private final long oilWork;
     private final long repairWork;
-    private final long otherWork;
+    private final long unavailableWork;
 
     Fixture(EntityManagerFactory factory) {
       this.factory = factory;
@@ -210,27 +211,32 @@ class SqlServerIT {
                         2026,
                         "Petrol");
                 WorkDefinition oil =
-                    new WorkDefinition(
-                        prefix + "-oil", "Test oil", WorkCategory.MAINTENANCE, null, null);
+                    new WorkDefinition(prefix + "-oil", "Test oil", WorkCategory.MAINTENANCE);
                 WorkDefinition repair =
+                    new WorkDefinition(prefix + "-repair", "Test repair", WorkCategory.REPAIR);
+                WorkDefinition unavailable =
                     new WorkDefinition(
-                        prefix + "-repair", "Test repair", WorkCategory.REPAIR, null, null);
-                WorkDefinition other =
-                    new WorkDefinition(
-                        "OTHER_" + prefix, "Test other", WorkCategory.REPAIR, null, null);
+                        "UNAVAILABLE_" + prefix, "Test unavailable", WorkCategory.REPAIR);
                 entityManager.persist(variantEntity);
                 entityManager.persist(oil);
                 entityManager.persist(repair);
-                entityManager.persist(other);
+                entityManager.persist(unavailable);
+                entityManager.flush();
+                entityManager.persist(
+                    new VehicleWorkRule(
+                        variantEntity, oil, 10000, 12, new BigDecimal("100.00")));
+                entityManager.persist(
+                    new VehicleWorkRule(
+                        variantEntity, repair, null, null, new BigDecimal("200.00")));
                 entityManager.flush();
                 return new long[] {
-                  variantEntity.getId(), oil.getId(), repair.getId(), other.getId()
+                  variantEntity.getId(), oil.getId(), repair.getId(), unavailable.getId()
                 };
               });
       variant = ids[0];
       oilWork = ids[1];
       repairWork = ids[2];
-      otherWork = ids[3];
+      unavailableWork = ids[3];
     }
 
     String newEmail() {
@@ -256,11 +262,7 @@ class SqlServerIT {
                 new Problem(
                     entityManager.find(Vehicle.class, vehicle),
                     description,
-                    LocalDateTime.now(),
-                    null,
-                    null,
-                    null,
-                    null);
+                    LocalDateTime.now(), null, null);
             entityManager.persist(problem);
             entityManager.flush();
             return problem.getId();
@@ -354,7 +356,7 @@ class SqlServerIT {
                     .executeUpdate();
               }
             }
-            for (Long work : List.of(oilWork, repairWork, otherWork)) {
+            for (Long work : List.of(oilWork, repairWork, unavailableWork)) {
               entityManager.remove(entityManager.find(WorkDefinition.class, work));
             }
             entityManager.remove(entityManager.find(VehicleVariant.class, variant));

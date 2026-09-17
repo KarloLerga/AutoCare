@@ -1,6 +1,5 @@
 package hr.unizd.autocare.repository;
 
-import hr.unizd.autocare.domain.DiagnosticRule;
 import hr.unizd.autocare.domain.VehicleVariant;
 import hr.unizd.autocare.domain.VehicleWorkRule;
 import hr.unizd.autocare.domain.WorkCategory;
@@ -9,11 +8,13 @@ import java.util.List;
 
 /** Transakcijski repository; sam ne otvara niti zatvara EntityManager. */
 public interface CatalogRepository {
-  List<String> makes(int year);
+  List<String> makes();
 
-  List<String> models(int year, String make);
+  List<String> models(String make);
 
-  List<VehicleVariant> variants(int year, String make, String model, String search);
+  List<Integer> years(String make, String model);
+
+  List<VehicleVariant> variants(String make, String model, int year);
 
   VehicleVariant findVariant(long id);
 
@@ -21,7 +22,7 @@ public interface CatalogRepository {
 
   WorkDefinition findWork(long id);
 
-  List<VehicleWorkRule> rules(long variant);
+  VehicleWorkRule findRule(long variantId, long workId);
 
-  List<DiagnosticRule> diagnosticRules();
+  List<VehicleWorkRule> rules(long variantId);
 }

@@ -52,26 +52,4 @@ public final class JpaVehicleRepository implements VehicleRepository {
     entityManager.remove(vehicle);
   }
 
-  @Override
-  public boolean hasHistory(long vehicleId) {
-    long serviceCount =
-        entityManager
-            .createQuery(
-                "select count(serviceRecord) from ServiceRecord serviceRecord "
-                    + "where serviceRecord.vehicle.id=:vehicleId",
-                Long.class)
-            .setParameter("vehicleId", vehicleId)
-            .getSingleResult();
-    if (serviceCount > 0) {
-      return true;
-    }
-    long problemCount =
-        entityManager
-            .createQuery(
-                "select count(problem) from Problem problem where problem.vehicle.id=:vehicleId",
-                Long.class)
-            .setParameter("vehicleId", vehicleId)
-            .getSingleResult();
-    return problemCount > 0;
-  }
 }

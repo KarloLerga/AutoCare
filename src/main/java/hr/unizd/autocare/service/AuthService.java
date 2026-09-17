@@ -61,7 +61,9 @@ public final class AuthService {
     String cleanEmail = Checks.email(email);
     String cleanPassword = Checks.password(password);
 
-    if (vehicleInput.getYear() > LocalDate.now().getYear()) {
+    if (vehicleInput == null
+        || vehicleInput.getYear() < 1886
+        || vehicleInput.getYear() > LocalDate.now().getYear()) {
       throw new AppException("Godina proizvodnje nije valjana.");
     }
 
@@ -88,7 +90,7 @@ public final class AuthService {
       VehicleVariant variant = catalogRepository.findVariant(vehicleInput.getVariantId());
 
       if (variant == null) {
-        throw new AppException("Odaberite postojecu varijantu vozila.");
+        throw new AppException("Odaberite postojeću varijantu vozila.");
       }
 
       Vehicle vehicle =

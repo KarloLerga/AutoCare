@@ -25,17 +25,10 @@ public final class SqlOfflineChecks {
     check(Ui.roundedEstimate(new BigDecimal("285")).equals(new BigDecimal("290")));
     check(Ui.estimate(null).equals("Nema procjene"));
     check(Checks.money(new BigDecimal("53.47"), false).equals(new BigDecimal("53.47")));
-
     MaintenanceCalculator calculator = new MaintenanceCalculator();
     LocalDate today = LocalDate.of(2026, 9, 16);
-
-    check(
-        calculator.calculate(10000, null, today, 90000, 99000, today)
-            == MaintenanceStatus.SOON);
-    check(
-        calculator.calculate(null, 12, today, null, 90000, today)
-            == MaintenanceStatus.OK);
-
+    check(calculator.calculate(10000, null, today, 90000, 99000, today) == MaintenanceStatus.SOON);
+    check(calculator.calculate(null, 12, today, null, 90000, today) == MaintenanceStatus.OK);
     System.out.println("Additional offline checks passed: " + checks);
   }
 

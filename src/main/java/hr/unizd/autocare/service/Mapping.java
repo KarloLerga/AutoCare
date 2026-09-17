@@ -73,9 +73,7 @@ final class Mapping {
         problem.getStatus(),
         problem.getCreatedAt(),
         problem.getSuggestedRepair() == null ? null : problem.getSuggestedRepair().getName(),
-        problem.getMatchPercent(),
         problem.getEstimatedCost(),
-        problem.getEstimateNote(),
         problem.getResolvedByService() == null ? null : problem.getResolvedByService().getId());
   }
 }
