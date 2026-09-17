@@ -11,13 +11,15 @@ tablice i stupce; ne treba masovno preimenovati bazu.
 - `03_final_data_read_only.sql` je povijesna provjera nakon target-name migracije.
 - `05_student_simplification_v2.sql` je povijesni patch za target-name shemu i nije potreban za
   postojecu snake_case bazu.
-- `06_student_runtime_compat.sql` je aktualni minimalni patch: zadano read-only provjerava
-  `work_definition.default_interval_km/default_interval_months` i legacy `service_record.request_key`,
-  a primjena dodaje samo nedostajuce nullable stupce i DB default za legacy request key.
+- `06_student_runtime_compat.sql` je raniji kompatibilni patch koji je vec primijenjen na postojeću
+  bazu: dodao je nullable default intervale i default za stari request key.
+- `07_final_student_cleanup.sql` je završni patch: zadano je read-only, auditira točnu bazu i
+  ovisnosti, a uz eksplicitni target i `@Apply = 1` transakcijski uklanja samo šest legacy kolona
+  (`version`, `request_key` i `schedule_kind`) bez resetiranja tablica ili kataloga.
 - `naming_map.csv` i `naming_manifest.json` cuvaju povijesnu before/after mapu 9 entiteta i 69
   mapiranih stupaca. Za aktualni fizicki runtime ugovor vrijedi snake_case shema i physical naming
-  strategy; stari `ServiceRecord.request_key` vise nije Java polje, ali se ne brise automatski.
+  strategy; manifest je povijesni zapis i nije popis aktivnih Java polja.
 
-Prije `06_student_runtime_compat.sql` prvo provjeriti tocnu bazu, backup i ovisnosti. Skripta ima
+Prije `07_final_student_cleanup.sql` prvo provjeriti tocnu bazu, backup i ovisnosti. Skripta ima
 `@Apply = 0` kao read-only zadanu vrijednost i placeholder za `@ExpectedDatabase`; ne uklanjati guard
 niti nagađati naziv baze. Ne koristiti Hibernate `update` za rename i ne stvarati paralelnu shemu.

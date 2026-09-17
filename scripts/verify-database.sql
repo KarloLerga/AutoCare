@@ -12,14 +12,26 @@ SELECT COUNT_BIG(*) AS variants FROM dbo.vehicle_variant;
 SELECT COUNT_BIG(*) AS works FROM dbo.work_definition;
 SELECT COUNT_BIG(*) AS scoped_rules FROM dbo.vehicle_work_rule;
 SELECT COUNT_BIG(*) AS diagnostic_rules FROM dbo.diagnostic_rule;
-SELECT schedule_kind,COUNT_BIG(*) AS rules FROM dbo.vehicle_work_rule GROUP BY schedule_kind;
 SELECT COUNT_BIG(*) AS null_estimates FROM dbo.vehicle_work_rule WHERE estimated_price IS NULL;
 SELECT variant_id,work_id,COUNT_BIG(*) AS duplicates FROM dbo.vehicle_work_rule GROUP BY variant_id,work_id HAVING COUNT_BIG(*)>1;
 SELECT code,COUNT_BIG(*) AS duplicates FROM dbo.vehicle_variant GROUP BY code HAVING COUNT_BIG(*)>1;
 SELECT u.id AS inconsistent_user,u.active_vehicle_id FROM dbo.app_user u LEFT JOIN dbo.vehicle v ON v.id=u.active_vehicle_id
 WHERE u.active_vehicle_id IS NULL OR v.owner_id<>u.id;
-SELECT TOP(20) v.make,v.model,v.generation,w.code,w.name,r.estimated_price,r.schedule_kind,r.interval_km,r.interval_months,r.interval_source
+SELECT TOP(20) v.make,v.model,v.generation,w.code,w.name,r.estimated_price,r.interval_km,r.interval_months,r.interval_source
 FROM dbo.vehicle_work_rule r JOIN dbo.vehicle_variant v ON v.id=r.variant_id JOIN dbo.work_definition w ON w.id=r.work_id
 WHERE v.make=N'Tesla' ORDER BY v.id,w.code;
+DECLARE @LegacyColumns TABLE (table_name sysname NOT NULL, column_name sysname NOT NULL);
+INSERT INTO @LegacyColumns(table_name,column_name)
+VALUES
+    (N'app_user',N'version'),
+    (N'vehicle',N'version'),
+    (N'problem',N'version'),
+    (N'problem',N'request_key'),
+    (N'service_record',N'request_key'),
+    (N'vehicle_work_rule',N'schedule_kind');
+SELECT table_name,column_name,
+       CASE WHEN COL_LENGTH(N'dbo.' + table_name,column_name) IS NULL THEN 0 ELSE 1 END AS legacy_column_exists
+FROM @LegacyColumns
+ORDER BY table_name,column_name;
 -- NULL is unknown/quote, not0. Compare manifest code subsets when legacy/manual records exist.
 -- Close/disconnect Object Explorer after use to avoid unnecessarily keeping serverless DB active.
