@@ -1,0 +1,34 @@
+AutoCare final catalogue audit
+Executed: 2026-09-17
+Target: Azure SQL database loaded from private connection.local.json
+
+current_database
+free-sql-db-0650603
+vehicle_variant_count
+30366
+work_definition_count
+120
+vehicle_work_rule_count
+2944248
+category	rule_count
+MAINTENANCE	728470
+REPAIR	2215778
+null_or_nonpositive_prices
+0
+maintenance_without_interval
+0
+repair_with_interval
+0
+duplicate_variant_work_groups
+0
+removed_other_work_count
+0
+diagnostic_rule_table_exists
+0
+legacy_rule_columns
+0
+legacy_work_default_columns
+0
+legacy_problem_columns
+0
+variant_code	make	model	fuel_type	work_code

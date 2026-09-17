@@ -1,83 +1,78 @@
-# AutoCare `— stvarni status implementacije
+# AutoCare — stvarni status implementacije
 
-Updated: 2026-09-17. Ovaj dokument opisuje trenutno stanje repozitorija i stvarne provjere na
-ovoj radnoj stanici. Nema reseta, rebasea ni force-pusha.
+Updated: 2026-09-17. Ovo je evidence log za završni data/UI handoff. Radni tree je izveden iz baseline commita `3c7c941`; postojeća povijest nije prepisivana, resetirana ni force-pushana.
 
 ## Završene faze
 
 | Faza | Status | Dokaz |
 |---|---|---|
-| Runtime transakcije, repositoryji i JPA mapping | PASS | Raniji fazni commitovi; eksplicitni EntityManager/EntityTransaction i pet repository sučelja. |
-| Klasični Swing kontroleri i pogledi | PASS | Raniji fazni commitovi; MVC/Service/Strategy/Observer struktura ostala je nepromijenjena. |
-| Račun i autentikacija | PASS | `aab2703`; `AppUser.password`, String login/register i profil samo ime/e-mail. `PasswordHasher` i njegove testne provjere uklonjeni. |
-| Navigacijske ikone | PASS | `004bcfc`; Ikonli Swing + FontAwesome6 12.4.0, generička ikona automobila, šest navigacijskih ikona i refresh ikona. |
-| Uklanjanje image pipelinea | PASS | `baea586`, `12466bf`; uklonjeni su VehicleImage, imagePath model/DTO, ImagePathTool, image enrichment alati/resursi i image-only katalog. |
-| Referentni katalog | PASS | `12466bf`; generator, CSV zaglavlja, manifest i checksum usklađeni; 30.366 varijanti i 1.650.435 pravila ostali su isti. |
-| Aktualna baza/migracija | PASS | `bb29613`; `schema/08_plain_password_and_remove_images.sql` je primijenjena nakon read-only audita. |
-| Runtime style scanner | PASS | `scripts/check-runtime-style.ps1`; proširen i na legacy password/image reference i `Arrays.fill`. |
+| Kompletni katalog | PASS | Reproducibilni generator i validator: 30.366 varijanti, 120 konkretnih radova, 2.944.248 pravila, 0 validacijskih grešaka. |
+| Modelirana pravila cijena i intervala | PASS | 728.470 maintenance pravila s pozitivnom cijenom i intervalom; 2.215.778 repair pravila s pozitivnom cijenom i bez izmišljenog intervala. |
+| Runtime uklanjanje dijagnostike i fallbackova | PASS | DiagnosticRule/strategije/dialog i runtime fallback putanje uklonjeni; persistence.xml više ih ne registrira. |
+| Maintenance/Problems/Service tokovi | PASS | Manualni problemi, konkretni repair izbor, tracked maintenance, interval strategies i inline servisni editor implementirani. |
+| Dashboard i navigacija | PASS | Četiri bordered dashboard kartice, Ikonli ikone, aktivno vozilo u sidebaru i isti JFrame/CardLayout onboarding tok. |
+| Azure SQL kompletni import | PASS | JDBC batch importer je atomarno uvezao 2.944.248 pravila u ciljnu bazu. |
+| Završni schema cleanup | PASS | Guarded migracija je uklonila `OTHER_*`, `diagnostic_rule` i legacy stupce nakon provjere referenci. |
 
-## Azure SQL rezultat
+## Reproducibilni podaci
 
-Read-only audit ciljne baze potvrdio je prije promjene 0 korisnika, 30.366 varijanti, 122 definicije
-rada, 1.650.435 pravila i 87 dijagnostičkih pravila. `password_hash` je bio prazan, a `image_path`
-je postojao za katalog. Pregled indeksa i ograničenja nije pronašao ovisnost na ta dva stupca.
+Generirani artefakti u `tools/reference-data/data/`:
 
-Prvi pokušaj izvršavanja dostavljene migracije zaustavljen je SQL greškom pri statičkom referenciranju
-novog stupca `password` u istom batchu nakon `sp_rename`; transakcija je rollbackana i read-only provjera
-je potvrdila da je baza ostala na staroj shemi. Skripta je zatim popravljena dinamičkim SQL-om za
-rename/nullable reset i ponovno primijenjena.
+- `vehicle_work_rules_complete.csv.gz`
+- `vehicle_work_rules_complete_audit.csv.gz`
+- `vehicle_work_rules_complete_summary.json`
+- `vehicle_work_rules_complete_validation.json`
 
-Završni audit potvrđuje:
+Generator je `scripts/complete_catalog_rules.py`, a provjera `scripts/validate_complete_catalog.py`. Zadnja validacija je vratila `error_count 0`, `rule_count 2944248`, `min_rules_per_variant 56` i `max_rules_per_variant 112`.
 
-- `app_user.password_hash`: odsutan
-- `app_user.password`: prisutan, nullable, 255 NVARCHAR znakova
-- `vehicle_variant.image_path`: odsutan
-- `vehicle_variant`: 30.366
-- `work_definition`: 122
-- `vehicle_work_rule`: 1.650.435
-- `diagnostic_rule`: 87
-- duplikati kataloškog koda i para varijanta/rad: 0
-- legacy cleanup kolone iz faze 07: odsutne
+## Azure SQL audit nakon migracije
 
-Nije brisan nijedan korisnik, katalog, vozilo, servisna povijest ili dijagnostičko pravilo. Baza je prije
-promjene imala 0 korisnika, pa nije bilo starih vjerodajnica koje bi trebalo poništiti.
+Ciljana baza je potvrđena kroz privatni connection config; vjerodajnice nisu u repozitoriju niti u ovom dokumentu.
+
+```text
+current_database                 free-sql-db-0650603
+vehicle_variant_count            30366
+work_definition_count            120
+vehicle_work_rule_count          2944248
+MAINTENANCE                      728470
+REPAIR                           2215778
+null_or_nonpositive_prices       0
+maintenance_without_interval     0
+repair_with_interval             0
+duplicate_variant_work_groups    0
+removed_other_work_count         0
+diagnostic_rule_table_exists     0
+legacy_rule_columns              0
+legacy_work_default_columns      0
+legacy_problem_columns           0
+BEV forbidden-work rows          0
+```
+
+Read-only audit je izvršen s `java -jar tools/setup/target/autocare-setup-1.0.0.jar final-audit schema/final_catalog_audit.sql`. Import i cleanup koriste eksplicitne apply guardove; prvi import pokušaj s kraćim timeoutom je rollbackan i audit je potvrdio da stari katalog nije bio djelomično izmijenjen. Drugi pokušaj je uspješno završen.
 
 ## Izvršene provjere
 
 | Naredba/provjera | Rezultat |
 |---|---|
-| `java -version` | PASS; OpenJDK/Temurin 25.0.4.1 |
-| `./mvnw.cmd -q test` | PASS; `Additional offline checks passed: 6` |
+| `java -version` | PASS; JDK 25.0.4.101 |
+| `./mvnw.cmd -q test` | PASS; offline Java provjere završile s exit code 0 |
 | `./mvnw.cmd -q clean verify` | PASS |
-| `./mvnw.cmd -q package` | PASS |
-| `./mvnw.cmd -q javadoc:javadoc` | PASS |
-| `./mvnw.cmd -q install -DskipTests` | PASS |
 | `./mvnw.cmd -q -f tools/setup/pom.xml clean test package` | PASS |
-| `py -3 -m unittest discover -s tests -v` | PASS; 17 testova |
-| `py -3 scripts/validate_af3.py` | PASS_STRUCTURAL_ONLY; 3.704.652 parova |
-| Graphviz domain/ERD render | PASS; DOT izvori i PNG/SVG ponovno generirani |
-| `sql-check` | PASS; Azure SQL, TLS i `trustServerCertificate=false` |
-| `db-check` | PASS; Hibernate/JPA `hbm2ddl=none`, 30.366 varijanti |
-| `schema/08...sql` read-only audit | PASS prije i nakon promjene |
-| `scripts/verify-database.sql` | PASS; counts, FK/index audit, duplikati 0, legacy kolone 0 |
-| `scripts/check-runtime-style.ps1` | PASS nakon proširenja provjera |
-| `scripts/check-secrets.ps1` | PASS; osnovni skener staged sadržaja prošao, uz ručni pregled diff-a |
+| `./mvnw.cmd -q install -DskipTests` | PASS |
+| `scripts/check-runtime-style.ps1` | PASS; 66 Java datoteka |
+| `scripts/validate_complete_catalog.py` | PASS; `error_count 0` |
+| `sql-check` | PASS; Azure SQL TLS veza, `trustServerCertificate=false` |
+| `final_catalog_audit.sql` prije cleanup-a | PASS; import preduvjeti potvrđeni |
+| `final_catalog_audit.sql` nakon cleanup-a | PASS; svi završni brojevi potvrđeni |
 
-## Blokade i NOT_RUN
+## NOT_RUN / ograničenja
 
-- Maven SQL Server integration profil s odvojenom bazom koja završava na `_test`: NOT_RUN; nije odobrena
-  zasebna testna baza, a glavna baza se nije koristila za fixture testove.
-- Ručni registracijski/login/CRUD GUI smoke, DPI, tipkovnica i native Windows interakcija: NOT_RUN jer
-  native GUI kanal nije dostupan u ovoj sesiji. Kompajliranje potvrđuje ikone, ali nije vizualni smoke test.
-- Nema fotografija po vozilu ni runtime image API-ja; aktualni UI koristi samo dekorativne Ikonli ikone.
+- Maven SQL Server integration profil s odvojenom bazom koja završava na `_test`: NOT_RUN; glavna baza nije korištena za fixture testove.
+- Ručni registracijski/login/CRUD GUI smoke, DPI i native Windows interakcija: NOT_RUN; native GUI kanal nije dostupan u ovoj sesiji. Build potvrđuje kompilaciju, ali ne predstavlja vizualni smoke test.
+- Fotografije vozila i runtime image API nisu dio završnog opsega; UI koristi samo dekorativne Ikonli ikone.
 
-## Trenutna arhitektura
+## Arhitektura
 
-Java 25 + Maven + Swing/FlatLaf + JPA/Hibernate + Microsoft SQL Server/Azure SQL. Runtime koristi
-camelCase Java imena i Hibernate `CamelCaseToUnderscoresNamingStrategy`; fizička baza ostaje
-snake_case, a DDL je izvan GUI runtimea (`hbm2ddl=none`). Service klase određuju granicu transakcije,
-repositoryji samo dohvaćaju/persistiraju, Strategy ostaje za dijagnostiku, a Observer ostaje mali
-in-memory listener.
+Java 25 + Maven + Swing/FlatLaf + JPA/Hibernate + Microsoft SQL Server/Azure SQL. Runtime koristi `hbm2ddl=none`, camelCase Java imena i Hibernate snake_case naming strategy. Schema i veliki katalog mijenjaju se samo kroz developerski setup alat; GUI ih ne mijenja.
 
-Stvarni fazni commitovi: `aab2703`, `004bcfc`, `baea586`, `12466bf`, `bb29613`, `5ee295e`.
-Raniji funkcionalni commitovi i detaljna povijest ostaju u Git DAG-u bez rewritea.
+Fazni commitovi ovog handoffa: `8275ed7` katalog/database tooling, `eb64b0d` runtime model i servisi, `99585d4` UI tokovi. Dokumentacijski/evidence commit dolazi nakon ove provjere.
