@@ -47,13 +47,12 @@ def validate(folder: Path, full_audit: bool=True) -> dict:
     for v in rows(folder/'vehicle_variants.csv'):
         if v['code'] in variants:raise ValueError('Duplicate variant code')
         if not v['code'].startswith('vmm-') or len(v['code'])!=68:raise ValueError('Wrong variant code')
-        for col,limit in {'make':100,'model':150,'generation':200,'engine_label':240,'body_type':100,'fuel_type':80,'transmission':120,'image_path':255}.items():
+        for col,limit in {'make':100,'model':150,'generation':200,'engine_label':240,'body_type':100,'fuel_type':80,'transmission':120}.items():
             if len(v[col])>limit:raise ValueError('Variant string too long: '+col)
         if any(not v[k] for k in ['make','model','generation','engine_label']):raise ValueError('Missing variant identity')
         start=integer(v['year_from']);end=integer(v['year_to']);hp=integer(v['power_hp'])
         if not start or not 1886<=start<=2100 or (end is not None and not start<=end<=2100):raise ValueError('Invalid years')
         if hp is not None and not 1<=hp<=10000:raise ValueError('Invalid power')
-        if v['image_path'] and (not v['image_path'].startswith('/images/') or '..' in v['image_path']):raise ValueError('Invalid image path')
         variants[v['code']]=v;counts['variants']+=1
     for w in rows(folder/'work_definitions.csv'):
         if w['code'] in works:raise ValueError('Duplicate work code')

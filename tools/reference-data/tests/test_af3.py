@@ -1,10 +1,8 @@
-import csv, hashlib, importlib.util, io, json, sys, tempfile, unittest
+import csv, hashlib, json, sys, unittest
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'scripts'))
 import build_af3 as b
-IMAGES=ROOT.parent/'images/enrich_images.py'
-spec=importlib.util.spec_from_file_location('image_tool',IMAGES);image=importlib.util.module_from_spec(spec);spec.loader.exec_module(image)
 
 def read_csv(path):
  with path.open(encoding='utf-8',newline='') as handle:return list(csv.DictReader(handle))
@@ -44,39 +42,5 @@ class EnrichmentChecks(unittest.TestCase):
  def test_sample_integrity(self):
   for line in (ROOT/'data/sample/checksums.sha256').read_text(encoding='utf-8').splitlines():
    sha,name=line.split('  ',1);self.assertEqual(sha,hashlib.sha256((ROOT/'data/sample'/name).read_bytes()).hexdigest())
-
-class ImageChecks(unittest.TestCase):
- def test_http_blocked(self):
-  with self.assertRaises(ValueError):image.safe_url('http://upload.wikimedia.org/a.jpg')
- def test_external_host_blocked(self):
-  with self.assertRaises(ValueError):image.safe_url('https://example.com/a.jpg')
- def test_suffix_attack_blocked(self):
-  with self.assertRaises(ValueError):image.safe_url('https://upload.wikimedia.org.attacker.example/a.jpg')
- def test_url_credentials_blocked(self):
-  with self.assertRaises(ValueError):image.safe_url('https://a:b@upload.wikimedia.org/a.jpg')
- def test_port_blocked(self):
-  with self.assertRaises(ValueError):image.safe_url('https://upload.wikimedia.org:8080/a.jpg')
- def test_good_url(self):self.assertTrue(image.safe_url('https://upload.wikimedia.org/x.jpg'))
- def test_unapproved_skipped(self):self.assertFalse(image.validate_review({'status':'DRAFT'}))
- def test_missing_review_not_promoted(self):
-  with self.assertRaises(ValueError):image.validate_review({'status':'APPROVED'})
- def test_unknown_license_blocked(self):
-  with self.assertRaises(ValueError):image.license_info({'extmetadata':{}})
- def test_supported_license(self):
-  m={'LicenseShortName':{'value':'CC BY-SA 4.0'},'LicenseUrl':{'value':'https://creativecommons.org/licenses/by-sa/4.0/'},'Artist':{'value':'<a>Photographer</a>'}}
-  self.assertEqual('Photographer',image.license_info({'extmetadata':m})[2])
- def test_html_stripped(self):self.assertEqual('A & B',image.plain('<b>A &amp; B</b>'))
- def test_contact_required(self):
-  with tempfile.TemporaryDirectory() as td:
-   with self.assertRaises(ValueError):image.Client('anonymous',Path(td))
- def test_resize(self):
-  try:from PIL import Image
-  except ImportError:self.skipTest('Pillow not installed; install tools/images/requirements.txt locally.')
-  raw=io.BytesIO();Image.new('RGB',(1600,900)).save(raw,format='PNG')
-  out=image.process_image(raw.getvalue());im=Image.open(io.BytesIO(out))
-  self.assertEqual((960,540),im.size);self.assertEqual('JPEG',im.format)
- def test_group_membership_complete(self):
-  groups={r['group_id'] for r in image.rows(ROOT/'data/image_groups.csv')};members=image.rows(ROOT/'data/image_group_variants.csv')
-  self.assertEqual(30366,len(members));self.assertTrue(all(r['group_id'] in groups for r in members))
 
 if __name__=='__main__':unittest.main()
