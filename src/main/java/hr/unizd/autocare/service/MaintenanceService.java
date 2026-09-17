@@ -6,7 +6,7 @@ import hr.unizd.autocare.domain.ServiceItem;
 import hr.unizd.autocare.domain.Vehicle;
 import hr.unizd.autocare.domain.VehicleWorkRule;
 import hr.unizd.autocare.domain.WorkCategory;
-import hr.unizd.autocare.domain.WorkDefinition;
+import hr.unizd.autocare.model.Data.MaintenanceEstimate;
 import hr.unizd.autocare.model.Data.MaintenanceRow;
 import hr.unizd.autocare.persistence.JpaCatalogRepository;
 import hr.unizd.autocare.persistence.JpaServiceRecordRepository;
@@ -16,15 +16,13 @@ import hr.unizd.autocare.repository.ServiceRecordRepository;
 import hr.unizd.autocare.repository.VehicleRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Racuna odrzavanje iz servisne povijesti i pravila za vozilo. */
+/** Tracked održavanje računa se samo za konkretno pravilo koje postoji u povijesti. */
 public final class MaintenanceService {
   private final EntityManagerFactory entityManagerFactory;
 
@@ -36,14 +34,41 @@ public final class MaintenanceService {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
       VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
-      CatalogRepository catalogRepository = new JpaCatalogRepository(entityManager);
-      ServiceRecordRepository serviceRecordRepository =
-          new JpaServiceRecordRepository(entityManager);
       Vehicle vehicle = vehicleRepository.findForOwner(ownerId, vehicleId);
       if (vehicle == null) {
-        throw new AppException("Vozilo nije pronadjeno.");
+        throw new AppException("Vozilo nije pronađeno.");
       }
-      return calculate(catalogRepository, serviceRecordRepository, ownerId, vehicle);
+      return calculate(
+          new JpaCatalogRepository(entityManager),
+          new JpaServiceRecordRepository(entityManager),
+          ownerId,
+          vehicle);
+    } finally {
+      entityManager.close();
+    }
+  }
+
+  public MaintenanceEstimate estimate(long ownerId, long vehicleId, long workId) {
+    EntityManager entityManager = entityManagerFactory.createEntityManager();
+    try {
+      VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
+      Vehicle vehicle = vehicleRepository.findForOwner(ownerId, vehicleId);
+      if (vehicle == null) {
+        throw new AppException("Vozilo nije pronađeno.");
+      }
+      CatalogRepository catalogRepository = new JpaCatalogRepository(entityManager);
+      VehicleWorkRule rule =
+          catalogRepository.findRule(vehicle.getVariant().getId(), workId);
+      if (rule == null || rule.getWork().getCategory() != WorkCategory.MAINTENANCE) {
+        throw new AppException("Odabrano održavanje nije dostupno za ovo vozilo.");
+      }
+      ServiceItem last = latestItems(
+              new JpaServiceRecordRepository(entityManager), ownerId, vehicleId)
+          .get(workId);
+      if (last == null) {
+        throw new AppException("Za odabrano održavanje nema zapisa u servisnoj povijesti.");
+      }
+      return estimate(rule, last, vehicle, LocalDate.now());
     } finally {
       entityManager.close();
     }
@@ -55,116 +80,99 @@ public final class MaintenanceService {
       long ownerId,
       Vehicle vehicle) {
     Map<Long, ServiceItem> latestItems =
-        findLatestItems(serviceRecordRepository, ownerId, vehicle.getId());
-    Map<Long, VehicleWorkRule> rules = findRules(catalogRepository, vehicle.getVariant().getId());
+        latestItems(serviceRecordRepository, ownerId, vehicle.getId());
     MaintenanceCalculator calculator = new MaintenanceCalculator();
     LocalDate today = LocalDate.now();
     List<MaintenanceRow> rows = new ArrayList<>();
 
-    for (WorkDefinition work : catalogRepository.works(WorkCategory.MAINTENANCE)) {
-      VehicleWorkRule rule = rules.get(work.getId());
-      Integer intervalKm;
-      Integer intervalMonths;
-      BigDecimal estimatedPrice;
-      String intervalSource;
-      String estimateNote;
-
-      if (rule != null) {
-        intervalKm = rule.getIntervalKm();
-        intervalMonths = rule.getIntervalMonths();
-        estimatedPrice = rule.getEstimatedPrice();
-        intervalSource = rule.getIntervalSource();
-        estimateNote = rule.getEstimateNote();
-      } else {
-        intervalKm = work.getDefaultIntervalKm();
-        intervalMonths = work.getDefaultIntervalMonths();
-        estimatedPrice = work.getDefaultEstimatedPrice();
-        intervalSource = null;
-        estimateNote = work.getEstimateNote();
-        if (intervalKm == null && intervalMonths == null) {
-          continue;
-        }
+    for (VehicleWorkRule rule : catalogRepository.rules(vehicle.getVariant().getId())) {
+      if (rule.getWork().getCategory() != WorkCategory.MAINTENANCE) {
+        continue;
       }
-
-      ServiceItem lastServiceItem = latestItems.get(work.getId());
-      LocalDate lastDate = null;
-      Integer lastMileage = null;
-      if (lastServiceItem != null) {
-        lastDate = lastServiceItem.getServiceRecord().getServiceDate();
-        lastMileage = lastServiceItem.getServiceRecord().getMileage();
+      ServiceItem last = latestItems.get(rule.getWork().getId());
+      if (last == null) {
+        continue;
       }
-
-      LocalDate nextDate = nextDate(lastDate, intervalMonths);
-      Integer nextMileage = nextMileage(lastMileage, intervalKm);
+      ServiceRecordValues values = ServiceRecordValues.of(last);
+      LocalDate nextDate = nextDate(values.date, rule.getIntervalMonths());
+      Integer nextMileage = nextMileage(values.mileage, rule.getIntervalKm());
       MaintenanceStatus status =
           calculator.calculate(
-              intervalKm,
-              intervalMonths,
-              lastDate,
-              lastMileage,
+              rule.getIntervalKm(),
+              rule.getIntervalMonths(),
+              values.date,
+              values.mileage,
               vehicle.getCurrentMileage(),
               today);
-      Integer remainingKm = null;
-      if (nextMileage != null) {
-        remainingKm = nextMileage - vehicle.getCurrentMileage();
-      }
-      Long remainingDays = null;
-      if (nextDate != null) {
-        remainingDays = ChronoUnit.DAYS.between(today, nextDate);
-      }
-
       rows.add(
           new MaintenanceRow(
-              work.getId(),
-              work.getCode(),
-              work.getName(),
-              lastDate,
-              lastMileage,
+              rule.getWork().getId(),
+              rule.getWork().getCode(),
+              rule.getWork().getName(),
+              values.date,
+              values.mileage,
               nextDate,
               nextMileage,
-              status,
-              estimatedPrice,
-              intervalSource,
-              estimateNote,
-              remainingKm,
-              remainingDays));
+              status));
     }
     return rows;
   }
 
-  private static Map<Long, VehicleWorkRule> findRules(
-      CatalogRepository catalogRepository, long variantId) {
-    Map<Long, VehicleWorkRule> rules = new HashMap<>();
-    for (VehicleWorkRule rule : catalogRepository.rules(variantId)) {
-      rules.put(rule.getWork().getId(), rule);
-    }
-    return rules;
+  private static MaintenanceEstimate estimate(
+      VehicleWorkRule rule, ServiceItem last, Vehicle vehicle, LocalDate today) {
+    ServiceRecordValues values = ServiceRecordValues.of(last);
+    LocalDate nextDate = nextDate(values.date, rule.getIntervalMonths());
+    Integer nextMileage = nextMileage(values.mileage, rule.getIntervalKm());
+    MaintenanceStatus status =
+        new MaintenanceCalculator()
+            .calculate(
+                rule.getIntervalKm(),
+                rule.getIntervalMonths(),
+                values.date,
+                values.mileage,
+                vehicle.getCurrentMileage(),
+                today);
+    return new MaintenanceEstimate(
+        rule.getWork().getId(),
+        rule.getWork().getCode(),
+        rule.getWork().getName(),
+        rule.getEstimatedPrice(),
+        rule.getIntervalKm(),
+        rule.getIntervalMonths(),
+        nextDate,
+        nextMileage,
+        status);
   }
 
-  private static Map<Long, ServiceItem> findLatestItems(
+  private static Map<Long, ServiceItem> latestItems(
       ServiceRecordRepository serviceRecordRepository, long ownerId, long vehicleId) {
-    Map<Long, ServiceItem> latestItems = new HashMap<>();
-    for (ServiceItem serviceItem :
-        serviceRecordRepository.historyItems(ownerId, vehicleId)) {
-      long workId = serviceItem.getWork().getId();
-      if (!latestItems.containsKey(workId)) {
-        latestItems.put(workId, serviceItem);
-      }
+    Map<Long, ServiceItem> latest = new HashMap<>();
+    for (ServiceItem item : serviceRecordRepository.historyItems(ownerId, vehicleId)) {
+      latest.putIfAbsent(item.getWork().getId(), item);
     }
-    return latestItems;
+    return latest;
   }
 
-  private static LocalDate nextDate(LocalDate lastDate, Integer intervalMonths) {
-    if (lastDate == null || intervalMonths == null) {
-      return null;
-    }
-    return lastDate.plusMonths(intervalMonths);
+  private static LocalDate nextDate(LocalDate lastDate, Integer months) {
+    return months == null ? null : lastDate.plusMonths(months);
   }
 
   private static Integer nextMileage(Integer lastMileage, Integer intervalKm) {
-    if (lastMileage == null || intervalKm == null) {
-      return null;
+    return intervalKm == null ? null : lastMileage + intervalKm;
+  }
+
+  private static final class ServiceRecordValues {
+    private final LocalDate date;
+    private final Integer mileage;
+
+    private ServiceRecordValues(LocalDate date, Integer mileage) {
+      this.date = date;
+      this.mileage = mileage;
     }
-    return lastMileage + intervalKm;
+
+    static ServiceRecordValues of(ServiceItem item) {
+      return new ServiceRecordValues(
+          item.getServiceRecord().getServiceDate(), item.getServiceRecord().getMileage());
+    }
   }
 }

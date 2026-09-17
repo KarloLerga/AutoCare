@@ -20,8 +20,8 @@ class CoreTest {
   }
 
   @Test
-  void deterministicDiagnostics() {
-    CoreChecks.diagnostics();
+  void maintenanceStrategies() {
+    CoreChecks.maintenance();
   }
 
   @Test

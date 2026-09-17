@@ -23,7 +23,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Upravljanje korisnikovim vozilima i aktivnim vozilom. */
+/** Upravljanje vozilima; identitet se stvara jednom, a kasnije se mijenja samo kilometraža. */
 public final class VehicleService {
   private final EntityManagerFactory entityManagerFactory;
 
@@ -38,13 +38,12 @@ public final class VehicleService {
       VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
       AppUser user = userRepository.findById(ownerId);
       if (user == null) {
-        throw new AppException("Korisnik nije pronadjen.");
+        throw new AppException("Korisnik nije pronađen.");
       }
-      Long activeVehicleId =
-          user.getActiveVehicle() == null ? null : user.getActiveVehicle().getId();
+      Long activeId = user.getActiveVehicle() == null ? null : user.getActiveVehicle().getId();
       List<VehicleRow> rows = new ArrayList<>();
       for (Vehicle vehicle : vehicleRepository.findAllForOwner(ownerId)) {
-        rows.add(Mapping.vehicle(vehicle, activeVehicleId));
+        rows.add(Mapping.vehicle(vehicle, activeId));
       }
       return rows;
     } finally {
@@ -58,15 +57,13 @@ public final class VehicleService {
       UserRepository userRepository = new JpaUserRepository(entityManager);
       VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
       AppUser user = userRepository.findById(ownerId);
-      if (user == null) {
-        throw new AppException("Korisnik nije pronadjen.");
-      }
-      if (user.getActiveVehicle() == null) {
+      if (user == null || user.getActiveVehicle() == null) {
         throw new AppException("Korisnik nema aktivno vozilo.");
       }
-      Vehicle vehicle = vehicleRepository.findForOwner(ownerId, user.getActiveVehicle().getId());
+      Vehicle vehicle =
+          vehicleRepository.findForOwner(ownerId, user.getActiveVehicle().getId());
       if (vehicle == null) {
-        throw new AppException("Aktivno vozilo nije pronadjeno.");
+        throw new AppException("Aktivno vozilo nije pronađeno.");
       }
       return Mapping.vehicle(vehicle, vehicle.getId());
     } finally {
@@ -85,11 +82,11 @@ public final class VehicleService {
       CatalogRepository catalogRepository = new JpaCatalogRepository(entityManager);
       AppUser user = userRepository.findById(ownerId);
       if (user == null) {
-        throw new AppException("Korisnik nije pronadjen.");
+        throw new AppException("Korisnik nije pronađen.");
       }
       VehicleVariant variant = catalogRepository.findVariant(input.getVariantId());
       if (variant == null) {
-        throw new AppException("Odaberite postojecu varijantu vozila.");
+        throw new AppException("Odaberite postojeću varijantu vozila.");
       }
       Vehicle vehicle = new Vehicle(user, variant, input.getYear(), input.getMileage());
       vehicleRepository.add(vehicle);
@@ -105,53 +102,23 @@ public final class VehicleService {
     }
   }
 
-  public void update(long ownerId, long vehicleId, VehicleInput input) {
-    validate(input);
+  public void updateMileage(long ownerId, long vehicleId, int mileage) {
+    Checks.mileage(mileage);
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();
     try {
       transaction.begin();
-      VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
-      CatalogRepository catalogRepository = new JpaCatalogRepository(entityManager);
-      Vehicle vehicle = vehicleRepository.findForOwner(ownerId, vehicleId);
+      Vehicle vehicle = new JpaVehicleRepository(entityManager).findForOwner(ownerId, vehicleId);
       if (vehicle == null) {
-        throw new AppException("Vozilo nije pronadjeno.");
+        throw new AppException("Vozilo nije pronađeno.");
       }
-
-      boolean identityChanged =
-          !vehicle.getVariant().getId().equals(input.getVariantId())
-              || vehicle.getProductionYear() != input.getYear();
-      if (identityChanged && vehicleRepository.hasHistory(vehicleId)) {
-        throw new AppException("Vozilu koje vec ima povijest nije moguce promijeniti model.");
-      }
-      if (identityChanged) {
-        VehicleVariant variant = catalogRepository.findVariant(input.getVariantId());
-        if (variant == null) {
-          throw new AppException("Odaberite postojecu varijantu vozila.");
-        }
-        vehicle.changeIdentity(variant, input.getYear());
-      }
-      vehicle.updateMileage(input.getMileage());
+      vehicle.updateMileage(mileage);
       transaction.commit();
     } catch (RuntimeException exception) {
       if (transaction.isActive()) {
         transaction.rollback();
       }
       throw exception;
-    } finally {
-      entityManager.close();
-    }
-  }
-
-  public boolean identityEditable(long ownerId, long vehicleId) {
-    EntityManager entityManager = entityManagerFactory.createEntityManager();
-    try {
-      VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
-      Vehicle vehicle = vehicleRepository.findForOwner(ownerId, vehicleId);
-      if (vehicle == null) {
-        throw new AppException("Vozilo nije pronadjeno.");
-      }
-      return !vehicleRepository.hasHistory(vehicleId);
     } finally {
       entityManager.close();
     }
@@ -167,10 +134,10 @@ public final class VehicleService {
       AppUser user = userRepository.findById(ownerId);
       Vehicle vehicle = vehicleRepository.findForOwner(ownerId, vehicleId);
       if (user == null) {
-        throw new AppException("Korisnik nije pronadjen.");
+        throw new AppException("Korisnik nije pronađen.");
       }
       if (vehicle == null) {
-        throw new AppException("Vozilo nije pronadjeno.");
+        throw new AppException("Vozilo nije pronađeno.");
       }
       user.activate(vehicle);
       transaction.commit();
@@ -198,19 +165,19 @@ public final class VehicleService {
       List<Vehicle> vehicles = vehicleRepository.findAllForOwner(ownerId);
       Vehicle vehicle = vehicleRepository.findForOwner(ownerId, vehicleId);
       if (user == null) {
-        throw new AppException("Korisnik nije pronadjen.");
+        throw new AppException("Korisnik nije pronađen.");
       }
       if (vehicles.size() <= 1) {
-        throw new AppException("Posljednje vozilo nije moguce obrisati.");
+        throw new AppException("Posljednje vozilo nije moguće obrisati.");
       }
       if (vehicle == null) {
-        throw new AppException("Vozilo nije pronadjeno.");
+        throw new AppException("Vozilo nije pronađeno.");
       }
       if (user.getActiveVehicle() != null
           && user.getActiveVehicle().getId().equals(vehicleId)) {
-        for (Vehicle otherVehicle : vehicles) {
-          if (!otherVehicle.getId().equals(vehicleId)) {
-            user.activate(otherVehicle);
+        for (Vehicle other : vehicles) {
+          if (!other.getId().equals(vehicleId)) {
+            user.activate(other);
             break;
           }
         }
@@ -229,7 +196,7 @@ public final class VehicleService {
     }
   }
 
-  private void validate(VehicleInput input) {
+  private static void validate(VehicleInput input) {
     if (input == null
         || input.getYear() < 1886
         || input.getYear() > LocalDate.now().getYear()) {

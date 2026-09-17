@@ -10,7 +10,6 @@ import hr.unizd.autocare.service.MaintenanceService;
 import hr.unizd.autocare.service.ProblemService;
 import hr.unizd.autocare.service.ServiceRecordService;
 import hr.unizd.autocare.service.VehicleService;
-import hr.unizd.autocare.strategy.KeywordDiagnosticStrategy;
 import hr.unizd.autocare.view.MainFrame;
 import jakarta.persistence.EntityManagerFactory;
 import java.awt.Font;
@@ -46,8 +45,7 @@ public final class Main {
           new ServiceRecordService(entityManagerFactory);
       MaintenanceService maintenanceService =
           new MaintenanceService(entityManagerFactory);
-      ProblemService problemService =
-          new ProblemService(entityManagerFactory, new KeywordDiagnosticStrategy());
+      ProblemService problemService = new ProblemService(entityManagerFactory);
       DashboardService dashboardService = new DashboardService(entityManagerFactory);
 
       MainFrame frame = new MainFrame();

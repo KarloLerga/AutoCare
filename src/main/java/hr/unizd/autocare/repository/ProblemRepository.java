@@ -1,7 +1,6 @@
 package hr.unizd.autocare.repository;
 
 import hr.unizd.autocare.domain.Problem;
-import hr.unizd.autocare.domain.ProblemStatus;
 import java.util.List;
 
 /** Transakcijski repository; sam ne otvara niti zatvara EntityManager. */
@@ -10,11 +9,11 @@ public interface ProblemRepository {
 
   Problem findForOwner(long ownerId, long problemId);
 
-  List<Problem> list(long ownerId, long vehicleId, ProblemStatus status);
+  List<Problem> list(long ownerId, long vehicleId);
 
-  List<String> resolvedDescriptions(long owner, long service);
+  List<String> resolvedDescriptions(long ownerId, long serviceId);
 
-  long openCount(long owner, long vehicle);
+  long openCount(long ownerId, long vehicleId);
 
-  void deleteForVehicle(long vehicle);
+  void deleteForVehicle(long vehicleId);
 }

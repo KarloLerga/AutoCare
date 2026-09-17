@@ -8,7 +8,7 @@ import jakarta.persistence.ManyToOne;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-/** Pravilo za jednu varijantu vozila i jedan rad. */
+/** Jedino mjesto konkretne primjenjivosti, cijene i intervala za par varijanta/rad. */
 @Entity
 public class VehicleWorkRule {
   @Id
@@ -24,8 +24,6 @@ public class VehicleWorkRule {
   private Integer intervalKm;
   private Integer intervalMonths;
   private BigDecimal estimatedPrice;
-  private String intervalSource;
-  private String estimateNote;
 
   protected VehicleWorkRule() {}
 
@@ -34,31 +32,34 @@ public class VehicleWorkRule {
       WorkDefinition work,
       Integer intervalKm,
       Integer intervalMonths,
-      BigDecimal estimatedPrice,
-      String intervalSource,
-      String estimateNote) {
+      BigDecimal estimatedPrice) {
     this.variant = Objects.requireNonNull(variant);
     this.work = Objects.requireNonNull(work);
+    validateInterval(intervalKm, intervalMonths);
+    if (work.getCategory() == WorkCategory.REPAIR
+        && (intervalKm != null || intervalMonths != null)) {
+      throw new IllegalArgumentException("Popravak nema preventivni interval.");
+    }
+    if (work.getCategory() == WorkCategory.MAINTENANCE
+        && intervalKm == null
+        && intervalMonths == null) {
+      throw new IllegalArgumentException("Održavanje mora imati kilometarski ili vremenski interval.");
+    }
+    if (estimatedPrice == null || estimatedPrice.signum() <= 0) {
+      throw new IllegalArgumentException("Procijenjena cijena mora biti pozitivna.");
+    }
+    this.intervalKm = intervalKm;
+    this.intervalMonths = intervalMonths;
+    this.estimatedPrice = Checks.money(estimatedPrice, false);
+  }
 
+  private static void validateInterval(Integer intervalKm, Integer intervalMonths) {
     if (intervalKm != null && intervalKm <= 0) {
       throw new IllegalArgumentException("Kilometarski interval mora biti pozitivan.");
     }
-
     if (intervalMonths != null && intervalMonths <= 0) {
       throw new IllegalArgumentException("Vremenski interval mora biti pozitivan.");
     }
-
-    boolean hasInterval = intervalKm != null || intervalMonths != null;
-    if (work.getCategory() == WorkCategory.REPAIR && hasInterval) {
-      throw new IllegalArgumentException("Popravak nema preventivni interval.");
-    }
-
-    this.intervalKm = intervalKm;
-    this.intervalMonths = intervalMonths;
-    this.estimatedPrice = Checks.money(estimatedPrice, true);
-    this.intervalSource = Checks.optional(intervalSource, 1000, "Izvor intervala");
-    this.estimateNote = Checks.optional(estimateNote, 1000, "Izvor cijene");
-
   }
 
   public Long getId() {
@@ -83,13 +84,5 @@ public class VehicleWorkRule {
 
   public BigDecimal getEstimatedPrice() {
     return estimatedPrice;
-  }
-
-  public String getIntervalSource() {
-    return intervalSource;
-  }
-
-  public String getEstimateNote() {
-    return estimateNote;
   }
 }

@@ -10,11 +10,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Nepromjenjivi ulazi i rezultati. Niti jedan tip ne nosi JPA entitet ili Swing komponentu. */
+/** Nepromjenjivi ulazi i rezultati između poslovnog sloja i Swinga. */
 public final class Data {
   private Data() {}
 
-  /** Account - jednostavan prijenos podataka preko granice slojeva. */
   public static final class Account {
     private final long id;
     private final String name;
@@ -45,7 +44,6 @@ public final class Data {
     }
   }
 
-  /** VariantRow - jednostavan prijenos podataka preko granice slojeva. */
   public static final class VariantRow {
     private final long id;
     private final String code;
@@ -128,9 +126,12 @@ public final class Data {
       return to;
     }
 
+    @Override
+    public String toString() {
+      return generation + " / " + engine + " / " + fuel;
+    }
   }
 
-  /** VehicleRow - jednostavan prijenos podataka preko granice slojeva. */
   public static final class VehicleRow {
     private final long id;
     private final VariantRow variant;
@@ -167,7 +168,7 @@ public final class Data {
     }
   }
 
-  /** VehicleInput - jednostavan prijenos podataka preko granice slojeva. */
+  /** Ulaz za stvaranje vozila; identitet se nakon stvaranja više ne mijenja. */
   public static final class VehicleInput {
     private final long variantId;
     private final int year;
@@ -192,36 +193,25 @@ public final class Data {
     }
   }
 
-  /** WorkRow - jednostavan prijenos podataka preko granice slojeva. */
   public static final class WorkRow {
     private final long id;
     private final String code;
     private final String name;
     private final WorkCategory category;
-    private final BigDecimal price;
-    private final String priceNote;
 
-    public WorkRow(
-        long id,
-        String code,
-        String name,
-        WorkCategory category,
-        BigDecimal price,
-        String priceNote) {
-      this.code = code;
+    public WorkRow(long id, String code, String name, WorkCategory category) {
       this.id = id;
+      this.code = code;
       this.name = name;
       this.category = category;
-      this.price = price;
-      this.priceNote = priceNote;
-    }
-
-    public String getCode() {
-      return code;
     }
 
     public long getId() {
       return id;
+    }
+
+    public String getCode() {
+      return code;
     }
 
     public String getName() {
@@ -232,16 +222,12 @@ public final class Data {
       return category;
     }
 
-    public BigDecimal getPrice() {
-      return price;
-    }
-
-    public String getPriceNote() {
-      return priceNote;
+    @Override
+    public String toString() {
+      return name;
     }
   }
 
-  /** ItemInput - jednostavan prijenos podataka preko granice slojeva. */
   public static final class ItemInput {
     private final long workId;
     private final BigDecimal actualPrice;
@@ -260,7 +246,6 @@ public final class Data {
     }
   }
 
-  /** ServiceInput - jednostavan prijenos podataka preko granice slojeva. */
   public static final class ServiceInput {
     private final LocalDate date;
     private final int mileage;
@@ -302,7 +287,6 @@ public final class Data {
     }
   }
 
-  /** ServiceRow - jednostavan prijenos podataka preko granice slojeva. */
   public static final class ServiceRow {
     private final long id;
     private final LocalDate date;
@@ -346,7 +330,6 @@ public final class Data {
     }
   }
 
-  /** ItemRow - jednostavan prijenos podataka preko granice slojeva. */
   public static final class ItemRow {
     private final String name;
     private final WorkCategory category;
@@ -371,7 +354,6 @@ public final class Data {
     }
   }
 
-  /** ServiceDetail - jednostavan prijenos podataka preko granice slojeva. */
   public static final class ServiceDetail {
     private final ServiceRow header;
     private final List<ItemRow> items;
@@ -396,16 +378,13 @@ public final class Data {
     }
   }
 
-  /** ProblemRow - jednostavan prijenos podataka preko granice slojeva. */
   public static final class ProblemRow {
     private final long id;
     private final String description;
     private final ProblemStatus status;
     private final LocalDateTime createdAt;
-    private final String suggestion;
-    private final BigDecimal score;
-    private final BigDecimal price;
-    private final String priceNote;
+    private final String suggestedRepair;
+    private final BigDecimal estimatedCost;
     private final Long resolvedServiceId;
 
     public ProblemRow(
@@ -413,19 +392,15 @@ public final class Data {
         String description,
         ProblemStatus status,
         LocalDateTime createdAt,
-        String suggestion,
-        BigDecimal score,
-        BigDecimal price,
-        String priceNote,
+        String suggestedRepair,
+        BigDecimal estimatedCost,
         Long resolvedServiceId) {
       this.id = id;
       this.description = description;
       this.status = status;
       this.createdAt = createdAt;
-      this.suggestion = suggestion;
-      this.score = score;
-      this.price = price;
-      this.priceNote = priceNote;
+      this.suggestedRepair = suggestedRepair;
+      this.estimatedCost = estimatedCost;
       this.resolvedServiceId = resolvedServiceId;
     }
 
@@ -445,20 +420,12 @@ public final class Data {
       return createdAt;
     }
 
-    public String getSuggestion() {
-      return suggestion;
+    public String getSuggestedRepair() {
+      return suggestedRepair;
     }
 
-    public BigDecimal getScore() {
-      return score;
-    }
-
-    public BigDecimal getPrice() {
-      return price;
-    }
-
-    public String getPriceNote() {
-      return priceNote;
+    public BigDecimal getEstimatedCost() {
+      return estimatedCost;
     }
 
     public Long getResolvedServiceId() {
@@ -466,124 +433,30 @@ public final class Data {
     }
   }
 
-  /** RuleData - jednostavan prijenos podataka preko granice slojeva. */
-  public static final class RuleData {
-    private final long candidateId;
-    private final String candidateName;
-    private final String phrase;
-    private final int weight;
-    private final BigDecimal price;
-    private final String priceNote;
+  public static final class ProblemEstimate {
+    private final long workId;
+    private final String workName;
+    private final BigDecimal estimatedCost;
 
-    public RuleData(
-        long candidateId,
-        String candidateName,
-        String phrase,
-        int weight,
-        BigDecimal price,
-        String priceNote) {
-      this.candidateId = candidateId;
-      this.candidateName = candidateName;
-      this.phrase = phrase;
-      this.weight = weight;
-      this.price = price;
-      this.priceNote = priceNote;
+    public ProblemEstimate(long workId, String workName, BigDecimal estimatedCost) {
+      this.workId = workId;
+      this.workName = workName;
+      this.estimatedCost = estimatedCost;
     }
 
-    public long getCandidateId() {
-      return candidateId;
+    public long getWorkId() {
+      return workId;
     }
 
-    public String getCandidateName() {
-      return candidateName;
+    public String getWorkName() {
+      return workName;
     }
 
-    public String getPhrase() {
-      return phrase;
-    }
-
-    public int getWeight() {
-      return weight;
-    }
-
-    public BigDecimal getPrice() {
-      return price;
-    }
-
-    public String getPriceNote() {
-      return priceNote;
+    public BigDecimal getEstimatedCost() {
+      return estimatedCost;
     }
   }
 
-  /** DiagnosticResult - jednostavan prijenos podataka preko granice slojeva. */
-  public static final class DiagnosticResult {
-    private final long candidateId;
-    private final String candidateName;
-    private final BigDecimal score;
-    private final int matchedWeight;
-    private final BigDecimal price;
-    private final String priceNote;
-
-    public DiagnosticResult(
-        long candidateId,
-        String candidateName,
-        BigDecimal score,
-        int matchedWeight,
-        BigDecimal price,
-        String priceNote) {
-      this.candidateId = candidateId;
-      this.candidateName = candidateName;
-      this.score = score;
-      this.matchedWeight = matchedWeight;
-      this.price = price;
-      this.priceNote = priceNote;
-    }
-
-    public long getCandidateId() {
-      return candidateId;
-    }
-
-    public String getCandidateName() {
-      return candidateName;
-    }
-
-    public BigDecimal getScore() {
-      return score;
-    }
-
-    public int getMatchedWeight() {
-      return matchedWeight;
-    }
-
-    public BigDecimal getPrice() {
-      return price;
-    }
-
-    public String getPriceNote() {
-      return priceNote;
-    }
-  }
-
-  /** Analysis - jednostavan prijenos podataka preko granice slojeva. */
-  public static final class Analysis {
-    private final String description;
-    private final List<DiagnosticResult> results;
-
-    public Analysis(String description, List<DiagnosticResult> results) {
-      this.description = description;
-      this.results = new ArrayList<>(results);
-    }
-
-    public String getDescription() {
-      return description;
-    }
-
-    public List<DiagnosticResult> getResults() {
-      return results;
-    }
-  }
-
-  /** MaintenanceRow - jednostavan prijenos podataka preko granice slojeva. */
   public static final class MaintenanceRow {
     private final long workId;
     private final String workCode;
@@ -593,11 +466,6 @@ public final class Data {
     private final LocalDate nextDate;
     private final Integer nextMileage;
     private final MaintenanceStatus status;
-    private final Integer remainingKm;
-    private final Long remainingDays;
-    private final BigDecimal price;
-    private final String intervalSource;
-    private final String priceNote;
 
     public MaintenanceRow(
         long workId,
@@ -607,12 +475,7 @@ public final class Data {
         Integer lastMileage,
         LocalDate nextDate,
         Integer nextMileage,
-        MaintenanceStatus status,
-        BigDecimal price,
-        String intervalSource,
-        String priceNote,
-        Integer remainingKm,
-        Long remainingDays) {
+        MaintenanceStatus status) {
       this.workId = workId;
       this.workCode = workCode;
       this.name = name;
@@ -621,19 +484,14 @@ public final class Data {
       this.nextDate = nextDate;
       this.nextMileage = nextMileage;
       this.status = status;
-      this.price = price;
-      this.intervalSource = intervalSource;
-      this.priceNote = priceNote;
-      this.remainingKm = remainingKm;
-      this.remainingDays = remainingDays;
-    }
-
-    public String getWorkCode() {
-      return workCode;
     }
 
     public long getWorkId() {
       return workId;
+    }
+
+    public String getWorkCode() {
+      return workCode;
     }
 
     public String getName() {
@@ -656,56 +514,100 @@ public final class Data {
       return nextMileage;
     }
 
-    public Integer getRemainingKm() {
-      return remainingKm;
+    public MaintenanceStatus getStatus() {
+      return status;
     }
 
-    public Long getRemainingDays() {
-      return remainingDays;
+    @Override
+    public String toString() {
+      return name;
+    }
+  }
+
+  public static final class MaintenanceEstimate {
+    private final long workId;
+    private final String workCode;
+    private final String workName;
+    private final BigDecimal estimatedPrice;
+    private final Integer intervalKm;
+    private final Integer intervalMonths;
+    private final LocalDate nextDate;
+    private final Integer nextMileage;
+    private final MaintenanceStatus status;
+
+    public MaintenanceEstimate(
+        long workId,
+        String workCode,
+        String workName,
+        BigDecimal estimatedPrice,
+        Integer intervalKm,
+        Integer intervalMonths,
+        LocalDate nextDate,
+        Integer nextMileage,
+        MaintenanceStatus status) {
+      this.workId = workId;
+      this.workCode = workCode;
+      this.workName = workName;
+      this.estimatedPrice = estimatedPrice;
+      this.intervalKm = intervalKm;
+      this.intervalMonths = intervalMonths;
+      this.nextDate = nextDate;
+      this.nextMileage = nextMileage;
+      this.status = status;
+    }
+
+    public long getWorkId() {
+      return workId;
+    }
+
+    public String getWorkCode() {
+      return workCode;
+    }
+
+    public String getWorkName() {
+      return workName;
+    }
+
+    public BigDecimal getEstimatedPrice() {
+      return estimatedPrice;
+    }
+
+    public Integer getIntervalKm() {
+      return intervalKm;
+    }
+
+    public Integer getIntervalMonths() {
+      return intervalMonths;
+    }
+
+    public LocalDate getNextDate() {
+      return nextDate;
+    }
+
+    public Integer getNextMileage() {
+      return nextMileage;
     }
 
     public MaintenanceStatus getStatus() {
       return status;
     }
-
-    public BigDecimal getPrice() {
-      return price;
-    }
-
-    public String getIntervalSource() {
-      return intervalSource;
-    }
-
-    public String getPriceNote() {
-      return priceNote;
-    }
   }
 
-  /** Dashboard - jednostavan prijenos podataka preko granice slojeva. */
   public static final class Dashboard {
     private final VehicleRow vehicle;
     private final CostSummary total;
     private final long openProblems;
-    private final int due;
-    private final int soon;
-    private final int noData;
-    private final int covered;
+    private final MaintenanceRow nextMaintenance;
 
     public Dashboard(
         VehicleRow vehicle,
         CostSummary total,
         long openProblems,
-        int due,
-        int soon,
-        int noData,
-        int covered) {
+        MaintenanceRow nextMaintenance) {
       this.vehicle = vehicle;
       this.total = total;
       this.openProblems = openProblems;
-      this.due = due;
-      this.soon = soon;
-      this.noData = noData;
-      this.covered = covered;
+      this.nextMaintenance = nextMaintenance;
     }
 
     public VehicleRow getVehicle() {
@@ -720,20 +622,8 @@ public final class Data {
       return openProblems;
     }
 
-    public int getDue() {
-      return due;
-    }
-
-    public int getSoon() {
-      return soon;
-    }
-
-    public int getNoData() {
-      return noData;
-    }
-
-    public int getCovered() {
-      return covered;
+    public MaintenanceRow getNextMaintenance() {
+      return nextMaintenance;
     }
   }
 }

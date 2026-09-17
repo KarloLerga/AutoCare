@@ -1,16 +1,17 @@
 package hr.unizd.autocare.persistence;
 
-import hr.unizd.autocare.domain.DiagnosticRule;
 import hr.unizd.autocare.domain.VehicleVariant;
 import hr.unizd.autocare.domain.VehicleWorkRule;
 import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.domain.WorkDefinition;
 import hr.unizd.autocare.repository.CatalogRepository;
 import jakarta.persistence.EntityManager;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+import java.util.TreeSet;
 
-/** JPA upiti koriste vezane parametre i postojeci EntityManager. */
+/** JPA upiti koriste vezane parametre i postojeći EntityManager. */
 public final class JpaCatalogRepository implements CatalogRepository {
   private final EntityManager entityManager;
 
@@ -19,47 +20,62 @@ public final class JpaCatalogRepository implements CatalogRepository {
   }
 
   @Override
-  public List<String> makes(int year) {
+  public List<String> makes() {
     return entityManager
         .createQuery(
-            "select distinct variant.make from VehicleVariant variant "
-                + "where variant.yearFrom<=:year and "
-                + "(variant.yearTo is null or variant.yearTo>=:year) order by variant.make",
+            "select distinct variant.make from VehicleVariant variant order by variant.make",
             String.class)
-        .setParameter("year", year)
         .getResultList();
   }
 
   @Override
-  public List<String> models(int year, String make) {
+  public List<String> models(String make) {
     return entityManager
         .createQuery(
             "select distinct variant.model from VehicleVariant variant "
-                + "where variant.make=:make and variant.yearFrom<=:year and "
-                + "(variant.yearTo is null or variant.yearTo>=:year) order by variant.model",
+                + "where variant.make=:make order by variant.model",
             String.class)
         .setParameter("make", make)
-        .setParameter("year", year)
         .getResultList();
   }
 
   @Override
-  public List<VehicleVariant> variants(int year, String make, String model, String search) {
-    String searchText = search == null ? "" : search.strip().toLowerCase(Locale.ROOT);
+  public List<Integer> years(String make, String model) {
+    List<VehicleVariant> variants =
+        entityManager
+            .createQuery(
+                "select variant from VehicleVariant variant where variant.make=:make "
+                    + "and variant.model=:model order by variant.yearFrom,variant.id",
+                VehicleVariant.class)
+            .setParameter("make", make)
+            .setParameter("model", model)
+            .getResultList();
+    TreeSet<Integer> years = new TreeSet<>();
+    int currentYear = LocalDate.now().getYear();
+    for (VehicleVariant variant : variants) {
+      int to =
+          variant.getYearTo() == null
+              ? currentYear
+              : Math.min(currentYear, variant.getYearTo());
+      for (int year = variant.getYearFrom(); year <= to; year++) {
+        years.add(year);
+      }
+    }
+    return new ArrayList<>(years);
+  }
+
+  @Override
+  public List<VehicleVariant> variants(String make, String model, int year) {
     return entityManager
         .createQuery(
             "select variant from VehicleVariant variant where variant.make=:make "
                 + "and variant.model=:model and variant.yearFrom<=:year "
                 + "and (variant.yearTo is null or variant.yearTo>=:year) "
-                + "and (locate(:searchText,lower(variant.generation))>0 "
-                + "or locate(:searchText,lower(variant.engineLabel))>0 or :searchText='') "
                 + "order by variant.generation,variant.engineLabel,variant.id",
             VehicleVariant.class)
         .setParameter("make", make)
         .setParameter("model", model)
         .setParameter("year", year)
-        .setParameter("searchText", searchText)
-        .setMaxResults(201)
         .getResultList();
   }
 
@@ -84,24 +100,28 @@ public final class JpaCatalogRepository implements CatalogRepository {
   }
 
   @Override
+  public VehicleWorkRule findRule(long variantId, long workId) {
+    List<VehicleWorkRule> rules =
+        entityManager
+            .createQuery(
+                "select rule from VehicleWorkRule rule join fetch rule.work "
+                    + "where rule.variant.id=:variantId and rule.work.id=:workId",
+                VehicleWorkRule.class)
+            .setParameter("variantId", variantId)
+            .setParameter("workId", workId)
+            .setMaxResults(1)
+            .getResultList();
+    return rules.isEmpty() ? null : rules.get(0);
+  }
+
+  @Override
   public List<VehicleWorkRule> rules(long variantId) {
     return entityManager
         .createQuery(
             "select rule from VehicleWorkRule rule join fetch rule.work "
-                + "where rule.variant.id=:variantId order by rule.work.name",
+                + "where rule.variant.id=:variantId order by rule.work.category,rule.work.name",
             VehicleWorkRule.class)
         .setParameter("variantId", variantId)
-        .getResultList();
-  }
-
-  @Override
-  public List<DiagnosticRule> diagnosticRules() {
-    return entityManager
-        .createQuery(
-            "select diagnosticRule from DiagnosticRule diagnosticRule "
-                + "join fetch diagnosticRule.candidate where diagnosticRule.active=true "
-                + "order by diagnosticRule.candidate.id,diagnosticRule.id",
-            DiagnosticRule.class)
         .getResultList();
   }
 }

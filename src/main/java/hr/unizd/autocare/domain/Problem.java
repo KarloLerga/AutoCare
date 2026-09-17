@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-/** Problem vozila i rezultat analize spremljen u trenutku prijave. */
+/** Ručno uneseni problem vozila i konkretna informativna procjena popravka. */
 @Entity
 public class Problem {
   @Id
@@ -31,9 +31,7 @@ public class Problem {
   @ManyToOne
   private WorkDefinition suggestedRepair;
 
-  private BigDecimal matchPercent;
   private BigDecimal estimatedCost;
-  private String estimateNote;
 
   @ManyToOne
   private ServiceRecord resolvedByService;
@@ -45,34 +43,28 @@ public class Problem {
       String description,
       LocalDateTime createdAt,
       WorkDefinition suggestedRepair,
-      BigDecimal matchPercent,
-      BigDecimal estimatedCost,
-      String estimateNote) {
+      BigDecimal estimatedCost) {
     this.vehicle = Objects.requireNonNull(vehicle);
-    this.description = Checks.text(description, 2000, "Opis simptoma");
+    this.description = Checks.text(description, 2000, "Opis problema");
     this.createdAt = Objects.requireNonNull(createdAt);
     this.status = ProblemStatus.OPEN;
-
     if (suggestedRepair != null && suggestedRepair.getCategory() != WorkCategory.REPAIR) {
-      throw new IllegalArgumentException("Predlozeni rad mora biti popravak.");
+      throw new IllegalArgumentException("Odabrani rad mora biti popravak.");
     }
-
+    if (suggestedRepair == null && estimatedCost != null) {
+      throw new IllegalArgumentException("Procjena pripada odabranom popravku.");
+    }
     this.suggestedRepair = suggestedRepair;
-    this.matchPercent = matchPercent;
     this.estimatedCost = Checks.money(estimatedCost, true);
-    this.estimateNote = Checks.optional(estimateNote, 1000, "Izvor procjene");
   }
 
   public void resolve(ServiceRecord serviceRecord) {
     if (status != ProblemStatus.OPEN) {
-      throw new IllegalArgumentException("Problem je vec rijesen.");
+      throw new IllegalArgumentException("Problem je već riješen.");
     }
-
-    Vehicle serviceVehicle = serviceRecord.getVehicle();
-    if (!vehicle.getId().equals(serviceVehicle.getId())) {
+    if (!vehicle.getId().equals(serviceRecord.getVehicle().getId())) {
       throw new IllegalArgumentException("Servis pripada drugom vozilu.");
     }
-
     resolvedByService = serviceRecord;
     status = ProblemStatus.RESOLVED;
   }
@@ -101,16 +93,8 @@ public class Problem {
     return suggestedRepair;
   }
 
-  public BigDecimal getMatchPercent() {
-    return matchPercent;
-  }
-
   public BigDecimal getEstimatedCost() {
     return estimatedCost;
-  }
-
-  public String getEstimateNote() {
-    return estimateNote;
   }
 
   public ServiceRecord getResolvedByService() {

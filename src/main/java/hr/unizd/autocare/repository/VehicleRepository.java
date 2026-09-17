@@ -12,6 +12,4 @@ public interface VehicleRepository {
   void add(Vehicle vehicle);
 
   void delete(Vehicle vehicle);
-
-  boolean hasHistory(long vehicleId);
 }

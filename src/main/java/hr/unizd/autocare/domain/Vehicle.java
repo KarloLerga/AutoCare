@@ -27,11 +27,11 @@ public class Vehicle {
 
   public Vehicle(AppUser owner, VehicleVariant variant, int productionYear, int currentMileage) {
     this.owner = Objects.requireNonNull(owner);
-    changeIdentity(variant, productionYear);
+    setIdentity(variant, productionYear);
     this.currentMileage = Checks.mileage(currentMileage);
   }
 
-  public void changeIdentity(VehicleVariant variant, int productionYear) {
+  private void setIdentity(VehicleVariant variant, int productionYear) {
     Objects.requireNonNull(variant);
     if (!variant.covers(productionYear)) {
       throw new IllegalArgumentException("Godina nije u rasponu varijante.");
