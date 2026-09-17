@@ -12,7 +12,8 @@ ovoj radnoj stanici. Nema reseta, rebasea ni force-pusha.
 | Testovi i događaji | PASS | `c2cecff`; testovi više ne ovise o uklonjenim pomoćnim klasama i `AppEvents` izravno obilazi listenere. |
 | Setup/import alati | PASS | `33cebd9`; SQL alati koriste postojeće `snake_case` tablice i ne traže legacy plan kolonu. |
 | Završni DB cleanup | PASS | `39522e7`; `schema/07_final_student_cleanup.sql` je prvo pokrenut read-only, zatim guardirano primijenjen. |
-| Runtime style scanner | PASS | `scripts/check-runtime-style.ps1`; 72 runtime Java datoteke bez zabranjenih konstrukcija. |
+| Završni studentski polish | PASS | `c78fd49`, `4b7e8ec`, `c842caa`; datum/radovi koriste obične Swing komponente, a provjere i service flow su usklađeni s aktualnim runtimeom. |
+| Runtime style scanner | PASS | `scripts/check-runtime-style.ps1`; 69 runtime Java datoteka bez zabranjenih konstrukcija. |
 
 ## Azure SQL rezultat
 
@@ -35,12 +36,12 @@ Završni audit potvrđuje:
 | Naredba/provjera | Rezultat |
 |---|---|
 | `git diff --check` | PASS |
-| `.\mvnw.cmd -q clean verify` | PASS; offline provjere: 7 |
+| `.\mvnw.cmd -q clean verify` | PASS; offline provjere: 6 |
 | `.\mvnw.cmd -q package` | PASS |
 | `.\mvnw.cmd -q javadoc:javadoc` | PASS |
 | `.\mvnw.cmd -q install -DskipTests` | PASS |
 | `.\mvnw.cmd -q -f tools\setup\pom.xml clean test package` | PASS |
-| `powershell -ExecutionPolicy Bypass -File scripts\check-runtime-style.ps1` | PASS; 72 datoteke |
+| `powershell -ExecutionPolicy Bypass -File scripts\check-runtime-style.ps1` | PASS; 69 datoteka |
 | `scripts\check-secrets.ps1` | PASS nad staged sadržajem |
 | `sql-check` | PASS; Azure SQL, TLS provjera uključena |
 | `db-check` | PASS; Hibernate/JPA s `hbm2ddl=none`, 30.366 varijanti |
@@ -63,5 +64,6 @@ camelCase Java imena i Hibernate `CamelCaseToUnderscoresNamingStrategy`; fizičk
 transakcije, repositoryji samo dohvaćaju/persistiraju, Strategy ostaje za dijagnostiku, a Observer
 ostaje mali in-memory listener.
 
-Stvarni fazni commitovi: `f545934`, `74aae6f`, `c2cecff`, `33cebd9`, `39522e7`, `f869795`.
+Stvarni fazni commitovi: `f545934`, `74aae6f`, `c2cecff`, `33cebd9`, `39522e7`, `f869795`,
+`c78fd49`, `4b7e8ec`, `c842caa`.
 Dokumentacijski završni commit: `9f50aec`.

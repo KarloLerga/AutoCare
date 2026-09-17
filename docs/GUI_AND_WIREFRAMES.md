@@ -3,7 +3,7 @@
 Prilozeni izvorni PDF ima 12 low-fidelity stranica. To je funkcionalna podloga, ne nepromjenjivi layout. Aktualni kod je standardni Swing uz FlatLaf Dark, bez custom nacrtanih kontrola/animacijskog frameworka. Stare preview PNG slike su sintetski Nimbus layout prikazi, NE snimke Azure SQL/Windows/FlatLaf integracije. Za predaju zamijeniti ili dodatno priloziti stvarne lokalne slike s naznacenim porijeklom.
 
 ## Kontrole
-Godina i km: JSpinner s commitEdit i rasponima. Marka/model: ovisni JComboBoxovi. Veliki popis varijanti: pretraziva JTable sa stabilnim ID-om, model/generacija/motor/snaga/mjenjac. Rad: WorkPicker pretrazivi JTable, ne ogromni dropdown. Datum: formatirano dd.MM.uuuu polje s strict parsingom. Cijena: decimalni unos, zarez ili tocka, najvise dvije decimale za racun. Opis: JTextArea s prelamanjem. Vise problema: checkbox table. Bool nije slobodan tekst. ID ne pokazivati kao naziv vozila.
+Godina i km: JSpinner s osnovnim rasponom. Marka/model: ovisni JComboBoxovi. Veliki popis varijanti: pretraziva JTable sa stabilnim ID-om, model/generacija/motor/snaga/mjenjac. Rad: jednostavan modalni JList s odabirom po kategoriji, bez live filter frameworka. Datum: obicni JTextField u obliku dd.MM.uuuu s parsiranjem kroz `Ui.parseDate`. Cijena: decimalni unos, zarez ili tocka, najvise dvije decimale za racun. Opis: JTextArea s prelamanjem. Vise problema: checkbox table. Bool nije slobodan tekst. ID ne pokazivati kao naziv vozila.
 
 ## Skup wireframeova (mreze su konceptualni prikaz aktualnoga toka)
 ### 1 Prijava

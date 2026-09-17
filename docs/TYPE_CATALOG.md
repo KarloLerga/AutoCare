@@ -74,8 +74,7 @@ proslijeđenim `EntityManagerom`; nestali objekti vraćaju `null`.
 `MainFrame`, `LoginView`, `OnboardingDialog`, `AnalysisDialog`, `ServiceEditorDialog`,
 `DashboardView`, `VehiclesView`, `MaintenanceView`, `ServicesView`, `ProblemsView` i `ProfileView`
 grade Swing prikaz. Glavne tablice koriste `JTable` + `DefaultTableModel`; pogledi posjeduju prikaz
-detalja. Komponente su `DateField`, `EstimateFormat`, `ServiceItemsModel`, `Ui`, `VehicleForm`,
-`VehicleImage` i `WorkPicker`.
+detalja. Komponente su `ServiceItemsModel`, `Ui`, `VehicleForm` i `VehicleImage`.
 
 ## setup alat
 
