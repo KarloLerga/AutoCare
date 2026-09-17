@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-/** Opis simptoma i snimka analize; rjesenje se povezuje sa stvarnim servisom. */
+/** Problem vozila i rezultat analize spremljen u trenutku prijave. */
 @Entity
 public class Problem {
   @Id
@@ -30,6 +30,7 @@ public class Problem {
 
   @ManyToOne
   private WorkDefinition suggestedRepair;
+
   private BigDecimal matchPercent;
   private BigDecimal estimatedCost;
   private String estimateNote;
@@ -50,18 +51,10 @@ public class Problem {
     this.vehicle = Objects.requireNonNull(vehicle);
     this.description = Checks.text(description, 2000, "Opis simptoma");
     this.createdAt = Objects.requireNonNull(createdAt);
-    status = ProblemStatus.OPEN;
+    this.status = ProblemStatus.OPEN;
 
     if (suggestedRepair != null && suggestedRepair.getCategory() != WorkCategory.REPAIR) {
-      throw new IllegalArgumentException("Kandidat mora biti popravak.");
-    }
-
-    boolean inconsistentResult = (suggestedRepair == null) != (matchPercent == null);
-    boolean invalidPercent =
-        matchPercent != null
-            && (matchPercent.signum() < 0 || matchPercent.compareTo(new BigDecimal("100")) > 0);
-    if (inconsistentResult || invalidPercent) {
-      throw new IllegalArgumentException("Nevaljana snimka analize.");
+      throw new IllegalArgumentException("Predlozeni rad mora biti popravak.");
     }
 
     this.suggestedRepair = suggestedRepair;
@@ -71,15 +64,12 @@ public class Problem {
   }
 
   public void resolve(ServiceRecord serviceRecord) {
-    Objects.requireNonNull(serviceRecord);
     if (status != ProblemStatus.OPEN) {
       throw new IllegalArgumentException("Problem je vec rijesen.");
     }
 
     Vehicle serviceVehicle = serviceRecord.getVehicle();
-    boolean sameObject = vehicle == serviceVehicle;
-    boolean sameId = vehicle.getId() != null && vehicle.getId().equals(serviceVehicle.getId());
-    if (!sameObject && !sameId) {
+    if (!vehicle.getId().equals(serviceVehicle.getId())) {
       throw new IllegalArgumentException("Servis pripada drugom vozilu.");
     }
 

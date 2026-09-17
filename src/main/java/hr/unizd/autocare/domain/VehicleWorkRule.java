@@ -8,7 +8,7 @@ import jakarta.persistence.ManyToOne;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-/** Pravilo za tocnu varijantu vozila i jedan zahvat. */
+/** Pravilo za jednu varijantu vozila i jedan rad. */
 @Entity
 public class VehicleWorkRule {
   @Id
@@ -40,11 +40,12 @@ public class VehicleWorkRule {
     this.variant = Objects.requireNonNull(variant);
     this.work = Objects.requireNonNull(work);
 
-    if (intervalKm != null && (intervalKm < 1 || intervalKm > 1_000_000)) {
-      throw new IllegalArgumentException("Nevaljan kilometarski interval.");
+    if (intervalKm != null && intervalKm <= 0) {
+      throw new IllegalArgumentException("Kilometarski interval mora biti pozitivan.");
     }
-    if (intervalMonths != null && (intervalMonths < 1 || intervalMonths > 1200)) {
-      throw new IllegalArgumentException("Nevaljan vremenski interval.");
+
+    if (intervalMonths != null && intervalMonths <= 0) {
+      throw new IllegalArgumentException("Vremenski interval mora biti pozitivan.");
     }
 
     boolean hasInterval = intervalKm != null || intervalMonths != null;
@@ -58,12 +59,6 @@ public class VehicleWorkRule {
     this.intervalSource = Checks.optional(intervalSource, 1000, "Izvor intervala");
     this.estimateNote = Checks.optional(estimateNote, 1000, "Izvor cijene");
 
-    if (hasInterval && this.intervalSource == null) {
-      throw new IllegalArgumentException("Interval zahtijeva izvor ili DEMO oznaku.");
-    }
-    if (estimatedPrice != null && this.estimateNote == null) {
-      throw new IllegalArgumentException("Cijena zahtijeva izvor ili DEMO oznaku.");
-    }
   }
 
   public Long getId() {
