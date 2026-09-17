@@ -17,6 +17,7 @@
 - request-key/idempotency tok za problem i servis
 - optimistic `version` polja
 - legacy plan metadata kolona
+- hashiranje lozinki i per-vehicle image metadata/pipeline
 - Clock dependency kroz sve Service konstruktore
 
 Razlog je čitljivost za kolegij: poslovna odluka i lifecycle trebaju biti vidljivi u klasi, a ne
@@ -25,15 +26,15 @@ raspršeni kroz dodatne apstrakcije.
 ## Baza
 
 Fizički SQL ostaje `snake_case`; Java mapiranje radi naming strategy. Runtime ne upravlja shemom
-(`hbm2ddl=none`). `schema/07_final_student_cleanup.sql` je read-only po defaultu, pronalazi stvarne
-ovisnosti preko `sys.*`, a primijenjena je tek nakon pregleda. Kataloški counts su ostali
-30.366 / 122 / 1.650.435 / 87; šest legacy kolona je uklonjeno.
+(`hbm2ddl=none`). `schema/08_plain_password_and_remove_images.sql` je read-only po defaultu i
+prebačen je tek nakon read-only pregleda. Kataloški counts su ostali 30.366 / 122 / 1.650.435 / 87;
+`app_user.password` je aktualna nullable tekstualna kolona, a `vehicle_variant.image_path` je uklonjen.
 
 ## Podaci i izvori
 
 Modelirane procjene nisu nacionalni prosjek. Review izvori i rasporedi nisu automatsko odobrenje.
-Fotografije su zadnja, lokalna enrichment faza s odvojenim review/licence zapisom; runtime ne zove
-vanjski API.
+Per-vehicle fotografije i enrichment/import pipeline nisu dio aktualnog paketa; UI koristi samo
+dekorativne FontAwesome6 Ikonli ikone, a runtime ne zove vanjski image API.
 
 ## Evidencija
 

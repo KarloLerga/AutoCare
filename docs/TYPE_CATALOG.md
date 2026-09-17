@@ -11,8 +11,8 @@ Katalog je usklađen sa završnim runtime sourceom. Javadoc je izvršen naredbom
 
 ## domain
 
-- `AppUser` — račun, profil, hash lozinke i aktivno vozilo.
-- `VehicleVariant` — kataloška varijanta, godine, tehnički podaci i lokalna slika.
+- `AppUser` — račun, profil, tekstualna lozinka i aktivno vozilo.
+- `VehicleVariant` — kataloška varijanta, godine i tehnički podaci; nema fotografije po vozilu.
 - `Vehicle` — owner, varijanta, proizvodna godina i kilometraža; kilometraža samo raste.
 - `WorkDefinition` — opća definicija održavanja/popravka i opcionalni default interval/procjena.
 - `VehicleWorkRule` — primjenjivost rada na varijantu i opcionalni interval/procjena.
@@ -52,7 +52,6 @@ proslijeđenim `EntityManagerom`; nestali objekti vraćaju `null`.
 - `MaintenanceService` — history + rule/default podaci + kalkulator.
 - `ProblemService` — analiza i jednostavno spremanje već prikazanog previewa.
 - `DashboardService` — pregled troška, otvorenih problema i maintenance statusa.
-- `PasswordHasher` — salted PBKDF2 format `salt:hash`.
 - `Mapping` — pretvara managed entitete u modele za View.
 - `AppException` — jednostavna runtime poslovna iznimka.
 
@@ -74,11 +73,14 @@ proslijeđenim `EntityManagerom`; nestali objekti vraćaju `null`.
 `MainFrame`, `LoginView`, `OnboardingDialog`, `AnalysisDialog`, `ServiceEditorDialog`,
 `DashboardView`, `VehiclesView`, `MaintenanceView`, `ServicesView`, `ProblemsView` i `ProfileView`
 grade Swing prikaz. Glavne tablice koriste `JTable` + `DefaultTableModel`; pogledi posjeduju prikaz
-detalja. Komponente su `ServiceItemsModel`, `Ui`, `VehicleForm` i `VehicleImage`.
+detalja. Komponente su `ServiceItemsModel`, `Ui` i `VehicleForm`; navigacija koristi Ikonli ikone.
 
 ## setup alat
 
 `tools/setup` je odvojeni developerski Maven projekt s `DatabaseTool`, `SqlSeedTool`,
-`ReviewedIntervalTool`, `ImagePathTool`, CSV/manifest pomoćnicima i `DevelopmentSeed`. Nije dio
+`ReviewedIntervalTool`, CSV/manifest pomoćnicima i `DevelopmentSeed`. Nije dio
 runtime JAR-a. Setup koristi postojeće fizičke `snake_case` SQL objekte, TLS i eksplicitne target
 consent provjere.
+
+Lozinka se u ovom studentskom modelu čuva kao običan `String` u `AppUser.password` i stupcu
+`dbo.app_user.password`; to je namjerna demonstracijska odluka, nije preporuka za produkciju.

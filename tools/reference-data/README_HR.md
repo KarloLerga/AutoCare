@@ -51,4 +51,5 @@ py -3 scripts/build_seed.py --input C:\sources\vehicle-makes-models-main.zip --c
 Usporediti novo normalizirane vehicle_variants/traits sa zabiljezenim base hashovima prije zamjene base-input/. Odstupanje prijaviti, ne mijenjati stabilne kodove vec koristenih vozila. Veliki audit.gz ne otvarati u Excelu kao da nema ogranicenje redaka.
 
 ## Fotografije / licence
-`image_groups.csv` i `image_group_variants.csv` daju6.697skupina/mapping. To nije skup skinutih fotografija. Image alat je odvojeni tools/images/, izvodi se zadnji. ODbL/attribution/licence sacuvati. CSV source registers razlikuju izvorno potvrden podatak od model pretpostavke. Nije dovoljno preimenovati status u VERIFIED.
+Katalog varijanti ne sadrzi fotografije, image mapping ni image enrichment alat. CSV source registers
+razlikuju izvorno potvrden podatak od model pretpostavke. Nije dovoljno preimenovati status u VERIFIED.

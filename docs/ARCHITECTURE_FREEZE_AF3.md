@@ -56,10 +56,11 @@ infrastrukture ni globalnog EntityManagera.
 
 ## Baza i cleanup
 
-`schema/07_final_student_cleanup.sql` je read-only po defaultu. Nakon točnog targeta i pregleda
-`sys.*` ovisnosti uklanja samo šest legacy kolona: tri `version`, dva `request_key` i
-`vehicle_work_rule.schedule_kind`. Ne briše tablice, katalog, korisničke podatke, indekse koji nisu
-ovisni o tim kolonama ni druge podatke. `scripts/verify-database.sql` ostaje završna read-only provjera.
+`schema/07_final_student_cleanup.sql` je povijesni cleanup za legacy kolone. Aktualni
+`schema/08_plain_password_and_remove_images.sql` je read-only po defaultu: preimenuje
+`app_user.password_hash` u `password`, eksplicitno poništava stare nereverzibilne vjerodajnice i
+uklanja `vehicle_variant.image_path`. Ne briše tablice, katalog, korisničke podatke ni servisnu
+povijest. `scripts/verify-database.sql` ostaje završna read-only provjera.
 
 ## Status
 

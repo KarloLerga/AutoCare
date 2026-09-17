@@ -26,7 +26,7 @@ Skript po defaultu uvozi mali uzorak, ne 1,65 milijuna pravila. Nakon testiranja
 . .\scripts\Load-Connection.ps1 -ConfigPath 'C:\private-autocare\connection.local.json'
 java -jar tools/setup/target/autocare-setup-1.0.0.jar sql-check
 # Normalni runtime koristi postojece snake_case SQL nazive; ne pokretati rename predloske.
-# schema/07_final_student_cleanup.sql prvo pokrenuti read-only s @Apply = 0.
+# schema/08_plain_password_and_remove_images.sql prvo pokrenuti read-only s @Apply = 0.
 # Nakon provjere tocne baze, backupa i ovisnosti promjenu primijeniti samo na tu bazu.
 java -jar tools/setup/target/autocare-setup-1.0.0.jar db-check
 java -Xmx768m -jar tools/setup/target/autocare-setup-1.0.0.jar seed-validate tools/reference-data/data
@@ -48,11 +48,11 @@ Katalog 30.366 varijanti; 122 radova; 1.282.916 modeliranih brojcanih procjena; 
 - `docs/AZURE_SETUP.md`, `docs/ACCEPTANCE.md`, `docs/VERIFICATION.md`.
 - `docs/DIAGRAM_SCOPES.md`, `docs/TRANSACTION_REVIEW.md`, `docs/AUDIT_AND_DECISIONS.md`.
 - `docs/PROJECT_REPORT.md`, `docs/GUI_AND_WIREFRAMES.md`, `docs/COURSE_ALIGNMENT_AND_DEFENSE.md`.
-- `docs/DEPENDENCIES_AND_SOURCES.md`, `tools/reference-data/README_HR.md`, `tools/images/README.md`.
+- `docs/DEPENDENCIES_AND_SOURCES.md`, `tools/reference-data/README_HR.md`, `schema/08_plain_password_and_remove_images.sql`.
 - `docs/MASTER_CODEX_PROMPT.md`: lokalna fazna integracija i provjere.
 
 ## Sigurnost / besplatna ponuda
 Ne commitati local JSON, lozinke, tokene ni cijeli isporuceni ZIP. Provjera certifikata ostaje ukljucena. SQL Server Object Explorer i aplikaciju zatvoriti kada nisu potrebni da konekcije ne ometaju serverless mirovanje. Ne ukljucivati placeni nastavak koristenja radi prolaza testa. Detalji i izvori su u Azure vodicu (AZURE_SETUP.md).
 
 ## Test status
-Runtime Java koristi camelCase logicka imena, a Hibernate `CamelCaseToUnderscoresNamingStrategy` ih mapira na postojeci snake_case Azure SQL ugovor. `schema/07_final_student_cleanup.sql` je zavrsni patch i zadano je read-only; ne radi se masovni rename. Offline Java/Python provjere nisu dokaz performansi importa ni GUI rada. Tocne izvrsene i neizvrsene provjere nalaze se u `docs/VERIFICATION.md` i `docs/IMPLEMENTATION_STATUS.md`; ne oznacavaj izolirani SQL/GUI scenarij kao PASS bez stvarnog prolaza.
+Runtime Java koristi camelCase logicka imena, a Hibernate `CamelCaseToUnderscoresNamingStrategy` ih mapira na postojeci snake_case Azure SQL ugovor. `schema/08_plain_password_and_remove_images.sql` je aktualni read-only-by-default patch za tekstualnu lozinku i uklanjanje per-vehicle image metapodataka; ne radi se masovni rename. Offline Java/Python provjere nisu dokaz performansi importa ni GUI rada. Tocne izvrsene i neizvrsene provjere nalaze se u `docs/VERIFICATION.md` i `docs/IMPLEMENTATION_STATUS.md`; ne oznacavaj izolirani SQL/GUI scenarij kao PASS bez stvarnog prolaza.

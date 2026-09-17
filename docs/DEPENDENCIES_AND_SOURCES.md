@@ -3,19 +3,20 @@ Checked 2026-09-16. Pinning is a reproducibility decision, not a claim that a re
 
 | Component | Pin | Use / official source |
 |---|---|---|
-| Java / Temurin | release 25, user's local 25.0.4.1 | Standard language, Swing, JDBC, PBKDF2; https://docs.oracle.com/en/java/javase/25/ |
+| Java / Temurin | release 25, user's local 25.0.4.1 | Standard language, Swing and JDBC; https://docs.oracle.com/en/java/javase/25/ |
 | Maven | 3.9.16 | Build; https://maven.apache.org/ref/3.9.16/apache-maven/ |
 | Jakarta Persistence | 3.2.0 | Mapping and EntityManager API; https://jakarta.ee/specifications/persistence/3.2/ |
 | Hibernate ORM | 7.4.8.Final | JPA provider; runtime koristi mali built-in pool za single-user desktop; https://hibernate.org/orm/releases/7.4/ |
 | Microsoft JDBC | 13.4.0.jre11 | SQL Server driver, jre11 artifact supports Java11+ including25; https://learn.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server?view=sql-server-ver17 |
 | FlatLaf | 3.6.2 | Standard Swing look and feel; https://www.formdev.com/flatlaf/ |
+| Ikonli Swing | 12.4.0 | Swing icon rendering; https://kordamp.org/ikonli/ |
+| Ikonli FontAwesome6 pack | 12.4.0 | One icon pack for sidebar/navigation; https://kordamp.org/ikonli/ |
 | SLF4J JUL binding | 2.0.17 | Logs to JDK logging; https://www.slf4j.org/ |
 | JUnit Jupiter | 5.13.4 | Test only; https://docs.junit.org/5.13.4/user-guide/ |
 | compiler / surefire / failsafe | 3.14.1 / 3.5.4 / 3.5.4 | Maven compiler/unit/integration tests |
 | jar / dependency / javadoc | 3.4.2 / 3.8.1 / 3.12.0 | Package + runtime lib directory + API docs; https://maven.apache.org/plugins/ |
 | wrapper plugin | 3.3.4 | Generates official only-script wrapper locally; https://maven.apache.org/wrapper/ |
-| Python | 3.11+ | Optional offline data/image tooling, NOT application runtime |
-| Pillow | 12.3.0 | Image processing only; https://pillow.readthedocs.io/ |
+| Python | 3.11+ | Optional offline reference-data tooling, NOT application runtime |
 | Graphviz | system development tool | Render included DOT sources, not runtime dependency; https://graphviz.org/ |
 
 Maven resolves Hibernate transitive libraries and JUnit components. Generate `mvn dependency:tree` on the real workstation for the exact effective inventory; do not infer versions of transitive jars from an unexecuted build. No HikariCP dependency or MySQL connector remains in the active runtime database path.
@@ -42,16 +43,8 @@ Maven resolves Hibernate transitive libraries and JUnit components. Generate `mv
 
 `tools/reference-data/data/source_register.csv` and `source_register_af3.csv` hold the operation/source details. Parts prices, labour times and modelling coefficients not present in those public sources remain explicitly labelled model assumptions. Published schedules do not validate every generated price. No claimed measured model error or national survey.
 
-## Image enrichment sources
-- Candidate considered: https://github.com/trustcarinfo/carapi . No runtime dependency and no assumption its year matching proves the generation.
-- Direct Wikidata access chosen for a small offline Python tool: https://www.wikidata.org/wiki/Wikidata:Data_access
-- Commons imageinfo metadata: https://www.mediawiki.org/wiki/API:Imageinfo
-- User-Agent policy: https://foundation.wikimedia.org/wiki/Policy:Wikimedia_Foundation_User-Agent_Policy
-- General Commons reuse requirements: https://commons.wikimedia.org/wiki/Commons:Reusing_content_outside_Wikimedia
-Specific image author/licence/source must come from each reviewed image record, not a generic statement that everything on Wikimedia is freely usable. No real photographs have been downloaded or approved during this delivery.
-
 ## Course / supplied sources
-Original handoff, professor's review of the earlier concept, amended concept, architecture/UML PNGs, 12-page GUI PDF and OOP/NOOP archive are retained outside the Git project in source-materials/. Original terminology and requirements are traced in COURSE_ALIGNMENT_AND_DEFENSE.md. The database change, SQL import staging, private credential workflow and image review pipeline are AF3 design decisions, not claims that professor supplied this exact implementation.
+Original handoff, professor's review of the earlier concept, amended concept, architecture/UML PNGs, 12-page GUI PDF and OOP/NOOP archive are retained outside the Git project in source-materials/. Original terminology and requirements are traced in COURSE_ALIGNMENT_AND_DEFENSE.md. The database change, SQL import staging and private credential workflow are AF3 design decisions, not claims that professor supplied this exact implementation.
 
 ## Local Codex working instructions
 `AGENTS.md` is a local repository instruction file; official context: https://developers.openai.com/codex/guides/agents-md . The package does not call OpenAI services, require an API key or add a runtime AI dependency.

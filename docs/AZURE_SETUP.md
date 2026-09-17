@@ -13,15 +13,15 @@ SQL authentication mora biti omogucen za navedeni login. Server networking mora 
 MSSQL ekstenzija VS Codea (`ms-mssql.mssql`): server `auto-care.database.windows.net,1433`, SQL Login, stvarni database name, encrypt ukljucen, Trust Server Certificate iskljucen. Lozinku upisati lokalno. Ne spremati je u committane settings/launch datoteke. Nakon provjere zatvoriti Object Explorer jer otvorene konekcije mogu sprjecavati auto-pause.
 
 ## 3. Konekcijske varijable
-Load-Connection.ps1 ucitava privatni JSON u proces. `AUTOCARE_DB_HOST`, `AUTOCARE_DB_PORT`, `AUTOCARE_DB_NAME`, `AUTOCARE_DB_USER`, `AUTOCARE_DB_PASSWORD`. Schema operacija dodatno zahtijeva `AUTOCARE_SCHEMA_TARGET` tocno jednak stvarnom imenu. Seed/image/review import zahtijeva `AUTOCARE_SEED_TARGET`. Privremene su to eksplicitne potvrde cilja, ne passwordi.
+Load-Connection.ps1 ucitava privatni JSON u proces. `AUTOCARE_DB_HOST`, `AUTOCARE_DB_PORT`, `AUTOCARE_DB_NAME`, `AUTOCARE_DB_USER`, `AUTOCARE_DB_PASSWORD`. Schema operacija dodatno zahtijeva `AUTOCARE_SCHEMA_TARGET` tocno jednak stvarnom imenu. Seed/review import zahtijeva `AUTOCARE_SEED_TARGET`. Privremene su to eksplicitne potvrde cilja, ne passwordi.
 
 JDBC URL: `jdbc:sqlserver://HOST:1433;databaseName=NAME;encrypt=true;trustServerCertificate=false;loginTimeout=60;socketTimeout=120000;applicationName=AutoCare`. User/password u Properties, ne URL-u. Ne koristiti MySQL `sslMode`, `allowPublicKeyRetrieval`, port 3306 ili mysql driver.
 
 ## 4. Redoslijed
 Pravi JDK25/Maven build -> read-only `sql-check` -> pregled tocne postojece snake_case baze ->
-`schema/07_final_student_cleanup.sql` s `@Apply=0` -> nakon eksplicitne potvrde tocne baze i
+`schema/08_plain_password_and_remove_images.sql` s `@Apply=0` -> nakon eksplicitne potvrde tocne baze i
 ovisnosti minimalni transakcijski apply -> `db-check` -> sample seed -> stvarni transakcijski/GUI
-test -> full seed -> opcionalni izvorni intervali -> kraj, image enrichment. Ne pokretati masovski
+test -> full seed -> opcionalni izvorni intervali. Ne pokretati masovski
 `schema/02_rename_reviewed.sql` ni povijesni kompatibilizacijski patch.
 Hibernate `hbm2ddl=none` je runtime ugovor; schema-update je samo eksplicitni developerski alat setup
 artefakta. Aplikacija ne stvara Azure logical server/database i ne puni seed pri pokretanju. Java
@@ -47,4 +47,4 @@ Pocetni schema/seed login smije napraviti inicijalizaciju. Za svakodnevni GUI pr
 ## 7. Greske i ponavljanje
 DNS failure -> provjeri mrezu/DNS; firewall -> odobri vlastiti IP; login failed -> provjeri SQL auth/login/password/bazu; certificate -> ispravan FQDN/trust store, nikada trustServerCertificate=true; paused/limit -> status u portalu, ne placeni upgrade. Ne ponavljati servisni INSERT slijepo nakon nejasne greske; zapis stvarnog servisa nema request-key recovery mehanizam. Seed se sigurno ponavlja po prirodnim kodovima i unique parovima nakon uspostave veze.
 
-Runtime koristi mali Hibernate built-in pool samo za studentski deployment; to nije produkcijski pool. Ne pokretati rasporedjeno polling provjeravanje jer trosi besplatni compute. Zatvoriti aplikaciju i SQL explorer po zavrsetku. Fotografije su lokalni developer-enrichment resursi i ne preuzimaju se iz runtime API-ja.
+Runtime koristi mali Hibernate built-in pool samo za studentski deployment; to nije produkcijski pool. Ne pokretati rasporedjeno polling provjeravanje jer trosi besplatni compute. Zatvoriti aplikaciju i SQL explorer po zavrsetku. Aplikacija nema fotografije po vozilu ni runtime image API.

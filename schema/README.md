@@ -20,6 +20,10 @@ tablice i stupce; ne treba masovno preimenovati bazu.
   mapiranih stupaca. Za aktualni fizicki runtime ugovor vrijedi snake_case shema i physical naming
   strategy; manifest je povijesni zapis i nije popis aktivnih Java polja.
 
-Prije `07_final_student_cleanup.sql` prvo provjeriti tocnu bazu, backup i ovisnosti. Skripta ima
+- `08_plain_password_and_remove_images.sql` je aktualni read-only-by-default patch za prijelaz na
+  `app_user.password` i uklanjanje `vehicle_variant.image_path`. Stare hashirane vjerodajnice nisu
+  reverzibilne; eksplicitni reset mod ih postavlja na `NULL` bez brisanja korisnickih redaka.
+
+Prije `08_plain_password_and_remove_images.sql` prvo provjeriti tocnu bazu, backup i ovisnosti. Skripta ima
 `@Apply = 0` kao read-only zadanu vrijednost i placeholder za `@ExpectedDatabase`; ne uklanjati guard
 niti nagađati naziv baze. Ne koristiti Hibernate `update` za rename i ne stvarati paralelnu shemu.

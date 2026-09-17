@@ -3,8 +3,8 @@ digraph AutoCareErD {
     node [fontname="Helvetica", shape=box, style="rounded,filled", fillcolor="#F4F7FB", color="#176B87", margin="0.18"];
     edge [fontname="Helvetica", fontsize=10, color="#526477"];
 
-    app_user [label="dbo.app_user\nPK id BIGINT IDENTITY\nname NVARCHAR\nUQ email\npassword_hash NVARCHAR\nFK active_vehicle_id BIGINT NULL"];
-    vehicle_variant [label="dbo.vehicle_variant\nPK id BIGINT IDENTITY\nUQ code\nmake, model, generation\nengine_label, body_type, fuel_type\npower_hp, transmission\nyear_from, year_to, image_path"];
+    app_user [label="dbo.app_user\nPK id BIGINT IDENTITY\nname NVARCHAR\nUQ email\npassword NVARCHAR\nFK active_vehicle_id BIGINT NULL"];
+    vehicle_variant [label="dbo.vehicle_variant\nPK id BIGINT IDENTITY\nUQ code\nmake, model, generation\nengine_label, body_type, fuel_type\npower_hp, transmission\nyear_from, year_to"];
     vehicle [label="dbo.vehicle\nPK id BIGINT IDENTITY\nFK owner_id BIGINT\nFK variant_id BIGINT\nproduction_year INT\ncurrent_mileage INT"];
     work_definition [label="dbo.work_definition\nPK id BIGINT IDENTITY\nUQ code\nname, category\ndefault_interval_km/months\ndefault_estimated_price\nestimate_note"];
     vehicle_work_rule [label="dbo.vehicle_work_rule\nPK id BIGINT IDENTITY\nFK variant_id, work_id\ninterval_km/months\nestimated_price\ninterval_source, estimate_note"];

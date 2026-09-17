@@ -1,8 +1,13 @@
 # MASTER IMPLEMENTATION / INTEGRATION PROMPT - AUTOCARE AF3 AZURE SQL
 
-## Aktualna V2 implementacija
+> Historical integration prompt. Its older password-hash and vehicle-image instructions describe
+> superseded phases. The current implementation uses `AppUser.password`, has no per-vehicle image
+> catalogue, and uses FontAwesome6 Ikonli icons; consult `docs/TYPE_CATALOG.md`, `docs/DATABASE_AND_JPA.md`
+> and `docs/IMPLEMENTATION_STATUS.md` for the active contract.
 
-Ovaj AF3 prompt ostaje povijesni ulazni ugovor, ali zadnji V2 plan je autoritativan za trenutno
+## Povijesna V2 implementacija (superseded)
+
+Ovaj AF3 prompt ostaje povijesni ulazni ugovor, a zadnji V2 plan bio je autoritativan za tadašnje
 stanje izvornog koda. V2 zadrzava Java25/Maven/Swing/FlatLaf/JPA/Hibernate/Azure SQL, pet repository
 sucelja i dijagnosticki tok bez runtime API-ja. Uklonjeni su servisni `ServiceRecord.requestKey`,
 service-save idempotency/retry state, owner lockovi, DTO version flow, session epoch/ticket mehanizam,

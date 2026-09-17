@@ -9,7 +9,7 @@ BLOCKED. Preskoceni integracijski test nije PASS.
 | Finalni build | `clean verify` sa stvarnim JPA/Hibernate/FlatLaf ovisnostima, bez API stubs. |
 | Javadoc | Generiran je tocni javni ugovor i class list. |
 | Package/JAR | Glavni JAR nema setup alate, importere, seed dataset ili privatne resurse. |
-| Resursi | Lokalna slika/fallback rade; credits/licence ostaju uz distribuciju. |
+| Resursi | Nema per-vehicle fotografija; sidebar koristi dekorativne FontAwesome6 Ikonli ikone. |
 | Config | GUI nema `create/update` parametar; runtime koristi `hbm2ddl=none`, a setup DDL je eksplicitan. |
 | Secrets | Privatna lozinka nije u sourceu, buildu, Javadocu, commitu ili release ZIP-u. |
 | Naming | Java camelCase imena uz `CamelCaseToUnderscoresNamingStrategy` mapiraju na postojeci snake_case SQL ugovor; constraint/index literalna imena su fizicka. |
@@ -34,7 +34,7 @@ SQL Server integration profil smije koristiti samo zasebnu odobrenu bazu s nasta
 `_test`, `AUTOCARE_TEST_*` varijablama i tocno potvrdenim `AUTOCARE_TEST_SCHEMA_TARGET`.
 Bez nje je status `BLOCKED` ili `NOT_RUN`, nikad `PASS`.
 
-Zavrsni delta dodatak: `schema/07_final_student_cleanup.sql` je read-only-by-default skripta koja
+Zavrsni delta dodatak: `schema/08_plain_password_and_remove_images.sql` je read-only-by-default skripta koja
 nakon pregleda tocne baze uklanja samo `version`, `request_key` i `schedule_kind` legacy kolone.
 Nullable `default_interval_km` i `default_interval_months` ostaju u `work_definition`. Dijagnosticka
 formula i 87 pravila ostaju nepromijenjeni, bez request-key toka.

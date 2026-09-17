@@ -29,8 +29,8 @@ identity postavki. Java entiteti zadržavaju samo ORM značenje: `@Entity`, ID/i
 
 | Entitet | Java polje → SQL stupac |
 |---|---|
-| AppUser | `id`, `name`, `email`, `passwordHash → password_hash`, `activeVehicle → active_vehicle_id` |
-| VehicleVariant | `id`, `code`, `make`, `model`, `generation`, `engineLabel → engine_label`, `bodyType → body_type`, `fuelType → fuel_type`, `powerHp → power_hp`, `transmission`, `yearFrom → year_from`, `yearTo → year_to`, `imagePath → image_path` |
+| AppUser | `id`, `name`, `email`, `password`, `activeVehicle → active_vehicle_id` |
+| VehicleVariant | `id`, `code`, `make`, `model`, `generation`, `engineLabel → engine_label`, `bodyType → body_type`, `fuelType → fuel_type`, `powerHp → power_hp`, `transmission`, `yearFrom → year_from`, `yearTo → year_to` |
 | Vehicle | `id`, `owner → owner_id`, `variant → variant_id`, `productionYear → production_year`, `currentMileage → current_mileage` |
 | WorkDefinition | `id`, `code`, `name`, `category`, `defaultIntervalKm → default_interval_km`, `defaultIntervalMonths → default_interval_months`, `defaultEstimatedPrice → default_estimated_price`, `estimateNote → estimate_note` |
 | VehicleWorkRule | `id`, `variant → variant_id`, `work → work_id`, `intervalKm → interval_km`, `intervalMonths → interval_months`, `estimatedPrice → estimated_price`, `intervalSource → interval_source`, `estimateNote → estimate_note` |
@@ -54,6 +54,11 @@ ovisnosti može ukloniti samo:
 - `problem.request_key`
 - `service_record.request_key`
 - `vehicle_work_rule.schedule_kind`
+
+`schema/08_plain_password_and_remove_images.sql` je zaseban read-only-by-default patch za aktualni
+studentski ugovor. Preimenuje `app_user.password_hash` u `password`, po eksplicitnom reset modu
+poništava stare nereverzibilne hashirane vjerodajnice, te uklanja `vehicle_variant.image_path`.
+Ne briše korisnike, vozila, servisnu povijest, katalog ni dijagnostička pravila.
 
 Skripta preko `sys.*` pronalazi samo pripadajuće default/index/key/FK/check ovisnosti, provjerava
 početne i završne counts i ne radi drop tablica, reset, rename, backfill ni re-seed.

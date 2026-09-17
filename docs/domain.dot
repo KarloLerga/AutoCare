@@ -3,8 +3,8 @@ digraph AutoCareDomain {
     node [fontname="Helvetica", shape=box, style="rounded,filled", fillcolor="#F4F7FB", color="#176B87", margin="0.18"];
     edge [fontname="Helvetica", fontsize=10, color="#526477"];
 
-    AppUser [label="AppUser\nid, name, email\npasswordHash, activeVehicle\n+ activate(vehicle)"];
-    VehicleVariant [label="VehicleVariant\nid, code, make, model\ngeneration, engineLabel\nyears, technical data, imagePath\n+ covers(year)"];
+    AppUser [label="AppUser\nid, name, email\npassword, activeVehicle\n+ activate(vehicle)"];
+    VehicleVariant [label="VehicleVariant\nid, code, make, model\ngeneration, engineLabel\nyears, technical data\n+ covers(year)"];
     Vehicle [label="Vehicle\nid, productionYear\ncurrentMileage\n+ changeIdentity(...)\n+ updateMileage(km)"];
     WorkDefinition [label="WorkDefinition\nid, code, name, category\ndefault intervals and estimate"];
     VehicleWorkRule [label="VehicleWorkRule\nid, intervalKm, intervalMonths\nestimatedPrice, sources"];
