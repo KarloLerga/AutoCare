@@ -14,22 +14,17 @@ import hr.unizd.autocare.domain.WorkDefinition;
 import hr.unizd.autocare.model.Data.ItemInput;
 import hr.unizd.autocare.model.Data.ServiceInput;
 import hr.unizd.autocare.model.Data.VehicleInput;
-import hr.unizd.autocare.persistence.JpaTransactionRunner;
 import hr.unizd.autocare.service.AppException;
 import hr.unizd.autocare.service.AuthService;
 import hr.unizd.autocare.service.PasswordHasher;
 import hr.unizd.autocare.service.ServiceRecordService;
-import hr.unizd.autocare.service.TransactionRunner;
 import hr.unizd.autocare.service.VehicleService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import java.math.BigDecimal;
-import java.time.Clock;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,8 +38,6 @@ import org.junit.jupiter.api.Test;
  * entiteta/JPQL-a prate cleanup (AppUser, serviceDate, productionYear).
  */
 class SqlServerIT {
-  private static final Clock CLOCK =
-      Clock.fixed(Instant.parse("2026-09-16T12:00:00Z"), ZoneOffset.UTC);
 
   @Test
   void serviceSuccessTwoProblemsOwnershipAndHistoricalMileage() {
@@ -205,10 +198,9 @@ class SqlServerIT {
 
     Fixture(EntityManagerFactory factory) {
       this.factory = factory;
-      TransactionRunner transactions = new JpaTransactionRunner(factory);
-      auth = new AuthService(transactions, new PasswordHasher(), CLOCK);
-      vehicles = new VehicleService(transactions, CLOCK);
-      services = new ServiceRecordService(transactions, CLOCK);
+      auth = new AuthService(factory, new PasswordHasher());
+      vehicles = new VehicleService(factory);
+      services = new ServiceRecordService(factory);
       String prefix = "review-it-" + UUID.randomUUID();
       long[] ids =
           inTransaction(
@@ -273,9 +265,8 @@ class SqlServerIT {
             Problem problem =
                 new Problem(
                     entityManager.find(Vehicle.class, vehicle),
-                    UUID.randomUUID().toString(),
                     description,
-                    LocalDateTime.now(CLOCK),
+                    LocalDateTime.now(),
                     null,
                     null,
                     null,
@@ -288,7 +279,7 @@ class SqlServerIT {
 
     ServiceInput service(int mileage, List<Long> problems) {
       return new ServiceInput(
-          LocalDate.now(CLOCK),
+          LocalDate.now(),
           mileage,
           "Test invoice",
           List.of(
