@@ -5,7 +5,6 @@ import hr.unizd.autocare.view.components.EstimateFormat;
 import hr.unizd.autocare.view.components.Ui;
 import java.awt.BorderLayout;
 import java.awt.Window;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -24,11 +23,9 @@ public final class AnalysisDialog extends JDialog {
   public final JButton analyze = Ui.button("Analiziraj", true);
   public final JButton save = Ui.button("Spremi problem", true);
   public final JButton cancel = Ui.button("Zatvori", false);
-  public final JButton check = Ui.button("Provjeri spremanje", false);
   public final JLabel estimate = Ui.hint("Rezultat analize jos nije izracunat.");
   public final JTable results;
   private final DefaultTableModel resultTableModel;
-  private List<DiagnosticResult> diagnosticResults = new ArrayList<>();
 
   public AnalysisDialog(Window owner) {
     super(owner, "Analiza simptoma", ModalityType.APPLICATION_MODAL);
@@ -68,17 +65,15 @@ public final class AnalysisDialog extends JDialog {
     root.add(new JScrollPane(results), BorderLayout.CENTER);
     JPanel bottom = Ui.column();
     bottom.add(estimate);
-    bottom.add(Ui.actions(cancel, check, save));
+    bottom.add(Ui.actions(cancel, save));
     root.add(bottom, BorderLayout.SOUTH);
     setContentPane(root);
     save.setEnabled(false);
-    check.setVisible(false);
   }
 
   public void setResults(List<DiagnosticResult> values) {
-    diagnosticResults = new ArrayList<>(values);
     resultTableModel.setRowCount(0);
-    for (DiagnosticResult result : diagnosticResults) {
+    for (DiagnosticResult result : values) {
       resultTableModel.addRow(
           new Object[] {
             result.getCandidateName(),

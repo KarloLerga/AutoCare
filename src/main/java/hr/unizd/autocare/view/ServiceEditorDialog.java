@@ -20,7 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
-import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 
 /** Lokalna servisna forma; procijenjene cijene se ne kopiraju u stupac stvarnih cijena. */
 public final class ServiceEditorDialog extends JDialog {
@@ -35,7 +35,7 @@ public final class ServiceEditorDialog extends JDialog {
       save = Ui.button("Spremi servis", true),
       cancel = Ui.button("Odustani", false);
   private final List<ProblemRow> problems;
-  private final boolean[] selected;
+  private final DefaultTableModel problemsTableModel;
   private final boolean historical;
 
   public ServiceEditorDialog(
@@ -46,7 +46,22 @@ public final class ServiceEditorDialog extends JDialog {
         ModalityType.APPLICATION_MODAL);
     this.historical = historical;
     this.problems = new ArrayList<>(problems);
-    selected = new boolean[problems.size()];
+    problemsTableModel =
+        new DefaultTableModel(
+            new Object[][] {}, new String[] {"Rijesen", "Problem rijesen ovim servisom"}) {
+          @Override
+          public Class<?> getColumnClass(int column) {
+            return column == 0 ? Boolean.class : String.class;
+          }
+
+          @Override
+          public boolean isCellEditable(int row, int column) {
+            return column == 0;
+          }
+        };
+    for (ProblemRow problem : this.problems) {
+      problemsTableModel.addRow(new Object[] {Boolean.FALSE, problem.getDescription()});
+    }
     mileage = Ui.mileage(mileageValue);
     setSize(940, 700);
     setLocationRelativeTo(owner);
@@ -72,44 +87,13 @@ public final class ServiceEditorDialog extends JDialog {
             historical
                 ? "Nepoznata stara cijena ostaje prazna; 0 znaci poznat nulti trosak."
                 : "Cijena je stvarno placeni ukupan iznos po radu. Npr. 120,50."));
-    if (!problems.isEmpty()) {
-      JTable p =
-          new JTable(
-              new AbstractTableModel() {
-                public int getRowCount() {
-                  return problems.size();
-                }
-
-                public int getColumnCount() {
-                  return 2;
-                }
-
-                public String getColumnName(int c) {
-                  return c == 0 ? "Rijesen" : "Problem rijesen ovim servisom";
-                }
-
-                public Class<?> getColumnClass(int c) {
-                  return c == 0 ? Boolean.class : String.class;
-                }
-
-                public Object getValueAt(int r, int c) {
-                  return c == 0 ? selected[r] : problems.get(r).getDescription();
-                }
-
-                public boolean isCellEditable(int r, int c) {
-                  return c == 0;
-                }
-
-                public void setValueAt(Object value, int r, int c) {
-                  selected[r] = Boolean.TRUE.equals(value);
-                  fireTableCellUpdated(r, c);
-                }
-              });
-      p.setRowHeight(28);
-      p.getColumnModel().getColumn(0).setMaxWidth(80);
-      JScrollPane sc = new JScrollPane(p);
-      sc.setPreferredSize(new Dimension(650, 110));
-      lower.add(sc);
+    if (!this.problems.isEmpty()) {
+      JTable problemTable = new JTable(problemsTableModel);
+      problemTable.setRowHeight(28);
+      problemTable.getColumnModel().getColumn(0).setMaxWidth(80);
+      JScrollPane problemScrollPane = new JScrollPane(problemTable);
+      problemScrollPane.setPreferredSize(new Dimension(650, 110));
+      lower.add(problemScrollPane);
     }
     middle.add(lower, BorderLayout.SOUTH);
     root.add(middle);
@@ -123,9 +107,9 @@ public final class ServiceEditorDialog extends JDialog {
       throw new IllegalArgumentException("Potvrdite valjanu cijenu u tablici.");
     }
     List<Long> ids = new ArrayList<>();
-    for (int i = 0; i < selected.length; i++) {
-      if (selected[i]) {
-        ids.add(problems.get(i).getId());
+    for (int row = 0; row < problemsTableModel.getRowCount(); row++) {
+      if (Boolean.TRUE.equals(problemsTableModel.getValueAt(row, 0))) {
+        ids.add(problems.get(row).getId());
       }
     }
     return new ServiceInput(
