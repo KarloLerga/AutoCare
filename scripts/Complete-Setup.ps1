@@ -33,8 +33,10 @@ if($ImportCompleteCatalog) {
 if($ApplyFinalSchema) {
  $env:AUTOCARE_SCHEMA_TARGET=$env:AUTOCARE_DB_NAME
  Invoke-Native 'java' @('-jar',$jar,'apply-final-schema',(Join-Path $root 'schema/09_complete_catalog_and_runtime_cleanup.sql'),'--apply','--confirm-final-schema')
+ Invoke-Native 'java' @('-jar',$jar,'apply-final-schema',(Join-Path $root 'schema/10_croatian_work_names.sql'),'--apply','--confirm-final-schema')
 } else {
  Invoke-Native 'java' @('-jar',$jar,'apply-final-schema',(Join-Path $root 'schema/09_complete_catalog_and_runtime_cleanup.sql'))
+ Invoke-Native 'java' @('-jar',$jar,'apply-final-schema',(Join-Path $root 'schema/10_croatian_work_names.sql'))
 }
 
 Invoke-Native 'java' @('-jar',$jar,'final-audit',(Join-Path $root 'schema/final_catalog_audit.sql'))
