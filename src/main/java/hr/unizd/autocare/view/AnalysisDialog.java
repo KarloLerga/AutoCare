@@ -18,9 +18,9 @@ import javax.swing.table.DefaultTableModel;
 /** Dijalog za unos simptoma i prikaz rezultata analize. */
 public final class AnalysisDialog extends JDialog {
   public final JTextArea description = new JTextArea(5, 45);
-  public final JButton analyze = Ui.button("Analiziraj", true);
-  public final JButton save = Ui.button("Spremi problem", true);
-  public final JButton cancel = Ui.button("Zatvori", false);
+  public final JButton analyze = Ui.button("Analiziraj");
+  public final JButton save = Ui.button("Spremi problem");
+  public final JButton cancel = Ui.button("Zatvori");
   public final JLabel estimate = Ui.hint("Rezultat analize jos nije izracunat.");
   public final JTable results;
 

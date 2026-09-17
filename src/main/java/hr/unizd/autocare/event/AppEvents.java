@@ -22,8 +22,4 @@ public final class AppEvents {
       listener.onChange(event);
     }
   }
-
-  public void clear() {
-    listeners.clear();
-  }
 }

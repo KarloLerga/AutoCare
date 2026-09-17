@@ -31,7 +31,7 @@ public final class MainFrame extends JFrame {
   public final ProblemsView problems = new ProblemsView();
   public final ProfileView profile = new ProfileView();
   public final Map<String, JButton> navigation = new LinkedHashMap<>();
-  public final JButton refresh = Ui.button("Osvjezi", false);
+  public final JButton refresh = Ui.button("Osvjezi");
   public final JLabel status = Ui.hint("Spremno");
 
   private final CardLayout roots = new CardLayout();
@@ -122,7 +122,7 @@ public final class MainFrame extends JFrame {
       String name,
       JPanel panel,
       FontAwesomeSolid iconCode) {
-    JButton navigationButton = Ui.button(name, false);
+    JButton navigationButton = Ui.button(name);
     navigationButton.setIcon(icon(iconCode, 17));
     navigationButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
     navigationButton.setAlignmentX(Component.LEFT_ALIGNMENT);

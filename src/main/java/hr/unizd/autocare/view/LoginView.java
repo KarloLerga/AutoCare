@@ -12,8 +12,8 @@ import javax.swing.JTextField;
 public final class LoginView extends JPanel {
   public final JTextField email = new JTextField(25);
   public final JPasswordField password = new JPasswordField(25);
-  public final JButton login = Ui.button("Prijavi se", true),
-      register = Ui.button("Kreiraj racun", false);
+  public final JButton login = Ui.button("Prijavi se"),
+      register = Ui.button("Kreiraj racun");
 
   public LoginView() {
     super(new GridBagLayout());

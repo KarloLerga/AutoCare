@@ -10,8 +10,8 @@ import javax.swing.JTextField;
 public final class ProfileView extends JPanel {
   public final JTextField name = new JTextField(25);
   public final JTextField email = new JTextField(25);
-  public final JButton save = Ui.button("Spremi promjene", true);
-  public final JButton logout = Ui.button("Odjava", false);
+  public final JButton save = Ui.button("Spremi promjene");
+  public final JButton logout = Ui.button("Odjava");
 
   public ProfileView() {
     super(new BorderLayout(12, 12));

@@ -16,8 +16,8 @@ import javax.swing.table.DefaultTableModel;
 /** Prikaz otvorenih i rijesenih problema vozila. */
 public final class ProblemsView extends JPanel {
   public final JComboBox<String> status = new JComboBox<>(new String[] {"Otvoreni", "Rijeseni"});
-  public final JButton add = Ui.button("Analiziraj novi problem", true);
-  public final JButton detail = Ui.button("Detalj", false);
+  public final JButton add = Ui.button("Analiziraj novi problem");
+  public final JButton detail = Ui.button("Detalj");
   public final JTable table;
 
   private final DefaultTableModel tableModel;

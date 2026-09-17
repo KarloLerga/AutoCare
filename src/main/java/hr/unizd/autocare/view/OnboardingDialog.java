@@ -27,12 +27,12 @@ public final class OnboardingDialog extends JDialog {
   public final JPasswordField password = new JPasswordField(25);
   public final JPasswordField repeat = new JPasswordField(25);
   public final VehicleForm vehicle = new VehicleForm();
-  public final JButton back = Ui.button("Natrag", false);
-  public final JButton next = Ui.button("Nastavi", true);
-  public final JButton finish = Ui.button("Zavrsi registraciju", true);
-  public final JButton cancel = Ui.button("Odustani", false);
-  public final JButton addHistory = Ui.button("Dodaj poznati servis", false);
-  public final JButton removeHistory = Ui.button("Ukloni odabrani servis", false);
+  public final JButton back = Ui.button("Natrag");
+  public final JButton next = Ui.button("Nastavi");
+  public final JButton finish = Ui.button("Zavrsi registraciju");
+  public final JButton cancel = Ui.button("Odustani");
+  public final JButton addHistory = Ui.button("Dodaj poznati servis");
+  public final JButton removeHistory = Ui.button("Ukloni odabrani servis");
   public final JTable historyTable;
   private final DefaultTableModel historyTableModel;
   private List<ServiceInput> history = new ArrayList<>();

@@ -51,18 +51,22 @@ public final class Ui {
   public static JPanel row(Component... controls) {
     JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEADING, 8, 4));
     panel.setOpaque(false);
+
     for (Component control : controls) {
       panel.add(control);
     }
+
     return panel;
   }
 
   public static JPanel actions(Component... controls) {
     JPanel panel = new JPanel(new FlowLayout(FlowLayout.TRAILING, 8, 4));
     panel.setOpaque(false);
+
     for (Component control : controls) {
       panel.add(control);
     }
+
     return panel;
   }
 
@@ -80,16 +84,16 @@ public final class Ui {
 
   public static JLabel hint(String text) {
     JLabel label = new JLabel(text);
+
     if (javax.swing.UIManager.getColor("Label.disabledForeground") != null) {
       label.setForeground(javax.swing.UIManager.getColor("Label.disabledForeground"));
     }
+
     return label;
   }
 
-  public static JButton button(String title, boolean primary) {
-    JButton button = new JButton(title);
-    button.setFocusPainted(true);
-    return button;
+  public static JButton button(String title) {
+    return new JButton(title);
   }
 
   public static JPanel form() {
@@ -104,6 +108,7 @@ public final class Ui {
     constraints.gridy = row;
     constraints.anchor = GridBagConstraints.LINE_START;
     constraints.insets = new Insets(6, 0, 6, 16);
+
     JLabel label = new JLabel(title);
     label.setLabelFor(component);
     form.add(label, constraints);
@@ -147,6 +152,7 @@ public final class Ui {
       if (optional) {
         return null;
       }
+
       throw new IllegalArgumentException("Unesite stvarno placenu cijenu za svaku stavku.");
     }
 
@@ -162,6 +168,7 @@ public final class Ui {
     if (value == null) {
       return "Nepoznato";
     }
+
     return String.format(Locale.forLanguageTag("hr-HR"), "%,.2f EUR", value);
   }
 
@@ -169,22 +176,27 @@ public final class Ui {
     if (amount == null) {
       return null;
     }
+
     return amount.divide(BigDecimal.TEN, 0, RoundingMode.HALF_UP).multiply(BigDecimal.TEN);
   }
 
   public static String estimate(BigDecimal amount) {
     BigDecimal rounded = roundedEstimate(amount);
+
     if (rounded == null) {
       return "Nema procjene";
     }
+
     return "≈ " + rounded.toPlainString() + " EUR";
   }
 
   public static String total(CostSummary summary) {
     String result = money(summary.getKnownTotal());
+
     if (summary.getUnknownCount() > 0) {
       result += " + " + summary.getUnknownCount() + " nepoznatih";
     }
+
     return result;
   }
 
@@ -192,6 +204,7 @@ public final class Ui {
     if (date == null) {
       return "-";
     }
+
     return date.format(DATE);
   }
 
@@ -199,6 +212,7 @@ public final class Ui {
     if (mileage == null) {
       return "-";
     }
+
     return String.format(Locale.forLanguageTag("hr-HR"), "%,d km", mileage);
   }
 
@@ -206,12 +220,15 @@ public final class Ui {
     if (maintenanceStatus == MaintenanceStatus.NO_DATA) {
       return "Nema podataka";
     }
+
     if (maintenanceStatus == MaintenanceStatus.OK) {
       return "U redu";
     }
+
     if (maintenanceStatus == MaintenanceStatus.SOON) {
       return "Uskoro";
     }
+
     return "Dospjelo";
   }
 
@@ -219,12 +236,17 @@ public final class Ui {
     if (category == WorkCategory.MAINTENANCE) {
       return "Odrzavanje";
     }
+
     return "Popravak";
   }
 
   public static boolean confirm(Component parent, String text) {
     return JOptionPane.showConfirmDialog(
-            parent, text, "AutoCare", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)
+            parent,
+            text,
+            "AutoCare",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE)
         == JOptionPane.YES_OPTION;
   }
 
@@ -234,9 +256,11 @@ public final class Ui {
 
   public static void error(Component parent, Throwable error) {
     String message = error.getMessage();
+
     if (message == null) {
       message = "Operacija nije uspjela.";
     }
+
     JOptionPane.showMessageDialog(parent, message, "AutoCare", JOptionPane.ERROR_MESSAGE);
   }
 
@@ -252,6 +276,7 @@ public final class Ui {
             },
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
+
     dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
   }
 }
