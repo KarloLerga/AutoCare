@@ -1,3 +1,0 @@
-image_path,asset_type,source,generated_on,review_status,notes,sha256
-/images/vehicles/generic-vehicle.jpg,GENERIC_CATEGORY_ILLUSTRATION,Codex built-in image generation,2026-09-16,INTERNAL_REVIEWED,Neutral unbranded illustration used only when no exact local vehicle image is approved; not a make/model match.,73faeb75a17cf529352703a68f32b197966c42e368129c694834019e01526e06
-/images/vehicles/generic-electric.jpg,GENERIC_ELECTRIC_CATEGORY_ILLUSTRATION,Codex built-in image generation,2026-09-16,INTERNAL_REVIEWED,Neutral unbranded electric-category illustration selected only for Electric fuel entries without an exact local vehicle image.,3fb2b1c0afe2d6a37e79b05dcc445a42c1e4b3a29df657093aa143e1c4c2b884

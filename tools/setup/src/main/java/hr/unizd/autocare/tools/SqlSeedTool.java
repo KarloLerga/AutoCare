@@ -207,13 +207,6 @@ public final class SqlSeedTool {
               SeedFiles.text(r, "body_type", 100, false);
               SeedFiles.text(r, "fuel_type", 80, false);
               SeedFiles.text(r, "transmission", 120, false);
-              String image = SeedFiles.text(r, "image_path", 255, false);
-              if (image != null
-                  && (!image.startsWith("/images/vehicles/")
-                      || image.contains("..")
-                      || image.contains("\\"))) {
-                throw new IllegalArgumentException("Nevaljana lokalna slika.");
-              }
             });
     long w =
         SeedFiles.read(
@@ -424,13 +417,13 @@ public final class SqlSeedTool {
         "CREATE TABLE #ac_v(code nvarchar(80),make nvarchar(100),model nvarchar(150),generation"
             + " nvarchar(200),engine_label nvarchar(240),body_type nvarchar(100),fuel_type"
             + " nvarchar(80),power_hp int,transmission nvarchar(120),year_from int,year_to"
-            + " int,image_path nvarchar(255))");
+            + " int)");
     batches(
         dir.resolve("vehicle_variants.csv"),
         rows -> {
           try (PreparedStatement s =
-              c.prepareStatement("INSERT INTO #ac_v VALUES(?,?,?,?,?,?,?,?,?,?,?,?)")) {
-            for (var r : rows) {
+              c.prepareStatement("INSERT INTO #ac_v VALUES(?,?,?,?,?,?,?,?,?,?,?)")) {
+            for (Map<String, String> r : rows) {
               strings(
                   s,
                   1,
@@ -446,7 +439,6 @@ public final class SqlSeedTool {
               strings(s, 9, r, "transmission");
               num(s, 10, r, "year_from");
               num(s, 11, r, "year_to");
-              strings(s, 12, r, "image_path");
               s.addBatch();
             }
             s.executeBatch();
@@ -461,9 +453,9 @@ public final class SqlSeedTool {
           execute(
               c,
               "INSERT INTO"
-                  + " dbo.vehicle_variant(code,make,model,generation,engine_label,body_type,fuel_type,power_hp,transmission,year_from,year_to,image_path)"
+                  + " dbo.vehicle_variant(code,make,model,generation,engine_label,body_type,fuel_type,power_hp,transmission,year_from,year_to)"
                   + " SELECT"
-                  + " s.code,s.make,s.model,s.generation,s.engine_label,s.body_type,s.fuel_type,s.power_hp,s.transmission,s.year_from,s.year_to,s.image_path"
+                  + " s.code,s.make,s.model,s.generation,s.engine_label,s.body_type,s.fuel_type,s.power_hp,s.transmission,s.year_from,s.year_to"
                   + " FROM #ac_v s WHERE NOT EXISTS(SELECT 1 FROM dbo.vehicle_variant t WHERE"
                   + " t.code=s.code)");
           execute(c, "DELETE FROM #ac_v");
