@@ -125,8 +125,8 @@ public final class VehiclesController {
             Dialog.ModalityType.APPLICATION_MODAL);
     VehicleForm form = new VehicleForm();
     VehicleFormController picker = new VehicleFormController(form, catalogService);
-    JButton save = Ui.button("Spremi vozilo", true);
-    JButton cancel = Ui.button("Odustani", false);
+    JButton save = Ui.button("Spremi vozilo");
+    JButton cancel = Ui.button("Odustani");
     JPanel root = new JPanel(new BorderLayout(12, 12));
     root.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
     root.add(form, BorderLayout.CENTER);

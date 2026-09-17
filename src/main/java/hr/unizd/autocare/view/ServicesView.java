@@ -19,8 +19,8 @@ import javax.swing.table.DefaultTableModel;
 
 /** Servisna povijest aktivnog vozila. */
 public final class ServicesView extends JPanel {
-  public final JButton add = Ui.button("Novi servis", true);
-  public final JButton detail = Ui.button("Detalj", false);
+  public final JButton add = Ui.button("Novi servis");
+  public final JButton detail = Ui.button("Detalj");
   public final JTable table;
   private final DefaultTableModel tableModel;
   private List<ServiceRow> services = new ArrayList<>();

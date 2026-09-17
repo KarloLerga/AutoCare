@@ -15,7 +15,7 @@ import javax.swing.table.DefaultTableModel;
 
 /** Izvedeni raspored i informativna procjena; ovaj ekran nikad ne sprema servis. */
 public final class MaintenanceView extends JPanel {
-  public final JButton estimate = Ui.button("Procijeni odabrana odrzavanja", false);
+  public final JButton estimate = Ui.button("Procijeni odabrana odrzavanja");
   public final JLabel coverage = Ui.hint("Ucitajte odrzavanje.");
   public final JTable table;
   private final DefaultTableModel tableModel;

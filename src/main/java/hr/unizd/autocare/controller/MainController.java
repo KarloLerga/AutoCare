@@ -13,6 +13,7 @@ import hr.unizd.autocare.service.ProblemService;
 import hr.unizd.autocare.service.ServiceRecordService;
 import hr.unizd.autocare.service.VehicleService;
 import hr.unizd.autocare.view.MainFrame;
+import hr.unizd.autocare.view.components.Ui;
 import jakarta.persistence.EntityManagerFactory;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -73,6 +74,7 @@ public final class MainController implements AppListener {
             enter(ownerId);
           }
         });
+
     activateForm();
     events.add(this);
     frame.auth();
@@ -81,6 +83,7 @@ public final class MainController implements AppListener {
   private void activateForm() {
     for (Map.Entry<String, JButton> navigationEntry : frame.navigation.entrySet()) {
       final String pageName = navigationEntry.getKey();
+
       navigationEntry
           .getValue()
           .addActionListener(
@@ -91,6 +94,7 @@ public final class MainController implements AppListener {
                 }
               });
     }
+
     frame.refresh.addActionListener(
         new ActionListener() {
           @Override
@@ -98,15 +102,15 @@ public final class MainController implements AppListener {
             refreshContext(false);
           }
         });
+
     frame.profile.logout.addActionListener(
         new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent event) {
-            if (profile.canLeave()) {
-              logout();
-            }
+            logout();
           }
         });
+
     frame.addWindowListener(
         new WindowAdapter() {
           @Override
@@ -125,24 +129,24 @@ public final class MainController implements AppListener {
     if (session.owner() == 0) {
       return;
     }
+
     try {
       VehicleRow activeVehicle = vehicleService.active(session.owner());
       session.setActive(activeVehicle);
       frame.context(activeVehicle);
       frame.application();
+
       if (showDashboard) {
         frame.showPage("Dashboard");
       }
+
       loadVisible();
     } catch (RuntimeException exception) {
-      hr.unizd.autocare.view.components.Ui.error(frame, exception);
+      Ui.error(frame, exception);
     }
   }
 
   private void navigate(String pageName) {
-    if (frame.page().equals("Profil") && !profile.canLeave()) {
-      return;
-    }
     frame.showPage(pageName);
     loadVisible();
   }
@@ -151,7 +155,9 @@ public final class MainController implements AppListener {
     if (session.active() == null) {
       return;
     }
+
     frame.status.setText("Aktivno vozilo #" + session.active().getId());
+
     if (frame.page().equals("Dashboard")) {
       loadDashboard();
     } else if (frame.page().equals("Vozila")) {
@@ -174,7 +180,7 @@ public final class MainController implements AppListener {
       frame.dashboard.show(
           dashboardService.get(session.owner(), session.active().getId()));
     } catch (RuntimeException exception) {
-      hr.unizd.autocare.view.components.Ui.error(frame.dashboard, exception);
+      Ui.error(frame.dashboard, exception);
     }
   }
 
@@ -184,6 +190,7 @@ public final class MainController implements AppListener {
       refreshContext(event == AppEvent.ACTIVE_VEHICLE_CHANGED);
       return;
     }
+
     loadVisible();
   }
 
@@ -199,13 +206,9 @@ public final class MainController implements AppListener {
   }
 
   private void close() {
-    if (session.owner() != 0 && frame.page().equals("Profil") && !profile.canLeave()) {
-      return;
-    }
     events.remove(this);
     session.logout();
     frame.dispose();
     entityManagerFactory.close();
   }
-
 }

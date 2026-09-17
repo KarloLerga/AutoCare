@@ -34,11 +34,11 @@ public final class ServiceEditorDialog extends JDialog {
   public final JTextArea note = new JTextArea(3, 25);
   public final ServiceItemsModel items = new ServiceItemsModel();
   public final JTable itemTable = new JTable(items);
-  public final JButton addMaintenance = Ui.button("Dodaj odrzavanje", false);
-  public final JButton addRepair = Ui.button("Dodaj popravak", false);
-  public final JButton remove = Ui.button("Ukloni odabranu stavku", false);
-  public final JButton save = Ui.button("Spremi servis", true);
-  public final JButton cancel = Ui.button("Odustani", false);
+  public final JButton addMaintenance = Ui.button("Dodaj odrzavanje");
+  public final JButton addRepair = Ui.button("Dodaj popravak");
+  public final JButton remove = Ui.button("Ukloni odabranu stavku");
+  public final JButton save = Ui.button("Spremi servis");
+  public final JButton cancel = Ui.button("Odustani");
 
   private final List<ProblemRow> problems;
   private final DefaultTableModel problemsTableModel;

@@ -14,10 +14,10 @@ import javax.swing.table.DefaultTableModel;
 
 /** Upravljanje vozilima; jedino mjesto promjene aktivnog vozila. */
 public final class VehiclesView extends JPanel {
-  public final JButton add = Ui.button("Dodaj vozilo", true);
-  public final JButton edit = Ui.button("Uredi", false);
-  public final JButton activate = Ui.button("Aktiviraj", false);
-  public final JButton delete = Ui.button("Obrisi", false);
+  public final JButton add = Ui.button("Dodaj vozilo");
+  public final JButton edit = Ui.button("Uredi");
+  public final JButton activate = Ui.button("Aktiviraj");
+  public final JButton delete = Ui.button("Obrisi");
   public final JTable table;
   private final DefaultTableModel tableModel;
   private List<VehicleRow> vehicles = new ArrayList<>();

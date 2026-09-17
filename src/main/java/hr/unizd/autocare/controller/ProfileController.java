@@ -16,7 +16,6 @@ public final class ProfileController {
   private final AuthService authService;
   private final Session session;
   private final AppEvents events;
-  private Account original;
 
   public ProfileController(
       MainFrame frame,
@@ -39,29 +38,20 @@ public final class ProfileController {
 
   public void load() {
     try {
-      original = authService.account(session.owner());
-      frame.profile.name.setText(original.getName());
-      frame.profile.email.setText(original.getEmail());
+      Account account = authService.account(session.owner());
+      frame.profile.name.setText(account.getName());
+      frame.profile.email.setText(account.getEmail());
     } catch (RuntimeException exception) {
       Ui.error(frame.profile, exception);
     }
   }
 
-  public boolean canLeave() {
-    return true;
-  }
-
   public void clear() {
-    original = null;
     frame.profile.name.setText("");
     frame.profile.email.setText("");
   }
 
   private void save() {
-    if (original == null) {
-      return;
-    }
-
     try {
       authService.profile(
           session.owner(),
