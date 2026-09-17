@@ -25,7 +25,7 @@ BEGIN TRY
   IF (SELECT COUNT_BIG(*) FROM dbo.work_definition
       WHERE code NOT IN (N'OTHER_MAINTENANCE', N'OTHER_REPAIR')) <> 120
     THROW 51002, 'Očekuje se 120 finalnih definicija rada.', 1;
-  IF (SELECT COUNT_BIG(*) FROM dbo.vehicle_work_rule) <> 2944248
+  IF (SELECT COUNT_BIG(*) FROM dbo.vehicle_work_rule) <> 2908857
     THROW 51003, 'Prvo treba uvesti kompletni materializirani katalog.', 1;
 
   IF EXISTS (
