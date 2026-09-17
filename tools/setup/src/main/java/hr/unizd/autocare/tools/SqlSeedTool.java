@@ -158,7 +158,7 @@ public final class SqlSeedTool {
 
   private static void verifySchema(Connection c) throws SQLException {
     for (String table :
-        List.of("VehicleVariant", "WorkDefinition", "VehicleWorkRule", "DiagnosticRule")) {
+        List.of("vehicle_variant", "work_definition", "vehicle_work_rule", "diagnostic_rule")) {
       try (PreparedStatement s =
           c.prepareStatement(
               "SELECT COUNT(*) FROM sys.tables WHERE name=? AND schema_id=SCHEMA_ID(N'dbo')")) {
@@ -169,13 +169,6 @@ public final class SqlSeedTool {
             throw new SQLException("Nedostaje dbo." + table + "; prvo Hibernate schema-update.");
           }
         }
-      }
-    }
-    try (Statement s = c.createStatement();
-        ResultSet r = s.executeQuery("SELECT COL_LENGTH(N'dbo.VehicleWorkRule',N'scheduleKind')")) {
-      r.next();
-      if (r.getObject(1) == null) {
-        throw new SQLException("Nedostaje scheduleKind stupac.");
       }
     }
   }
@@ -264,14 +257,9 @@ public final class SqlSeedTool {
                 throw new IllegalArgumentException("Duplicirani par varijanta/rad.");
               }
               SeedFiles.price(r, "estimated_price");
-              String kind = SeedFiles.text(r, "schedule_kind", 24, true);
-              if (!Set.of("FIXED", "UNKNOWN", "CONDITION_BASED", "VEHICLE_INDICATOR")
-                  .contains(kind)) {
-                throw new IllegalArgumentException("Nevaljana vrsta plana.");
-              }
               Integer km = SeedFiles.integer(r, "interval_km", 1, 1000000),
                   months = SeedFiles.integer(r, "interval_months", 1, 1200);
-              if ((km != null || months != null) || kind.equals("FIXED")) {
+              if (km != null || months != null) {
                 throw new IllegalArgumentException(
                     "Osnovni seed ne smije neprimjetno aktivirati intervale; odvojeni su u"
                         + " referenced_intervals.csv.");
@@ -415,15 +403,15 @@ public final class SqlSeedTool {
           }
           execute(
               c,
-              "IF EXISTS(SELECT 1 FROM #ac_w s JOIN dbo.WorkDefinition t ON t.code=s.code WHERE"
+              "IF EXISTS(SELECT 1 FROM #ac_w s JOIN dbo.work_definition t ON t.code=s.code WHERE"
                   + " t.category<>s.category) THROW 51000,'Postojeci work code ima drugo"
                   + " znacenje/kategoriju.',1");
           execute(
               c,
               "INSERT INTO"
-                  + " dbo.WorkDefinition(code,name,category,defaultEstimatedPrice,estimateNote)"
+                  + " dbo.work_definition(code,name,category,default_estimated_price,estimate_note)"
                   + " SELECT s.code,s.name,s.category,NULL,s.estimate_note FROM #ac_w s WHERE NOT"
-                  + " EXISTS(SELECT 1 FROM dbo.WorkDefinition t WHERE t.code=s.code)");
+                  + " EXISTS(SELECT 1 FROM dbo.work_definition t WHERE t.code=s.code)");
           execute(c, "DELETE FROM #ac_w");
           c.commit();
         });
@@ -465,18 +453,18 @@ public final class SqlSeedTool {
           }
           execute(
               c,
-              "IF EXISTS(SELECT 1 FROM #ac_v s JOIN dbo.VehicleVariant t ON t.code=s.code WHERE"
+              "IF EXISTS(SELECT 1 FROM #ac_v s JOIN dbo.vehicle_variant t ON t.code=s.code WHERE"
                   + " t.make<>s.make OR t.model<>s.model OR t.generation<>s.generation OR"
-                  + " t.engineLabel<>s.engine_label OR t.yearFrom<>s.year_from OR"
-                  + " ISNULL(t.yearTo,-1)<>ISNULL(s.year_to,-1)) THROW 51000,'Kataloski code ima"
+                  + " t.engine_label<>s.engine_label OR t.year_from<>s.year_from OR"
+                  + " ISNULL(t.year_to,-1)<>ISNULL(s.year_to,-1)) THROW 51000,'Kataloski code ima"
                   + " drugo znacenje; potreban review.',1");
           execute(
               c,
               "INSERT INTO"
-                  + " dbo.VehicleVariant(code,make,model,generation,engineLabel,bodyType,fuelType,powerHp,transmission,yearFrom,yearTo,imagePath)"
+                  + " dbo.vehicle_variant(code,make,model,generation,engine_label,body_type,fuel_type,power_hp,transmission,year_from,year_to,image_path)"
                   + " SELECT"
                   + " s.code,s.make,s.model,s.generation,s.engine_label,s.body_type,s.fuel_type,s.power_hp,s.transmission,s.year_from,s.year_to,s.image_path"
-                  + " FROM #ac_v s WHERE NOT EXISTS(SELECT 1 FROM dbo.VehicleVariant t WHERE"
+                  + " FROM #ac_v s WHERE NOT EXISTS(SELECT 1 FROM dbo.vehicle_variant t WHERE"
                   + " t.code=s.code)");
           execute(c, "DELETE FROM #ac_v");
           c.commit();
@@ -488,42 +476,41 @@ public final class SqlSeedTool {
     execute(
         c,
         "CREATE TABLE #ac_r(variant_code nvarchar(80),work_code nvarchar(80),estimated_price"
-            + " decimal(9,2),estimate_note nvarchar(1000),schedule_kind"
-            + " nvarchar(24),interval_source nvarchar(1000))");
+            + " decimal(9,2),estimate_note nvarchar(1000),interval_source nvarchar(1000))");
     batches(
         dir.resolve("vehicle_work_rules.csv.gz"),
         rows -> {
-          try (PreparedStatement s = c.prepareStatement("INSERT INTO #ac_r VALUES(?,?,?,?,?,?)")) {
+          try (PreparedStatement s = c.prepareStatement("INSERT INTO #ac_r VALUES(?,?,?,?,?)")) {
             for (var r : rows) {
               strings(s, 1, r, "variant_code", "work_code");
               money(s, 3, r, "estimated_price");
-              strings(s, 4, r, "estimate_note", "schedule_kind", "interval_source");
+              strings(s, 4, r, "estimate_note", "interval_source");
               s.addBatch();
             }
             s.executeBatch();
           }
           execute(
               c,
-              "IF EXISTS(SELECT 1 FROM #ac_r s LEFT JOIN dbo.VehicleVariant v ON"
-                  + " v.code=s.variant_code LEFT JOIN dbo.WorkDefinition w ON w.code=s.work_code"
+              "IF EXISTS(SELECT 1 FROM #ac_r s LEFT JOIN dbo.vehicle_variant v ON"
+                  + " v.code=s.variant_code LEFT JOIN dbo.work_definition w ON w.code=s.work_code"
                   + " WHERE v.id IS NULL OR w.id IS NULL) THROW 51000,'Nedostaje varijanta ili"
                   + " zahvat.',1");
           execute(
               c,
               "INSERT INTO"
-                  + " dbo.VehicleWorkRule(variant_id,work_id,estimatedPrice,estimateNote,scheduleKind,intervalSource)"
+                  + " dbo.vehicle_work_rule(variant_id,work_id,estimated_price,estimate_note,interval_source)"
                   + " SELECT"
-                  + " v.id,w.id,s.estimated_price,s.estimate_note,s.schedule_kind,s.interval_source"
-                  + " FROM #ac_r s JOIN dbo.VehicleVariant v ON v.code=s.variant_code JOIN"
-                  + " dbo.WorkDefinition w ON w.code=s.work_code WHERE NOT EXISTS(SELECT 1 FROM"
-                  + " dbo.VehicleWorkRule t WHERE t.variant_id=v.id AND t.work_id=w.id)");
+                  + " v.id,w.id,s.estimated_price,s.estimate_note,s.interval_source"
+                  + " FROM #ac_r s JOIN dbo.vehicle_variant v ON v.code=s.variant_code JOIN"
+                  + " dbo.work_definition w ON w.code=s.work_code WHERE NOT EXISTS(SELECT 1 FROM"
+                  + " dbo.vehicle_work_rule t WHERE t.variant_id=v.id AND t.work_id=w.id)");
           // A deliberate NULL with an existing reviewed note is NOT missing data to overwrite.
           execute(
               c,
-              "UPDATE t SET t.estimatedPrice=s.estimated_price,t.estimateNote=s.estimate_note FROM"
-                  + " dbo.VehicleWorkRule t JOIN dbo.VehicleVariant v ON v.id=t.variant_id JOIN"
-                  + " dbo.WorkDefinition w ON w.id=t.work_id JOIN #ac_r s ON s.variant_code=v.code"
-                  + " AND s.work_code=w.code WHERE t.estimatedPrice IS NULL AND t.estimateNote IS"
+              "UPDATE t SET t.estimated_price=s.estimated_price,t.estimate_note=s.estimate_note FROM"
+                  + " dbo.vehicle_work_rule t JOIN dbo.vehicle_variant v ON v.id=t.variant_id JOIN"
+                  + " dbo.work_definition w ON w.id=t.work_id JOIN #ac_r s ON s.variant_code=v.code"
+                  + " AND s.work_code=w.code WHERE t.estimated_price IS NULL AND t.estimate_note IS"
                   + " NULL AND s.estimated_price IS NOT NULL");
           execute(c, "DELETE FROM #ac_r");
           c.commit();
@@ -552,20 +539,20 @@ public final class SqlSeedTool {
           execute(
               c,
               "INSERT INTO"
-                  + " dbo.VehicleWorkRule(variant_id,work_id,scheduleKind,intervalKm,intervalMonths,intervalSource)"
-                  + " SELECT v.id,w.id,N'FIXED',s.interval_km,s.interval_months,s.interval_source"
-                  + " FROM #ac_i s JOIN dbo.VehicleVariant v ON v.code=s.variant_code JOIN"
-                  + " dbo.WorkDefinition w ON w.code=s.work_code WHERE NOT EXISTS(SELECT 1 FROM"
-                  + " dbo.VehicleWorkRule t WHERE t.variant_id=v.id AND t.work_id=w.id)");
+                  + " dbo.vehicle_work_rule(variant_id,work_id,interval_km,interval_months,interval_source)"
+                  + " SELECT v.id,w.id,s.interval_km,s.interval_months,s.interval_source"
+                  + " FROM #ac_i s JOIN dbo.vehicle_variant v ON v.code=s.variant_code JOIN"
+                  + " dbo.work_definition w ON w.code=s.work_code WHERE NOT EXISTS(SELECT 1 FROM"
+                  + " dbo.vehicle_work_rule t WHERE t.variant_id=v.id AND t.work_id=w.id)");
           execute(
               c,
               "UPDATE t SET"
-                  + " t.intervalKm=s.interval_km,t.intervalMonths=s.interval_months,t.intervalSource=s.interval_source,t.scheduleKind=N'FIXED'"
-                  + " FROM dbo.VehicleWorkRule t JOIN dbo.VehicleVariant v ON v.id=t.variant_id"
-                  + " JOIN dbo.WorkDefinition w ON w.id=t.work_id JOIN #ac_i s ON"
-                  + " s.variant_code=v.code AND s.work_code=w.code WHERE t.intervalKm IS NULL AND"
-                  + " t.intervalMonths IS NULL AND t.scheduleKind=N'UNKNOWN' AND (t.intervalSource"
-                  + " IS NULL OR t.intervalSource LIKE N'AC-SCHEDULE-%')");
+                  + " t.interval_km=s.interval_km,t.interval_months=s.interval_months,t.interval_source=s.interval_source"
+                  + " FROM dbo.vehicle_work_rule t JOIN dbo.vehicle_variant v ON v.id=t.variant_id"
+                  + " JOIN dbo.work_definition w ON w.id=t.work_id JOIN #ac_i s ON"
+                  + " s.variant_code=v.code AND s.work_code=w.code WHERE t.interval_km IS NULL AND"
+                  + " t.interval_months IS NULL AND (t.interval_source"
+                  + " IS NULL OR t.interval_source LIKE N'AC-SCHEDULE-%')");
           execute(c, "DELETE FROM #ac_i");
           c.commit();
         });
@@ -592,16 +579,16 @@ public final class SqlSeedTool {
           }
           execute(
               c,
-              "IF EXISTS(SELECT 1 FROM #ac_d s JOIN dbo.DiagnosticRule t ON t.code=s.code JOIN"
-                  + " dbo.WorkDefinition w ON w.id=t.candidate_id WHERE s.work_code<>w.code OR"
+              "IF EXISTS(SELECT 1 FROM #ac_d s JOIN dbo.diagnostic_rule t ON t.code=s.code JOIN"
+                  + " dbo.work_definition w ON w.id=t.candidate_id WHERE s.work_code<>w.code OR"
                   + " s.phrase<>t.phrase OR s.weight<>t.weight) THROW 51000,'Izmijenjeno"
                   + " dijagnosticko pravilo istoga koda; potreban review.',1");
           execute(
               c,
-              "INSERT INTO dbo.DiagnosticRule(code,candidate_id,phrase,weight,active) SELECT"
-                  + " s.code,w.id,s.phrase,s.weight,s.active FROM #ac_d s JOIN dbo.WorkDefinition w"
+              "INSERT INTO dbo.diagnostic_rule(code,candidate_id,phrase,weight,active) SELECT"
+                  + " s.code,w.id,s.phrase,s.weight,s.active FROM #ac_d s JOIN dbo.work_definition w"
                   + " ON w.code=s.work_code WHERE w.category=N'REPAIR' AND NOT EXISTS(SELECT 1 FROM"
-                  + " dbo.DiagnosticRule t WHERE t.code=s.code)");
+                  + " dbo.diagnostic_rule t WHERE t.code=s.code)");
           execute(c, "DELETE FROM #ac_d");
           c.commit();
         });
@@ -622,10 +609,10 @@ public final class SqlSeedTool {
     };
     try (PreparedStatement find =
             c.prepareStatement(
-                "SELECT w.code,r.phrase,r.weight FROM dbo.DiagnosticRule r JOIN dbo.WorkDefinition"
+                "SELECT w.code,r.phrase,r.weight FROM dbo.diagnostic_rule r JOIN dbo.work_definition"
                     + " w ON w.id=r.candidate_id WHERE r.code=?");
         PreparedStatement disable =
-            c.prepareStatement("UPDATE dbo.DiagnosticRule SET active=0 WHERE code=?")) {
+            c.prepareStatement("UPDATE dbo.diagnostic_rule SET active=0 WHERE code=?")) {
       for (String[] row : known) {
         find.setString(1, row[0]);
         try (ResultSet r = find.executeQuery()) {
@@ -649,9 +636,9 @@ public final class SqlSeedTool {
     try (Statement s = c.createStatement();
         ResultSet r =
             s.executeQuery(
-                "SELECT (SELECT COUNT_BIG(*) FROM dbo.VehicleVariant),(SELECT COUNT_BIG(*) FROM"
-                    + " dbo.WorkDefinition),(SELECT COUNT_BIG(*) FROM dbo.VehicleWorkRule),(SELECT"
-                    + " COUNT_BIG(*) FROM dbo.DiagnosticRule)")) {
+                "SELECT (SELECT COUNT_BIG(*) FROM dbo.vehicle_variant),(SELECT COUNT_BIG(*) FROM"
+                    + " dbo.work_definition),(SELECT COUNT_BIG(*) FROM dbo.vehicle_work_rule),(SELECT"
+                    + " COUNT_BIG(*) FROM dbo.diagnostic_rule)")) {
       r.next();
       System.out.printf(
           "Ukupno u bazi: %d varijanti / %d radova / %d pravila / %d dijagnostickih pravila.%n",

@@ -76,10 +76,10 @@ public final class ImagePathTool {
         c.setAutoCommit(false);
         try (PreparedStatement find =
                 c.prepareStatement(
-                    "SELECT imagePath FROM dbo.VehicleVariant WITH (UPDLOCK,HOLDLOCK) WHERE"
+                    "SELECT image_path FROM dbo.vehicle_variant WITH (UPDLOCK,HOLDLOCK) WHERE"
                         + " code=?");
             PreparedStatement update =
-                c.prepareStatement("UPDATE dbo.VehicleVariant SET imagePath=? WHERE code=?")) {
+                c.prepareStatement("UPDATE dbo.vehicle_variant SET image_path=? WHERE code=?")) {
           int count = 0;
           for (Map<String, String> r : rows) {
             find.setString(1, r.get("variant_code"));

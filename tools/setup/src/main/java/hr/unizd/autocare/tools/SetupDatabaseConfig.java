@@ -12,8 +12,8 @@ final class SetupDatabaseConfig {
   private SetupDatabaseConfig() {}
 
   static EntityManagerFactory open(String schemaAction, boolean test) {
-    if (!Set.of("validate", "update").contains(schemaAction)) {
-      throw new IllegalArgumentException("Dopusteni su validate ili eksplicitni update.");
+    if (!Set.of("none", "validate", "update").contains(schemaAction)) {
+      throw new IllegalArgumentException("Dopusteni su none, validate ili eksplicitni update.");
     }
 
     SetupSqlSettings settings = SetupSqlSettings.environment(test);
@@ -37,16 +37,7 @@ final class SetupDatabaseConfig {
     properties.put("hibernate.use_nationalized_character_data", "true");
     properties.put("hibernate.hbm2ddl.auto", schemaAction);
     properties.put("hibernate.hbm2ddl.halt_on_error", "true");
-    properties.put(
-        "hibernate.connection.provider_class",
-        "org.hibernate.hikaricp.internal.HikariCPConnectionProvider");
-    properties.put("hibernate.hikari.maximumPoolSize", "2");
-    properties.put("hibernate.hikari.minimumIdle", "0");
-    properties.put("hibernate.hikari.idleTimeout", "30000");
-    properties.put("hibernate.hikari.keepaliveTime", "0");
-    properties.put("hibernate.hikari.connectionTimeout", "120000");
-    properties.put("hibernate.hikari.validationTimeout", "5000");
-    properties.put("hibernate.hikari.maxLifetime", "300000");
+    properties.put("hibernate.connection.pool_size", "2");
 
     return Persistence.createEntityManagerFactory("autocare", properties);
   }

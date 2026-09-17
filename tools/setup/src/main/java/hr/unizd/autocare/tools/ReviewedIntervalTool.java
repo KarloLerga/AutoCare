@@ -80,8 +80,10 @@ public final class ReviewedIntervalTool {
                 mo = SeedFiles.integer(r, "interval_months", 1, 1200);
             try (PreparedStatement s =
                 c.prepareStatement(
-                    "SELECT v.id,w.id,w.category FROM dbo.VehicleVariant v CROSS JOIN"
-                        + " dbo.WorkDefinition w WHERE v.code=? AND w.code=?")) {
+                    "SELECT vehicleVariant.id,workDefinition.id,workDefinition.category "
+                        + "FROM dbo.vehicle_variant vehicleVariant CROSS JOIN "
+                        + "dbo.work_definition workDefinition "
+                        + "WHERE vehicleVariant.code=? AND workDefinition.code=?")) {
               s.setString(1, r.get("variant_code"));
               s.setString(2, r.get("work_code"));
               try (ResultSet q = s.executeQuery()) {
@@ -94,10 +96,9 @@ public final class ReviewedIntervalTool {
             }
             Long id = null;
             Integer oldKm = null, oldMo = null;
-            String kind = null;
             try (PreparedStatement s =
                 c.prepareStatement(
-                    "SELECT id,intervalKm,intervalMonths,scheduleKind FROM dbo.VehicleWorkRule"
+                    "SELECT id,interval_km,interval_months FROM dbo.vehicle_work_rule"
                         + " WITH(UPDLOCK,HOLDLOCK) WHERE variant_id=? AND work_id=?")) {
               s.setLong(1, vid);
               s.setLong(2, wid);
@@ -106,13 +107,12 @@ public final class ReviewedIntervalTool {
                   id = q.getLong(1);
                   oldKm = (Integer) q.getObject(2);
                   oldMo = (Integer) q.getObject(3);
-                  kind = q.getString(4);
                 }
               }
             }
             if (id != null
                 && !replace
-                && (oldKm != null || oldMo != null || !"UNKNOWN".equals(kind))) {
+                && (oldKm != null || oldMo != null)) {
               if (Objects.equals(km, oldKm) && Objects.equals(mo, oldMo)) {
                 continue;
               }
@@ -123,10 +123,10 @@ public final class ReviewedIntervalTool {
             String sql =
                 id == null
                     ? "INSERT INTO"
-                          + " dbo.VehicleWorkRule(intervalKm,intervalMonths,intervalSource,scheduleKind,variant_id,work_id)"
-                          + " VALUES(?,?,?,N'FIXED',?,?)"
-                    : "UPDATE dbo.VehicleWorkRule SET"
-                        + " intervalKm=?,intervalMonths=?,intervalSource=?,scheduleKind=N'FIXED'"
+                          + " dbo.vehicle_work_rule(interval_km,interval_months,interval_source,variant_id,work_id)"
+                          + " VALUES(?,?,?,?,?)"
+                    : "UPDATE dbo.vehicle_work_rule SET"
+                        + " interval_km=?,interval_months=?,interval_source=?"
                         + " WHERE variant_id=? AND work_id=?";
             try (PreparedStatement s = c.prepareStatement(sql)) {
               s.setObject(1, km, Types.INTEGER);
