@@ -2,57 +2,76 @@ package hr.unizd.autocare.persistence;
 
 import hr.unizd.autocare.domain.Vehicle;
 import hr.unizd.autocare.repository.VehicleRepository;
-import hr.unizd.autocare.service.AppException;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 
 /** JPA upiti koriste vezane parametre i postojeci EntityManager. */
 public final class JpaVehicleRepository implements VehicleRepository {
-  private final EntityManager em;
+  private final EntityManager entityManager;
 
-  public JpaVehicleRepository(EntityManager em) {
-    this.em = em;
+  public JpaVehicleRepository(EntityManager entityManager) {
+    this.entityManager = entityManager;
   }
 
-  public Vehicle requireOwned(long owner, long id) {
-    return em.createQuery(
-            "select v from Vehicle v join fetch v.variant where v.id=:id and v.owner.id=:owner",
-            Vehicle.class)
-        .setParameter("id", id)
-        .setParameter("owner", owner)
-        .getResultStream()
-        .findFirst()
-        .orElseThrow(
-            () -> new AppException(AppException.Kind.NOT_FOUND, "Vozilo nije pronadjeno."));
+  @Override
+  public Vehicle findForOwner(long ownerId, long vehicleId) {
+    List<Vehicle> vehicles =
+        entityManager
+            .createQuery(
+                "select vehicle from Vehicle vehicle join fetch vehicle.variant "
+                    + "where vehicle.id=:vehicleId and vehicle.owner.id=:ownerId",
+                Vehicle.class)
+            .setParameter("vehicleId", vehicleId)
+            .setParameter("ownerId", ownerId)
+            .setMaxResults(1)
+            .getResultList();
+    if (vehicles.isEmpty()) {
+      return null;
+    }
+    return vehicles.get(0);
   }
 
-  public List<Vehicle> list(long owner) {
-    return em.createQuery(
-            "select v from Vehicle v join fetch v.variant where v.owner.id=:owner order by v.id",
+  @Override
+  public List<Vehicle> findAllForOwner(long ownerId) {
+    return entityManager
+        .createQuery(
+            "select vehicle from Vehicle vehicle join fetch vehicle.variant "
+                + "where vehicle.owner.id=:ownerId order by vehicle.id",
             Vehicle.class)
-        .setParameter("owner", owner)
+        .setParameter("ownerId", ownerId)
         .getResultList();
   }
 
-  public void add(Vehicle v) {
-    em.persist(v);
+  @Override
+  public void add(Vehicle vehicle) {
+    entityManager.persist(vehicle);
   }
 
-  public void delete(Vehicle v) {
-    em.remove(v);
+  @Override
+  public void delete(Vehicle vehicle) {
+    entityManager.remove(vehicle);
   }
 
-  public boolean hasHistory(long vehicle) {
-    long services =
-        em.createQuery("select count(s) from ServiceRecord s where s.vehicle.id=:v", Long.class)
-            .setParameter("v", vehicle)
+  @Override
+  public boolean hasHistory(long vehicleId) {
+    long serviceCount =
+        entityManager
+            .createQuery(
+                "select count(serviceRecord) from ServiceRecord serviceRecord "
+                    + "where serviceRecord.vehicle.id=:vehicleId",
+                Long.class)
+            .setParameter("vehicleId", vehicleId)
             .getSingleResult();
-    if (services > 0) {
+    if (serviceCount > 0) {
       return true;
     }
-    return em.createQuery("select count(p) from Problem p where p.vehicle.id=:v", Long.class)
-            .setParameter("v", vehicle)
-            .getSingleResult()
-        > 0;
+    long problemCount =
+        entityManager
+            .createQuery(
+                "select count(problem) from Problem problem where problem.vehicle.id=:vehicleId",
+                Long.class)
+            .setParameter("vehicleId", vehicleId)
+            .getSingleResult();
+    return problemCount > 0;
   }
 }

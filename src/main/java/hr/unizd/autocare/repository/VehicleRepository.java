@@ -5,9 +5,9 @@ import java.util.List;
 
 /** Transakcijski repository; sam ne otvara niti zatvara EntityManager. */
 public interface VehicleRepository {
-  Vehicle requireOwned(long owner, long id);
+  Vehicle findForOwner(long ownerId, long vehicleId);
 
-  List<Vehicle> list(long owner);
+  List<Vehicle> findAllForOwner(long ownerId);
 
   void add(Vehicle vehicle);
 

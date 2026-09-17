@@ -4,77 +4,105 @@ import hr.unizd.autocare.domain.CostSummary;
 import hr.unizd.autocare.domain.ServiceItem;
 import hr.unizd.autocare.domain.ServiceRecord;
 import hr.unizd.autocare.repository.ServiceRecordRepository;
-import hr.unizd.autocare.service.AppException;
 import jakarta.persistence.EntityManager;
+import java.math.BigDecimal;
 import java.util.List;
 
 /** JPA upiti koriste vezane parametre i postojeci EntityManager. */
 public final class JpaServiceRecordRepository implements ServiceRecordRepository {
-  private final EntityManager em;
+  private final EntityManager entityManager;
 
-  public JpaServiceRecordRepository(EntityManager em) {
-    this.em = em;
+  public JpaServiceRecordRepository(EntityManager entityManager) {
+    this.entityManager = entityManager;
   }
 
-  public void add(ServiceRecord s) {
-    em.persist(s);
+  @Override
+  public void add(ServiceRecord serviceRecord) {
+    entityManager.persist(serviceRecord);
   }
 
-  public List<ServiceRecord> list(long owner, long vehicle) {
-    return em.createQuery(
-            "select distinct s from ServiceRecord s left join fetch s.items i left join fetch"
-                + " i.work where s.vehicle.id=:v and s.vehicle.owner.id=:o order by s.serviceDate"
-                + " desc,s.mileage desc,s.id desc",
+  @Override
+  public List<ServiceRecord> list(long ownerId, long vehicleId) {
+    return entityManager
+        .createQuery(
+            "select distinct serviceRecord from ServiceRecord serviceRecord "
+                + "left join fetch serviceRecord.items serviceItem "
+                + "left join fetch serviceItem.work where serviceRecord.vehicle.id=:vehicleId "
+                + "and serviceRecord.vehicle.owner.id=:ownerId "
+                + "order by serviceRecord.serviceDate desc,serviceRecord.mileage desc,serviceRecord.id desc",
             ServiceRecord.class)
-        .setParameter("v", vehicle)
-        .setParameter("o", owner)
+        .setParameter("vehicleId", vehicleId)
+        .setParameter("ownerId", ownerId)
         .getResultList();
   }
 
-  public ServiceRecord requireOwned(long owner, long id) {
-    return em.createQuery(
-            "select distinct s from ServiceRecord s left join fetch s.items i left join fetch"
-                + " i.work where s.id=:id and s.vehicle.owner.id=:o",
-            ServiceRecord.class)
-        .setParameter("id", id)
-        .setParameter("o", owner)
-        .getResultStream()
-        .findFirst()
-        .orElseThrow(() -> new AppException(AppException.Kind.NOT_FOUND, "Servis nije pronadjen."));
+  @Override
+  public ServiceRecord findForOwner(long ownerId, long serviceId) {
+    List<ServiceRecord> serviceRecords =
+        entityManager
+            .createQuery(
+                "select distinct serviceRecord from ServiceRecord serviceRecord "
+                    + "left join fetch serviceRecord.items serviceItem "
+                    + "left join fetch serviceItem.work where serviceRecord.id=:serviceId "
+                    + "and serviceRecord.vehicle.owner.id=:ownerId",
+                ServiceRecord.class)
+            .setParameter("serviceId", serviceId)
+            .setParameter("ownerId", ownerId)
+            .setMaxResults(1)
+            .getResultList();
+    if (serviceRecords.isEmpty()) {
+      return null;
+    }
+    return serviceRecords.get(0);
   }
 
-  public List<ServiceItem> historyItems(long owner, long vehicle) {
-    return em.createQuery(
-            "select i from ServiceItem i join fetch i.work join fetch i.serviceRecord s where"
-                + " s.vehicle.owner.id=:o and s.vehicle.id=:v order by s.serviceDate desc,s.mileage"
-                + " desc,s.id desc",
+  @Override
+  public List<ServiceItem> historyItems(long ownerId, long vehicleId) {
+    return entityManager
+        .createQuery(
+            "select serviceItem from ServiceItem serviceItem join fetch serviceItem.work "
+                + "join fetch serviceItem.serviceRecord serviceRecord "
+                + "where serviceRecord.vehicle.owner.id=:ownerId "
+                + "and serviceRecord.vehicle.id=:vehicleId "
+                + "order by serviceRecord.serviceDate desc,serviceRecord.mileage desc,"
+                + "serviceRecord.id desc",
             ServiceItem.class)
-        .setParameter("o", owner)
-        .setParameter("v", vehicle)
+        .setParameter("ownerId", ownerId)
+        .setParameter("vehicleId", vehicleId)
         .getResultList();
   }
 
-  public CostSummary total(long owner, long vehicle) {
-    Object[] a =
-        em.createQuery(
-                "select sum(i.actualPrice),count(i),count(i.actualPrice) from ServiceItem i where"
-                    + " i.serviceRecord.vehicle.owner.id=:o and i.serviceRecord.vehicle.id=:v",
+  @Override
+  public CostSummary total(long ownerId, long vehicleId) {
+    Object[] values =
+        entityManager
+            .createQuery(
+                "select sum(serviceItem.actualPrice),count(serviceItem),"
+                    + "count(serviceItem.actualPrice) from ServiceItem serviceItem where "
+                    + "serviceItem.serviceRecord.vehicle.owner.id=:ownerId and "
+                    + "serviceItem.serviceRecord.vehicle.id=:vehicleId",
                 Object[].class)
-            .setParameter("o", owner)
-            .setParameter("v", vehicle)
+            .setParameter("ownerId", ownerId)
+            .setParameter("vehicleId", vehicleId)
             .getSingleResult();
-    return new CostSummary(
-        (java.math.BigDecimal) a[0], ((Number) a[1]).longValue() - ((Number) a[2]).longValue());
+    BigDecimal knownAmount = (BigDecimal) values[0];
+    long itemCount = ((Number) values[1]).longValue();
+    long unknownCount = itemCount - ((Number) values[2]).longValue();
+    return new CostSummary(knownAmount, unknownCount);
   }
 
-  public void deleteForVehicle(long vehicle) {
-    em.createQuery(
-            "delete from ServiceItem i where i.serviceRecord.id in (select s.id from ServiceRecord"
-                + " s where s.vehicle.id=:v)")
-        .setParameter("v", vehicle)
+  @Override
+  public void deleteForVehicle(long vehicleId) {
+    entityManager
+        .createQuery(
+            "delete from ServiceItem serviceItem where serviceItem.serviceRecord.id in "
+                + "(select serviceRecord.id from ServiceRecord serviceRecord "
+                + "where serviceRecord.vehicle.id=:vehicleId)")
+        .setParameter("vehicleId", vehicleId)
         .executeUpdate();
-    em.createQuery("delete from ServiceRecord s where s.vehicle.id=:v")
-        .setParameter("v", vehicle)
+    entityManager
+        .createQuery("delete from ServiceRecord serviceRecord where serviceRecord.vehicle.id=:vehicleId")
+        .setParameter("vehicleId", vehicleId)
         .executeUpdate();
   }
 }

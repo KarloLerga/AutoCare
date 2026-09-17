@@ -1,53 +1,28 @@
 package hr.unizd.autocare.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
 
 /** Identitet kataloske varijante vozila, bez podataka o korisnikovim servisima. */
 @Entity
-@Table(indexes = @Index(name = "idx_variant_picker", columnList = "make,model,year_from"))
 public class VehicleVariant {
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false, unique = true, length = 80)
   private String code;
-
-  @Column(nullable = false, length = 100)
   private String make;
-
-  @Column(nullable = false, length = 150)
   private String model;
-
-  @Column(nullable = false, length = 200)
   private String generation;
-
-  @Column(nullable = false, length = 240)
   private String engineLabel;
-
-  @Column(length = 100)
   private String bodyType;
-
-  @Column(length = 80)
   private String fuelType;
-
   private Integer powerHp;
-
-  @Column(length = 120)
   private String transmission;
-
-  @Column(nullable = false)
   private int yearFrom;
-
   private Integer yearTo;
-
   private String imagePath;
 
   protected VehicleVariant() {}
@@ -66,11 +41,9 @@ public class VehicleVariant {
     this.model = Checks.text(model, 150, "Model");
     this.generation = Checks.text(generation, 200, "Generacija");
     this.engineLabel = Checks.text(engineLabel, 240, "Motor");
-
     if (yearFrom < 1886 || yearFrom > 2100 || (yearTo != null && yearTo < yearFrom)) {
       throw new IllegalArgumentException("Nevaljan raspon godina.");
     }
-
     this.yearFrom = yearFrom;
     this.yearTo = yearTo;
     this.fuelType = Checks.optional(fuelType, 80, "Gorivo");
@@ -91,15 +64,12 @@ public class VehicleVariant {
       String imagePath) {
     this(code, make, model, generation, engineLabel, yearFrom, yearTo, fuelType);
     this.bodyType = Checks.optional(bodyType, 100, "Karoserija");
-
     if (powerHp != null && powerHp <= 0) {
       throw new IllegalArgumentException("Snaga mora biti pozitivna.");
     }
-
     if (imagePath != null && (!imagePath.startsWith("/images/") || imagePath.contains(".."))) {
       throw new IllegalArgumentException("Slika mora biti lokalni /images/ resurs.");
     }
-
     this.powerHp = powerHp;
     this.transmission = Checks.optional(transmission, 120, "Mjenjac");
     this.imagePath = imagePath;

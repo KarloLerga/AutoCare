@@ -26,47 +26,70 @@ public final class KeywordDiagnosticStrategy implements DiagnosticStrategy {
 
   @Override
   public List<DiagnosticResult> analyze(String description, List<RuleData> rules) {
-    String text = " " + normalize(description) + " ";
+    String normalizedDescription = " " + normalize(description) + " ";
     Map<Long, List<RuleData>> groups = new LinkedHashMap<>();
-    for (RuleData rule : rules) {
-      groups.computeIfAbsent(rule.getCandidateId(), id -> new ArrayList<>()).add(rule);
+    for (RuleData ruleData : rules) {
+      List<RuleData> candidateRules = groups.get(ruleData.getCandidateId());
+      if (candidateRules == null) {
+        candidateRules = new ArrayList<>();
+        groups.put(ruleData.getCandidateId(), candidateRules);
+      }
+      candidateRules.add(ruleData);
     }
-    List<DiagnosticResult> result = new ArrayList<>();
-    for (List<RuleData> group : groups.values()) {
-      int total = 0, matched = 0;
-      Set<String> seen = new HashSet<>();
-      for (RuleData rule : group) {
-        String phrase = normalize(rule.getPhrase());
-        if (phrase.isEmpty() || !seen.add(phrase)) {
+
+    List<DiagnosticResult> results = new ArrayList<>();
+    for (List<RuleData> candidateRules : groups.values()) {
+      int totalWeight = 0;
+      int matchedWeight = 0;
+      Set<String> seenPhrases = new HashSet<>();
+      for (RuleData ruleData : candidateRules) {
+        String phrase = normalize(ruleData.getPhrase());
+        if (phrase.isEmpty() || !seenPhrases.add(phrase)) {
           continue;
         }
-        total += rule.getWeight();
-        if (text.contains(" " + phrase + " ")) {
-          matched += rule.getWeight();
+        totalWeight += ruleData.getWeight();
+        if (normalizedDescription.contains(" " + phrase + " ")) {
+          matchedWeight += ruleData.getWeight();
         }
       }
-      if (matched > 0 && total > 0) {
-        RuleData first = group.get(0);
+
+      if (matchedWeight > 0 && totalWeight > 0) {
+        RuleData firstRule = candidateRules.get(0);
         BigDecimal score =
-            BigDecimal.valueOf(matched)
+            BigDecimal.valueOf(matchedWeight)
                 .multiply(BigDecimal.valueOf(100))
-                .divide(BigDecimal.valueOf(total), 2, RoundingMode.HALF_UP);
-        result.add(
+                .divide(BigDecimal.valueOf(totalWeight), 2, RoundingMode.HALF_UP);
+        results.add(
             new DiagnosticResult(
-                first.getCandidateId(),
-                first.getCandidateName(),
+                firstRule.getCandidateId(),
+                firstRule.getCandidateName(),
                 score,
-                matched,
-                first.getPrice(),
-                first.getPriceNote()));
+                matchedWeight,
+                firstRule.getPrice(),
+                firstRule.getPriceNote()));
       }
     }
-    result.sort(
-        Comparator.comparing(DiagnosticResult::getScore)
-            .reversed()
-            .thenComparing(Comparator.comparingInt(DiagnosticResult::getMatchedWeight).reversed())
-            .thenComparing(DiagnosticResult::getCandidateName)
-            .thenComparingLong(DiagnosticResult::getCandidateId));
-    return List.copyOf(result);
+
+    results.sort(
+        new Comparator<DiagnosticResult>() {
+          @Override
+          public int compare(DiagnosticResult first, DiagnosticResult second) {
+            int scoreComparison = second.getScore().compareTo(first.getScore());
+            if (scoreComparison != 0) {
+              return scoreComparison;
+            }
+            int weightComparison =
+                Integer.compare(second.getMatchedWeight(), first.getMatchedWeight());
+            if (weightComparison != 0) {
+              return weightComparison;
+            }
+            int nameComparison = first.getCandidateName().compareTo(second.getCandidateName());
+            if (nameComparison != 0) {
+              return nameComparison;
+            }
+            return Long.compare(first.getCandidateId(), second.getCandidateId());
+          }
+        });
+    return results;
   }
 }

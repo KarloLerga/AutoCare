@@ -11,12 +11,32 @@ public final class DatabaseConfig {
   private DatabaseConfig() {}
 
   public static EntityManagerFactory open() {
-    SqlSettings settings = SqlSettings.fromEnvironment();
     Map<String, Object> properties = new HashMap<>();
-    properties.put("jakarta.persistence.jdbc.url", settings.getJdbcUrl());
-    properties.put("jakarta.persistence.jdbc.user", settings.getUsername());
-    properties.put("jakarta.persistence.jdbc.password", settings.getPassword());
+    String host = required("AUTOCARE_DB_HOST");
+    String database = required("AUTOCARE_DB_NAME");
+    String username = required("AUTOCARE_DB_USER");
+    String password = required("AUTOCARE_DB_PASSWORD");
+
+    String jdbcUrl =
+        "jdbc:sqlserver://"
+            + host
+            + ":1433;databaseName="
+            + database
+            + ";encrypt=true;trustServerCertificate=false"
+            + ";loginTimeout=60;socketTimeout=120000;applicationName=AutoCare;";
+
+    properties.put("jakarta.persistence.jdbc.url", jdbcUrl);
+    properties.put("jakarta.persistence.jdbc.user", username);
+    properties.put("jakarta.persistence.jdbc.password", password);
 
     return Persistence.createEntityManagerFactory("autocare", properties);
+  }
+
+  private static String required(String name) {
+    String value = System.getenv(name);
+    if (value == null || value.isBlank()) {
+      throw new IllegalArgumentException("Nedostaje " + name + ".");
+    }
+    return value.strip();
   }
 }

@@ -6,91 +6,101 @@ import hr.unizd.autocare.domain.VehicleWorkRule;
 import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.domain.WorkDefinition;
 import hr.unizd.autocare.repository.CatalogRepository;
-import hr.unizd.autocare.service.AppException;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.Locale;
 
 /** JPA upiti koriste vezane parametre i postojeci EntityManager. */
 public final class JpaCatalogRepository implements CatalogRepository {
-  private final EntityManager em;
+  private final EntityManager entityManager;
 
-  public JpaCatalogRepository(EntityManager em) {
-    this.em = em;
+  public JpaCatalogRepository(EntityManager entityManager) {
+    this.entityManager = entityManager;
   }
 
-  public List<String> makes(int y) {
-    return em.createQuery(
-            "select distinct v.make from VehicleVariant v where v.yearFrom<=:y and (v.yearTo is"
-                + " null or v.yearTo>=:y) order by v.make",
+  @Override
+  public List<String> makes(int year) {
+    return entityManager
+        .createQuery(
+            "select distinct variant.make from VehicleVariant variant "
+                + "where variant.yearFrom<=:year and "
+                + "(variant.yearTo is null or variant.yearTo>=:year) order by variant.make",
             String.class)
-        .setParameter("y", y)
+        .setParameter("year", year)
         .getResultList();
   }
 
-  public List<String> models(int y, String make) {
-    return em.createQuery(
-            "select distinct v.model from VehicleVariant v where v.make=:m and v.yearFrom<=:y and"
-                + " (v.yearTo is null or v.yearTo>=:y) order by v.model",
+  @Override
+  public List<String> models(int year, String make) {
+    return entityManager
+        .createQuery(
+            "select distinct variant.model from VehicleVariant variant "
+                + "where variant.make=:make and variant.yearFrom<=:year and "
+                + "(variant.yearTo is null or variant.yearTo>=:year) order by variant.model",
             String.class)
-        .setParameter("m", make)
-        .setParameter("y", y)
+        .setParameter("make", make)
+        .setParameter("year", year)
         .getResultList();
   }
 
-  public List<VehicleVariant> variants(int y, String make, String model, String search) {
-    String q = (search == null ? "" : search).strip().toLowerCase(Locale.ROOT);
-    return em.createQuery(
-            "select v from VehicleVariant v where v.make=:m and v.model=:model and v.yearFrom<=:y"
-                + " and (v.yearTo is null or v.yearTo>=:y) and (locate(:q,lower(v.generation))>0 or"
-                + " locate(:q,lower(v.engineLabel))>0 or :q='') order by"
-                + " v.generation,v.engineLabel,v.id",
+  @Override
+  public List<VehicleVariant> variants(int year, String make, String model, String search) {
+    String searchText = search == null ? "" : search.strip().toLowerCase(Locale.ROOT);
+    return entityManager
+        .createQuery(
+            "select variant from VehicleVariant variant where variant.make=:make "
+                + "and variant.model=:model and variant.yearFrom<=:year "
+                + "and (variant.yearTo is null or variant.yearTo>=:year) "
+                + "and (locate(:searchText,lower(variant.generation))>0 "
+                + "or locate(:searchText,lower(variant.engineLabel))>0 or :searchText='') "
+                + "order by variant.generation,variant.engineLabel,variant.id",
             VehicleVariant.class)
-        .setParameter("m", make)
+        .setParameter("make", make)
         .setParameter("model", model)
-        .setParameter("y", y)
-        .setParameter("q", q)
+        .setParameter("year", year)
+        .setParameter("searchText", searchText)
         .setMaxResults(201)
         .getResultList();
   }
 
-  public VehicleVariant variant(long id) {
-    VehicleVariant v = em.find(VehicleVariant.class, id);
-    if (v == null) {
-      throw new AppException(AppException.Kind.NOT_FOUND, "Odaberite postojecu varijantu vozila.");
-    }
-    return v;
+  @Override
+  public VehicleVariant findVariant(long id) {
+    return entityManager.find(VehicleVariant.class, id);
   }
 
+  @Override
   public List<WorkDefinition> works(WorkCategory category) {
-    return em.createQuery(
-            "select w from WorkDefinition w where w.category=:c order by w.name",
+    return entityManager
+        .createQuery(
+            "select work from WorkDefinition work where work.category=:category order by work.name",
             WorkDefinition.class)
-        .setParameter("c", category)
+        .setParameter("category", category)
         .getResultList();
   }
 
-  public WorkDefinition work(long id) {
-    WorkDefinition w = em.find(WorkDefinition.class, id);
-    if (w == null) {
-      throw new AppException(AppException.Kind.NOT_FOUND, "Rad nije pronadjen.");
-    }
-    return w;
+  @Override
+  public WorkDefinition findWork(long id) {
+    return entityManager.find(WorkDefinition.class, id);
   }
 
-  public List<VehicleWorkRule> rules(long variant) {
-    return em.createQuery(
-            "select r from VehicleWorkRule r join fetch r.work where r.variant.id=:v order by"
-                + " r.work.name",
+  @Override
+  public List<VehicleWorkRule> rules(long variantId) {
+    return entityManager
+        .createQuery(
+            "select rule from VehicleWorkRule rule join fetch rule.work "
+                + "where rule.variant.id=:variantId order by rule.work.name",
             VehicleWorkRule.class)
-        .setParameter("v", variant)
+        .setParameter("variantId", variantId)
         .getResultList();
   }
 
+  @Override
   public List<DiagnosticRule> diagnosticRules() {
-    return em.createQuery(
-            "select r from DiagnosticRule r join fetch r.candidate where r.active=true order by"
-                + " r.candidate.id,r.id",
+    return entityManager
+        .createQuery(
+            "select diagnosticRule from DiagnosticRule diagnosticRule "
+                + "join fetch diagnosticRule.candidate where diagnosticRule.active=true "
+                + "order by diagnosticRule.candidate.id,diagnosticRule.id",
             DiagnosticRule.class)
         .getResultList();
   }

@@ -7,15 +7,15 @@ import java.util.List;
 
 /** Transakcijski repository; sam ne otvara niti zatvara EntityManager. */
 public interface ServiceRecordRepository {
-  void add(ServiceRecord record);
+  void add(ServiceRecord serviceRecord);
 
-  List<ServiceRecord> list(long owner, long vehicle);
+  List<ServiceRecord> list(long ownerId, long vehicleId);
 
-  ServiceRecord requireOwned(long owner, long id);
+  ServiceRecord findForOwner(long ownerId, long serviceId);
 
-  List<ServiceItem> historyItems(long owner, long vehicle);
+  List<ServiceItem> historyItems(long ownerId, long vehicleId);
 
-  CostSummary total(long owner, long vehicle);
+  CostSummary total(long ownerId, long vehicleId);
 
   void deleteForVehicle(long vehicle);
 }

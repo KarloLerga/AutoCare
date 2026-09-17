@@ -2,34 +2,38 @@ package hr.unizd.autocare.persistence;
 
 import hr.unizd.autocare.domain.AppUser;
 import hr.unizd.autocare.repository.UserRepository;
-import hr.unizd.autocare.service.AppException;
 import jakarta.persistence.EntityManager;
-import java.util.Optional;
+import java.util.List;
 
 /** JPA upiti koriste vezane parametre i postojeci EntityManager. */
 public final class JpaUserRepository implements UserRepository {
-  private final EntityManager em;
+  private final EntityManager entityManager;
 
-  public JpaUserRepository(EntityManager em) {
-    this.em = em;
+  public JpaUserRepository(EntityManager entityManager) {
+    this.entityManager = entityManager;
   }
 
-  public Optional<AppUser> byEmail(String email) {
-    return em.createQuery("select u from AppUser u where u.email=:email", AppUser.class)
-        .setParameter("email", email)
-        .getResultStream()
-        .findFirst();
-  }
-
-  public AppUser require(long id) {
-    AppUser u = em.find(AppUser.class, id);
-    if (u == null) {
-      throw new AppException(AppException.Kind.NOT_FOUND, "Korisnik nije pronadjen.");
+  @Override
+  public AppUser findByEmail(String email) {
+    List<AppUser> users =
+        entityManager
+            .createQuery("select user from AppUser user where user.email=:email", AppUser.class)
+            .setParameter("email", email)
+            .setMaxResults(1)
+            .getResultList();
+    if (users.isEmpty()) {
+      return null;
     }
-    return u;
+    return users.get(0);
   }
 
-  public void add(AppUser u) {
-    em.persist(u);
+  @Override
+  public AppUser findById(long id) {
+    return entityManager.find(AppUser.class, id);
+  }
+
+  @Override
+  public void add(AppUser user) {
+    entityManager.persist(user);
   }
 }

@@ -1,37 +1,28 @@
 package hr.unizd.autocare.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.util.Objects;
 
 /** Podatkovno pravilo za lokalnu analizu simptoma. */
 @Entity
 public class DiagnosticRule {
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false, unique = true, length = 80)
   private String code;
 
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(nullable = false)
+  @ManyToOne
   private WorkDefinition candidate;
 
-  @Column(nullable = false, length = 160)
   private String phrase;
-
-  @Column(nullable = false)
   private int weight;
-
-  @Column(nullable = false)
   private boolean active;
 
   protected DiagnosticRule() {}
@@ -40,15 +31,12 @@ public class DiagnosticRule {
     this.code = Checks.text(code, 80, "Kod");
     this.candidate = Objects.requireNonNull(candidate);
     this.phrase = Checks.text(phrase, 160, "Fraza");
-
     if (candidate.getCategory() != WorkCategory.REPAIR) {
       throw new IllegalArgumentException("Kandidat mora biti popravak.");
     }
-
     if (weight < 1 || weight > 100) {
       throw new IllegalArgumentException("Tezina mora biti 1 - 100.");
     }
-
     this.weight = weight;
     active = true;
   }
