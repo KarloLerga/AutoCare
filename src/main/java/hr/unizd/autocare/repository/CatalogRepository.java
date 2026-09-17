@@ -15,11 +15,11 @@ public interface CatalogRepository {
 
   List<VehicleVariant> variants(int year, String make, String model, String search);
 
-  VehicleVariant variant(long id);
+  VehicleVariant findVariant(long id);
 
   List<WorkDefinition> works(WorkCategory category);
 
-  WorkDefinition work(long id);
+  WorkDefinition findWork(long id);
 
   List<VehicleWorkRule> rules(long variant);
 

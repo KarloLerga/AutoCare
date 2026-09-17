@@ -1,37 +1,24 @@
 package hr.unizd.autocare.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Version;
 import java.util.Objects;
 
 /** Korisnicki racun i njegovo aktivno vozilo. */
 @Entity
 public class AppUser {
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Version
-  @Column(nullable = false)
-  private long version;
-
-  @Column(nullable = false, length = 100)
   private String name;
-
-  @Column(nullable = false, unique = true, length = 254)
   private String email;
-
-  @Column(nullable = false)
   private String passwordHash;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne
   private Vehicle activeVehicle;
 
   protected AppUser() {}
@@ -44,14 +31,11 @@ public class AppUser {
 
   public void activate(Vehicle vehicle) {
     Objects.requireNonNull(vehicle);
-
     boolean sameObject = vehicle.getOwner() == this;
     boolean sameId = id != null && id.equals(vehicle.getOwner().getId());
-
     if (!sameObject && !sameId) {
       throw new IllegalArgumentException("Vozilo nije vase.");
     }
-
     activeVehicle = vehicle;
   }
 
@@ -66,10 +50,6 @@ public class AppUser {
 
   public Long getId() {
     return id;
-  }
-
-  public long getVersion() {
-    return version;
   }
 
   public String getName() {

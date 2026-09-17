@@ -18,60 +18,64 @@ import java.util.StringJoiner;
 final class Mapping {
   private Mapping() {}
 
-  static Account account(AppUser u) {
+  static Account account(AppUser user) {
     return new Account(
-        u.getId(),
-        u.getName(),
-        u.getEmail(),
-        u.getActiveVehicle() == null ? null : u.getActiveVehicle().getId());
+        user.getId(),
+        user.getName(),
+        user.getEmail(),
+        user.getActiveVehicle() == null ? null : user.getActiveVehicle().getId());
   }
 
-  static VariantRow variant(VehicleVariant v) {
+  static VariantRow variant(VehicleVariant variant) {
     return new VariantRow(
-        v.getId(),
-        v.getCode(),
-        v.getMake(),
-        v.getModel(),
-        v.getGeneration(),
-        v.getEngineLabel(),
-        v.getFuelType(),
-        v.getTransmission(),
-        v.getPowerHp(),
-        v.getYearFrom(),
-        v.getYearTo(),
-        v.getImagePath());
+        variant.getId(),
+        variant.getCode(),
+        variant.getMake(),
+        variant.getModel(),
+        variant.getGeneration(),
+        variant.getEngineLabel(),
+        variant.getFuelType(),
+        variant.getTransmission(),
+        variant.getPowerHp(),
+        variant.getYearFrom(),
+        variant.getYearTo(),
+        variant.getImagePath());
   }
 
-  static VehicleRow vehicle(Vehicle v, Long active) {
+  static VehicleRow vehicle(Vehicle vehicle, Long activeVehicleId) {
     return new VehicleRow(
-        v.getId(),
-        variant(v.getVariant()),
-        v.getProductionYear(),
-        v.getCurrentMileage(),
-        Objects.equals(v.getId(), active));
+        vehicle.getId(),
+        variant(vehicle.getVariant()),
+        vehicle.getProductionYear(),
+        vehicle.getCurrentMileage(),
+        Objects.equals(vehicle.getId(), activeVehicleId));
   }
 
-  static ServiceRow service(ServiceRecord s) {
+  static ServiceRow service(ServiceRecord serviceRecord) {
     StringJoiner names = new StringJoiner(", ");
-    for (ServiceItem i : s.getItems()) {
-      names.add(i.getWork().getName());
+    for (ServiceItem serviceItem : serviceRecord.getItems()) {
+      names.add(serviceItem.getWork().getName());
     }
     return new ServiceRow(
-        s.getId(), s.getServiceDate(), s.getMileage(), names.toString(), s.total(), s.getNote());
+        serviceRecord.getId(),
+        serviceRecord.getServiceDate(),
+        serviceRecord.getMileage(),
+        names.toString(),
+        serviceRecord.total(),
+        serviceRecord.getNote());
   }
 
-  static ProblemRow problem(Problem p) {
+  static ProblemRow problem(Problem problem) {
     return new ProblemRow(
-        p.getId(),
-        p.getVersion(),
-        p.getDescription(),
-        p.getStatus(),
-        p.getCreatedAt(),
-        p.getSuggestedRepair() == null ? null : p.getSuggestedRepair().getName(),
-        p.getMatchPercent(),
-        p.getEstimatedCost(),
-        p.getEstimateNote(),
-        p.getResolvedByService() == null ? null : p.getResolvedByService().getId());
+        problem.getId(),
+        problem.getDescription(),
+        problem.getStatus(),
+        problem.getCreatedAt(),
+        problem.getSuggestedRepair() == null ? null : problem.getSuggestedRepair().getName(),
+        problem.getMatchPercent(),
+        problem.getEstimatedCost(),
+        problem.getEstimateNote(),
+        problem.getResolvedByService() == null ? null : problem.getResolvedByService().getId());
   }
 
 }

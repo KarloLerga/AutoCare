@@ -7,6 +7,7 @@ import hr.unizd.autocare.domain.WorkCategory;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /** Nepromjenjivi ulazi i rezultati. Niti jedan tip ne nosi JPA entitet ili Swing komponentu. */
@@ -282,8 +283,8 @@ public final class Data {
       this.date = date;
       this.mileage = mileage;
       this.note = note;
-      this.items = List.copyOf(items);
-      this.resolvedProblemIds = List.copyOf(resolvedProblemIds);
+      this.items = new ArrayList<>(items);
+      this.resolvedProblemIds = new ArrayList<>(resolvedProblemIds);
     }
 
     public LocalDate getDate() {
@@ -384,8 +385,8 @@ public final class Data {
 
     public ServiceDetail(ServiceRow header, List<ItemRow> items, List<String> resolvedProblems) {
       this.header = header;
-      this.items = List.copyOf(items);
-      this.resolvedProblems = List.copyOf(resolvedProblems);
+      this.items = new ArrayList<>(items);
+      this.resolvedProblems = new ArrayList<>(resolvedProblems);
     }
 
     public ServiceRow getHeader() {
@@ -404,7 +405,6 @@ public final class Data {
   /** ProblemRow - jednostavan prijenos podataka preko granice slojeva. */
   public static final class ProblemRow {
     private final long id;
-    private final long version;
     private final String description;
     private final ProblemStatus status;
     private final LocalDateTime createdAt;
@@ -416,7 +416,6 @@ public final class Data {
 
     public ProblemRow(
         long id,
-        long version,
         String description,
         ProblemStatus status,
         LocalDateTime createdAt,
@@ -426,7 +425,6 @@ public final class Data {
         String priceNote,
         Long resolvedServiceId) {
       this.id = id;
-      this.version = version;
       this.description = description;
       this.status = status;
       this.createdAt = createdAt;
@@ -439,10 +437,6 @@ public final class Data {
 
     public long getId() {
       return id;
-    }
-
-    public long getVersion() {
-      return version;
     }
 
     public String getDescription() {
@@ -583,7 +577,7 @@ public final class Data {
 
     public Analysis(String description, List<DiagnosticResult> results) {
       this.description = description;
-      this.results = List.copyOf(results);
+      this.results = new ArrayList<>(results);
     }
 
     public String getDescription() {

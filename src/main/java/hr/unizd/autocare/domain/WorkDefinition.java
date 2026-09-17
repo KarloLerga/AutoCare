@@ -1,6 +1,5 @@
 package hr.unizd.autocare.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -10,130 +9,95 @@ import jakarta.persistence.Id;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-/** OpÄ‡a definicija odrÅ¾avanja ili popravka. */
+/** Opca definicija odrzavanja ili popravka. */
 @Entity
 public class WorkDefinition {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  private String code;
+  private String name;
 
-    @Column(nullable = false, unique = true, length = 80)
-    private String code;
+  @Enumerated(EnumType.STRING)
+  private WorkCategory category;
 
-    @Column(nullable = false, length = 160)
-    private String name;
+  private Integer defaultIntervalKm;
+  private Integer defaultIntervalMonths;
+  private BigDecimal defaultEstimatedPrice;
+  private String estimateNote;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private WorkCategory category;
+  protected WorkDefinition() {}
 
-    private Integer defaultIntervalKm;
+  public WorkDefinition(
+      String code,
+      String name,
+      WorkCategory category,
+      BigDecimal defaultEstimatedPrice,
+      String estimateNote) {
+    this(code, name, category, null, null, defaultEstimatedPrice, estimateNote);
+  }
 
-    private Integer defaultIntervalMonths;
-
-    @Column(precision = 9, scale = 2)
-    private BigDecimal defaultEstimatedPrice;
-
-    @Column(length = 1000)
-    private String estimateNote;
-
-    protected WorkDefinition() {
+  public WorkDefinition(
+      String code,
+      String name,
+      WorkCategory category,
+      Integer defaultIntervalKm,
+      Integer defaultIntervalMonths,
+      BigDecimal defaultEstimatedPrice,
+      String estimateNote) {
+    this.code = Checks.text(code, 80, "Kod");
+    this.name = Checks.text(name, 160, "Rad");
+    this.category = Objects.requireNonNull(category);
+    validateInterval(defaultIntervalKm, defaultIntervalMonths);
+    if (category == WorkCategory.REPAIR
+        && (defaultIntervalKm != null || defaultIntervalMonths != null)) {
+      throw new IllegalArgumentException("Popravak nema preventivni interval.");
     }
+    this.defaultIntervalKm = defaultIntervalKm;
+    this.defaultIntervalMonths = defaultIntervalMonths;
+    this.defaultEstimatedPrice = Checks.money(defaultEstimatedPrice, true);
+    this.estimateNote = Checks.optional(estimateNote, 1000, "Izvor procjene");
+  }
 
-    /**
-     * Stari jednostavni konstruktor ostaje koristan za popravke i postojeÄ‡e testove.
-     */
-    public WorkDefinition(
-            String code,
-            String name,
-            WorkCategory category,
-            BigDecimal defaultEstimatedPrice,
-            String estimateNote) {
-
-        this(
-                code,
-                name,
-                category,
-                null,
-                null,
-                defaultEstimatedPrice,
-                estimateNote);
+  private void validateInterval(Integer intervalKm, Integer intervalMonths) {
+    if (intervalKm != null && intervalKm <= 0) {
+      throw new IllegalArgumentException("Kilometarski interval mora biti pozitivan.");
     }
-
-    public WorkDefinition(
-            String code,
-            String name,
-            WorkCategory category,
-            Integer defaultIntervalKm,
-            Integer defaultIntervalMonths,
-            BigDecimal defaultEstimatedPrice,
-            String estimateNote) {
-
-        this.code = Checks.text(code, 80, "Kod");
-        this.name = Checks.text(name, 160, "Rad");
-        this.category = Objects.requireNonNull(category);
-
-        validateInterval(defaultIntervalKm, defaultIntervalMonths);
-
-        if (category == WorkCategory.REPAIR
-                && (defaultIntervalKm != null || defaultIntervalMonths != null)) {
-            throw new IllegalArgumentException(
-                    "Popravak nema preventivni interval.");
-        }
-
-        this.defaultIntervalKm = defaultIntervalKm;
-        this.defaultIntervalMonths = defaultIntervalMonths;
-        this.defaultEstimatedPrice =
-                Checks.money(defaultEstimatedPrice, true);
-        this.estimateNote =
-                Checks.optional(estimateNote, 1000, "Izvor procjene");
+    if (intervalMonths != null && intervalMonths <= 0) {
+      throw new IllegalArgumentException("Vremenski interval mora biti pozitivan.");
     }
+  }
 
-    private void validateInterval(
-            Integer intervalKm,
-            Integer intervalMonths) {
+  public Long getId() {
+    return id;
+  }
 
-        if (intervalKm != null && intervalKm <= 0) {
-            throw new IllegalArgumentException(
-                    "Kilometarski interval mora biti pozitivan.");
-        }
+  public String getCode() {
+    return code;
+  }
 
-        if (intervalMonths != null && intervalMonths <= 0) {
-            throw new IllegalArgumentException(
-                    "Vremenski interval mora biti pozitivan.");
-        }
-    }
+  public String getName() {
+    return name;
+  }
 
-    public Long getId() {
-        return id;
-    }
+  public WorkCategory getCategory() {
+    return category;
+  }
 
-    public String getCode() {
-        return code;
-    }
+  public Integer getDefaultIntervalKm() {
+    return defaultIntervalKm;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public Integer getDefaultIntervalMonths() {
+    return defaultIntervalMonths;
+  }
 
-    public WorkCategory getCategory() {
-        return category;
-    }
+  public BigDecimal getDefaultEstimatedPrice() {
+    return defaultEstimatedPrice;
+  }
 
-    public Integer getDefaultIntervalKm() {
-        return defaultIntervalKm;
-    }
-
-    public Integer getDefaultIntervalMonths() {
-        return defaultIntervalMonths;
-    }
-
-    public BigDecimal getDefaultEstimatedPrice() {
-        return defaultEstimatedPrice;
-    }
-
-    public String getEstimateNote() {
-        return estimateNote;
-    }
+  public String getEstimateNote() {
+    return estimateNote;
+  }
 }

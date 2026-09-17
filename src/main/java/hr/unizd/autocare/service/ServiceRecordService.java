@@ -11,8 +11,19 @@ import hr.unizd.autocare.model.Data.ItemRow;
 import hr.unizd.autocare.model.Data.ServiceDetail;
 import hr.unizd.autocare.model.Data.ServiceInput;
 import hr.unizd.autocare.model.Data.ServiceRow;
-import hr.unizd.autocare.repository.Repositories;
-import java.time.Clock;
+import hr.unizd.autocare.persistence.JpaCatalogRepository;
+import hr.unizd.autocare.persistence.JpaProblemRepository;
+import hr.unizd.autocare.persistence.JpaServiceRecordRepository;
+import hr.unizd.autocare.persistence.JpaUserRepository;
+import hr.unizd.autocare.persistence.JpaVehicleRepository;
+import hr.unizd.autocare.repository.CatalogRepository;
+import hr.unizd.autocare.repository.ProblemRepository;
+import hr.unizd.autocare.repository.ServiceRecordRepository;
+import hr.unizd.autocare.repository.UserRepository;
+import hr.unizd.autocare.repository.VehicleRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,158 +31,169 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-  /** Poslovna granica za servis, njegove stavke, kilometrazu i rijesene probleme. */
+/** Poslovna granica za servis, njegove stavke, kilometrazu i rijesene probleme. */
 public final class ServiceRecordService {
+  private final EntityManagerFactory entityManagerFactory;
 
-  private final TransactionRunner transactions;
-  private final Clock clock;
-
-  public ServiceRecordService(TransactionRunner transactions, Clock clock) {
-    this.transactions = Objects.requireNonNull(transactions);
-    this.clock = Objects.requireNonNull(clock);
+  public ServiceRecordService(EntityManagerFactory entityManagerFactory) {
+    this.entityManagerFactory = entityManagerFactory;
   }
 
-  /** Sprema cijeli servis u jednoj transakciji; osvjezavanje GUI-ja zasebno je citanje. */
-  public long create(long owner, long vehicle, ServiceInput input) {
-    return transactions.write(
-        repositories -> {
-          repositories.users().require(owner);
-          validate(input, false, clock);
-          Vehicle ownedVehicle = repositories.vehicles().requireOwned(owner, vehicle);
-          ServiceRecord saved = saveInside(repositories, ownedVehicle, input, false, clock);
-          return saved.getId();
-        });
+  public long create(long ownerId, long vehicleId, ServiceInput input) {
+    EntityManager entityManager = entityManagerFactory.createEntityManager();
+    EntityTransaction transaction = entityManager.getTransaction();
+    try {
+      transaction.begin();
+      UserRepository userRepository = new JpaUserRepository(entityManager);
+      VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
+      CatalogRepository catalogRepository = new JpaCatalogRepository(entityManager);
+      ServiceRecordRepository serviceRecordRepository =
+          new JpaServiceRecordRepository(entityManager);
+      ProblemRepository problemRepository = new JpaProblemRepository(entityManager);
+      if (userRepository.findById(ownerId) == null) {
+        throw new AppException("Korisnik nije pronadjen.");
+      }
+      Vehicle vehicle = vehicleRepository.findForOwner(ownerId, vehicleId);
+      if (vehicle == null) {
+        throw new AppException("Vozilo nije pronadjeno.");
+      }
+      validate(input, false);
+      ServiceRecord serviceRecord =
+          saveInside(
+              catalogRepository,
+              serviceRecordRepository,
+              problemRepository,
+              vehicle,
+              input,
+              false);
+      transaction.commit();
+      return serviceRecord.getId();
+    } catch (RuntimeException exception) {
+      if (transaction.isActive()) {
+        transaction.rollback();
+      }
+      throw exception;
+    } finally {
+      entityManager.close();
+    }
   }
 
-  /**
-   * Koristi VEC OTVORENU Service transakciju. Poziva ga i registracija za pocetnu povijest. Ne
-   * otvara novi EntityManager i ne radi zaseban commit.
-   */
   static ServiceRecord saveInside(
-      Repositories repositories,
+      CatalogRepository catalogRepository,
+      ServiceRecordRepository serviceRecordRepository,
+      ProblemRepository problemRepository,
       Vehicle vehicle,
       ServiceInput input,
-      boolean historical,
-      Clock clock) {
-    validate(input, historical, clock);
-
+      boolean historical) {
+    validate(input, historical);
     if (input.getDate().getYear() < vehicle.getProductionYear()) {
-      throw AppException.validation("Servis ne moze biti prije godine proizvodnje.");
+      throw new AppException("Servis ne moze biti prije godine proizvodnje.");
     }
 
     ServiceRecord serviceRecord =
-        new ServiceRecord(
-            vehicle,
-            input.getDate(),
-            input.getMileage(),
-            input.getNote());
-
-    for (ItemInput item : input.getItems()) {
-      WorkDefinition work = repositories.catalog().work(item.getWorkId());
-
+        new ServiceRecord(vehicle, input.getDate(), input.getMileage(), input.getNote());
+    for (ItemInput itemInput : input.getItems()) {
+      WorkDefinition work = catalogRepository.findWork(itemInput.getWorkId());
+      if (work == null) {
+        throw new AppException("Odabrani rad nije pronadjen.");
+      }
       if (work.getCode().startsWith("OTHER_")
           && (input.getNote() == null || input.getNote().isBlank())) {
-        throw AppException.validation("Za drugi rad upisite stvarni opis zahvata u napomenu.");
+        throw new AppException("Za drugi rad upisite stvarni opis zahvata u napomenu.");
       }
-
-      serviceRecord.addItem(work, item.getActualPrice());
+      serviceRecord.addItem(work, itemInput.getActualPrice());
     }
-
-    repositories.services().add(serviceRecord);
-
+    serviceRecordRepository.add(serviceRecord);
     if (input.getMileage() > vehicle.getCurrentMileage()) {
       vehicle.updateMileage(input.getMileage());
     }
-
-    resolveSelectedProblems(repositories, vehicle, serviceRecord, input.getResolvedProblemIds());
+    resolveSelectedProblems(problemRepository, vehicle, serviceRecord, input.getResolvedProblemIds());
     return serviceRecord;
   }
 
   private static void resolveSelectedProblems(
-      Repositories repositories,
+      ProblemRepository problemRepository,
       Vehicle vehicle,
       ServiceRecord serviceRecord,
       List<Long> problemIds) {
-    Set<Long> selected = new HashSet<>();
-
+    Set<Long> selectedProblemIds = new HashSet<>();
     for (Long problemId : problemIds) {
-      if (!selected.add(problemId)) {
-        throw AppException.validation("Problem je odabran vise puta.");
+      if (!selectedProblemIds.add(problemId)) {
+        throw new AppException("Problem je odabran vise puta.");
       }
-
-      Problem problem = repositories.problems().requireOwned(vehicle.getOwner().getId(), problemId);
-
+      Problem problem = problemRepository.findForOwner(vehicle.getOwner().getId(), problemId);
+      if (problem == null) {
+        throw new AppException("Problem nije pronadjen.");
+      }
       if (!Objects.equals(problem.getVehicle().getId(), vehicle.getId())) {
-        throw AppException.validation("Problem pripada drugom vozilu.");
+        throw new AppException("Problem pripada drugom vozilu.");
       }
-
-      // Promjena managed domenskog objekta dio je iste transakcije kao i servis.
       problem.resolve(serviceRecord);
     }
   }
 
-  /**
-   * Provjerava unos; vlasnistvo i aktualno stanje dodatno provjerava use-case.
-   *
-   * @param input snapshot forme
-   * @param historical dopusta nepoznatu cijenu samo u pocetnoj povijesti
-   * @param clock izvor danasnjeg datuma
-   */
-  public static void validate(ServiceInput input, boolean historical, Clock clock) {
-    if (input == null || input.getDate() == null || input.getDate().isAfter(LocalDate.now(clock))) {
-      throw AppException.validation("Unesite datum koji nije u buducnosti.");
+  public static void validate(ServiceInput input, boolean historical) {
+    if (input == null || input.getDate() == null || input.getDate().isAfter(LocalDate.now())) {
+      throw new AppException("Unesite datum koji nije u buducnosti.");
     }
-
     Checks.mileage(input.getMileage());
     Checks.optional(input.getNote(), 2000, "Napomena");
     if (input.getItems().isEmpty() || input.getItems().size() > 100) {
-      throw AppException.validation("Servis treba imati 1 - 100 stavki.");
+      throw new AppException("Servis treba imati 1 - 100 stavki.");
     }
 
-    Set<Long> selectedWorks = new HashSet<>();
-
-    for (ItemInput item : input.getItems()) {
-      if (!selectedWorks.add(item.getWorkId())) {
-        throw AppException.validation("Isti rad nije moguce dodati dvaput.");
+    Set<Long> selectedWorkIds = new HashSet<>();
+    for (ItemInput itemInput : input.getItems()) {
+      if (!selectedWorkIds.add(itemInput.getWorkId())) {
+        throw new AppException("Isti rad nije moguce dodati dvaput.");
       }
-      Checks.money(item.getActualPrice(), historical);
+      Checks.money(itemInput.getActualPrice(), historical);
     }
-
     if (historical && !input.getResolvedProblemIds().isEmpty()) {
-      throw AppException.validation("Pocetna povijest ne rjesava postojece probleme.");
+      throw new AppException("Pocetna povijest ne rjesava postojece probleme.");
     }
   }
 
-  public List<ServiceRow> list(long owner, long vehicle) {
-    return transactions.read(
-        repositories -> {
-          repositories.vehicles().requireOwned(owner, vehicle);
-          List<ServiceRow> rows = new ArrayList<>();
-
-          for (ServiceRecord serviceRecord :
-              repositories.services().list(owner, vehicle)) {
-            rows.add(Mapping.service(serviceRecord));
-          }
-          return List.copyOf(rows);
-        });
+  public List<ServiceRow> list(long ownerId, long vehicleId) {
+    EntityManager entityManager = entityManagerFactory.createEntityManager();
+    try {
+      VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
+      ServiceRecordRepository serviceRecordRepository =
+          new JpaServiceRecordRepository(entityManager);
+      if (vehicleRepository.findForOwner(ownerId, vehicleId) == null) {
+        throw new AppException("Vozilo nije pronadjeno.");
+      }
+      List<ServiceRow> rows = new ArrayList<>();
+      for (ServiceRecord serviceRecord : serviceRecordRepository.list(ownerId, vehicleId)) {
+        rows.add(Mapping.service(serviceRecord));
+      }
+      return rows;
+    } finally {
+      entityManager.close();
+    }
   }
 
-  public ServiceDetail detail(long owner, long service) {
-    return transactions.read(
-        repositories -> {
-          ServiceRecord serviceRecord = repositories.services().requireOwned(owner, service);
-          List<ItemRow> items = new ArrayList<>();
-
-          for (ServiceItem item : serviceRecord.getItems()) {
-            WorkDefinition work = item.getWork();
-            items.add(new ItemRow(work.getName(), work.getCategory(), item.getActualPrice()));
-          }
-
-          return new ServiceDetail(
-              Mapping.service(serviceRecord),
-              items,
-              repositories.problems().resolvedDescriptions(owner, service));
-        });
+  public ServiceDetail detail(long ownerId, long serviceId) {
+    EntityManager entityManager = entityManagerFactory.createEntityManager();
+    try {
+      ServiceRecordRepository serviceRecordRepository =
+          new JpaServiceRecordRepository(entityManager);
+      ProblemRepository problemRepository = new JpaProblemRepository(entityManager);
+      ServiceRecord serviceRecord = serviceRecordRepository.findForOwner(ownerId, serviceId);
+      if (serviceRecord == null) {
+        throw new AppException("Servis nije pronadjen.");
+      }
+      List<ItemRow> items = new ArrayList<>();
+      for (ServiceItem serviceItem : serviceRecord.getItems()) {
+        WorkDefinition work = serviceItem.getWork();
+        items.add(new ItemRow(work.getName(), work.getCategory(), serviceItem.getActualPrice()));
+      }
+      return new ServiceDetail(
+          Mapping.service(serviceRecord),
+          items,
+          problemRepository.resolvedDescriptions(ownerId, serviceId));
+    } finally {
+      entityManager.close();
+    }
   }
-
 }

@@ -20,18 +20,11 @@
    <property name="hibernate.use_nationalized_character_data" value="true"/>
    <property name="hibernate.physical_naming_strategy"
              value="org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy"/>
-   <property name="hibernate.hbm2ddl.auto" value="validate"/>
+   <property name="hibernate.hbm2ddl.auto" value="none"/>
    <property name="hibernate.hbm2ddl.halt_on_error" value="true"/>
    <property name="hibernate.show_sql" value="false"/>
    <property name="hibernate.jdbc.time_zone" value="UTC"/>
-   <property name="hibernate.connection.provider_class" value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider"/>
-   <property name="hibernate.hikari.maximumPoolSize" value="2"/>
-   <property name="hibernate.hikari.minimumIdle" value="0"/>
-   <property name="hibernate.hikari.idleTimeout" value="30000"/>
-   <property name="hibernate.hikari.keepaliveTime" value="0"/>
-   <property name="hibernate.hikari.connectionTimeout" value="120000"/>
-   <property name="hibernate.hikari.validationTimeout" value="5000"/>
-   <property name="hibernate.hikari.maxLifetime" value="300000"/>
+   <property name="hibernate.connection.pool_size" value="2"/>
   </properties>
  </persistence-unit>
 </persistence>

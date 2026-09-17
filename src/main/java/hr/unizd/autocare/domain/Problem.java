@@ -1,73 +1,46 @@
 package hr.unizd.autocare.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.UUID;
 
 /** Opis simptoma i snimka analize; rjesenje se povezuje sa stvarnim servisom. */
 @Entity
-@Table(indexes = @Index(name = "idx_problem_vehicle_status", columnList = "vehicle_id,status"))
 public class Problem {
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Version
-  @Column(nullable = false)
-  private long version;
-
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(nullable = false)
+  @ManyToOne
   private Vehicle vehicle;
 
-  @Column(nullable = false, unique = true, length = 36)
-  private String requestKey;
-
-  @Column(nullable = false, length = 2000)
   private String description;
 
   @Enumerated(EnumType.STRING)
-  @Column(nullable = false, length = 20)
   private ProblemStatus status;
 
-  @Column(nullable = false)
   private LocalDateTime createdAt;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne
   private WorkDefinition suggestedRepair;
-
-  @Column(precision = 5, scale = 2)
   private BigDecimal matchPercent;
-
-  @Column(precision = 9, scale = 2)
   private BigDecimal estimatedCost;
-
-  @Column(length = 1000)
   private String estimateNote;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne
   private ServiceRecord resolvedByService;
 
   protected Problem() {}
 
   public Problem(
       Vehicle vehicle,
-      String requestKey,
       String description,
       LocalDateTime createdAt,
       WorkDefinition suggestedRepair,
@@ -75,7 +48,6 @@ public class Problem {
       BigDecimal estimatedCost,
       String estimateNote) {
     this.vehicle = Objects.requireNonNull(vehicle);
-    this.requestKey = UUID.fromString(requestKey).toString();
     this.description = Checks.text(description, 2000, "Opis simptoma");
     this.createdAt = Objects.requireNonNull(createdAt);
     status = ProblemStatus.OPEN;
@@ -88,7 +60,6 @@ public class Problem {
     boolean invalidPercent =
         matchPercent != null
             && (matchPercent.signum() < 0 || matchPercent.compareTo(new BigDecimal("100")) > 0);
-
     if (inconsistentResult || invalidPercent) {
       throw new IllegalArgumentException("Nevaljana snimka analize.");
     }
@@ -101,7 +72,6 @@ public class Problem {
 
   public void resolve(ServiceRecord serviceRecord) {
     Objects.requireNonNull(serviceRecord);
-
     if (status != ProblemStatus.OPEN) {
       throw new IllegalArgumentException("Problem je vec rijesen.");
     }
@@ -109,7 +79,6 @@ public class Problem {
     Vehicle serviceVehicle = serviceRecord.getVehicle();
     boolean sameObject = vehicle == serviceVehicle;
     boolean sameId = vehicle.getId() != null && vehicle.getId().equals(serviceVehicle.getId());
-
     if (!sameObject && !sameId) {
       throw new IllegalArgumentException("Servis pripada drugom vozilu.");
     }
@@ -122,16 +91,8 @@ public class Problem {
     return id;
   }
 
-  public long getVersion() {
-    return version;
-  }
-
   public Vehicle getVehicle() {
     return vehicle;
-  }
-
-  public String getRequestKey() {
-    return requestKey;
   }
 
   public String getDescription() {

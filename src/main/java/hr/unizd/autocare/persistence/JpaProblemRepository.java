@@ -3,80 +3,86 @@ package hr.unizd.autocare.persistence;
 import hr.unizd.autocare.domain.Problem;
 import hr.unizd.autocare.domain.ProblemStatus;
 import hr.unizd.autocare.repository.ProblemRepository;
-import hr.unizd.autocare.service.AppException;
 import jakarta.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 
 /** JPA upiti koriste vezane parametre i postojeci EntityManager. */
 public final class JpaProblemRepository implements ProblemRepository {
-  private final EntityManager em;
+  private final EntityManager entityManager;
 
-  public JpaProblemRepository(EntityManager em) {
-    this.em = em;
+  public JpaProblemRepository(EntityManager entityManager) {
+    this.entityManager = entityManager;
   }
 
-  public void add(Problem p) {
-    em.persist(p);
+  @Override
+  public void add(Problem problem) {
+    entityManager.persist(problem);
   }
 
-  public Problem requireOwned(long owner, long id) {
-    return em.createQuery(
-            "select p from Problem p where p.id=:id and p.vehicle.owner.id=:o", Problem.class)
-        .setParameter("id", id)
-        .setParameter("o", owner)
-        .getResultStream()
-        .findFirst()
-        .orElseThrow(
-            () -> new AppException(AppException.Kind.NOT_FOUND, "Problem nije pronadjen."));
+  @Override
+  public Problem findForOwner(long ownerId, long problemId) {
+    List<Problem> problems =
+        entityManager
+            .createQuery(
+                "select problem from Problem problem where problem.id=:problemId "
+                    + "and problem.vehicle.owner.id=:ownerId",
+                Problem.class)
+            .setParameter("problemId", problemId)
+            .setParameter("ownerId", ownerId)
+            .setMaxResults(1)
+            .getResultList();
+    if (problems.isEmpty()) {
+      return null;
+    }
+    return problems.get(0);
   }
 
-  public List<Problem> list(long owner, long vehicle, ProblemStatus status) {
-    return em.createQuery(
-            "select p from Problem p left join fetch p.suggestedRepair left join fetch"
-                + " p.resolvedByService where p.vehicle.id=:v and p.vehicle.owner.id=:o and"
-                + " p.status=:s order by p.createdAt desc,p.id desc",
+  @Override
+  public List<Problem> list(long ownerId, long vehicleId, ProblemStatus status) {
+    return entityManager
+        .createQuery(
+            "select problem from Problem problem left join fetch problem.suggestedRepair "
+                + "left join fetch problem.resolvedByService where problem.vehicle.id=:vehicleId "
+                + "and problem.vehicle.owner.id=:ownerId and problem.status=:status "
+                + "order by problem.createdAt desc,problem.id desc",
             Problem.class)
-        .setParameter("v", vehicle)
-        .setParameter("o", owner)
-        .setParameter("s", status)
+        .setParameter("vehicleId", vehicleId)
+        .setParameter("ownerId", ownerId)
+        .setParameter("status", status)
         .getResultList();
   }
 
-  public Optional<Problem> byRequest(long owner, String key) {
-    return em.createQuery(
-            "select p from Problem p where p.requestKey=:k and p.vehicle.owner.id=:o",
-            Problem.class)
-        .setParameter("k", key)
-        .setParameter("o", owner)
-        .getResultStream()
-        .findFirst();
-  }
-
-  public List<String> resolvedDescriptions(long owner, long service) {
-    return em.createQuery(
-            "select p.description from Problem p where p.resolvedByService.id=:s and"
-                + " p.vehicle.owner.id=:o order by p.id",
+  @Override
+  public List<String> resolvedDescriptions(long ownerId, long serviceId) {
+    return entityManager
+        .createQuery(
+            "select problem.description from Problem problem where "
+                + "problem.resolvedByService.id=:serviceId and problem.vehicle.owner.id=:ownerId "
+                + "order by problem.id",
             String.class)
-        .setParameter("s", service)
-        .setParameter("o", owner)
+        .setParameter("serviceId", serviceId)
+        .setParameter("ownerId", ownerId)
         .getResultList();
   }
 
-  public long openCount(long owner, long vehicle) {
-    return em.createQuery(
-            "select count(p) from Problem p where p.vehicle.owner.id=:o and p.vehicle.id=:v and"
-                + " p.status=:s",
+  @Override
+  public long openCount(long ownerId, long vehicleId) {
+    return entityManager
+        .createQuery(
+            "select count(problem) from Problem problem where problem.vehicle.owner.id=:ownerId "
+                + "and problem.vehicle.id=:vehicleId and problem.status=:status",
             Long.class)
-        .setParameter("o", owner)
-        .setParameter("v", vehicle)
-        .setParameter("s", ProblemStatus.OPEN)
+        .setParameter("ownerId", ownerId)
+        .setParameter("vehicleId", vehicleId)
+        .setParameter("status", ProblemStatus.OPEN)
         .getSingleResult();
   }
 
-  public void deleteForVehicle(long vehicle) {
-    em.createQuery("delete from Problem p where p.vehicle.id=:v")
-        .setParameter("v", vehicle)
+  @Override
+  public void deleteForVehicle(long vehicleId) {
+    entityManager
+        .createQuery("delete from Problem problem where problem.vehicle.id=:vehicleId")
+        .setParameter("vehicleId", vehicleId)
         .executeUpdate();
   }
 }
