@@ -1,6 +1,5 @@
 package hr.unizd.autocare.controller;
 
-import hr.unizd.autocare.app.Session;
 import hr.unizd.autocare.event.AppEvent;
 import hr.unizd.autocare.event.AppEvents;
 import hr.unizd.autocare.model.Data.VehicleInput;
@@ -10,6 +9,7 @@ import hr.unizd.autocare.service.VehicleService;
 import hr.unizd.autocare.view.MainFrame;
 import hr.unizd.autocare.view.components.Ui;
 import hr.unizd.autocare.view.components.VehicleForm;
+import hr.unizd.autocare.app.Session;
 import java.awt.BorderLayout;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
@@ -17,9 +17,11 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
-/** Dodavanje, uredjivanje, aktiviranje i brisanje vozila. */
+/** Dodavanje, aktiviranje, brisanje i promjena kilometraže vozila. */
 public final class VehiclesController {
   private final MainFrame frame;
   private final VehicleService vehicleService;
@@ -46,17 +48,14 @@ public final class VehiclesController {
         new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent event) {
-            edit(null);
+            showAdd();
           }
         });
     frame.vehicles.edit.addActionListener(
         new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent event) {
-            VehicleRow vehicle = selected();
-            if (vehicle != null) {
-              edit(vehicle);
-            }
+            showMileageEditor();
           }
         });
     frame.vehicles.activate.addActionListener(
@@ -91,40 +90,10 @@ public final class VehiclesController {
     return vehicle;
   }
 
-  private void activate() {
-    VehicleRow vehicle = selected();
-    if (vehicle == null) {
-      return;
-    }
-    try {
-      vehicleService.activate(session.owner(), vehicle.getId());
-      events.publish(AppEvent.ACTIVE_VEHICLE_CHANGED);
-    } catch (RuntimeException exception) {
-      Ui.error(frame, exception);
-    }
-  }
-
-  private void edit(VehicleRow vehicle) {
-    if (vehicle == null) {
-      showEditor(null, true);
-      return;
-    }
-    try {
-      boolean editable = vehicleService.identityEditable(session.owner(), vehicle.getId());
-      showEditor(vehicle, editable);
-    } catch (RuntimeException exception) {
-      Ui.error(frame, exception);
-    }
-  }
-
-  private void showEditor(final VehicleRow vehicle, boolean identityEditable) {
-    JDialog dialog =
-        new JDialog(
-            frame,
-            vehicle == null ? "Dodaj vozilo" : "Uredi vozilo",
-            Dialog.ModalityType.APPLICATION_MODAL);
+  private void showAdd() {
+    JDialog dialog = new JDialog(frame, "Dodaj vozilo", Dialog.ModalityType.APPLICATION_MODAL);
     VehicleForm form = new VehicleForm();
-    VehicleFormController picker = new VehicleFormController(form, catalogService);
+    new VehicleFormController(form, catalogService).loadMakes();
     JButton save = Ui.button("Spremi vozilo");
     JButton cancel = Ui.button("Odustani");
     JPanel root = new JPanel(new BorderLayout(12, 12));
@@ -132,19 +101,14 @@ public final class VehiclesController {
     root.add(form, BorderLayout.CENTER);
     root.add(Ui.actions(cancel, save), BorderLayout.SOUTH);
     dialog.setContentPane(root);
-    dialog.setSize(900, 660);
+    dialog.setSize(820, 440);
     dialog.setLocationRelativeTo(frame);
     save.addActionListener(
         new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent event) {
             try {
-              VehicleInput input = form.input();
-              if (vehicle == null) {
-                vehicleService.add(session.owner(), input);
-              } else {
-                vehicleService.update(session.owner(), vehicle.getId(), input);
-              }
+              vehicleService.add(session.owner(), form.input());
               dialog.dispose();
               events.publish(AppEvent.VEHICLE_CHANGED);
             } catch (RuntimeException exception) {
@@ -160,12 +124,66 @@ public final class VehiclesController {
           }
         });
     Ui.escape(dialog);
-    if (vehicle == null) {
-      picker.loadMakes();
-    } else {
-      form.existing(vehicle, identityEditable);
-    }
     dialog.setVisible(true);
+  }
+
+  private void showMileageEditor() {
+    VehicleRow vehicle = selected();
+    if (vehicle == null) {
+      return;
+    }
+    JDialog dialog =
+        new JDialog(frame, "Promijeni kilometražu", Dialog.ModalityType.APPLICATION_MODAL);
+    JTextField mileage = new JTextField(Integer.toString(vehicle.getMileage()), 14);
+    JLabel hint = Ui.hint("Kilometraža se može samo povećati.");
+    JButton save = Ui.button("Spremi");
+    JButton cancel = Ui.button("Odustani");
+    JPanel root = new JPanel(new BorderLayout(12, 12));
+    root.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+    JPanel form = Ui.form();
+    Ui.field(form, 0, "Nova kilometraža", mileage);
+    form.add(hint);
+    root.add(form, BorderLayout.CENTER);
+    root.add(Ui.actions(cancel, save), BorderLayout.SOUTH);
+    dialog.setContentPane(root);
+    dialog.pack();
+    dialog.setLocationRelativeTo(frame);
+    save.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            try {
+              vehicleService.updateMileage(
+                  session.owner(), vehicle.getId(), Ui.mileage(mileage));
+              dialog.dispose();
+              events.publish(AppEvent.VEHICLE_CHANGED);
+            } catch (RuntimeException exception) {
+              Ui.error(dialog, exception);
+            }
+          }
+        });
+    cancel.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            dialog.dispose();
+          }
+        });
+    Ui.escape(dialog);
+    dialog.setVisible(true);
+  }
+
+  private void activate() {
+    VehicleRow vehicle = selected();
+    if (vehicle == null) {
+      return;
+    }
+    try {
+      vehicleService.activate(session.owner(), vehicle.getId());
+      events.publish(AppEvent.ACTIVE_VEHICLE_CHANGED);
+    } catch (RuntimeException exception) {
+      Ui.error(frame, exception);
+    }
   }
 
   private void delete() {
@@ -174,14 +192,10 @@ public final class VehiclesController {
       return;
     }
     if (frame.vehicles.rows().size() <= 1) {
-      Ui.info(frame, "Posljednje vozilo nije moguce obrisati.");
+      Ui.info(frame, "Posljednje vozilo nije moguće obrisati.");
       return;
     }
-    if (!Ui.confirm(
-        frame,
-        "Trajno obrisati vozilo #"
-            + vehicle.getId()
-            + ", njegove servise i probleme?")) {
+    if (!Ui.confirm(frame, "Trajno obrisati vozilo, njegove servise i probleme?")) {
       return;
     }
     try {

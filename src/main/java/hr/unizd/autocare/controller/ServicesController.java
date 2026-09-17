@@ -1,7 +1,6 @@
 package hr.unizd.autocare.controller;
 
 import hr.unizd.autocare.app.Session;
-import hr.unizd.autocare.domain.ProblemStatus;
 import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.event.AppEvent;
 import hr.unizd.autocare.event.AppEvents;
@@ -88,8 +87,7 @@ public final class ServicesController {
     int currentMileage = session.active().getMileage();
     try {
       List<WorkRow> works = loadEditorWorks(ownerId, vehicleId);
-      List<ProblemRow> openProblems =
-          problemService.list(ownerId, vehicleId, ProblemStatus.OPEN);
+      List<ProblemRow> openProblems = problemService.list(ownerId, vehicleId);
       openEditor(ownerId, vehicleId, currentMileage, works, openProblems);
     } catch (RuntimeException exception) {
       Ui.error(frame, exception);

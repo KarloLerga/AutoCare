@@ -2,143 +2,129 @@ package hr.unizd.autocare.view.components;
 
 import hr.unizd.autocare.model.Data.VariantRow;
 import hr.unizd.autocare.model.Data.VehicleInput;
-import hr.unizd.autocare.model.Data.VehicleRow;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.table.DefaultTableModel;
 
-/** Picker identiteta; nema SQL-a. Godina, marka, model i filtrirane varijante. */
+/** Kaskadni izbor marka → model → godina → točna varijanta. */
 public final class VehicleForm extends JPanel {
-  public final JSpinner year =
-      new JSpinner(
-          new SpinnerNumberModel(LocalDate.now().getYear(), 1886, LocalDate.now().getYear(), 1));
   public final JComboBox<String> make = new JComboBox<>();
   public final JComboBox<String> model = new JComboBox<>();
-  public final JTextField search = new JTextField(18);
-  public final JButton find = Ui.button("Pretrazi varijante");
-  public final JSpinner mileage = Ui.mileage(0);
-  public final JLabel state = Ui.hint("Odaberite godinu, marku, model i tocnu varijantu.");
-  public final JTable variants;
+  public final JComboBox<Integer> year = new JComboBox<>();
+  public final JComboBox<VariantRow> variant = new JComboBox<>();
+  public final JTextField mileage = new JTextField("0", 12);
+  public final JLabel details = Ui.hint("Odaberite točnu varijantu.");
+  public final JLabel state = Ui.hint("Odaberite marku, model, godinu i varijantu.");
   public boolean updating;
-  private final DefaultTableModel variantsModel;
+
   private List<VariantRow> variantRows = new ArrayList<>();
 
   public VehicleForm() {
     super(new BorderLayout(12, 12));
     setOpaque(false);
 
-    variantsModel =
-        new DefaultTableModel(
-            new Object[][] {},
-            new String[] {"Generacija", "Motor", "Gorivo", "Mjenjac", "KS", "Od", "Do"}) {
-          @Override
-          public boolean isCellEditable(int row, int column) {
-            return false;
-          }
-        };
-
-    variants = new JTable(variantsModel);
-    variants.setRowHeight(30);
-    variants.setAutoCreateRowSorter(true);
-    variants.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    variants.setFillsViewportHeight(true);
-    variants.getTableHeader().setReorderingAllowed(false);
-
-    year.setEditor(new JSpinner.NumberEditor(year, "0"));
-
     JPanel form = Ui.form();
-    Ui.field(form, 0, "Godina proizvodnje", year);
-    Ui.field(form, 1, "Marka", make);
-    Ui.field(form, 2, "Model", model);
-    Ui.field(form, 3, "Motor ili generacija", Ui.row(search, find));
-    Ui.field(form, 4, "Trenutna kilometraza", mileage);
-
+    Ui.field(form, 0, "Marka", make);
+    Ui.field(form, 1, "Model", model);
+    Ui.field(form, 2, "Godina proizvodnje", year);
+    Ui.field(form, 3, "Varijanta", variant);
+    Ui.field(form, 4, "Trenutna kilometraža", mileage);
+    JPanel information = Ui.column();
+    information.add(details);
+    information.add(state);
     add(form, BorderLayout.NORTH);
-    setPreferredSize(new Dimension(700, 420));
-    add(new JScrollPane(variants), BorderLayout.CENTER);
-    add(state, BorderLayout.SOUTH);
-
+    add(information, BorderLayout.SOUTH);
+    setPreferredSize(new Dimension(700, 250));
     make.setMaximumRowCount(18);
     model.setMaximumRowCount(18);
+    year.setMaximumRowCount(18);
+    variant.setMaximumRowCount(18);
   }
 
   public VehicleInput input() {
-    VariantRow selectedVariant = selectedVariant();
-
-    if (selectedVariant == null) {
-      throw new IllegalArgumentException("Odaberite tocnu varijantu u tablici.");
+    VariantRow selected = selectedVariant();
+    if (selected == null) {
+      throw new IllegalArgumentException("Odaberite točnu varijantu vozila.");
     }
+    Integer selectedYear = (Integer) year.getSelectedItem();
+    if (selectedYear == null) {
+      throw new IllegalArgumentException("Odaberite godinu proizvodnje.");
+    }
+    return new VehicleInput(selected.getId(), selectedYear, Ui.mileage(mileage));
+  }
 
-    return new VehicleInput(selectedVariant.getId(), Ui.integer(year), Ui.integer(mileage));
+  public void setMakes(List<String> values) {
+    make.setModel(new DefaultComboBoxModel<>(values.toArray(new String[0])));
+    make.setSelectedIndex(-1);
+  }
+
+  public void setModels(List<String> values) {
+    model.setModel(new DefaultComboBoxModel<>(values.toArray(new String[0])));
+    model.setSelectedIndex(-1);
+  }
+
+  public void setYears(List<Integer> values) {
+    year.setModel(new DefaultComboBoxModel<>(values.toArray(new Integer[0])));
+    year.setSelectedIndex(-1);
   }
 
   public void setVariants(List<VariantRow> values) {
     variantRows = new ArrayList<>(values);
-    variantsModel.setRowCount(0);
-
-    for (VariantRow variant : variantRows) {
-      variantsModel.addRow(
-          new Object[] {
-            variant.getGeneration(),
-            variant.getEngine(),
-            variant.getFuel(),
-            variant.getTransmission(),
-            variant.getPowerHp(),
-            variant.getFrom(),
-            variant.getTo()
-          });
-    }
+    variant.setModel(new DefaultComboBoxModel<>(variantRows.toArray(new VariantRow[0])));
+    variant.setSelectedIndex(-1);
+    details.setText("Odaberite točnu varijantu.");
   }
 
   public VariantRow selectedVariant() {
-    int selectedRow = variants.getSelectedRow();
-
-    if (selectedRow < 0) {
-      return null;
-    }
-
-    return variantRows.get(variants.convertRowIndexToModel(selectedRow));
+    return (VariantRow) variant.getSelectedItem();
   }
 
-  public void existing(VehicleRow vehicle, boolean identityEditable) {
+  public List<VariantRow> variants() {
+    return variantRows;
+  }
+
+  public void clearBelowMake() {
     updating = true;
-    year.setValue(vehicle.getYear());
-    make.setModel(new DefaultComboBoxModel<>(new String[] {vehicle.getVariant().getMake()}));
-    model.setModel(new DefaultComboBoxModel<>(new String[] {vehicle.getVariant().getModel()}));
-
-    List<VariantRow> values = new ArrayList<>();
-    values.add(vehicle.getVariant());
-    setVariants(values);
-    variants.setRowSelectionInterval(0, 0);
-    mileage.setValue(vehicle.getMileage());
-
-    year.setEnabled(identityEditable);
-    make.setEnabled(identityEditable);
-    model.setEnabled(identityEditable);
-    search.setEnabled(identityEditable);
-    find.setEnabled(identityEditable);
-
-    if (identityEditable) {
-      state.setText("Za promjenu identiteta prvo ponovno odaberite godinu i katalog.");
-    } else {
-      state.setText(
-          "Identitet je zakljucan jer vozilo ima povijest; kilometraza se moze povecati.");
-    }
-
+    setModels(List.of());
+    setYears(List.of());
+    setVariants(List.of());
     updating = false;
+  }
+
+  public void clearBelowModel() {
+    updating = true;
+    setYears(List.of());
+    setVariants(List.of());
+    updating = false;
+  }
+
+  public void clearBelowYear() {
+    updating = true;
+    setVariants(List.of());
+    updating = false;
+  }
+
+  public void showDetails(VariantRow selected) {
+    if (selected == null) {
+      details.setText("Odaberite točnu varijantu.");
+      return;
+    }
+    String power = selected.getPowerHp() == null ? "? KS" : selected.getPowerHp() + " KS";
+    details.setText(
+        selected.getGeneration()
+            + " / "
+            + selected.getEngine()
+            + " / "
+            + selected.getFuel()
+            + " / "
+            + power
+            + " / "
+            + selected.getTransmission());
   }
 }
