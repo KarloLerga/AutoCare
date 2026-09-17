@@ -1,7 +1,6 @@
 package hr.unizd.autocare.view;
 
 import hr.unizd.autocare.model.Data.ProblemRow;
-import hr.unizd.autocare.view.components.EstimateFormat;
 import hr.unizd.autocare.view.components.Ui;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
@@ -14,18 +13,20 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
-/** Dva statusa problema i ulaz u analizator. */
+/** Prikaz otvorenih i rijesenih problema vozila. */
 public final class ProblemsView extends JPanel {
   public final JComboBox<String> status = new JComboBox<>(new String[] {"Otvoreni", "Rijeseni"});
   public final JButton add = Ui.button("Analiziraj novi problem", true);
   public final JButton detail = Ui.button("Detalj", false);
   public final JTable table;
+
   private final DefaultTableModel tableModel;
   private List<ProblemRow> problems = new ArrayList<>();
 
   public ProblemsView() {
     super(new BorderLayout(12, 12));
     setOpaque(false);
+
     tableModel =
         new DefaultTableModel(
             new Object[][] {},
@@ -35,39 +36,48 @@ public final class ProblemsView extends JPanel {
             return false;
           }
         };
+
     table = new JTable(tableModel);
     table.setRowHeight(32);
-    table.setAutoCreateRowSorter(true);
     table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     table.setFillsViewportHeight(true);
     table.getTableHeader().setReorderingAllowed(false);
+
     JPanel top = Ui.column();
     top.add(Ui.heading("Problemi"));
     top.add(Ui.row(status, add, detail));
+
     add(top, BorderLayout.NORTH);
     add(new JScrollPane(table), BorderLayout.CENTER);
     add(
-        Ui.hint("Rjesavanje problema evidentira se kroz Novi servis, ne kroz sam rezultat analize."),
+        Ui.hint("Problem se oznacava rijesenim kroz stvarni servis."),
         BorderLayout.SOUTH);
   }
 
   public void setRows(List<ProblemRow> values) {
     problems = new ArrayList<>(values);
     tableModel.setRowCount(0);
+
     for (ProblemRow problem : problems) {
+      String suggestion = problem.getSuggestion();
+      if (suggestion == null) {
+        suggestion = "Nema podudaranja";
+      }
+
+      String score = "-";
+      if (problem.getScore() != null) {
+        score = problem.getScore().toPlainString();
+      }
+
       tableModel.addRow(
           new Object[] {
             problem.getDescription(),
-            problem.getSuggestion(),
-            problem.getScore(),
-            EstimateFormat.display(problem.getPrice()),
-            problem.getCreatedAt().toLocalDate().toString()
+            suggestion,
+            score,
+            Ui.estimate(problem.getPrice()),
+            Ui.date(problem.getCreatedAt().toLocalDate())
           });
     }
-  }
-
-  public List<ProblemRow> rows() {
-    return problems;
   }
 
   public ProblemRow selected() {
@@ -75,22 +85,45 @@ public final class ProblemsView extends JPanel {
     if (selectedRow < 0) {
       return null;
     }
-    return problems.get(table.convertRowIndexToModel(selectedRow));
+
+    int modelRow = table.convertRowIndexToModel(selectedRow);
+    return problems.get(modelRow);
   }
 
   public void showProblemDetails(ProblemRow problem) {
-    Ui.info(
-        this,
+    String suggestion = problem.getSuggestion();
+    if (suggestion == null) {
+      suggestion = "Nema podudaranja";
+    }
+
+    String score = "-";
+    if (problem.getScore() != null) {
+      score = problem.getScore().toPlainString() + " %";
+    }
+
+    String source = problem.getPriceNote();
+    if (source == null || source.isBlank()) {
+      source = "Nepoznat";
+    }
+
+    String resolvedService = "-";
+    if (problem.getResolvedServiceId() != null) {
+      resolvedService = problem.getResolvedServiceId().toString();
+    }
+
+    String text =
         problem.getDescription()
             + "\nMoguci uzrok: "
-            + java.util.Objects.toString(problem.getSuggestion(), "Nema podudaranja")
+            + suggestion
             + "\nPodudaranje: "
-            + java.util.Objects.toString(problem.getScore(), "-")
-            + " %\nProcjena: "
-            + EstimateFormat.display(problem.getPrice())
+            + score
+            + "\nProcjena: "
+            + Ui.estimate(problem.getPrice())
             + "\nIzvor: "
-            + java.util.Objects.toString(problem.getPriceNote(), "Nepoznat")
+            + source
             + "\nRijeseno servisom: "
-            + java.util.Objects.toString(problem.getResolvedServiceId(), "-"));
+            + resolvedService;
+
+    Ui.info(this, text);
   }
 }

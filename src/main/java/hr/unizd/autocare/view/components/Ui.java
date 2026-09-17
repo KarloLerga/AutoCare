@@ -15,8 +15,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.util.Locale;
 import javax.swing.BoxLayout;
@@ -105,6 +107,7 @@ public final class Ui {
     JLabel label = new JLabel(title);
     label.setLabelFor(component);
     form.add(label, constraints);
+
     constraints.gridx = 1;
     constraints.weightx = 1;
     constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -112,7 +115,8 @@ public final class Ui {
   }
 
   public static JSpinner mileage(int value) {
-    JSpinner spinner = new JSpinner(new SpinnerNumberModel(value, 0, 3_000_000, 100));
+    JSpinner spinner =
+        new JSpinner(new SpinnerNumberModel(value, 0, Integer.MAX_VALUE, 100));
     spinner.setEditor(new JSpinner.NumberEditor(spinner, "0"));
     return spinner;
   }
@@ -126,6 +130,18 @@ public final class Ui {
     }
   }
 
+  public static LocalDate parseDate(String text) {
+    if (text == null || text.isBlank()) {
+      throw new IllegalArgumentException("Unesite datum, npr. 15.09.2026.");
+    }
+
+    try {
+      return LocalDate.parse(text.strip(), DATE);
+    } catch (DateTimeParseException exception) {
+      throw new IllegalArgumentException("Datum mora biti valjan, npr. 15.09.2026.");
+    }
+  }
+
   public static BigDecimal parseMoney(String text, boolean optional) {
     if (text == null || text.isBlank()) {
       if (optional) {
@@ -133,12 +149,13 @@ public final class Ui {
       }
       throw new IllegalArgumentException("Unesite stvarno placenu cijenu za svaku stavku.");
     }
-    String cleanText = text.strip();
-    if (!cleanText.matches("[0-9]+([.,][0-9]{1,2})?")) {
-      throw new IllegalArgumentException(
-          "Cijena: npr. 120,50; bez simbola EUR i odvajanja tisucica.");
+
+    try {
+      BigDecimal amount = new BigDecimal(text.strip().replace(',', '.'));
+      return Checks.money(amount, optional);
+    } catch (NumberFormatException exception) {
+      throw new IllegalArgumentException("Cijena mora biti broj, npr. 120,50.");
     }
-    return Checks.money(new BigDecimal(cleanText.replace(',', '.')), optional);
   }
 
   public static String money(BigDecimal value) {
@@ -146,6 +163,21 @@ public final class Ui {
       return "Nepoznato";
     }
     return String.format(Locale.forLanguageTag("hr-HR"), "%,.2f EUR", value);
+  }
+
+  public static BigDecimal roundedEstimate(BigDecimal amount) {
+    if (amount == null) {
+      return null;
+    }
+    return amount.divide(BigDecimal.TEN, 0, RoundingMode.HALF_UP).multiply(BigDecimal.TEN);
+  }
+
+  public static String estimate(BigDecimal amount) {
+    BigDecimal rounded = roundedEstimate(amount);
+    if (rounded == null) {
+      return "Nema procjene";
+    }
+    return "≈ " + rounded.toPlainString() + " EUR";
   }
 
   public static String total(CostSummary summary) {
