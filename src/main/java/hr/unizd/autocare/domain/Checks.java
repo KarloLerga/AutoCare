@@ -4,34 +4,46 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Locale;
 
-/** Jednostavne zajednicke invarijante. IllegalArgumentException znaci nevaljan unos. */
+/** Osnovne provjere korisnickog unosa. */
 public final class Checks {
   private Checks() {}
 
   public static String text(String value, int max, String label) {
-    if (value == null || value.strip().isEmpty() || value.strip().length() > max) {
-      throw new IllegalArgumentException(label + ": obavezan unos do " + max + " znakova.");
+    if (value == null || value.strip().isEmpty()) {
+      throw new IllegalArgumentException(label + " je obavezan.");
     }
-    return value.strip();
+
+    String cleanValue = value.strip();
+    if (cleanValue.length() > max) {
+      throw new IllegalArgumentException(label + " je predugacak.");
+    }
+
+    return cleanValue;
   }
 
   public static String optional(String value, int max, String label) {
-    return value == null || value.isBlank() ? null : text(value, max, label);
+    if (value == null || value.isBlank()) {
+      return null;
+    }
+    return text(value, max, label);
   }
 
   public static String email(String value) {
     String email = text(value, 254, "E-mail").toLowerCase(Locale.ROOT);
-    if (!email.matches(
-            "[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?\\.[a-z]{2,63}")
-        || email.contains("..")) {
+
+    int at = email.indexOf('@');
+    int dot = email.lastIndexOf('.');
+
+    if (at <= 0 || dot <= at + 1 || dot >= email.length() - 1 || email.contains(" ")) {
       throw new IllegalArgumentException("Unesite valjanu e-mail adresu.");
     }
+
     return email;
   }
 
   public static int mileage(int value) {
-    if (value < 0 || value > 3_000_000) {
-      throw new IllegalArgumentException("Kilometraza mora biti 0 - 3.000.000 km.");
+    if (value < 0) {
+      throw new IllegalArgumentException("Kilometraza ne moze biti negativna.");
     }
     return value;
   }
@@ -43,19 +55,17 @@ public final class Checks {
       }
       throw new IllegalArgumentException("Unesite stvarno placenu cijenu.");
     }
-    if (value.signum() < 0 || value.compareTo(new BigDecimal("9999999.99")) > 0) {
-      throw new IllegalArgumentException("Cijena mora biti od 0 do 9.999.999,99 EUR.");
+
+    if (value.signum() < 0) {
+      throw new IllegalArgumentException("Cijena ne moze biti negativna.");
     }
-    try {
-      return value.setScale(2, RoundingMode.UNNECESSARY);
-    } catch (ArithmeticException ex) {
-      throw new IllegalArgumentException("Cijena smije imati najvise dvije decimale.");
-    }
+
+    return value.setScale(2, RoundingMode.HALF_UP);
   }
 
   public static void password(char[] value) {
-    if (value == null || value.length < 12 || value.length > 128) {
-      throw new IllegalArgumentException("Lozinka treba imati 12 - 128 znakova.");
+    if (value == null || value.length < 6) {
+      throw new IllegalArgumentException("Lozinka treba imati najmanje 6 znakova.");
     }
   }
 }

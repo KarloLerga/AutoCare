@@ -36,12 +36,15 @@ public final class AuthService {
   public Account login(String email, char[] password) {
     String cleanEmail = Checks.email(email);
     EntityManager entityManager = entityManagerFactory.createEntityManager();
+
     try {
       UserRepository userRepository = new JpaUserRepository(entityManager);
       AppUser user = userRepository.findByEmail(cleanEmail);
+
       if (user == null || !passwordHasher.verify(password, user.getPasswordHash())) {
         throw new AppException("E-mail ili lozinka nisu ispravni.");
       }
+
       return Mapping.account(user);
     } finally {
       entityManager.close();
@@ -56,7 +59,6 @@ public final class AuthService {
       List<ServiceInput> history) {
     String cleanName = Checks.text(name, 100, "Ime");
     String cleanEmail = Checks.email(email);
-    Checks.password(password);
     String passwordHash = passwordHasher.hash(password);
 
     if (vehicleInput.getYear() > LocalDate.now().getYear()) {
@@ -65,8 +67,10 @@ public final class AuthService {
 
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();
+
     try {
       transaction.begin();
+
       UserRepository userRepository = new JpaUserRepository(entityManager);
       VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
       CatalogRepository catalogRepository = new JpaCatalogRepository(entityManager);
@@ -80,6 +84,7 @@ public final class AuthService {
 
       AppUser user = new AppUser(cleanName, cleanEmail, passwordHash);
       userRepository.add(user);
+
       VehicleVariant variant = catalogRepository.findVariant(vehicleInput.getVariantId());
       if (variant == null) {
         throw new AppException("Odaberite postojecu varijantu vozila.");
@@ -94,6 +99,7 @@ public final class AuthService {
         if (serviceInput.getMileage() > vehicleInput.getMileage()) {
           throw new AppException("Pocetna povijest ne moze imati vecu kilometrazu od trenutne.");
         }
+
         ServiceRecordService.saveInside(
             catalogRepository,
             serviceRecordRepository,
@@ -117,12 +123,15 @@ public final class AuthService {
 
   public Account account(long ownerId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
+
     try {
       UserRepository userRepository = new JpaUserRepository(entityManager);
       AppUser user = userRepository.findById(ownerId);
+
       if (user == null) {
         throw new AppException("Korisnik nije pronadjen.");
       }
+
       return Mapping.account(user);
     } finally {
       entityManager.close();
@@ -137,12 +146,16 @@ public final class AuthService {
       char[] newPassword) {
     String cleanName = Checks.text(name, 100, "Ime");
     String cleanEmail = Checks.email(email);
+
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();
+
     try {
       transaction.begin();
+
       UserRepository userRepository = new JpaUserRepository(entityManager);
       AppUser user = userRepository.findById(ownerId);
+
       if (user == null) {
         throw new AppException("Korisnik nije pronadjen.");
       }
@@ -157,9 +170,10 @@ public final class AuthService {
         if (!passwordHasher.verify(currentPassword, user.getPasswordHash())) {
           throw new AppException("Trenutna lozinka nije ispravna.");
         }
-        Checks.password(newPassword);
+
         user.changePasswordHash(passwordHasher.hash(newPassword));
       }
+
       user.changeProfile(cleanName, cleanEmail);
       transaction.commit();
     } catch (RuntimeException exception) {
