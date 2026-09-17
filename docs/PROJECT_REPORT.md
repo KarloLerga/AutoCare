@@ -24,13 +24,13 @@ Svi konceptualni ekrani/tokovi, kontrole, layouti i objasnjenja nalaze se u GUI_
 ## Principi i gradivo
 MVC dijeli UI i poslovne akcije. Strategy izolira zamjenjivi algoritam. Observer spaja promjene stanja i zainteresirane prikaze bez globalne magije. Kompozicija ServiceRecord/ServiceItem ima stvarni zivotni ciklus; enum je dovoljan za kategoriju/status. Repository izolira pristup bazi. SRP/OCP/DIP/ISP i ugovori zamjenjivosti obrazlozeni su u COURSE_ALIGNMENT_AND_DEFENSE.md; ne tvrdi se da sama rijec implements dokazuje LSP. Ne dodajemo Factory/Command/Memento samo za popis bodova.
 
-## Podaci, slike i ogranicenja
+## Podaci i ogranicenja
 Katalog je normaliziran iz korisnikova ZIP-a vehicle-makes-models, uz stabilne kodove, licence i evidentirane prilagodbe. 122 rada su prakticni prosireni katalog, ne iscrpna lista svakog dijela svakog automobila. 1.282.916 cijena su modelirane planske bruto vrijednosti, a ne nacionalni prosjeci ili verificirane ponude. Za dio izvedbi broj se ne daje. 34 izvorno referencirana perioda pokrivaju uzak modelski podskup; 676 kandidata nije automatski odobreno. Nepoznata OEM/VIN informacija ostaje nepoznata.
 
-Lokalna slika po make/model/generation je zavrsno obogacivanje. Offline pipeline odvojeno trazi kandidata, zahtijeva review generacije/licence, preuzima normalizirani JPG i sacuva autora/izvor/licencu. Tek nakon pakiranja resursa u JAR Java importer mijenja imagePath. Nema mreze u VehicleImage i nema BLOB-a.
+Katalog nema fotografije po vozilu ni image-enrichment/import pipeline. UI koristi samo dekorativne FontAwesome6 Ikonli ikone; one ne predstavljaju identitet ili podudaranje vozila.
 
 ## Sigurnost i trosak infrastrukture
-SQL Server umjesto prvotnog MySQL-a je korisnikova nova odluka zbog free offera. Lozinke su u lokalnoj vanjskoj konfiguraciji; TLS provjera identiteta ukljucena. Aplikacijske lozinke PBKDF2 hash+salt; owner-scoped upiti i jedna transakcija cuvaju aplikacijske invarijante. Direktna shared SQL vjerodajnica u desktopu nije produkcijska izolacija korisnika. Serverless potrosnja prati se u portalu, konekcije se zatvaraju, paid overage ne aktivira se automatski.
+SQL Server umjesto prvotnog MySQL-a je korisnikova nova odluka zbog free offera. SQL vjerodajnica je u lokalnoj vanjskoj konfiguraciji; TLS provjera identiteta ukljucena. U ovom studentskom modelu aplikacijska lozinka je obican tekstualni `String` u bazi; to je svjesni obrazovni kompromis i nije produkcijska sigurnosna preporuka. Owner-scoped upiti i jedna transakcija cuvaju aplikacijske invarijante. Direktna shared SQL vjerodajnica u desktopu nije produkcijska izolacija korisnika. Serverless potrosnja prati se u portalu, konekcije se zatvaraju, paid overage ne aktivira se automatski.
 
 ## Dokumentacija API-ja i povijest
 Maven Javadoc generira `target/reports/apidocs` ili putanju koju prijavi stvarna verzija plugina; zabiljeziti stvarno mjesto. Opisati javne poslovne ugovore, ne dodavati prazne komentare svakom getteru. Biblioteke i sluzbeni izvori su u DEPENDENCIES_AND_SOURCES.md.

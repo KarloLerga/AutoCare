@@ -24,6 +24,9 @@ $forbiddenPatterns = [ordered]@{
   EntityManagerShortName = '\bEntityManager\s+em\b'
   EntityManagerFactoryShortName = '\bEntityManagerFactory\s+emf\b'
   TransactionShortName = '\bEntityTransaction\s+tx\b'
+  LegacyPasswordHasher = '\bPasswordHasher\b'
+  LegacyVehicleImage = '\bVehicleImage\b|\bimagePath\b'
+  PasswordBufferWipe = 'Arrays\.fill'
 }
 
 function Remove-CommentsAndStrings([string]$source) {

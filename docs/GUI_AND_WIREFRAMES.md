@@ -14,7 +14,7 @@ Godina i km: JSpinner s osnovnim rasponom. Marka/model: ovisni JComboBoxovi. Vel
              [Prijavi se]
              Registriraj se
 ```
-Nema sidebara. Login Controller -> AuthService u SwingWorkeru. Greska ne otkriva postoji li taj racun. Hashing nije na EDT-u.
+Nema sidebara. Login Controller -> AuthService u SwingWorkeru. Greska ne otkriva postoji li taj racun. Lozinka se provjerava kao obican String.
 
 ### 2 Registracija
 ```text
@@ -29,10 +29,10 @@ Lokalni podaci; jos nema INSERT-a. Slab/prazan input pokazati uz formu. Escape/X
  Godina [spinner]  Marka [combo]  Model [combo]
  Pretraga varijante [____________________]
  [Generacija | Motor | Snaga | Mjenjac] tabela
- Kilometraza [spinner]   lokalna slika / fallback
+  Kilometraza [spinner]
  [Nastavi/Spremi] [Odustani]
 ```
-Godina i marka resetiraju podredene filtre/odabir. Lista se ucitava u pozadini. Ne pretpostaviti da 2017 automatski znaci jednoznacnu generaciju. Slika nije dokaz identiteta.
+Godina i marka resetiraju podredene filtre/odabir. Lista se ucitava u pozadini. Ne pretpostaviti da 2017 automatski znaci jednoznacnu generaciju. Ikona automobila u sidebaru je samo dekorativna.
 
 ### 4 Opcionalna pocetna povijest
 ```text
@@ -59,7 +59,7 @@ Samo cetiri kartice. Ne proracunavati koji je 'najblizi' od 1000 km i 20 dana be
 ### 6 Vozila
 ```text
  [Dodaj vozilo]
- [slika | model/generacija | motor | godina | km]
+  [model/generacija | motor | godina | km]
  [Aktiviraj] [Uredi] [Obrisi]
 ```
 Aktivacija samo ovdje. Zadnje vozilo ne moze se obrisati; aktivno brisanje trazi zamjenu. Identitet se mijenja samo prije servisa/problema. Dugi nazivi ne smiju skrivati akcije.
@@ -109,11 +109,10 @@ Nema podudaranja je valjano stanje; dopustiti spremiti opis bez kandidat/cijena.
 
 ### 12 Profil
 ```text
- Ime / E-mail / Trenutna lozinka za osjetljive promjene
- Nova lozinka / potvrda
+  Ime / E-mail
  [Spremi] [Odjava]
 ```
-Ne slati hash u UI. Dirty warning prije odjave. Session sadrzi samo vlasnika i aktivni DTO; callbackovi ne nose epoch/ticket stanje.
+Profil mijenja samo ime i e-mail; lozinka se ne uređuje iz profila. Dirty warning prije odjave. Session sadrzi samo vlasnika i aktivni DTO; callbackovi ne nose epoch/ticket stanje.
 
 ## Prikaz / pristupacnost / testiranje
 Tamna FlatLaf pozadina, kartice s jasnim kontrastom, dosljedni razmaci, primarna akcija naglasena, opasna akcija odvojena. Koristiti layout manager, ne absolute position. Status ima tekst, ne samo boju. Tipkovnica Tab/Enter/Escape, fokus u prvo relevantno polje; duge napomene sa scrollom. Native standardni dialogi prihvatljivi.

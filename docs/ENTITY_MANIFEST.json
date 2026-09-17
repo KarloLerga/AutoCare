@@ -7,12 +7,12 @@
     {
       "java": "AppUser",
       "table": "app_user",
-      "columns": ["id", "name", "email", "password_hash", "active_vehicle_id"]
+      "columns": ["id", "name", "email", "password", "active_vehicle_id"]
     },
     {
       "java": "VehicleVariant",
       "table": "vehicle_variant",
-      "columns": ["id", "code", "make", "model", "generation", "engine_label", "body_type", "fuel_type", "power_hp", "transmission", "year_from", "year_to", "image_path"]
+      "columns": ["id", "code", "make", "model", "generation", "engine_label", "body_type", "fuel_type", "power_hp", "transmission", "year_from", "year_to"]
     },
     {
       "java": "Vehicle",

@@ -18,7 +18,7 @@
 <text xml:space="preserve" text-anchor="middle" x="202.24" y="-466.88" font-family="Helvetica,sans-Serif" font-size="14.00">PK id BIGINT IDENTITY</text>
 <text xml:space="preserve" text-anchor="middle" x="202.24" y="-451.12" font-family="Helvetica,sans-Serif" font-size="14.00">name NVARCHAR</text>
 <text xml:space="preserve" text-anchor="middle" x="202.24" y="-435.38" font-family="Helvetica,sans-Serif" font-size="14.00">UQ email</text>
-<text xml:space="preserve" text-anchor="middle" x="202.24" y="-419.62" font-family="Helvetica,sans-Serif" font-size="14.00">password_hash NVARCHAR</text>
+<text xml:space="preserve" text-anchor="middle" x="202.24" y="-419.62" font-family="Helvetica,sans-Serif" font-size="14.00">password NVARCHAR</text>
 <text xml:space="preserve" text-anchor="middle" x="202.24" y="-403.88" font-family="Helvetica,sans-Serif" font-size="14.00">FK active_vehicle_id BIGINT NULL</text>
 </g>
 <!-- vehicle -->
@@ -49,7 +49,7 @@
 <text xml:space="preserve" text-anchor="middle" x="604.24" y="-62.66" font-family="Helvetica,sans-Serif" font-size="14.00">make, model, generation</text>
 <text xml:space="preserve" text-anchor="middle" x="604.24" y="-46.91" font-family="Helvetica,sans-Serif" font-size="14.00">engine_label, body_type, fuel_type</text>
 <text xml:space="preserve" text-anchor="middle" x="604.24" y="-31.16" font-family="Helvetica,sans-Serif" font-size="14.00">power_hp, transmission</text>
-<text xml:space="preserve" text-anchor="middle" x="604.24" y="-15.41" font-family="Helvetica,sans-Serif" font-size="14.00">year_from, year_to, image_path</text>
+<text xml:space="preserve" text-anchor="middle" x="604.24" y="-15.41" font-family="Helvetica,sans-Serif" font-size="14.00">year_from, year_to</text>
 </g>
 <!-- vehicle&#45;&gt;app_user -->
 <g id="edge2" class="edge">
