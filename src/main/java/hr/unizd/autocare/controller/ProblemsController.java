@@ -9,146 +9,162 @@ import hr.unizd.autocare.model.Data.ProblemRow;
 import hr.unizd.autocare.service.ProblemService;
 import hr.unizd.autocare.view.AnalysisDialog;
 import hr.unizd.autocare.view.MainFrame;
+import hr.unizd.autocare.view.components.EstimateFormat;
 import hr.unizd.autocare.view.components.Ui;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-/** Kontrolira analizu i cuva nepromjenjivi preview odvojen od JPA entiteta. */
+/** Kontrolira analizu i cuva rezultat koji je korisnik vidio. */
 public final class ProblemsController {
   private final MainFrame frame;
-  private final ProblemService service;
+  private final ProblemService problemService;
   private final Session session;
   private final AppEvents events;
-  private final UiTasks tasks;
 
   public ProblemsController(
-      MainFrame frame, ProblemService service, Session session, AppEvents events) {
+      MainFrame frame, ProblemService problemService, Session session, AppEvents events) {
     this.frame = frame;
-    this.service = service;
+    this.problemService = problemService;
     this.session = session;
     this.events = events;
-    tasks = new UiTasks();
     frame.problems.status.addActionListener(
-        e -> {
-          if (session.active() != null) {
-            load();
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            if (session.active() != null) {
+              load();
+            }
           }
         });
-    frame.problems.add.addActionListener(e -> new AnalysisFlow().open());
-    frame.problems.detail.addActionListener(
-        e -> {
-          ProblemRow p = frame.problems.table.selected();
-          if (p == null) {
-            Ui.info(frame, "Odaberite problem.");
-            return;
+    frame.problems.add.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            openAnalysis();
           }
-          Ui.info(
-              frame,
-              p.getDescription()
-                  + "\nMoguci uzrok: "
-                  + Objects.toString(p.getSuggestion(), "Nema podudaranja")
-                  + "\nPodudaranje: "
-                  + Objects.toString(p.getScore(), "-")
-                  + " %\nProcjena: "
-                  + hr.unizd.autocare.view.components.EstimateFormat.display(p.getPrice())
-                  + "\nIzvor: "
-                  + Objects.toString(p.getPriceNote(), "Nepoznat")
-                  + "\nRijeseno servisom: "
-                  + Objects.toString(p.getResolvedServiceId(), "-"));
+        });
+    frame.problems.detail.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            ProblemRow problem = frame.problems.selected();
+            if (problem == null) {
+              Ui.info(frame, "Odaberite problem.");
+            } else {
+              frame.problems.showProblemDetails(problem);
+            }
+          }
         });
   }
 
   public void load() {
-    long owner = session.owner(), vehicle = session.active().getId();
-    ProblemStatus status =
-        frame.problems.status.getSelectedIndex() == 0 ? ProblemStatus.OPEN : ProblemStatus.RESOLVED;
-    tasks.read(
-        frame.problems,
-        () -> service.list(owner, vehicle, status),
-        rows -> frame.problems.table.setRows(rows));
+    long ownerId = session.owner();
+    long vehicleId = session.active().getId();
+    ProblemStatus status = ProblemStatus.OPEN;
+    if (frame.problems.status.getSelectedIndex() == 1) {
+      status = ProblemStatus.RESOLVED;
+    }
+    try {
+      frame.problems.setRows(problemService.list(ownerId, vehicleId, status));
+    } catch (RuntimeException exception) {
+      Ui.error(frame.problems, exception);
+    }
+  }
+
+  private void openAnalysis() {
+    new AnalysisFlow().open();
   }
 
   private final class AnalysisFlow {
     private final AnalysisDialog dialog = new AnalysisDialog(frame);
-    private final UiTasks work = new UiTasks();
-    private final long owner = session.owner(), vehicle = session.active().getId();
-    private final String key = UUID.randomUUID().toString();
+    private final long ownerId = session.owner();
+    private final long vehicleId = session.active().getId();
     private Analysis preview;
 
-    void open() {
-      dialog
-          .description
-          .getDocument()
-          .addDocumentListener(
-              new DocumentListener() {
-                private void changed() {
-                  preview = null;
-                  dialog.save.setEnabled(false);
-                  dialog.results.setRows(List.of());
-                  dialog.estimate.setText("Opis je promijenjen; ponovno analizirajte.");
-                }
+    private void open() {
+      dialog.description.getDocument().addDocumentListener(
+          new DocumentListener() {
+            private void descriptionChanged() {
+              preview = null;
+              dialog.save.setEnabled(false);
+              dialog.setResults(new ArrayList<>());
+              dialog.estimate.setText("Opis je promijenjen; ponovno analizirajte.");
+            }
 
-                public void insertUpdate(DocumentEvent e) {
-                  changed();
-                }
+            @Override
+            public void insertUpdate(DocumentEvent event) {
+              descriptionChanged();
+            }
 
-                public void removeUpdate(DocumentEvent e) {
-                  changed();
-                }
+            @Override
+            public void removeUpdate(DocumentEvent event) {
+              descriptionChanged();
+            }
 
-                public void changedUpdate(DocumentEvent e) {
-                  changed();
-                }
-              });
+            @Override
+            public void changedUpdate(DocumentEvent event) {
+              descriptionChanged();
+            }
+          });
       dialog.analyze.addActionListener(
-          e -> {
-            String description = dialog.description.getText();
-            work.read(
-                dialog,
-                () -> service.analyze(owner, vehicle, description),
-                a -> {
-                  if (!description.equals(dialog.description.getText())) {
-                    return;
-                  }
-                  preview = a;
-                  dialog.results.setRows(a.getResults());
-                  dialog.save.setEnabled(true);
-                  dialog.estimate.setText(
-                      a.getResults().isEmpty()
-                          ? "Nema podudaranja. Mozete spremiti opis bez pretpostavljenog uzroka."
-                          : "Glavna informativna procjena: "
-                              + hr.unizd.autocare.view.components.EstimateFormat.display(
-                                  a.getResults().get(0).getPrice()));
-                });
+          new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+              analyze();
+            }
           });
       dialog.save.addActionListener(
-          e -> {
-            Analysis snapshot = preview;
-            if (snapshot == null) {
-              return;
+          new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+              save();
             }
-            work.run(
-                dialog,
-                () -> service.save(owner, vehicle, key, snapshot),
-                id -> {
-                  dialog.dispose();
-                  events.publish(AppEvent.PROBLEM_SAVED);
-                },
-                error -> Ui.error(dialog, error));
           });
-      Runnable close =
-          () -> {
-            if (dialog.description.getText().isBlank()
-                || Ui.confirm(dialog, "Zatvoriti i odbaciti nespremljenu analizu?")) {
+      dialog.cancel.addActionListener(
+          new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
               dialog.dispose();
             }
-          };
-      dialog.cancel.addActionListener(e -> close.run());
-      Ui.escape(dialog, close);
+          });
+      Ui.escape(dialog);
       dialog.setVisible(true);
+    }
+
+    private void analyze() {
+      try {
+        String description = dialog.description.getText();
+        preview = problemService.analyze(ownerId, vehicleId, description);
+        dialog.setResults(preview.getResults());
+        dialog.save.setEnabled(true);
+        if (preview.getResults().isEmpty()) {
+          dialog.estimate.setText(
+              "Nema podudaranja. Mozete spremiti opis bez pretpostavljenog uzroka.");
+        } else {
+          dialog.estimate.setText(
+              "Glavna informativna procjena: "
+                  + EstimateFormat.display(preview.getResults().get(0).getPrice()));
+        }
+      } catch (RuntimeException exception) {
+        Ui.error(dialog, exception);
+      }
+    }
+
+    private void save() {
+      if (preview == null) {
+        return;
+      }
+      try {
+        problemService.save(ownerId, vehicleId, preview);
+        dialog.dispose();
+        events.publish(AppEvent.PROBLEM_SAVED);
+      } catch (RuntimeException exception) {
+        Ui.error(dialog, exception);
+      }
     }
   }
 }

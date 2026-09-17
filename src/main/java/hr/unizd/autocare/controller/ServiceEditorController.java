@@ -6,60 +6,85 @@ import hr.unizd.autocare.model.Data.WorkRow;
 import hr.unizd.autocare.view.ServiceEditorDialog;
 import hr.unizd.autocare.view.components.Ui;
 import hr.unizd.autocare.view.components.WorkPicker;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 /** Zajednicki GUI dio editora, upotrebljiv za onboarding i stvarni servis. */
 public final class ServiceEditorController {
   public ServiceEditorController(
-      ServiceEditorDialog view,
-      List<WorkRow> works,
-      Consumer<ServiceInput> submit) {
-    view.addMaintenance.addActionListener(e -> add(view, works, WorkCategory.MAINTENANCE));
-    view.addRepair.addActionListener(e -> add(view, works, WorkCategory.REPAIR));
-    view.remove.addActionListener(
-        e -> {
-          if (view.itemTable.isEditing()) {
-            view.itemTable.getCellEditor().stopCellEditing();
+      final ServiceEditorDialog view,
+      final List<WorkRow> works,
+      final ServiceEditorListener listener) {
+    view.addMaintenance.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            add(view, works, WorkCategory.MAINTENANCE);
           }
-          int row = view.itemTable.getSelectedRow();
-          if (row >= 0) {
-            view.items.remove(view.itemTable.convertRowIndexToModel(row));
+        });
+    view.addRepair.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            add(view, works, WorkCategory.REPAIR);
+          }
+        });
+    view.remove.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            removeSelected(view);
           }
         });
     view.save.addActionListener(
-        e -> {
-          try {
-            submit.accept(view.input());
-          } catch (RuntimeException ex) {
-            Ui.error(view, ex);
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            try {
+              ServiceInput serviceInput = view.input();
+              listener.saveService(serviceInput);
+            } catch (RuntimeException exception) {
+              Ui.error(view, exception);
+            }
           }
         });
-    Runnable cancel =
-        () -> {
-          if (Ui.confirm(view, "Odbaciti nespremljene podatke ovog servisa?")) {
+    view.cancel.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
             view.dispose();
           }
-        };
-    view.cancel.addActionListener(e -> cancel.run());
-    Ui.escape(view, cancel);
+        });
+    Ui.escape(view);
   }
 
-  private void add(ServiceEditorDialog view, List<WorkRow> all, WorkCategory category) {
+  private static void removeSelected(ServiceEditorDialog view) {
+    if (view.itemTable.isEditing() && !view.itemTable.getCellEditor().stopCellEditing()) {
+      return;
+    }
+    int selectedRow = view.itemTable.getSelectedRow();
+    if (selectedRow >= 0) {
+      view.items.remove(view.itemTable.convertRowIndexToModel(selectedRow));
+    }
+  }
+
+  private static void add(
+      ServiceEditorDialog view, List<WorkRow> allWorks, WorkCategory category) {
     try {
       List<WorkRow> choices = new ArrayList<>();
-      for (WorkRow w : all) {
-        if (w.getCategory() == category) {
-          choices.add(w);
+      for (WorkRow work : allWorks) {
+        if (work.getCategory() == category) {
+          choices.add(work);
         }
       }
-      WorkRow selected = WorkPicker.choose(view, choices);
-      if (selected != null) {
-        view.items.add(selected);
+      WorkRow selectedWork = WorkPicker.choose(view, choices);
+      if (selectedWork != null) {
+        view.items.add(selectedWork);
       }
-    } catch (RuntimeException ex) {
-      Ui.error(view, ex);
+    } catch (RuntimeException exception) {
+      Ui.error(view, exception);
     }
   }
 }

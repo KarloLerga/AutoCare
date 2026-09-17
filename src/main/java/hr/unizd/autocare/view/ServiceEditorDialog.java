@@ -38,15 +38,16 @@ public final class ServiceEditorDialog extends JDialog {
   private final boolean[] selected;
   private final boolean historical;
 
-  public ServiceEditorDialog(Window owner, int km, boolean historical, List<ProblemRow> problems) {
+  public ServiceEditorDialog(
+      Window owner, int mileageValue, boolean historical, List<ProblemRow> problems) {
     super(
         owner,
         historical ? "Pocetna povijest - novi zapis" : "Novi servis",
         ModalityType.APPLICATION_MODAL);
     this.historical = historical;
-    this.problems = List.copyOf(problems);
+    this.problems = new ArrayList<>(problems);
     selected = new boolean[problems.size()];
-    mileage = Ui.mileage(km);
+    mileage = Ui.mileage(mileageValue);
     setSize(940, 700);
     setLocationRelativeTo(owner);
     JPanel root = new JPanel(new BorderLayout(12, 12));
