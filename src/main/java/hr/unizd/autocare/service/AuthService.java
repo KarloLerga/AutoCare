@@ -100,7 +100,7 @@ public final class AuthService {
 
       for (ServiceInput serviceInput : history) {
         if (serviceInput.getMileage() > vehicleInput.getMileage()) {
-          throw new AppException("Pocetna povijest ne moze imati vecu kilometrazu od trenutne.");
+          throw new AppException("Početna povijest ne može imati veću kilometražu od trenutne.");
         }
 
         ServiceRecordService.saveInside(
@@ -133,7 +133,7 @@ public final class AuthService {
       AppUser user = userRepository.findById(ownerId);
 
       if (user == null) {
-        throw new AppException("Korisnik nije pronadjen.");
+        throw new AppException("Korisnik nije pronađen.");
       }
 
       return Mapping.account(user);
@@ -156,7 +156,7 @@ public final class AuthService {
       AppUser user = userRepository.findById(ownerId);
 
       if (user == null) {
-        throw new AppException("Korisnik nije pronadjen.");
+        throw new AppException("Korisnik nije pronađen.");
       }
 
       AppUser otherUser = userRepository.findByEmail(cleanEmail);

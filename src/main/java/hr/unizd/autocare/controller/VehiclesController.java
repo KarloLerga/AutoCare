@@ -76,7 +76,7 @@ public final class VehiclesController {
 
   public void load() {
     try {
-      frame.vehicles.setRows(vehicleService.list(session.owner()));
+      frame.vehicles.setRows(vehicleService.list(session.getOwnerId()));
     } catch (RuntimeException exception) {
       Ui.error(frame.vehicles, exception);
     }
@@ -108,7 +108,7 @@ public final class VehiclesController {
           @Override
           public void actionPerformed(ActionEvent event) {
             try {
-              vehicleService.add(session.owner(), form.input());
+              vehicleService.add(session.getOwnerId(), form.input());
               dialog.dispose();
               events.publish(AppEvent.VEHICLE_CHANGED);
             } catch (RuntimeException exception) {
@@ -154,7 +154,7 @@ public final class VehiclesController {
           public void actionPerformed(ActionEvent event) {
             try {
               vehicleService.updateMileage(
-                  session.owner(), vehicle.getId(), Ui.mileage(mileage));
+                  session.getOwnerId(), vehicle.getId(), Ui.mileage(mileage));
               dialog.dispose();
               events.publish(AppEvent.VEHICLE_CHANGED);
             } catch (RuntimeException exception) {
@@ -179,7 +179,7 @@ public final class VehiclesController {
       return;
     }
     try {
-      vehicleService.activate(session.owner(), vehicle.getId());
+      vehicleService.activate(session.getOwnerId(), vehicle.getId());
       events.publish(AppEvent.ACTIVE_VEHICLE_CHANGED);
     } catch (RuntimeException exception) {
       Ui.error(frame, exception);
@@ -199,7 +199,7 @@ public final class VehiclesController {
       return;
     }
     try {
-      vehicleService.delete(session.owner(), vehicle.getId());
+      vehicleService.delete(session.getOwnerId(), vehicle.getId());
       events.publish(AppEvent.VEHICLE_CHANGED);
     } catch (RuntimeException exception) {
       Ui.error(frame, exception);

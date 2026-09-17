@@ -2,9 +2,9 @@ package hr.unizd.autocare.view;
 
 import hr.unizd.autocare.model.Data.MaintenanceEstimate;
 import hr.unizd.autocare.model.Data.MaintenanceRow;
+import hr.unizd.autocare.model.Data.WorkRow;
 import hr.unizd.autocare.view.components.Ui;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -16,9 +16,9 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
-/** Praćeno održavanje i procjena odabrane konkretne stavke. */
+/** Praćeno održavanje i zasebna procjena bilo kojeg dostupnog održavanja. */
 public final class MaintenanceView extends JPanel {
-  public final JComboBox<MaintenanceRow> work = new JComboBox<>();
+  public final JComboBox<WorkRow> work = new JComboBox<>();
   public final JButton estimate = Ui.button("Procijeni cijenu i interval");
   public final JLabel estimatePrice = Ui.hint("Cijena: -");
   public final JLabel estimateInterval = Ui.hint("Interval: -");
@@ -26,8 +26,6 @@ public final class MaintenanceView extends JPanel {
   public final JTable table;
 
   private final DefaultTableModel tableModel;
-  private List<MaintenanceRow> maintenanceRows = new ArrayList<>();
-
   public MaintenanceView() {
     super(new BorderLayout(12, 12));
     setOpaque(false);
@@ -56,15 +54,14 @@ public final class MaintenanceView extends JPanel {
     add(new JScrollPane(table), BorderLayout.CENTER);
 
     JPanel estimator = Ui.column();
-    estimator.add(Ui.row(new JLabel("Praćeni rad:"), work, estimate));
+    estimator.add(Ui.row(new JLabel("Održavanje:"), work, estimate));
     estimator.add(Ui.row(estimatePrice, estimateInterval));
     add(estimator, BorderLayout.SOUTH);
   }
 
   public void setRows(List<MaintenanceRow> values) {
-    maintenanceRows = new ArrayList<>(values);
     tableModel.setRowCount(0);
-    for (MaintenanceRow row : maintenanceRows) {
+    for (MaintenanceRow row : values) {
       tableModel.addRow(
           new Object[] {
             row.getName(),
@@ -75,37 +72,31 @@ public final class MaintenanceView extends JPanel {
             Ui.status(row.getStatus())
           });
     }
-    work.setModel(new DefaultComboBoxModel<>(maintenanceRows.toArray(new MaintenanceRow[0])));
-    if (maintenanceRows.isEmpty()) {
-      estimatePrice.setText("Cijena: -");
-      estimateInterval.setText("Interval: -");
+  }
+
+  public void setAvailableWorks(List<WorkRow> values) {
+    work.setModel(new DefaultComboBoxModel<>(values.toArray(new WorkRow[0])));
+    work.setSelectedIndex(-1);
+    estimatePrice.setText("Cijena: -");
+    estimateInterval.setText("Interval: -");
+  }
+
+  public WorkRow selectedWork() {
+    return (WorkRow) work.getSelectedItem();
+  }
+
+  public void showEstimate(MaintenanceEstimate value) {
+    estimatePrice.setText("Cijena: " + Ui.estimate(value.getEstimatedPrice()));
+    StringBuilder interval = new StringBuilder("Interval: ");
+    if (value.getIntervalKm() != null) {
+      interval.append(Ui.km(value.getIntervalKm()));
     }
-  }
-
-  public List<MaintenanceRow> rows() {
-    return maintenanceRows;
-  }
-
-  public MaintenanceRow selectedWork() {
-    return (MaintenanceRow) work.getSelectedItem();
-  }
-
-  public void showEstimate(MaintenanceEstimate estimate) {
-    estimatePrice.setText("Cijena: " + Ui.estimate(estimate.getEstimatedPrice()));
-    String interval = "Interval: ";
-    if (estimate.getIntervalKm() != null) {
-      interval += Ui.km(estimate.getIntervalKm());
-    }
-    if (estimate.getIntervalMonths() != null) {
-      if (estimate.getIntervalKm() != null) {
-        interval += " / ";
+    if (value.getIntervalMonths() != null) {
+      if (value.getIntervalKm() != null) {
+        interval.append(" / ");
       }
-      interval += estimate.getIntervalMonths() + " mjeseci";
+      interval.append(value.getIntervalMonths()).append(" mjeseci");
     }
-    interval += " / sljedeće: " + Ui.date(estimate.getNextDate());
-    if (estimate.getNextMileage() != null) {
-      interval += " / " + Ui.km(estimate.getNextMileage());
-    }
-    estimateInterval.setText(interval);
+    estimateInterval.setText(interval.toString());
   }
 }

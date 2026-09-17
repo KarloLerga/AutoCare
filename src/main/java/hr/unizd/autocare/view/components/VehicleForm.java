@@ -4,7 +4,6 @@ import hr.unizd.autocare.model.Data.VariantRow;
 import hr.unizd.autocare.model.Data.VehicleInput;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -18,12 +17,10 @@ public final class VehicleForm extends JPanel {
   public final JComboBox<String> model = new JComboBox<>();
   public final JComboBox<Integer> year = new JComboBox<>();
   public final JComboBox<VariantRow> variant = new JComboBox<>();
-  public final JTextField mileage = new JTextField("0", 12);
+  public final JTextField mileage = new JTextField(12);
   public final JLabel details = Ui.hint("Odaberite točnu varijantu.");
   public final JLabel state = Ui.hint("Odaberite marku, model, godinu i varijantu.");
   public boolean updating;
-
-  private List<VariantRow> variantRows = new ArrayList<>();
 
   public VehicleForm() {
     super(new BorderLayout(12, 12));
@@ -75,18 +72,13 @@ public final class VehicleForm extends JPanel {
   }
 
   public void setVariants(List<VariantRow> values) {
-    variantRows = new ArrayList<>(values);
-    variant.setModel(new DefaultComboBoxModel<>(variantRows.toArray(new VariantRow[0])));
+    variant.setModel(new DefaultComboBoxModel<>(values.toArray(new VariantRow[0])));
     variant.setSelectedIndex(-1);
     details.setText("Odaberite točnu varijantu.");
   }
 
   public VariantRow selectedVariant() {
     return (VariantRow) variant.getSelectedItem();
-  }
-
-  public List<VariantRow> variants() {
-    return variantRows;
   }
 
   public void clearBelowMake() {
@@ -116,6 +108,10 @@ public final class VehicleForm extends JPanel {
       return;
     }
     String power = selected.getPowerHp() == null ? "? KS" : selected.getPowerHp() + " KS";
+    String transmission = selected.getTransmission();
+    if (transmission == null || transmission.isBlank()) {
+      transmission = "Mjenjač nije naveden";
+    }
     details.setText(
         selected.getGeneration()
             + " / "
@@ -125,6 +121,6 @@ public final class VehicleForm extends JPanel {
             + " / "
             + power
             + " / "
-            + selected.getTransmission());
+            + transmission);
   }
 }

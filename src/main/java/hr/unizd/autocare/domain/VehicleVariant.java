@@ -70,7 +70,7 @@ public class VehicleVariant {
     }
 
     this.powerHp = powerHp;
-    this.transmission = Checks.optional(transmission, 120, "Mjenjac");
+    this.transmission = Checks.optional(transmission, 120, "Mjenjač");
   }
 
   public boolean covers(int year) {

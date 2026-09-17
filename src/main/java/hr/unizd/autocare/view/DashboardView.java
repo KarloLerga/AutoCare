@@ -1,5 +1,6 @@
 package hr.unizd.autocare.view;
 
+import hr.unizd.autocare.domain.MaintenanceStatus;
 import hr.unizd.autocare.model.Data.Dashboard;
 import hr.unizd.autocare.model.Data.MaintenanceRow;
 import hr.unizd.autocare.view.components.Ui;
@@ -7,13 +8,16 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 import org.kordamp.ikonli.swing.FontIcon;
 
-/** Četiri bordered kartice s kratkim sažetkom aktivnog vozila. */
+/** Četiri jednostavne kartice sa sažetkom aktivnog vozila. */
 public final class DashboardView extends JPanel {
   private final JLabel total = Ui.hint("-");
   private final JLabel maintenance = Ui.hint("-");
@@ -37,13 +41,20 @@ public final class DashboardView extends JPanel {
   private static void addCard(
       JPanel grid, String title, JLabel value, FontAwesomeSolid iconCode) {
     JPanel card = Ui.card();
-    JPanel heading = new JPanel(new BorderLayout(8, 8));
-    heading.setOpaque(false);
-    heading.add(new JLabel(icon(iconCode, 24)), BorderLayout.WEST);
-    heading.add(Ui.hint(title), BorderLayout.CENTER);
-    card.add(heading, BorderLayout.NORTH);
+    JPanel content = new JPanel(new GridLayout(3, 1, 0, 8));
+    content.setOpaque(false);
+
+    JLabel iconLabel = new JLabel(icon(iconCode, 34));
+    iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    JLabel titleLabel = Ui.hint(title);
+    titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    value.setHorizontalAlignment(SwingConstants.CENTER);
     value.setFont(value.getFont().deriveFont(Font.BOLD, 18f));
-    card.add(value, BorderLayout.CENTER);
+
+    content.add(iconLabel);
+    content.add(titleLabel);
+    content.add(value);
+    card.add(content, BorderLayout.CENTER);
     grid.add(card);
   }
 
@@ -52,23 +63,48 @@ public final class DashboardView extends JPanel {
     return FontIcon.of(iconCode, size, color == null ? Color.WHITE : color);
   }
 
-  public void show(Dashboard dashboard) {
+  public void showDashboard(Dashboard dashboard) {
     total.setText(Ui.total(dashboard.getTotal()));
     MaintenanceRow next = dashboard.getNextMaintenance();
     if (next == null) {
       maintenance.setText("Nema praćenog održavanja");
+    } else if (next.getStatus() == MaintenanceStatus.DUE) {
+      maintenance.setText(
+          "<html><div style='text-align:center;'>" + next.getName() + "<br>Dospjelo</div></html>");
     } else {
-      StringBuilder value = new StringBuilder(next.getName());
-      value.append(" — ").append(Ui.status(next.getStatus()));
-      if (next.getNextDate() != null) {
-        value.append(" / ").append(Ui.date(next.getNextDate()));
-      }
-      if (next.getNextMileage() != null) {
-        value.append(" / ").append(Ui.km(next.getNextMileage()));
-      }
-      maintenance.setText("<html>" + value + "</html>");
+      String remaining = remaining(next, dashboard.getVehicle().getMileage());
+      maintenance.setText(
+          "<html><div style='text-align:center;'>"
+              + next.getName()
+              + "<br>za "
+              + remaining
+              + "</div></html>");
     }
     problems.setText(Long.toString(dashboard.getOpenProblems()));
     mileage.setText(Ui.km(dashboard.getVehicle().getMileage()));
+  }
+
+  private static String remaining(MaintenanceRow row, int currentMileage) {
+    StringBuilder result = new StringBuilder();
+    if (row.getNextMileage() != null) {
+      int remainingKm = Math.max(0, row.getNextMileage() - currentMileage);
+      result.append(Ui.km(remainingKm));
+    }
+    if (row.getNextDate() != null) {
+      long remainingDays = Math.max(0, ChronoUnit.DAYS.between(LocalDate.now(), row.getNextDate()));
+      if (result.length() > 0) {
+        result.append(" / ");
+      }
+      if (remainingDays >= 60) {
+        long months = Math.max(1, Math.round(remainingDays / 30.0));
+        result.append(months).append(" mj.");
+      } else {
+        result.append(remainingDays).append(" dana");
+      }
+    }
+    if (result.length() == 0) {
+      return Ui.status(row.getStatus());
+    }
+    return result.toString();
   }
 }

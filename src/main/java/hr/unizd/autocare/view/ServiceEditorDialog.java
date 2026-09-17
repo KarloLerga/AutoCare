@@ -1,5 +1,6 @@
 package hr.unizd.autocare.view;
 
+import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.model.Data.ItemInput;
 import hr.unizd.autocare.model.Data.ProblemRow;
 import hr.unizd.autocare.model.Data.ServiceInput;
@@ -24,11 +25,12 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
-/** Unos stvarno plaćenih stavki servisa, bez procjene u izboru radova. */
+/** Unos stvarno plaćenih stavki servisa bez prikaza procijenjenih cijena. */
 public final class ServiceEditorDialog extends JDialog {
   public final JTextField date = new JTextField(Ui.date(LocalDate.now()), 12);
   public final JTextField mileage;
   public final JTextArea note = new JTextArea(3, 25);
+  public final JComboBox<String> type = new JComboBox<>(new String[] {"Održavanje", "Popravak"});
   public final JComboBox<WorkRow> work = new JComboBox<>();
   public final JTextField actualPrice = new JTextField(12);
   public final JButton addItem = Ui.button("Dodaj stavku");
@@ -41,6 +43,7 @@ public final class ServiceEditorDialog extends JDialog {
   private final DefaultTableModel itemTableModel;
   private final DefaultTableModel problemsTableModel;
   private final List<AddedItem> items = new ArrayList<>();
+  private final List<WorkRow> availableWorks = new ArrayList<>();
   private final boolean historical;
 
   public ServiceEditorDialog(
@@ -54,8 +57,7 @@ public final class ServiceEditorDialog extends JDialog {
     mileage = new JTextField(Integer.toString(mileageValue), 12);
 
     itemTableModel =
-        new DefaultTableModel(
-            new Object[][] {}, new String[] {"Rad", "Kategorija", "Stvarna cijena"}) {
+        new DefaultTableModel(new Object[][] {}, new String[] {"Rad", "Stvarno plaćeno"}) {
           @Override
           public boolean isCellEditable(int row, int column) {
             return false;
@@ -96,7 +98,16 @@ public final class ServiceEditorDialog extends JDialog {
     root.add(top, BorderLayout.NORTH);
 
     JPanel middle = new JPanel(new BorderLayout(8, 8));
-    JPanel picker = Ui.row(new JLabel("Rad:"), work, new JLabel("Stvarna cijena:"), actualPrice, addItem, remove);
+    JPanel picker =
+        Ui.row(
+            new JLabel("Vrsta:"),
+            type,
+            new JLabel("Rad:"),
+            work,
+            new JLabel("Stvarno plaćeno:"),
+            actualPrice,
+            addItem,
+            remove);
     middle.add(picker, BorderLayout.NORTH);
     middle.add(new JScrollPane(itemTable), BorderLayout.CENTER);
 
@@ -126,7 +137,22 @@ public final class ServiceEditorDialog extends JDialog {
   }
 
   public void setWorks(List<WorkRow> works) {
-    work.setModel(new DefaultComboBoxModel<>(works.toArray(new WorkRow[0])));
+    availableWorks.clear();
+    availableWorks.addAll(works);
+    type.setSelectedIndex(0);
+    filterWorks();
+  }
+
+  public void filterWorks() {
+    WorkCategory selectedCategory =
+        type.getSelectedIndex() == 0 ? WorkCategory.MAINTENANCE : WorkCategory.REPAIR;
+    List<WorkRow> filtered = new ArrayList<>();
+    for (WorkRow row : availableWorks) {
+      if (row.getCategory() == selectedCategory) {
+        filtered.add(row);
+      }
+    }
+    work.setModel(new DefaultComboBoxModel<>(filtered.toArray(new WorkRow[0])));
     work.setSelectedIndex(-1);
   }
 
@@ -157,10 +183,7 @@ public final class ServiceEditorDialog extends JDialog {
   private void refreshItems() {
     itemTableModel.setRowCount(0);
     for (AddedItem item : items) {
-      itemTableModel.addRow(
-          new Object[] {
-            item.work.getName(), Ui.category(item.work.getCategory()), Ui.money(item.price)
-          });
+      itemTableModel.addRow(new Object[] {item.work.getName(), Ui.money(item.price)});
     }
   }
 

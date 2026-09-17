@@ -18,13 +18,11 @@ public final class Data {
     private final long id;
     private final String name;
     private final String email;
-    private final Long activeVehicleId;
 
-    public Account(long id, String name, String email, Long activeVehicleId) {
+    public Account(long id, String name, String email) {
       this.id = id;
       this.name = name;
       this.email = email;
-      this.activeVehicleId = activeVehicleId;
     }
 
     public long getId() {
@@ -39,14 +37,10 @@ public final class Data {
       return email;
     }
 
-    public Long getActiveVehicleId() {
-      return activeVehicleId;
-    }
   }
 
   public static final class VariantRow {
     private final long id;
-    private final String code;
     private final String make;
     private final String model;
     private final String generation;
@@ -54,23 +48,17 @@ public final class Data {
     private final String fuel;
     private final String transmission;
     private final Integer powerHp;
-    private final int from;
-    private final Integer to;
 
     public VariantRow(
         long id,
-        String code,
         String make,
         String model,
         String generation,
         String engine,
         String fuel,
         String transmission,
-        Integer powerHp,
-        int from,
-        Integer to) {
+        Integer powerHp) {
       this.id = id;
-      this.code = code;
       this.make = make;
       this.model = model;
       this.generation = generation;
@@ -78,16 +66,10 @@ public final class Data {
       this.fuel = fuel;
       this.transmission = transmission;
       this.powerHp = powerHp;
-      this.from = from;
-      this.to = to;
     }
 
     public long getId() {
       return id;
-    }
-
-    public String getCode() {
-      return code;
     }
 
     public String getMake() {
@@ -116,14 +98,6 @@ public final class Data {
 
     public Integer getPowerHp() {
       return powerHp;
-    }
-
-    public int getFrom() {
-      return from;
-    }
-
-    public Integer getTo() {
-      return to;
     }
 
     @Override
@@ -195,23 +169,17 @@ public final class Data {
 
   public static final class WorkRow {
     private final long id;
-    private final String code;
     private final String name;
     private final WorkCategory category;
 
-    public WorkRow(long id, String code, String name, WorkCategory category) {
+    public WorkRow(long id, String name, WorkCategory category) {
       this.id = id;
-      this.code = code;
       this.name = name;
       this.category = category;
     }
 
     public long getId() {
       return id;
-    }
-
-    public String getCode() {
-      return code;
     }
 
     public String getName() {
@@ -332,21 +300,15 @@ public final class Data {
 
   public static final class ItemRow {
     private final String name;
-    private final WorkCategory category;
     private final BigDecimal actualPrice;
 
-    public ItemRow(String name, WorkCategory category, BigDecimal actualPrice) {
+    public ItemRow(String name, BigDecimal actualPrice) {
       this.name = name;
-      this.category = category;
       this.actualPrice = actualPrice;
     }
 
     public String getName() {
       return name;
-    }
-
-    public WorkCategory getCategory() {
-      return category;
     }
 
     public BigDecimal getActualPrice() {
@@ -385,7 +347,6 @@ public final class Data {
     private final LocalDateTime createdAt;
     private final String suggestedRepair;
     private final BigDecimal estimatedCost;
-    private final Long resolvedServiceId;
 
     public ProblemRow(
         long id,
@@ -393,15 +354,13 @@ public final class Data {
         ProblemStatus status,
         LocalDateTime createdAt,
         String suggestedRepair,
-        BigDecimal estimatedCost,
-        Long resolvedServiceId) {
+        BigDecimal estimatedCost) {
       this.id = id;
       this.description = description;
       this.status = status;
       this.createdAt = createdAt;
       this.suggestedRepair = suggestedRepair;
       this.estimatedCost = estimatedCost;
-      this.resolvedServiceId = resolvedServiceId;
     }
 
     public long getId() {
@@ -428,9 +387,6 @@ public final class Data {
       return estimatedCost;
     }
 
-    public Long getResolvedServiceId() {
-      return resolvedServiceId;
-    }
   }
 
   public static final class ProblemEstimate {
@@ -459,7 +415,6 @@ public final class Data {
 
   public static final class MaintenanceRow {
     private final long workId;
-    private final String workCode;
     private final String name;
     private final LocalDate lastDate;
     private final Integer lastMileage;
@@ -469,7 +424,6 @@ public final class Data {
 
     public MaintenanceRow(
         long workId,
-        String workCode,
         String name,
         LocalDate lastDate,
         Integer lastMileage,
@@ -477,7 +431,6 @@ public final class Data {
         Integer nextMileage,
         MaintenanceStatus status) {
       this.workId = workId;
-      this.workCode = workCode;
       this.name = name;
       this.lastDate = lastDate;
       this.lastMileage = lastMileage;
@@ -488,10 +441,6 @@ public final class Data {
 
     public long getWorkId() {
       return workId;
-    }
-
-    public String getWorkCode() {
-      return workCode;
     }
 
     public String getName() {
@@ -518,50 +467,30 @@ public final class Data {
       return status;
     }
 
-    @Override
-    public String toString() {
-      return name;
-    }
   }
 
   public static final class MaintenanceEstimate {
     private final long workId;
-    private final String workCode;
     private final String workName;
     private final BigDecimal estimatedPrice;
     private final Integer intervalKm;
     private final Integer intervalMonths;
-    private final LocalDate nextDate;
-    private final Integer nextMileage;
-    private final MaintenanceStatus status;
 
     public MaintenanceEstimate(
         long workId,
-        String workCode,
         String workName,
         BigDecimal estimatedPrice,
         Integer intervalKm,
-        Integer intervalMonths,
-        LocalDate nextDate,
-        Integer nextMileage,
-        MaintenanceStatus status) {
+        Integer intervalMonths) {
       this.workId = workId;
-      this.workCode = workCode;
       this.workName = workName;
       this.estimatedPrice = estimatedPrice;
       this.intervalKm = intervalKm;
       this.intervalMonths = intervalMonths;
-      this.nextDate = nextDate;
-      this.nextMileage = nextMileage;
-      this.status = status;
     }
 
     public long getWorkId() {
       return workId;
-    }
-
-    public String getWorkCode() {
-      return workCode;
     }
 
     public String getWorkName() {
@@ -580,17 +509,6 @@ public final class Data {
       return intervalMonths;
     }
 
-    public LocalDate getNextDate() {
-      return nextDate;
-    }
-
-    public Integer getNextMileage() {
-      return nextMileage;
-    }
-
-    public MaintenanceStatus getStatus() {
-      return status;
-    }
   }
 
   public static final class Dashboard {

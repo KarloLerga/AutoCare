@@ -1,8 +1,11 @@
 package hr.unizd.autocare.controller;
 
 import hr.unizd.autocare.app.Session;
+import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.model.Data.MaintenanceEstimate;
 import hr.unizd.autocare.model.Data.MaintenanceRow;
+import hr.unizd.autocare.model.Data.WorkRow;
+import hr.unizd.autocare.service.CatalogService;
 import hr.unizd.autocare.service.MaintenanceService;
 import hr.unizd.autocare.view.MainFrame;
 import hr.unizd.autocare.view.components.Ui;
@@ -10,16 +13,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-/** Učitava praćeno održavanje i procjenjuje odabranu konkretnu stavku. */
+/** Učitava praćeno održavanje i procjenjuje bilo koje dostupno održavanje. */
 public final class MaintenanceController {
   private final MainFrame frame;
   private final MaintenanceService maintenanceService;
+  private final CatalogService catalogService;
   private final Session session;
 
   public MaintenanceController(
-      MainFrame frame, MaintenanceService maintenanceService, Session session) {
+      MainFrame frame,
+      MaintenanceService maintenanceService,
+      CatalogService catalogService,
+      Session session) {
     this.frame = frame;
     this.maintenanceService = maintenanceService;
+    this.catalogService = catalogService;
     this.session = session;
     frame.maintenance.estimate.addActionListener(
         new ActionListener() {
@@ -32,28 +40,34 @@ public final class MaintenanceController {
 
   public void load() {
     try {
-      List<MaintenanceRow> rows =
-          maintenanceService.list(session.owner(), session.active().getId());
-      frame.maintenance.setRows(rows);
-      frame.maintenance.coverage.setText(
-          rows.isEmpty()
-              ? "Nema praćenih stavki. Održavanje se pojavi nakon što se rad zabilježi u servisu."
-              : "Prikazano praćenih stavki: " + rows.size());
+      long ownerId = session.getOwnerId();
+      long vehicleId = session.getActiveVehicle().getId();
+      List<MaintenanceRow> tracked = maintenanceService.list(ownerId, vehicleId);
+      List<WorkRow> available =
+          catalogService.works(ownerId, vehicleId, WorkCategory.MAINTENANCE);
+      frame.maintenance.setRows(tracked);
+      frame.maintenance.setAvailableWorks(available);
+      if (tracked.isEmpty()) {
+        frame.maintenance.coverage.setText(
+            "Nema praćenih stavki. Održavanje se počinje pratiti nakon evidentiranog servisa.");
+      } else {
+        frame.maintenance.coverage.setText("Praćenih održavanja: " + tracked.size());
+      }
     } catch (RuntimeException exception) {
       Ui.error(frame.maintenance, exception);
     }
   }
 
   private void estimate() {
-    MaintenanceRow selected = frame.maintenance.selectedWork();
+    WorkRow selected = frame.maintenance.selectedWork();
     if (selected == null) {
-      Ui.info(frame.maintenance, "Odaberite praćeni rad.");
+      Ui.info(frame.maintenance, "Odaberite održavanje.");
       return;
     }
     try {
       MaintenanceEstimate estimate =
           maintenanceService.estimate(
-              session.owner(), session.active().getId(), selected.getWorkId());
+              session.getOwnerId(), session.getActiveVehicle().getId(), selected.getId());
       frame.maintenance.showEstimate(estimate);
     } catch (RuntimeException exception) {
       Ui.error(frame.maintenance, exception);

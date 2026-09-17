@@ -17,7 +17,7 @@ public final class VehiclesView extends JPanel {
   public final JButton add = Ui.button("Dodaj vozilo");
   public final JButton edit = Ui.button("Promijeni kilometražu");
   public final JButton activate = Ui.button("Aktiviraj");
-  public final JButton delete = Ui.button("Obrisi");
+  public final JButton delete = Ui.button("Obriši");
   public final JTable table;
   private final DefaultTableModel tableModel;
   private List<VehicleRow> vehicles = new ArrayList<>();
@@ -28,7 +28,7 @@ public final class VehiclesView extends JPanel {
     tableModel =
         new DefaultTableModel(
             new Object[][] {},
-            new String[] {"Vozilo", "Godina", "Motor", "Kilometraza", "Aktivno"}) {
+            new String[] {"Vozilo", "Godina", "Motor", "Kilometraža", "Aktivno"}) {
           @Override
           public boolean isCellEditable(int row, int column) {
             return false;

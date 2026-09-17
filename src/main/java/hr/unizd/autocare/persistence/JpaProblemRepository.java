@@ -40,7 +40,7 @@ public final class JpaProblemRepository implements ProblemRepository {
     return entityManager
         .createQuery(
             "select problem from Problem problem left join fetch problem.suggestedRepair "
-                + "left join fetch problem.resolvedByService where problem.vehicle.id=:vehicleId "
+                + "where problem.vehicle.id=:vehicleId "
                 + "and problem.vehicle.owner.id=:ownerId "
                 + "order by case when problem.status=:openStatus then 0 else 1 end, "
                 + "problem.createdAt desc,problem.id desc",

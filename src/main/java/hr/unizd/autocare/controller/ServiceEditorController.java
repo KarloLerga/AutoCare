@@ -9,13 +9,20 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Povezuje inline izbor rada i stvarne cijene sa servisnim zapisom. */
+/** Povezuje inline izbor vrste rada, rada i stvarno plaćene cijene sa servisnim zapisom. */
 public final class ServiceEditorController {
   public ServiceEditorController(
       final ServiceEditorDialog view,
       final List<WorkRow> works,
       final ServiceEditorListener listener) {
     view.setWorks(new ArrayList<>(works));
+    view.type.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            view.filterWorks();
+          }
+        });
     view.addItem.addActionListener(
         new ActionListener() {
           @Override

@@ -14,31 +14,24 @@ import hr.unizd.autocare.model.Data.VehicleRow;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** Mapira tocno potrebne podatke dok je persistence context otvoren. */
+/** Mapira točno potrebne podatke dok je persistence context otvoren. */
 final class Mapping {
   private Mapping() {}
 
   static Account account(AppUser user) {
-    return new Account(
-        user.getId(),
-        user.getName(),
-        user.getEmail(),
-        user.getActiveVehicle() == null ? null : user.getActiveVehicle().getId());
+    return new Account(user.getId(), user.getName(), user.getEmail());
   }
 
   static VariantRow variant(VehicleVariant variant) {
     return new VariantRow(
         variant.getId(),
-        variant.getCode(),
         variant.getMake(),
         variant.getModel(),
         variant.getGeneration(),
         variant.getEngineLabel(),
         variant.getFuelType(),
         variant.getTransmission(),
-        variant.getPowerHp(),
-        variant.getYearFrom(),
-        variant.getYearTo());
+        variant.getPowerHp());
   }
 
   static VehicleRow vehicle(Vehicle vehicle, Long activeVehicleId) {
@@ -67,13 +60,16 @@ final class Mapping {
   }
 
   static ProblemRow problem(Problem problem) {
+    String suggestedRepair = null;
+    if (problem.getSuggestedRepair() != null) {
+      suggestedRepair = problem.getSuggestedRepair().getName();
+    }
     return new ProblemRow(
         problem.getId(),
         problem.getDescription(),
         problem.getStatus(),
         problem.getCreatedAt(),
-        problem.getSuggestedRepair() == null ? null : problem.getSuggestedRepair().getName(),
-        problem.getEstimatedCost(),
-        problem.getResolvedByService() == null ? null : problem.getResolvedByService().getId());
+        suggestedRepair,
+        problem.getEstimatedCost());
   }
 }

@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import java.util.Objects;
 
-/** Konkretno vozilo korisnika; trenutna kilometraza ne smije se smanjiti. */
+/** Konkretno vozilo korisnika; trenutna kilometraža ne smije se smanjiti. */
 @Entity
 public class Vehicle {
   @Id
@@ -43,7 +43,7 @@ public class Vehicle {
   public void updateMileage(int mileage) {
     Checks.mileage(mileage);
     if (mileage < currentMileage) {
-      throw new IllegalArgumentException("Trenutna kilometraza ne moze se smanjiti.");
+      throw new IllegalArgumentException("Trenutna kilometraža ne može se smanjiti.");
     }
     currentMileage = mileage;
   }
