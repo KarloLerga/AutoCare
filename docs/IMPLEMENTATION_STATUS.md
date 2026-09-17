@@ -1,119 +1,67 @@
-# Local implementation status (resume point)
+# AutoCare — stvarni status implementacije
 
-## Delta nakon F7 — aktualni zapis
+Updated: 2026-09-17. Ovaj dokument opisuje trenutno stanje repozitorija i stvarne provjere na
+ovoj radnoj stanici. Nema reseta, rebasea ni force-pusha.
 
-Updated: 2026-09-17. Ovaj pass je integriran na prethodno pushani HEAD bez reseta ili izmjene
-postojece povijesti. Live evidence i aktualni SQL audit su zapisani u commitu `d18fde7`.
+## Završene faze
 
-| Delta stavka | Status | Commit / dokaz |
+| Faza | Status | Dokaz |
 |---|---|---|
-| Runtime physical naming strategy | PASS | `be08831`; `persistence.xml` koristi `CamelCaseToUnderscoresNamingStrategy`. |
-| Fizicki index/constraint nazivi | PASS | `VehicleVariant` koristi `year_from`, `ServiceItem` koristi `service_record_id`; `VehicleWorkRule` ostaje `variant_id,work_id`. |
-| Maintenance bez ScheduleKind logike | PASS | `MaintenanceCalculator` ima samo intervalni `calculate(...)`; `MaintenanceService` koristi specificni rule ili WorkDefinition fallback. |
-| Legacy DB kompatibilnost | PASS | Read-only `schema/06_student_runtime_compat.sql` prvo je vratio ocekivani stari snake_case oblik; nakon tocne provjere baze primijenjene su samo njegove guarded minimalne izmjene. Ponovni read-only pregled potvrdio je oba nullable intervalna stupca i DB default za legacy `request_key`. |
-| Diagnostics i dijagrami | PASS (unchanged) | Nisu dirani `DiagnosticRule`, Strategy/Problem flow ni `.dot/.mmd/.png/.svg` datoteke. |
-| Maven/JDK25 verification | PASS | `git diff --check`, `clean verify`, `package`, `javadoc:javadoc`, runtime `install` i neovisni setup `clean test package` prosli. |
-| Stvarna Azure SQL/JPA provjera | PASS | Commit `d18fde7`; `sql-check`, Hibernate `db-check` (`validate`) i read-only `scripts/verify-database.sql` prosli nad postojecim Azure SQL targetom; katalog je 30.366 varijanti / 122 rada / 1.650.435 pravila / 87 dijagnostickih pravila, bez duplikata. |
+| Runtime transakcije, repositoryji i JPA mapping | PASS | `f545934`; eksplicitni `EntityManager`/`EntityTransaction`, pet repository sučelja, `hbm2ddl=none`. |
+| Klasični Swing kontroleri i pogledi | PASS | `74aae6f`, `f869795`; anonimni `ActionListener`, obične tablice i prikaz detalja u View klasama. |
+| Testovi i događaji | PASS | `c2cecff`; testovi više ne ovise o uklonjenim pomoćnim klasama i `AppEvents` izravno obilazi listenere. |
+| Setup/import alati | PASS | `33cebd9`; SQL alati koriste postojeće `snake_case` tablice i ne traže legacy plan kolonu. |
+| Završni DB cleanup | PASS | `39522e7`; `schema/07_final_student_cleanup.sql` je prvo pokrenut read-only, zatim guardirano primijenjen. |
+| Runtime style scanner | PASS | `scripts/check-runtime-style.ps1`; 72 runtime Java datoteke bez zabranjenih konstrukcija. |
 
-Delta ogranicenja: odvojeni `_test` profil i login/CRUD manual smoke te native Windows GUI ostaju
-`NOT_RUN`/`BLOCKED`; ne oznacavaju se kao PASS bez stvarnog izvrsenja. SQL patch nije radio rename,
-rebuild, backfill ni brisanje podataka. Puni seed nije ponovno pokretan jer je postojece katalog
-punjenje vec provjereno i ponovno punjenje nije potrebno za ovu runtime kompatibilnost.
+## Azure SQL rezultat
 
-## V2 studentska simplifikacija — baseline prije delta passa
+Read-only audit je pronašao točno šest legacy kolona: tri `version`, dva `request_key` i
+`vehicle_work_rule.schedule_kind`. Pronađeni su samo njima pripadajući default, unique indeksi i
+check constraint. Nakon provjere točne baze primijenjena je transakcijska skripta; nisu brisane
+tablice, kataloški redovi, servisi ni korisnički podaci.
 
-Updated: 2026-09-16. Ovaj odjeljak je aktualan za commitove nakon REVIEW-CLEAN-2 i nadopunjuje
-povijesne AF3/CLEAN redove ispod. Svaka faza je stvarno implementirana u repozitoriju i pushana na
-`main`; dijagnosticki kod je ostao izvan funkcionalnog V2 reza.
+Završni audit potvrđuje:
 
-| V2 faza | Status | Commit / dokaz |
-|---|---|---|
-| F1 dark FlatLaf i jednostavnija tema | PASS | `9d68dd9`; Maven testovi nakon faze |
-| F2 jednostavan SwingWorker/session tok | PASS | `e053fc4`; Maven testovi nakon faze |
-| F3 servisni save bez request-key flowa | PASS | `e05eb5c`; ServiceRecord/ServiceInput/forma uskladeni |
-| F4 puna servisna povijest bez paging statea | PASS | `2e582ea`; list API i SQL IT uskladeni |
-| F5 repository/runner simplifikacija | PASS | `4f0762d`; runner lifecycle testovi prosli |
-| F6 aplikacijski servisi i DTO version flow | PASS | `e06888c`; auth/vehicle/controller potpisi uskladeni |
-| F7 maintenance model i schema delta | PASS | `1d4bc11`; `mvnw -q test`, dodatne offline provjere: 18 |
-| F8 dokumentacija i završna verifikacija | PASS uz blokade | `336a695`; docs uskladeni, `clean verify`, setup package, Javadoc, staged secret-check i runtime-JAR audit prosli |
+- `vehicle_variant`: 30.366
+- `work_definition`: 122
+- `vehicle_work_rule`: 1.650.435
+- `diagnostic_rule`: 87
+- duplikati kataloškog koda i para varijanta/rad: 0
+- svih šest legacy kolona: nema ih više
 
-V2 SQL promjena nije pokrenuta nad postojećom Azure bazom. `schema/05_student_simplification_v2.sql`
-je read-only po defaultu i dodaje samo nullable `defaultIntervalKm`/`defaultIntervalMonths` na ciljnu
-`dbo.WorkDefinition` tablicu. Target-name Hibernate validate, izolirani SQL Server profil i native
-Windows GUI smoke ostaju `BLOCKED`/`NOT_RUN` bez zasebne odobrene `_test` baze i dostupnog GUI kanala.
-Updated: 2026-09-16 during the local Codex integration and REVIEW-CLEAN-2 cleanup. This file records only commands actually executed on this workstation.
+## Izvršene provjere
 
-## REVIEW-CLEAN-2 cleanup status
+| Naredba/provjera | Rezultat |
+|---|---|
+| `git diff --check` | PASS |
+| `.\mvnw.cmd -q clean verify` | PASS; offline provjere: 7 |
+| `.\mvnw.cmd -q package` | PASS |
+| `.\mvnw.cmd -q javadoc:javadoc` | PASS |
+| `.\mvnw.cmd -q install -DskipTests` | PASS |
+| `.\mvnw.cmd -q -f tools\setup\pom.xml clean test package` | PASS |
+| `powershell -ExecutionPolicy Bypass -File scripts\check-runtime-style.ps1` | PASS; 72 datoteke |
+| `scripts\check-secrets.ps1` | PASS nad staged sadržajem |
+| `sql-check` | PASS; Azure SQL, TLS provjera uključena |
+| `db-check` | PASS; Hibernate/JPA s `hbm2ddl=none`, 30.366 varijanti |
+| `schema/07_final_student_cleanup.sql` | PASS; read-only audit i guardirana primjena |
+| `scripts/verify-database.sql` | PASS; završni counts, indeksi, FK i legacy audit |
 
-The status below applies to the cleanup worktree, not to the earlier Azure run whose schema used the old
-snake_case names. The target JPA contract is in `schema/naming_manifest.json`; the existing Azure database was
-not renamed in this phase.
+## Blokade i NOT_RUN
 
-| Cleanup phase | Status | Evidence / next action |
-|---|---|---|
-| R1 transaction review | PASS | Commit `f821f69`; one transaction boundary remains in the service and the runner preserves original failures. |
-| C1 readability | PASS | Google Java Format 1.27.0 and the final explicit-import/brace audit passed over all repository Java sources. |
-| C2 setup isolation | PASS | Seven developer classes are under `tools/setup`; the root POM has no modules and setup depends on installed `hr.unizd:autocare`. |
-| C3/C4 naming and JPA | PASS (source) | `AppUser`, `productionYear`, `serviceDate`, standard implicit names and preserved constraints are in the runtime sources. |
-| C5 existing-database migration | BLOCKED / NOT_RUN | The available database is the populated old snake_case schema and there is no separately approved copy/restore target. Migration scripts default to read-only. |
-| C6 simplification | PASS | Runtime `Main` is GUI-only; `specific` and the legacy schedule fallback/revise path are removed. |
-| C7 distribution boundary | PASS | Runtime and setup have separate Maven artifacts; the clean runtime JAR has no setup tools or private/reference-data payloads. |
-| C8 final verification | PASS with explicit blockers | Commit `1450b55` passed clean Maven verify, setup test/package, Javadoc, parser, runtime-JAR audit, UTF-8 cleanup-package tests (39/39), secret check and SQL-script safety checks. Target-name SQL/JPA integration and GUI remain NOT_RUN/BLOCKED under C5/F4-F6. |
+- Izolirani SQL Server Maven profil je `NOT_RUN`: nema zasebne odobrene baze s nastavkom `_test`.
+- Ručni GUI smoke, DPI, tipkovnica i native Windows interakcija su `BLOCKED` jer native GUI kanal
+  nije dostupan u ovoj sesiji. Nisu označeni kao PASS.
+- Runtime ne koristi image API. Slike su lokalni resources i njihovo model-specific/licence odobrenje
+  ostaje developer enrichment, ne automatska potvrda kandidata.
 
-### REVIEW-CLEAN-2 executed evidence
+## Trenutna arhitektura
 
-- Source/setup commit: `1450b55` (`refactor: isolate setup tools and align JPA naming`).
-- `.\mvnw.cmd -q clean verify`: PASS; all Maven tests passed and `Additional offline checks passed: 20`. The expected runner test warning logs a simulated close failure after a successful commit.
-- `.\mvnw.cmd -q install -DskipTests`: PASS; installed the main artifact for the independent setup build.
-- `.\mvnw.cmd -q -f tools\setup\pom.xml clean test package`: PASS.
-- `.\mvnw.cmd -q javadoc:javadoc`: PASS on JDK 25.
-- Cleanup `runtime_audit.py`: PASS; 79 runtime Java files, zero source errors/warnings and zero runtime-JAR errors. Runtime JAR contains no setup tools; setup JAR contains `DatabaseTool`.
-- Cleanup `ParseSources.java`: PASS; 79 main Java sources parsed.
-- Cleanup package tests under UTF-8 Python: PASS, 39/39.
-- `scripts/check-secrets.ps1`: PASS; credentials remain outside the repository.
-- Reviewed SQL scripts: PASS static safety checks; rename/reverse scripts default to `DECLARE @Apply bit = 0`, contain rollback guards and do not execute against the current Azure database.
+Java 25 + Maven + Swing/FlatLaf + JPA/Hibernate + Microsoft SQL Server/Azure SQL. Runtime koristi
+camelCase Java imena i Hibernate `CamelCaseToUnderscoresNamingStrategy`; fizička baza ostaje
+`snake_case`, a DDL je izvan GUI runtimea (`hbm2ddl=none`). Service klase izravno određuju granicu
+transakcije, repositoryji samo dohvaćaju/persistiraju, Strategy ostaje za dijagnostiku, a Observer
+ostaje mali in-memory listener.
 
-The F0-F9 rows below preserve earlier implementation evidence. F3 and F7 are historical because they were
-executed before this name-only JPA refactor; they are not validation of the target schema.
-
-| Phase | Status | Evidence / next action |
-|---|---|---|
-| Reference preparation | OFFLINE CHECKS EXECUTED | See VERIFICATION.md and docs/evidence |
-| F0 local Git/JDK25/Azure name | PASS | JDK 25 and external private config confirmed; read-only `db-list` reached Azure and discovered one existing database. The confirmed name remains only in the external private config. See docs/evidence/local-azure-check.md |
-| F1 real Maven/JDK25 build | PASS | Official Maven 3.9.16 bootstrap/checksum, wrapper generation and `mvnw clean verify`; commit `dfd301c` |
-| F2 local full unit run | PASS | Java 25 Maven tests plus Windows UTF-8 Python data tests; validator resource-warning fix is included in commit `ae9cd52` |
-| F3 actual SQL/JPA/schema/sample | PASS | `sql-check`, explicit `schema-update`, `db-check`, read-only schema/FK/index inspection, sample seed and identical sample rerun all passed against the existing Azure SQL database; evidence commit `ae9cd52` |
-| F4-F6 actual GUI flows | BLOCKED | Windows Computer Use native pipe nije dostupan; neautomatizirani login/CRUD scenariji nisu označeni kao PASS. Nije stvoren testni korisnik u razvojnoj bazi. |
-| F7 actual full seed/rerun | PASS | Sample first+second run and full AF3 seed/resume completed: 30,366 variants / 122 works / 1,650,435 rules / 87 diagnostics. Referenced intervals stayed opt-in; evidence commit `ae9cd52` |
-| F8 local visual fallback | PASS | Added two local generated category illustrations, classpath provenance and offline `VehicleImageTest`; exact model-specific Commons candidates remain unapproved. See `docs/evidence/local-image-enrichment.md` |
-| F9 final docs/Javadoc/Git DAG | PARTIAL | Javadoc i Git DAG stvarno provjereni; screenshot/DPI/manual evidence čeka dostupni Windows GUI helper. |
-
-## Local execution log
-
-- 2026-09-16: JDK/Javac `25.0.4.1` detected from Eclipse Adoptium.
-- 2026-09-16: Maven 3.9.16 downloaded into ignored `.tools/` and verified against Apache SHA-512; the bootstrap script required two Windows PowerShell compatibility fixes.
-- 2026-09-16: Official only-script Maven wrapper generated with `maven-wrapper-plugin:3.3.4`.
-- 2026-09-16: `.\mvnw.cmd clean verify` passed with 86 production sources, 5 test sources and 8 tests total (7 `CoreTest`, 1 `SqlInfrastructureTest`).
-- 2026-09-16: SQL credentials are loaded only from an external local configuration; no password or token is stored in this repository or this log.
-- 2026-09-16: The initial read-only `db-list` was blocked by the Azure firewall; after the user allowed the current client IP, the same read-only command discovered one existing database. The name is intentionally omitted here and remains external.
-- 2026-09-16: `sql-check` passed with SQL Server TLS verification enabled; explicit `schema-update --confirm-development-schema` created the JPA schema in the selected existing database, and `db-check` passed with 30,366 catalog variants.
-- 2026-09-16: Sample seed passed and an identical sample rerun preserved 8 variants / 122 works / 403 rules / 87 diagnostics without duplicates.
-- 2026-09-16: The full seed resumed after an earlier process ended with 1,438,118 committed rules; the idempotent rerun completed with 30,366 variants / 122 works / 1,650,435 rules / 87 diagnostics. No `TRUNCATE`, disabled FK or TLS bypass was used.
-- 2026-09-16: Read-only schema verification passed with zero duplicate variant codes, zero duplicate variant/work groups, 367,519 NULL estimates, and the expected primary/unique/index/FK structures. Full details are in docs/evidence/azure-seed-validation.md.
-- 2026-09-16: Python AF3 structural audit, 31 AF3 tests, 5 estimate tests and 4 catalog tests pass under Windows Python 3.12.4 with `-W error::ResourceWarning`; the validator file-close fix is included in commit `ae9cd52`.
-- 2026-09-16: Added `generic-vehicle.jpg` and `generic-electric.jpg` as local generated category illustrations, with packaged CSV/HTML provenance and classpath regression tests. They are not exact model photos and do not auto-approve any catalog group.
-- 2026-09-16: Real `mvnw -q clean verify` passed after the image phase with 10 tests total (7 `CoreTest`, 1 `SqlInfrastructureTest`, 2 `VehicleImageTest`); all three local vehicle JPEG resources are packaged under `target/classes`.
-- 2026-09-16: Real `mvnw javadoc:javadoc` passed on Java 25. Windows GUI interaction/DPI/cancellation scenarios are BLOCKED because the Computer Use native pipe is unavailable; the isolated SQL Server `_test` profile is NOT_RUN because no separate approved database exists. Exact model-specific Commons photo enrichment remains NOT_RUN; local generic fallback is covered by F8 and its evidence file.
-
-## V2 F8 izvedeni dokazi
-
-- `.\mvnw.cmd -q clean verify`: PASS; Maven/JDK25 testovi i `Additional offline checks passed: 18`.
-- `.\mvnw.cmd -q install -DskipTests`: PASS; runtime artifact instaliran za neovisni setup build.
-- `.\mvnw.cmd -q -f tools\setup\pom.xml clean test package`: PASS.
-- `.\mvnw.cmd -q javadoc:javadoc`: PASS na JDK 25.
-- `scripts/check-secrets.ps1`: PASS nad staged F8 dokumentacijom; nema privatnih/arhivskih datoteka ni credential patterna.
-- Runtime JAR audit: PASS; setup klase nisu u runtime JAR-u, a lokalne fallback slike/provenance su prisutne.
-- Git/DAG: PASS; F1-F8 su stvarni linearni commitovi na `main`, bez force-pusha; F8 je `336a695`.
-- Dijagrami: PASS ocuvani; F8 nije mijenjao `.dot`, `.mmd`, `.png` ni `.svg` datoteke.
-
-Record each future run with date, phase, exact non-secret command, outcome, relevant commit SHA, blocker and next step. Do not replace blocked results with imagined success.
+Stvarni fazni commitovi prije dokumentacijskog završetka: `f545934`, `74aae6f`, `c2cecff`,
+`33cebd9`, `39522e7`, `f869795`.

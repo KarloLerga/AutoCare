@@ -1,36 +1,19 @@
 digraph AutoCareDomain {
-    graph [
-        rankdir=TB,
-        bgcolor="white",
-        pad="0.3",
-        nodesep="0.5",
-        ranksep="0.7",
-        fontname="Helvetica",
-        label="AutoCare - persistent domain UML",
-        labelloc=t
-    ];
-    node [
-        fontname="Helvetica",
-        shape=box,
-        style="rounded,filled",
-        fillcolor="#F4F7FB",
-        color="#176B87",
-        margin="0.18"
-    ];
+    graph [rankdir=TB, bgcolor="white", pad="0.3", nodesep="0.5", ranksep="0.7", fontname="Helvetica", label="AutoCare - aktualna persistentna domena", labelloc=t];
+    node [fontname="Helvetica", shape=box, style="rounded,filled", fillcolor="#F4F7FB", color="#176B87", margin="0.18"];
     edge [fontname="Helvetica", fontsize=10, color="#526477"];
 
-    AppUser [label="AppUser\n------------------------\nid: Long\nname: String\nemail: String\npasswordHash: String\nactiveVehicle: Vehicle?\n------------------------\n+ activate(vehicle)"];
-    VehicleVariant [label="VehicleVariant\n------------------------\nid: Long\ncode: String\nmake: String\nmodel: String\ngeneration: String\nengineLabel: String\nyearFrom: int\nyearTo: Integer?\nimagePath: String?\n------------------------\n+ covers(year)"];
-    Vehicle [label="Vehicle\n------------------------\nid: Long\nproductionYear: int\ncurrentMileage: int\n------------------------\n+ changeIdentity(...)\n+ updateMileage(km)"];
-    WorkDefinition [label="WorkDefinition\n------------------------\nid: Long\ncode: String\nname: String\ncategory: WorkCategory\ndefaultEstimatedPrice: BigDecimal?"];
-    VehicleWorkRule [label="VehicleWorkRule\n------------------------\nscheduleKind: ScheduleKind\nintervalKm: Integer?\nintervalMonths: Integer?\nestimatedPrice: BigDecimal?\n------------------------\n+ defineScheduleKind(kind)"];
-    ServiceRecord [label="ServiceRecord\n------------------------\nid: Long\nrequestKey: String\nserviceDate: LocalDate\nmileage: int\n------------------------\n+ addItem(work, price)\n+ total(): CostSummary"];
-    ServiceItem [label="ServiceItem\n------------------------\nactualPrice: BigDecimal?"];
-    Problem [label="Problem\n------------------------\nrequestKey: String\ndescription: String\nstatus: ProblemStatus\ncreatedAt: LocalDateTime\nmatchPercent: BigDecimal?\nestimatedCost: BigDecimal?\n------------------------\n+ resolve(service)"];
-    DiagnosticRule [label="DiagnosticRule\n------------------------\ncode: String\nphrase: String\nweight: int\nactive: boolean"];
+    AppUser [label="AppUser\nid, name, email\npasswordHash, activeVehicle\n+ activate(vehicle)"];
+    VehicleVariant [label="VehicleVariant\nid, code, make, model\ngeneration, engineLabel\nyears, technical data, imagePath\n+ covers(year)"];
+    Vehicle [label="Vehicle\nid, productionYear\ncurrentMileage\n+ changeIdentity(...)\n+ updateMileage(km)"];
+    WorkDefinition [label="WorkDefinition\nid, code, name, category\ndefault intervals and estimate"];
+    VehicleWorkRule [label="VehicleWorkRule\nid, intervalKm, intervalMonths\nestimatedPrice, sources"];
+    ServiceRecord [label="ServiceRecord\nid, serviceDate, mileage, note\n+ addItem(work, actualPrice)\n+ total()"];
+    ServiceItem [label="ServiceItem\nid, actualPrice"];
+    Problem [label="Problem\nid, description, status\ncreatedAt, analysis snapshot\n+ resolve(serviceRecord)"];
+    DiagnosticRule [label="DiagnosticRule\nid, code, phrase\nweight, active"];
     WorkCategory [shape=ellipse, label="enum WorkCategory\nMAINTENANCE | REPAIR"];
     ProblemStatus [shape=ellipse, label="enum ProblemStatus\nOPEN | RESOLVED"];
-    ScheduleKind [shape=ellipse, label="enum ScheduleKind\nFIXED | UNKNOWN\nCONDITION_BASED | VEHICLE_INDICATOR"];
 
     AppUser -> Vehicle [label="activeVehicle 0..1"];
     Vehicle -> AppUser [label="owner 1"];
@@ -46,5 +29,4 @@ digraph AutoCareDomain {
     DiagnosticRule -> WorkDefinition [label="candidate 1"];
     WorkDefinition -> WorkCategory [style=dashed, label="value"];
     Problem -> ProblemStatus [style=dashed, label="value"];
-    VehicleWorkRule -> ScheduleKind [style=dashed, label="value"];
 }

@@ -10,14 +10,12 @@ classDiagram
     Problem "*" --> "1" Vehicle : vehicle
     Problem "*" --> "0..1" WorkDefinition : suggestedRepair
     Problem "*" --> "0..1" ServiceRecord : resolvedByService
-    DiagnosticRule "*" --> "1" WorkDefinition : candidate REPAIR
+    DiagnosticRule "*" --> "1" WorkDefinition : candidate
     WorkDefinition --> WorkCategory
     Problem --> ProblemStatus
-    VehicleWorkRule --> ScheduleKind
 
     class AppUser {
         Long id
-        long version
         String name
         String email
         String passwordHash
@@ -25,7 +23,6 @@ classDiagram
     }
     class Vehicle {
         Long id
-        long version
         int productionYear
         int currentMileage
         changeIdentity(VehicleVariant, int)
@@ -33,7 +30,6 @@ classDiagram
     }
     class ServiceRecord {
         Long id
-        String requestKey
         LocalDate serviceDate
         int mileage
         addItem(WorkDefinition, BigDecimal)
@@ -43,21 +39,11 @@ classDiagram
         Long id
         BigDecimal actualPrice
     }
-    class WorkDefinition {
-        String code
-        String name
-        WorkCategory category
-        BigDecimal defaultEstimatedPrice
-        String estimateNote
-    }
     class VehicleWorkRule {
-        ScheduleKind scheduleKind
         Integer intervalKm
         Integer intervalMonths
         BigDecimal estimatedPrice
         String intervalSource
-        String estimateNote
-        defineScheduleKind(ScheduleKind)
     }
     class Problem {
         ProblemStatus status
@@ -65,12 +51,6 @@ classDiagram
         BigDecimal matchPercent
         BigDecimal estimatedCost
         resolve(ServiceRecord)
-    }
-    class DiagnosticRule {
-        String code
-        String phrase
-        int weight
-        boolean active
     }
     class WorkCategory {
         <<enumeration>>
@@ -81,11 +61,4 @@ classDiagram
         <<enumeration>>
         OPEN
         RESOLVED
-    }
-    class ScheduleKind {
-        <<enumeration>>
-        FIXED
-        UNKNOWN
-        CONDITION_BASED
-        VEHICLE_INDICATOR
     }

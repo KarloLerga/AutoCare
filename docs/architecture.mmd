@@ -1,14 +1,10 @@
 flowchart TD
-    V[View<br/>Swing forms and drafts<br/>FlatLaf styles] --> C[Controller<br/>listeners + SwingWorker<br/>EDT/background boundary]
-    C --> S[Service<br/>use-case + validation<br/>business transaction boundary]
-    S --> D[Domain<br/>9 entities, enums, calculators]
-    S --> R[Repository interfaces<br/>query/persist contracts]
-    S --> T[TransactionRunner<br/>technical boundary]
-    S --> STR[DiagnosticStrategy<br/>policy interface]
-    T -. implements .-> JT[JpaTransactionRunner<br/>one EntityManager / operation]
-    JT --> P[JPA repository implementations<br/>shared EntityManager]
-    P -. implements .-> R
+    V[View<br/>Swing forms dialogs tables<br/>FlatLaf styles] --> C[Controller<br/>classic ActionListener<br/>coordinates UI]
+    C --> S[Service<br/>use-case and validation<br/>business transaction boundary]
+    S --> D[Domain<br/>9 entities enums calculators]
+    S --> R[Repository interfaces<br/>query and persist contracts]
+    S --> STR[DiagnosticStrategy<br/>analysis policy]
+    R -. implements .-> P[JPA repositories<br/>JPQL persist remove]
     P --> D
-    JT --> I[JPA / Hibernate / JDBC infrastructure]
-    P --> I
-    I --> DB[(Azure SQL Database<br/>dbo target schema)]
+    P --> I[JPA Hibernate JDBC]
+    I --> DB[(Azure SQL<br/>dbo snake_case)]

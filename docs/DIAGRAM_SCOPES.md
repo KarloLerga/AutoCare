@@ -1,56 +1,29 @@
-# Razdvajanje prikaza prema novom reviewu
+# Opseg dijagrama
 
-Ovo nije promjena GUI-ja ni zahtjev da kod slijedi stare slikovne makete. Nakon sto stvarni kod
-prodje testove, dokumentaciju uskladiti s tim kodom. Nove finalne slike nisu renderirane u ovom dodatku.
+Dijagrami su tri različita pogleda na isti aktualni kod. DOT/Mermaid izvori i renderirane PNG/SVG
+datoteke moraju ostati međusobno usklađeni.
 
-## 1. Arhitektura: odgovornosti i ovisnosti
+## 1. Arhitektura
 
-Na ovoj slici prikazati View, Controller, Application/Service, Domain, repository sucelja i JPA
-implementaciju/infrastrukturu. Service koristi domenu i repository/transaction sucelja. Jpa implementacije
-implementiraju ta sucelja, mapiraju domain i ovise o JPA/Hibernate infrastrukturi. Baza je vanjski tehnicki
-resurs te infrastrukture. Domain nije tehnicka postaja nakon baze i nema SQL pozivnu strelicu prema njoj.
+`architecture.*` prikazuje View → Controller → Service → Repository → JPA/Hibernate → Azure SQL.
+Domain tipovi koriste se između Service i Repository sloja. Service je vlasnik poslovne granice
+transakcije; repositoryji imaju samo dohvat/persistiranje.
 
-Service oznaciti kao vlasnika POSLOVNE granice transakcije. JpaTransactionRunner oznaciti kao izvrsitelja
-TEHNICKOG lifecyclea jedne tako odredjene transakcije. Repository oznaciti samo query/persist.
-Na ovu sliku ne stavljati svaki povratni rezultat, ORM mapiranje pojedinog polja ili callback dogadjaj.
-Jedna jasna legenda strelice: ovisnost. Tok save-a objasnjava se tekstom ili zasebnim sequence prikazom.
+## 2. Persistentna domena
 
-## 2. Prvi UML class prikaz: persistentna domena
+`domain.*` prikazuje devet aktualnih entiteta i enumove koji su dio Java domene. Ne prikazuje
+Controller, Strategy ni privremene DTO rezultate kao tablice. Kardinalnosti su fizičke/poslovne:
+vozilo ima ownera i varijantu, servis pripada vozilu i ima stavke, problem pripada vozilu i može biti
+riješen jednim servisom.
 
-Za aktualni runtime: AppUser, Vehicle, VehicleVariant, ServiceRecord, ServiceItem, WorkDefinition,
-VehicleWorkRule, Problem, DiagnosticRule; enumove prikazati kao enum, ne kao dodatne SQL tablice.
-Prikazati vazne atribute, domenske metode i stvarne kardinalnosti, ne svih pedeset getter metoda.
+## 3. Aplikacijski odnosi
 
-Primjeri: Vehicle ima jednog ownera i jednu varijantu; ServiceRecord pripada jednom vozilu i sadrzi
-najmanje jednu ServiceItem; Problem ima opcionalni resolvedByService (vise problema na jedan servis).
-Ne izmisljati User.vehicles kolekciju samo zato sto FK semanticki opisuje vise vozila. Association moze
-postojati i bez Java kolekcije u oba smjera. AppUser.activeVehicle tehnicki nullable pri registraciji,
-a dovrseni racun ga poslovno mora imati. Te dvije tvrdnje se objasnjavaju, ne mijesaju.
+`design.*` prikazuje reprezentativne Controller/Service/Repository odnose te
+`DiagnosticStrategy`/`KeywordDiagnosticStrategy` i `Data` rezultate. Transakcija je nacrtana kao
+odgovornost Service klase i neposredni JPA lifecycle, bez dodatnog generičkog posrednika.
 
-U ovaj prikaz ne stavljati Controllers, Strategy implementaciju ili DiagnosticResult kao entitete.
+## 4. ERD
 
-## 3. Drugi UML class prikaz: aplikacijski/design odnosi
-
-Prikazati reprezentativni kompletan save/analysis put kroz STVARNE tipove:
-ServicesController, ServiceRecordService, TransactionRunner, JpaTransactionRunner,
-Repositories i relevantna mala repository sucelja/implementacije. Dodati ProblemService,
-DiagnosticStrategy, KeywordDiagnosticStrategy i ne-persistentni Data.DiagnosticResult.
-Pojednostaviti prikaz zajednickih ponavljanja i objasniti ostale Service klase u tablici.
-
-ServiceRecordService ovisi o TransactionRunner sucelju, ne concrete JpaTransactionRunneru.
-JpaTransactionRunner implementira sucelje i kreira konkretne repository objekte s jednim EM-om.
-ProblemService koristi DiagnosticStrategy sucelje; rezultat je plain Java privremeni podatak.
-Ne prikazivati nasljedivanje gdje je samo konstruktorom predana ovisnost.
-
-## 4. ERD je treci, razlicit tip dokumenta
-
-ERD prikazuje fizicke postojece snake_case SQL tablice i FK stupce koje runtime koristi uz Hibernate
-physical naming strategy. Nema Controller/Strategy tablice. Ostaje kao obavezni dio dokumentacije,
-odvojen od dva UML class pogleda. Kratki sequence/save opis
-moze biti poseban dodatak, ali nije zamjena za arhitekturni dependency prikaz.
-
-## 5. Sto je profesor stvarno trazio
-
-Profesor je predlozio dva dijagrama klasa i jasnu Service transakcijsku odgovornost, ne nove module
-ili tocno odredjeni paketni naziv. Nazivi iz ovoga dokumenta prate nas konkretni kod i korisnikov cleanup,
-nisu obvezni nazivi prepisani iz njegova komentara. Pri generiranju finalnih slika uzeti aktualni source.
+`erd.*` prikazuje fizičke `dbo` `snake_case` tablice, PK/FK i važne podatke. Ne prikazuje pomoćne
+Java klase. Nakon završnog cleanup-a u ERD-u nema legacy `version`, `request_key` ni `schedule_kind`
+stupaca. Brojevi i tipovi odgovaraju live SQL auditu gdje je navedeno u `docs/VERIFICATION.md`.
