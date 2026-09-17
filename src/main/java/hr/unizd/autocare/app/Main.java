@@ -7,7 +7,6 @@ import hr.unizd.autocare.service.AuthService;
 import hr.unizd.autocare.service.CatalogService;
 import hr.unizd.autocare.service.DashboardService;
 import hr.unizd.autocare.service.MaintenanceService;
-import hr.unizd.autocare.service.PasswordHasher;
 import hr.unizd.autocare.service.ProblemService;
 import hr.unizd.autocare.service.ServiceRecordService;
 import hr.unizd.autocare.service.VehicleService;
@@ -19,7 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-/** Ulaz normalne GUI aplikacije; nema naredbi za shemu, seed ili slike. */
+/** Ulaz normalne GUI aplikacije. */
 public final class Main {
   private Main() {}
 
@@ -36,15 +35,17 @@ public final class Main {
   private static void startApplication() {
     initializeLookAndFeel();
     EntityManagerFactory entityManagerFactory = null;
+
     try {
       entityManagerFactory = DatabaseConfig.open();
-      PasswordHasher passwordHasher = new PasswordHasher();
-      AuthService authService = new AuthService(entityManagerFactory, passwordHasher);
+
+      AuthService authService = new AuthService(entityManagerFactory);
       CatalogService catalogService = new CatalogService(entityManagerFactory);
       VehicleService vehicleService = new VehicleService(entityManagerFactory);
       ServiceRecordService serviceRecordService =
           new ServiceRecordService(entityManagerFactory);
-      MaintenanceService maintenanceService = new MaintenanceService(entityManagerFactory);
+      MaintenanceService maintenanceService =
+          new MaintenanceService(entityManagerFactory);
       ProblemService problemService =
           new ProblemService(entityManagerFactory, new KeywordDiagnosticStrategy());
       DashboardService dashboardService = new DashboardService(entityManagerFactory);
@@ -52,6 +53,7 @@ public final class Main {
       MainFrame frame = new MainFrame();
       Session session = new Session();
       AppEvents events = new AppEvents();
+
       new MainController(
           frame,
           session,
@@ -64,11 +66,13 @@ public final class Main {
           dashboardService,
           events,
           entityManagerFactory);
+
       frame.setVisible(true);
     } catch (RuntimeException exception) {
       if (entityManagerFactory != null) {
         entityManagerFactory.close();
       }
+
       JOptionPane.showMessageDialog(
           null,
           "Povezivanje nije uspjelo. Provjerite mrezu i vanjsku konfiguraciju baze.",

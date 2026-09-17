@@ -29,8 +29,4 @@ class CoreTest {
     CoreChecks.entities();
   }
 
-  @Test
-  void passwordStorage() {
-    CoreChecks.passwords();
-  }
 }

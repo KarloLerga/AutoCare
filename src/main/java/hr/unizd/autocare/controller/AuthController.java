@@ -16,7 +16,6 @@ import hr.unizd.autocare.view.components.Ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /** Prijava i trokoracni onboarding bez polovicnog spremanja korisnika. */
@@ -44,6 +43,7 @@ public final class AuthController {
     this.authService = authService;
     this.catalogService = catalogService;
     this.loginListener = loginListener;
+
     frame.login.login.addActionListener(
         new ActionListener() {
           @Override
@@ -51,6 +51,7 @@ public final class AuthController {
             login();
           }
         });
+
     frame.login.register.addActionListener(
         new ActionListener() {
           @Override
@@ -62,15 +63,14 @@ public final class AuthController {
 
   private void login() {
     String email = frame.login.email.getText();
-    char[] password = frame.login.password.getPassword();
+    String password = new String(frame.login.password.getPassword());
+
     try {
       Account account = authService.login(email, password);
       frame.login.password.setText("");
       loginListener.loggedIn(account.getId());
     } catch (RuntimeException exception) {
       Ui.error(frame, exception);
-    } finally {
-      Arrays.fill(password, '\0');
     }
   }
 
@@ -88,6 +88,7 @@ public final class AuthController {
             nextRegistrationStep();
           }
         });
+
     onboardingView.back.addActionListener(
         new ActionListener() {
           @Override
@@ -95,6 +96,7 @@ public final class AuthController {
             previousRegistrationStep();
           }
         });
+
     onboardingView.addHistory.addActionListener(
         new ActionListener() {
           @Override
@@ -102,6 +104,7 @@ public final class AuthController {
             addHistoryItem();
           }
         });
+
     onboardingView.removeHistory.addActionListener(
         new ActionListener() {
           @Override
@@ -109,6 +112,7 @@ public final class AuthController {
             removeHistoryItem();
           }
         });
+
     onboardingView.finish.addActionListener(
         new ActionListener() {
           @Override
@@ -116,6 +120,7 @@ public final class AuthController {
             finishRegistration();
           }
         });
+
     onboardingView.cancel.addActionListener(
         new ActionListener() {
           @Override
@@ -123,6 +128,7 @@ public final class AuthController {
             cancelRegistration();
           }
         });
+
     Ui.escape(onboardingView);
     onboardingView.setVisible(true);
   }
@@ -133,21 +139,27 @@ public final class AuthController {
         validateAccountStep();
       } else {
         VehicleInput vehicleInput = onboardingView.vehicle.input();
-        if (!registrationHistory.isEmpty() && historyVariantId != vehicleInput.getVariantId()) {
+
+        if (!registrationHistory.isEmpty()
+            && historyVariantId != vehicleInput.getVariantId()) {
           boolean discard =
               Ui.confirm(
                   onboardingView,
                   "Promijenili ste varijantu. Odbaciti povijest prethodne varijante?");
+
           if (!discard) {
             return;
           }
+
           registrationHistory.clear();
           onboardingView.setHistory(registrationHistory);
           historyVariantId = -1L;
         }
       }
+
       int nextStep = onboardingView.step() + 1;
       onboardingView.step(nextStep);
+
       if (nextStep == 1 && !vehiclePickerStarted) {
         vehiclePickerStarted = true;
         vehiclePicker.loadMakes();
@@ -166,16 +178,14 @@ public final class AuthController {
   private void validateAccountStep() {
     Checks.text(onboardingView.name.getText(), 100, "Ime");
     Checks.email(onboardingView.email.getText());
-    char[] password = onboardingView.password.getPassword();
-    char[] repeatedPassword = onboardingView.repeat.getPassword();
-    try {
-      Checks.password(password);
-      if (!Arrays.equals(password, repeatedPassword)) {
-        throw new IllegalArgumentException("Lozinke se ne podudaraju.");
-      }
-    } finally {
-      Arrays.fill(password, '\0');
-      Arrays.fill(repeatedPassword, '\0');
+
+    String password = new String(onboardingView.password.getPassword());
+    String repeatedPassword = new String(onboardingView.repeat.getPassword());
+
+    Checks.password(password);
+
+    if (!password.equals(repeatedPassword)) {
+      throw new IllegalArgumentException("Lozinke se ne podudaraju.");
     }
   }
 
@@ -185,10 +195,14 @@ public final class AuthController {
       int currentMileage = vehicleInput.getMileage();
       long variantId = vehicleInput.getVariantId();
       List<WorkRow> works =
-          new ArrayList<>(catalogService.onboardingWorks(variantId, WorkCategory.MAINTENANCE));
+          new ArrayList<>(
+              catalogService.onboardingWorks(variantId, WorkCategory.MAINTENANCE));
       works.addAll(catalogService.onboardingWorks(variantId, WorkCategory.REPAIR));
+
       ServiceEditorDialog editor =
-          new ServiceEditorDialog(onboardingView, currentMileage, true, new ArrayList<>());
+          new ServiceEditorDialog(
+              onboardingView, currentMileage, true, new ArrayList<>());
+
       new ServiceEditorController(
           editor,
           works,
@@ -196,16 +210,19 @@ public final class AuthController {
             @Override
             public void saveService(ServiceInput serviceInput) {
               ServiceRecordService.validate(serviceInput, true);
+
               if (serviceInput.getMileage() > currentMileage) {
                 throw new IllegalArgumentException(
                     "Povijest ne moze imati vise km od trenutnog stanja.");
               }
+
               historyVariantId = variantId;
               registrationHistory.add(serviceInput);
               onboardingView.setHistory(registrationHistory);
               editor.dispose();
             }
           });
+
       editor.setVisible(true);
     } catch (RuntimeException exception) {
       Ui.error(onboardingView, exception);
@@ -214,9 +231,11 @@ public final class AuthController {
 
   private void removeHistoryItem() {
     ServiceInput selectedService = onboardingView.selectedHistory();
+
     if (selectedService != null) {
       registrationHistory.remove(selectedService);
       onboardingView.setHistory(registrationHistory);
+
       if (registrationHistory.isEmpty()) {
         historyVariantId = -1L;
       }
@@ -227,20 +246,23 @@ public final class AuthController {
     try {
       String name = onboardingView.name.getText();
       String email = onboardingView.email.getText();
+      String password = new String(onboardingView.password.getPassword());
       VehicleInput vehicleInput = onboardingView.vehicle.input();
-      if (!registrationHistory.isEmpty() && historyVariantId != vehicleInput.getVariantId()) {
+
+      if (!registrationHistory.isEmpty()
+          && historyVariantId != vehicleInput.getVariantId()) {
         throw new IllegalArgumentException(
             "Povijest je za prethodnu varijantu; vratite se i provjerite odabir.");
       }
-      char[] password = onboardingView.password.getPassword();
-      long ownerId;
-      try {
-        ownerId =
-            authService.register(
-                name, email, password, vehicleInput, new ArrayList<>(registrationHistory));
-      } finally {
-        Arrays.fill(password, '\0');
-      }
+
+      long ownerId =
+          authService.register(
+              name,
+              email,
+              password,
+              vehicleInput,
+              new ArrayList<>(registrationHistory));
+
       onboardingView.clearPasswords();
       onboardingView.dispose();
       loginListener.loggedIn(ownerId);
@@ -251,7 +273,8 @@ public final class AuthController {
 
   private void cancelRegistration() {
     if (Ui.confirm(
-        onboardingView, "Odustati od registracije? Nespremljeni podaci bit ce odbaceni.")) {
+        onboardingView,
+        "Odustati od registracije? Nespremljeni podaci bit ce odbaceni.")) {
       onboardingView.clearPasswords();
       onboardingView.dispose();
     }

@@ -26,14 +26,12 @@ import java.util.List;
 /** Registracija, prijava i profil korisnika. */
 public final class AuthService {
   private final EntityManagerFactory entityManagerFactory;
-  private final PasswordHasher passwordHasher;
 
-  public AuthService(EntityManagerFactory entityManagerFactory, PasswordHasher passwordHasher) {
+  public AuthService(EntityManagerFactory entityManagerFactory) {
     this.entityManagerFactory = entityManagerFactory;
-    this.passwordHasher = passwordHasher;
   }
 
-  public Account login(String email, char[] password) {
+  public Account login(String email, String password) {
     String cleanEmail = Checks.email(email);
     EntityManager entityManager = entityManagerFactory.createEntityManager();
 
@@ -41,7 +39,9 @@ public final class AuthService {
       UserRepository userRepository = new JpaUserRepository(entityManager);
       AppUser user = userRepository.findByEmail(cleanEmail);
 
-      if (user == null || !passwordHasher.verify(password, user.getPasswordHash())) {
+      if (user == null
+          || user.getPassword() == null
+          || !user.getPassword().equals(password)) {
         throw new AppException("E-mail ili lozinka nisu ispravni.");
       }
 
@@ -54,12 +54,12 @@ public final class AuthService {
   public long register(
       String name,
       String email,
-      char[] password,
+      String password,
       VehicleInput vehicleInput,
       List<ServiceInput> history) {
     String cleanName = Checks.text(name, 100, "Ime");
     String cleanEmail = Checks.email(email);
-    String passwordHash = passwordHasher.hash(password);
+    String cleanPassword = Checks.password(password);
 
     if (vehicleInput.getYear() > LocalDate.now().getYear()) {
       throw new AppException("Godina proizvodnje nije valjana.");
@@ -82,10 +82,11 @@ public final class AuthService {
         throw new AppException("E-mail adresa je vec registrirana.");
       }
 
-      AppUser user = new AppUser(cleanName, cleanEmail, passwordHash);
+      AppUser user = new AppUser(cleanName, cleanEmail, cleanPassword);
       userRepository.add(user);
 
       VehicleVariant variant = catalogRepository.findVariant(vehicleInput.getVariantId());
+
       if (variant == null) {
         throw new AppException("Odaberite postojecu varijantu vozila.");
       }
@@ -115,6 +116,7 @@ public final class AuthService {
       if (transaction.isActive()) {
         transaction.rollback();
       }
+
       throw exception;
     } finally {
       entityManager.close();
@@ -138,12 +140,7 @@ public final class AuthService {
     }
   }
 
-  public void profile(
-      long ownerId,
-      String name,
-      String email,
-      char[] currentPassword,
-      char[] newPassword) {
+  public void profile(long ownerId, String name, String email) {
     String cleanName = Checks.text(name, 100, "Ime");
     String cleanEmail = Checks.email(email);
 
@@ -161,17 +158,9 @@ public final class AuthService {
       }
 
       AppUser otherUser = userRepository.findByEmail(cleanEmail);
+
       if (otherUser != null && !otherUser.getId().equals(ownerId)) {
         throw new AppException("E-mail adresa je zauzeta.");
-      }
-
-      boolean changesPassword = newPassword != null && newPassword.length > 0;
-      if (changesPassword) {
-        if (!passwordHasher.verify(currentPassword, user.getPasswordHash())) {
-          throw new AppException("Trenutna lozinka nije ispravna.");
-        }
-
-        user.changePasswordHash(passwordHasher.hash(newPassword));
       }
 
       user.changeProfile(cleanName, cleanEmail);
@@ -180,6 +169,7 @@ public final class AuthService {
       if (transaction.isActive()) {
         transaction.rollback();
       }
+
       throw exception;
     } finally {
       entityManager.close();
