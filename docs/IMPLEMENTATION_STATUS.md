@@ -63,5 +63,5 @@ camelCase Java imena i Hibernate `CamelCaseToUnderscoresNamingStrategy`; fizičk
 transakcije, repositoryji samo dohvaćaju/persistiraju, Strategy ostaje za dijagnostiku, a Observer
 ostaje mali in-memory listener.
 
-Stvarni fazni commitovi prije dokumentacijskog završetka: `f545934`, `74aae6f`, `c2cecff`,
-`33cebd9`, `39522e7`, `f869795`.
+Stvarni fazni commitovi: `f545934`, `74aae6f`, `c2cecff`, `33cebd9`, `39522e7`, `f869795`.
+Dokumentacijski završni commit: `9f50aec`.
