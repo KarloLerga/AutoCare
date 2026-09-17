@@ -1,23 +1,32 @@
 package hr.unizd.autocare.view;
 
+import hr.unizd.autocare.model.Data.ProblemEstimate;
 import hr.unizd.autocare.model.Data.ProblemRow;
+import hr.unizd.autocare.model.Data.WorkRow;
 import hr.unizd.autocare.view.components.Ui;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
-/** Prikaz otvorenih i rijesenih problema vozila. */
+/** Ručni unos problema; tablica uvijek prikazuje otvorene i riješene probleme. */
 public final class ProblemsView extends JPanel {
-  public final JComboBox<String> status = new JComboBox<>(new String[] {"Otvoreni", "Rijeseni"});
-  public final JButton add = Ui.button("Analiziraj novi problem");
+  public final JTextArea description = new JTextArea(3, 36);
+  public final JComboBox<WorkRow> repair = new JComboBox<>();
+  public final JButton estimate = Ui.button("Procijeni cijenu");
+  public final JButton add = Ui.button("Spremi problem");
   public final JButton detail = Ui.button("Detalj");
+  public final JLabel estimateLabel = Ui.hint("Procjena: -");
   public final JTable table;
 
   private final DefaultTableModel tableModel;
@@ -26,58 +35,71 @@ public final class ProblemsView extends JPanel {
   public ProblemsView() {
     super(new BorderLayout(12, 12));
     setOpaque(false);
-
     tableModel =
         new DefaultTableModel(
             new Object[][] {},
-            new String[] {"Opis simptoma", "Moguci uzrok", "Podudaranje %", "Procjena", "Datum"}) {
+            new String[] {"Opis problema", "Odabrani popravak", "Procjena", "Status", "Datum", "Servis"}) {
           @Override
           public boolean isCellEditable(int row, int column) {
             return false;
           }
         };
-
     table = new JTable(tableModel);
     table.setRowHeight(32);
+    table.setAutoCreateRowSorter(true);
     table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     table.setFillsViewportHeight(true);
     table.getTableHeader().setReorderingAllowed(false);
 
+    JPanel editor = Ui.card();
+    editor.add(Ui.heading("Novi problem"), BorderLayout.NORTH);
+    description.setLineWrap(true);
+    description.setWrapStyleWord(true);
+    JPanel fields = Ui.form();
+    Ui.field(fields, 0, "Opis problema", new JScrollPane(description));
+    Ui.field(fields, 1, "Popravak", repair);
+    editor.add(fields, BorderLayout.CENTER);
+    JPanel actions = Ui.column();
+    actions.add(Ui.row(estimate, add, detail));
+    actions.add(estimateLabel);
+    editor.add(actions, BorderLayout.SOUTH);
+
     JPanel top = Ui.column();
     top.add(Ui.heading("Problemi"));
-    top.add(Ui.row(status, add, detail));
-
+    top.add(editor);
     add(top, BorderLayout.NORTH);
     add(new JScrollPane(table), BorderLayout.CENTER);
-    add(
-        Ui.hint("Problem se oznacava rijesenim kroz stvarni servis."),
-        BorderLayout.SOUTH);
+    add(Ui.hint("Problem se označava riješenim kroz stvarni servis."), BorderLayout.SOUTH);
+    repair.setPreferredSize(new Dimension(360, repair.getPreferredSize().height));
+  }
+
+  public void setRepairs(List<WorkRow> values) {
+    repair.setModel(new DefaultComboBoxModel<>(values.toArray(new WorkRow[0])));
+    repair.setSelectedIndex(-1);
+  }
+
+  public WorkRow selectedRepair() {
+    return (WorkRow) repair.getSelectedItem();
   }
 
   public void setRows(List<ProblemRow> values) {
     problems = new ArrayList<>(values);
     tableModel.setRowCount(0);
-
     for (ProblemRow problem : problems) {
-      String suggestion = problem.getSuggestion();
-      if (suggestion == null) {
-        suggestion = "Nema podudaranja";
-      }
-
-      String score = "-";
-      if (problem.getScore() != null) {
-        score = problem.getScore().toPlainString();
-      }
-
       tableModel.addRow(
           new Object[] {
             problem.getDescription(),
-            suggestion,
-            score,
-            Ui.estimate(problem.getPrice()),
-            Ui.date(problem.getCreatedAt().toLocalDate())
+            problem.getSuggestedRepair() == null ? "-" : problem.getSuggestedRepair(),
+            Ui.estimate(problem.getEstimatedCost()),
+            Ui.problemStatus(problem.getStatus()),
+            Ui.date(problem.getCreatedAt().toLocalDate()),
+            problem.getResolvedServiceId() == null ? "-" : problem.getResolvedServiceId()
           });
     }
+  }
+
+  public List<ProblemRow> rows() {
+    return problems;
   }
 
   public ProblemRow selected() {
@@ -85,45 +107,28 @@ public final class ProblemsView extends JPanel {
     if (selectedRow < 0) {
       return null;
     }
+    return problems.get(table.convertRowIndexToModel(selectedRow));
+  }
 
-    int modelRow = table.convertRowIndexToModel(selectedRow);
-    return problems.get(modelRow);
+  public void showEstimate(ProblemEstimate value) {
+    estimateLabel.setText("Procjena: " + value.getWorkName() + " / " + Ui.estimate(value.getEstimatedCost()));
+  }
+
+  public void clearEditor() {
+    description.setText("");
+    repair.setSelectedIndex(-1);
+    estimateLabel.setText("Procjena: -");
   }
 
   public void showProblemDetails(ProblemRow problem) {
-    String suggestion = problem.getSuggestion();
-    if (suggestion == null) {
-      suggestion = "Nema podudaranja";
-    }
-
-    String score = "-";
-    if (problem.getScore() != null) {
-      score = problem.getScore().toPlainString() + " %";
-    }
-
-    String source = problem.getPriceNote();
-    if (source == null || source.isBlank()) {
-      source = "Nepoznat";
-    }
-
-    String resolvedService = "-";
-    if (problem.getResolvedServiceId() != null) {
-      resolvedService = problem.getResolvedServiceId().toString();
-    }
-
-    String text =
-        problem.getDescription()
-            + "\nMoguci uzrok: "
-            + suggestion
-            + "\nPodudaranje: "
-            + score
-            + "\nProcjena: "
-            + Ui.estimate(problem.getPrice())
-            + "\nIzvor: "
-            + source
-            + "\nRijeseno servisom: "
-            + resolvedService;
-
-    Ui.info(this, text);
+    StringBuilder text = new StringBuilder(problem.getDescription());
+    text.append("\nPopravak: ")
+        .append(problem.getSuggestedRepair() == null ? "-" : problem.getSuggestedRepair());
+    text.append("\nProcjena: ").append(Ui.estimate(problem.getEstimatedCost()));
+    text.append("\nStatus: ").append(Ui.problemStatus(problem.getStatus()));
+    text.append("\nDatum: ").append(Ui.date(problem.getCreatedAt().toLocalDate()));
+    text.append("\nRiješeno servisom: ")
+        .append(problem.getResolvedServiceId() == null ? "-" : problem.getResolvedServiceId());
+    Ui.info(this, text.toString());
   }
 }

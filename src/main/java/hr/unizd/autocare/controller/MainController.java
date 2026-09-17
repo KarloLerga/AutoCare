@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.JButton;
 
-/** Glavna navigacija, session i osvjezavanje trenutno otvorenog ekrana. */
+/** Glavna navigacija, session i ponovno učitavanje aktivnog vozila. */
 public final class MainController implements AppListener {
   private final MainFrame frame;
   private final Session session;
@@ -61,7 +61,7 @@ public final class MainController implements AppListener {
         new ServicesController(
             frame, serviceRecordService, catalogService, problemService, session, events);
     maintenance = new MaintenanceController(frame, maintenanceService, session);
-    problems = new ProblemsController(frame, problemService, session, events);
+    problems = new ProblemsController(frame, problemService, catalogService, session, events);
     profile = new ProfileController(frame, authService, session, events);
 
     new AuthController(
@@ -74,35 +74,22 @@ public final class MainController implements AppListener {
             enter(ownerId);
           }
         });
-
     activateForm();
     events.add(this);
     frame.auth();
   }
 
   private void activateForm() {
-    for (Map.Entry<String, JButton> navigationEntry : frame.navigation.entrySet()) {
-      final String pageName = navigationEntry.getKey();
-
-      navigationEntry
-          .getValue()
-          .addActionListener(
-              new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent event) {
-                  navigate(pageName);
-                }
-              });
+    for (Map.Entry<String, JButton> entry : frame.navigation.entrySet()) {
+      final String pageName = entry.getKey();
+      entry.getValue().addActionListener(
+          new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+              navigate(pageName);
+            }
+          });
     }
-
-    frame.refresh.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            refreshContext(false);
-          }
-        });
-
     frame.profile.logout.addActionListener(
         new ActionListener() {
           @Override
@@ -110,7 +97,6 @@ public final class MainController implements AppListener {
             logout();
           }
         });
-
     frame.addWindowListener(
         new WindowAdapter() {
           @Override
@@ -129,17 +115,14 @@ public final class MainController implements AppListener {
     if (session.owner() == 0) {
       return;
     }
-
     try {
       VehicleRow activeVehicle = vehicleService.active(session.owner());
       session.setActive(activeVehicle);
       frame.context(activeVehicle);
       frame.application();
-
       if (showDashboard) {
         frame.showPage("Dashboard");
       }
-
       loadVisible();
     } catch (RuntimeException exception) {
       Ui.error(frame, exception);
@@ -155,30 +138,25 @@ public final class MainController implements AppListener {
     if (session.active() == null) {
       return;
     }
-
-    frame.status.setText("Aktivno vozilo #" + session.active().getId());
-
-    if (frame.page().equals("Dashboard")) {
+    String page = frame.page();
+    if (page.equals("Dashboard")) {
       loadDashboard();
-    } else if (frame.page().equals("Vozila")) {
+    } else if (page.equals("Vozila")) {
       vehicles.load();
-    } else if (frame.page().equals("Servisi")) {
+    } else if (page.equals("Servisi")) {
       services.load();
-    } else if (frame.page().equals("Odrzavanje")) {
+    } else if (page.equals("Održavanje")) {
       maintenance.load();
-    } else if (frame.page().equals("Problemi")) {
+    } else if (page.equals("Problemi")) {
       problems.load();
-    } else if (frame.page().equals("Profil")) {
+    } else if (page.equals("Profil")) {
       profile.load();
-    } else {
-      throw new IllegalArgumentException("Nepoznat ekran.");
     }
   }
 
   private void loadDashboard() {
     try {
-      frame.dashboard.show(
-          dashboardService.get(session.owner(), session.active().getId()));
+      frame.dashboard.show(dashboardService.get(session.owner(), session.active().getId()));
     } catch (RuntimeException exception) {
       Ui.error(frame.dashboard, exception);
     }
@@ -186,12 +164,13 @@ public final class MainController implements AppListener {
 
   @Override
   public void onChange(AppEvent event) {
-    if (event == AppEvent.ACTIVE_VEHICLE_CHANGED || event == AppEvent.VEHICLE_CHANGED) {
-      refreshContext(event == AppEvent.ACTIVE_VEHICLE_CHANGED);
-      return;
+    if (event == AppEvent.ACTIVE_VEHICLE_CHANGED) {
+      refreshContext(true);
+    } else if (event == AppEvent.VEHICLE_CHANGED || event == AppEvent.SERVICE_SAVED) {
+      refreshContext(false);
+    } else {
+      loadVisible();
     }
-
-    loadVisible();
   }
 
   private void logout() {
