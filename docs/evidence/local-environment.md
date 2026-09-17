@@ -41,3 +41,4 @@ Date: 2026-09-18
 - Final read-only audit: PASS for expected catalogue counts and all gating checks. It records two source rows whose engine text ends in `5MTFWD`; these are retained to preserve the package's authoritative 2,908,857-row catalogue and are documented in `final_catalog_audit.txt`.
 - Azure directory: the user confirmed the Azure default directory; the application connection itself uses the supplied SQL authentication settings, not an Azure API token.
 - Credentials: external local configuration only; password intentionally redacted and never written here.
+- Application launch: PASS; `Run-App.ps1` started the built GUI process. Native GUI smoke remains NOT_RUN in this session.

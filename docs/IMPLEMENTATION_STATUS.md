@@ -87,4 +87,6 @@ Fazni commitovi ove završne integracije:
 - `7388123` — `runtime: align desktop workflows with final catalogue`
 - `0d773e5` — `data: publish final vehicle work catalogue`
 - `cd6da72` — `database: apply guarded catalogue cleanup migrations`
-- završni evidence commit slijedi nakon posljednje provjere repozitorija.
+- `ce63097` — `docs: document final implementation and verification`.
+
+Pokretanje aplikacije nakon čiste izgradnje: PASS; `Run-App.ps1` je pokrenuo GUI proces iz `target/autocare-1.0.0.jar`. Ručni login/CRUD i vizualni smoke ostaju NOT_RUN jer native GUI kanal nije dostupan.
