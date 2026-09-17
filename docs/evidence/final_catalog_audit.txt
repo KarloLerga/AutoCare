@@ -1,5 +1,5 @@
 AutoCare final catalogue audit
-Executed: 2026-09-17
+Executed: 2026-09-18
 Target: Azure SQL database loaded from private connection.local.json
 
 current_database
@@ -9,10 +9,10 @@ vehicle_variant_count
 work_definition_count
 120
 vehicle_work_rule_count
-2944248
+2908857
 category	rule_count
-MAINTENANCE	728470
-REPAIR	2215778
+MAINTENANCE	693784
+REPAIR	2215073
 null_or_nonpositive_prices
 0
 maintenance_without_interval
@@ -31,4 +31,15 @@ legacy_work_default_columns
 0
 legacy_problem_columns
 0
-variant_code	make	model	fuel_type	work_code
+work_names_without_expected_croatian_characters
+0
+bev_combustion_or_conventional_transmission_rules
+0
+explicit_fwd_differential_or_transfer_rules
+2
+unexpected_final_catalogue_counts
+0
+
+The two FWD rows contain the drivetrain suffix inside the source engine label
+"5MTFWD" rather than as a separate token; they are retained in the supplied
+2,908,857-row catalogue and recorded as a source-data limitation.
