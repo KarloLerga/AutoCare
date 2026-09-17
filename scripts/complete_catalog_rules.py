@@ -16,9 +16,15 @@ import argparse
 import csv
 import gzip
 import json
+import re
+import sys
 from collections import Counter, defaultdict
 from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
+
+REFERENCE_SCRIPTS = Path(__file__).resolve().parents[1] / "tools" / "reference-data" / "scripts"
+if str(REFERENCE_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(REFERENCE_SCRIPTS))
 
 from build_af3 import decision, load_traits
 from build_seed import estimate, price_factors
@@ -75,6 +81,51 @@ ENGINE_ONLY_CHECK_CODES = {
     "DPF_CLEAN",
     "DPF_REPLACEMENT",
 }
+
+
+def drivetrain(traits: dict) -> str:
+    """Return an explicit drivetrain only when the catalogue text actually says it."""
+    text = " ".join(
+        str(traits.get(key, ""))
+        for key in ("model", "generation", "engine_label")
+    ).lower()
+    if re.search(r"\b(awd|4wd|4x4)\b", text) or any(
+        token in text for token in ("xdrive", "quattro", "4matic", "4motion", "all4", "sh-awd")
+    ):
+        return "AWD"
+    if re.search(r"\brwd\b", text):
+        return "RWD"
+    if re.search(r"\bfwd\b", text):
+        return "FWD"
+    return "UNKNOWN"
+
+
+def explicitly_mentions_fwd(traits: dict) -> bool:
+    text = " ".join(
+        str(traits.get(key, ""))
+        for key in ("model", "generation", "engine_label")
+    ).lower()
+    return re.search(r"\bfwd\b", text) is not None
+
+
+def final_applicability(traits: dict, work: dict) -> tuple[str, str]:
+    """Apply obvious hardware exclusions on top of the base catalogue decision."""
+    state, reason = decision(traits, work)
+    if state == "NOT_APPLICABLE":
+        return state, reason
+
+    code = work["code"]
+    fuel_class = traits.get("fuel_class", "")
+    drive = drivetrain(traits)
+
+    if fuel_class == "BEV" and code == "TRANSMISSION_REBUILD":
+        return "NOT_APPLICABLE", "EV_USES_DRIVE_UNIT_NOT_CONVENTIONAL_TRANSMISSION_REBUILD"
+    if code == "DIFFERENTIAL_OIL" and (drive == "FWD" or explicitly_mentions_fwd(traits)):
+        return "NOT_APPLICABLE", "FWD_HAS_NO_SEPARATE_DIFFERENTIAL_SERVICE_IN_THIS_MODEL"
+    if code == "TRANSFER_CASE_OIL" and drive in {"FWD", "RWD"}:
+        return "NOT_APPLICABLE", "NO_TRANSFER_CASE_ON_EXPLICIT_TWO_WHEEL_DRIVE_VARIANT"
+
+    return state, reason
 
 
 def money(value: str | Decimal) -> Decimal:
@@ -248,6 +299,7 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--audit", type=Path, required=True)
     parser.add_argument("--summary", type=Path, required=True)
+    parser.add_argument("--removed-applicability", type=Path, required=True)
     args = parser.parse_args()
 
     root = args.reference_root
@@ -273,9 +325,11 @@ def main() -> int:
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.audit.parent.mkdir(parents=True, exist_ok=True)
+    args.removed_applicability.parent.mkdir(parents=True, exist_ok=True)
     counts = Counter()
     by_tier = defaultdict(Counter)
     rules_per_variant = Counter()
+    final_removals_by_work = Counter()
 
     output_fields = ["variant_code", "work_code", "interval_km", "interval_months", "estimated_price"]
     audit_fields = [
@@ -284,23 +338,36 @@ def main() -> int:
         "old_interval_km", "new_interval_km",
         "old_interval_months", "new_interval_months", "interval_action",
     ]
+    removed_fields = ["variant_code", "work_code", "reason"]
 
     with gzip.open(args.output, "wt", encoding="utf-8", newline="") as output_handle, \
-         gzip.open(args.audit, "wt", encoding="utf-8", newline="") as audit_handle:
+         gzip.open(args.audit, "wt", encoding="utf-8", newline="") as audit_handle, \
+         args.removed_applicability.open("w", encoding="utf-8", newline="") as removed_handle:
         output_writer = csv.DictWriter(output_handle, fieldnames=output_fields)
         audit_writer = csv.DictWriter(audit_handle, fieldnames=audit_fields)
+        removed_writer = csv.DictWriter(removed_handle, fieldnames=removed_fields)
         output_writer.writeheader()
         audit_writer.writeheader()
+        removed_writer.writeheader()
 
         for traits_row in traits:
             traits_row["_price_factors"] = price_factors(traits_row, model)
             variant_code = traits_row["variant_code"]
 
             for work in works:
-                state, reason = decision(traits_row, work)
+                base_state, base_reason = decision(traits_row, work)
+                state, reason = final_applicability(traits_row, work)
                 counts["evaluated_pairs"] += 1
                 if state == "NOT_APPLICABLE":
                     counts["not_applicable_pairs"] += 1
+                    if base_state != "NOT_APPLICABLE":
+                        removed_writer.writerow({
+                            "variant_code": variant_code,
+                            "work_code": work["code"],
+                            "reason": reason,
+                        })
+                        counts["final_obvious_hardware_rules_removed"] += 1
+                        final_removals_by_work[work["code"]] += 1
                     continue
 
                 key = (variant_code, work["code"])
@@ -374,7 +441,9 @@ def main() -> int:
             "not_applicable_rows_stored": False,
             "existing_prices_preserved_unless_low_outlier": True,
             "existing_intervals_preserved": True,
+            "obvious_drivetrain_conflicts_removed": True,
         },
+        "final_hardware_removals_by_work": dict(final_removals_by_work),
     }
     args.summary.write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False, indent=2))
