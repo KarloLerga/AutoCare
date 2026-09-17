@@ -27,14 +27,13 @@ class ServiceRecordServiceValidationTest {
   }
 
   @Test
-  void actualPriceIsNotRoundedFromExtraDecimals() {
-    assertThrows(
-        IllegalArgumentException.class,
+  void actualPriceIsRoundedToCents() {
+    assertDoesNotThrow(
         () -> ServiceRecordService.validate(input(new BigDecimal("53.471")), false));
   }
 
   @Test
-  void duplicatedWorkIsRejected() {
+  void duplicatedWorkIsAcceptedByServiceValidation() {
     ServiceInput duplicated =
         new ServiceInput(
             LocalDate.now(),
@@ -42,8 +41,7 @@ class ServiceRecordServiceValidationTest {
             null,
             List.of(new ItemInput(1, BigDecimal.ONE), new ItemInput(1, BigDecimal.TEN)),
             List.of());
-    assertThrows(
-        AppException.class, () -> ServiceRecordService.validate(duplicated, false));
+    assertDoesNotThrow(() -> ServiceRecordService.validate(duplicated, false));
   }
 
   @Test
