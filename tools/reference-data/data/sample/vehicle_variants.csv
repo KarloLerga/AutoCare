@@ -1,9 +1,9 @@
-code,make,model,generation,engine_label,body_type,fuel_type,power_hp,transmission,year_from,year_to,image_path
-vmm-3ab1d36c24e25acdd4240f862b6a1c50fc361d33f61b7c96b58dc14cb2ba8555,BMW,3 Series,3 Series Sedan (2024),318i 8AT RWD (156 HP),,Gasoline,156,8-speed automatic Steptronic,2024,,/images/vehicles/fallback-car.jpg
-vmm-365ae6eb41b8cc50d946efee9e9dfee2dfd047442404ca6a81d5f0d0602eea4a,Kia,EV6,EV6 (2021),GT Long Range 77.4 KWh AWD (585 HP),,Electric,585,,2021,,/images/vehicles/fallback-car.jpg
-vmm-d19701480745cf29a48c6ba1694c50dfe99bda5c8a3ecda843210992e9b20933,Kia,Picanto,Picanto (2023),1.0L 5AT FWD (63 HP),,Gasoline,63,5-speed automatic,2023,,/images/vehicles/fallback-car.jpg
-vmm-cdb469302ad3726074c444585ee3f8b63171c9b001769785fc93ac8fc2964847,Tesla,Model 3,Model 3 (2023),Dual Motor Standard Range AWD (444 HP),,Electric,444,,2023,,/images/vehicles/fallback-car.jpg
-vmm-2ddfa6499300fdbd60825c174c91a4e8d145b7458d7a230ff680884f27cb9dce,Tesla,Model Y,Model Y (2024),62.5 KWh RWD (299 HP),,Electric,299,1-speed automatic,2024,,/images/vehicles/fallback-car.jpg
-vmm-af255b421ddace8aa09ae583ba8c2a5eb1fd6f7a1862ff121284c01800cbe7b2,Toyota,C-HR,C-HR (2019),1.8L CVT FWD (122 HP),,Hybrid,98,CVT Planetary Gear System,2019,2023,/images/vehicles/fallback-car.jpg
-vmm-8daa7e8c28b673e3f06b6c0f2a2a161b4b5563d236ac6baf5e3f2cde9c6bc4fa,Toyota,Yaris,Yaris 5 Doors (2019),1.5L eCVT FWD (116 HP),,Hybrid Gasoline,91,eCVT,2019,2024,/images/vehicles/fallback-car.jpg
-vmm-941a6c44f37a434b04d7d74195bedaebec4beeac645928193046794383482ee2,Volkswagen,Golf,Golf 5 Doors (2024),2.0L TDI 6MT FWD (116 HP),,Diesel,116,6-manual speed,2024,,/images/vehicles/fallback-car.jpg
+code,make,model,generation,engine_label,body_type,fuel_type,power_hp,transmission,year_from,year_to
+vmm-3ab1d36c24e25acdd4240f862b6a1c50fc361d33f61b7c96b58dc14cb2ba8555,BMW,3 Series,3 Series Sedan (2024),318i 8AT RWD (156 HP),,Gasoline,156,8-speed automatic Steptronic,2024,
+vmm-365ae6eb41b8cc50d946efee9e9dfee2dfd047442404ca6a81d5f0d0602eea4a,Kia,EV6,EV6 (2021),GT Long Range 77.4 KWh AWD (585 HP),,Electric,585,,2021,
+vmm-d19701480745cf29a48c6ba1694c50dfe99bda5c8a3ecda843210992e9b20933,Kia,Picanto,Picanto (2023),1.0L 5AT FWD (63 HP),,Gasoline,63,5-speed automatic,2023,
+vmm-cdb469302ad3726074c444585ee3f8b63171c9b001769785fc93ac8fc2964847,Tesla,Model 3,Model 3 (2023),Dual Motor Standard Range AWD (444 HP),,Electric,444,,2023,
+vmm-2ddfa6499300fdbd60825c174c91a4e8d145b7458d7a230ff680884f27cb9dce,Tesla,Model Y,Model Y (2024),62.5 KWh RWD (299 HP),,Electric,299,1-speed automatic,2024,
+vmm-af255b421ddace8aa09ae583ba8c2a5eb1fd6f7a1862ff121284c01800cbe7b2,Toyota,C-HR,C-HR (2019),1.8L CVT FWD (122 HP),,Hybrid,98,CVT Planetary Gear System,2019,2023
+vmm-8daa7e8c28b673e3f06b6c0f2a2a161b4b5563d236ac6baf5e3f2cde9c6bc4fa,Toyota,Yaris,Yaris 5 Doors (2019),1.5L eCVT FWD (116 HP),,Hybrid Gasoline,91,eCVT,2019,2024
+vmm-941a6c44f37a434b04d7d74195bedaebec4beeac645928193046794383482ee2,Volkswagen,Golf,Golf 5 Doors (2024),2.0L TDI 6MT FWD (116 HP),,Diesel,116,6-manual speed,2024,

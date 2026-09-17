@@ -8,7 +8,6 @@ from collections import Counter,defaultdict
 from decimal import Decimal as D
 from build_seed import applicability as legacy_applicability,estimate,price_factors,writer
 ROOT=Path(__file__).resolve().parents[1]
-FALLBACK='/images/vehicles/fallback-car.jpg'
 EMPTY_PRICE=dict.fromkeys(['estimated_price','parts_model_eur','hours_model','consumables_model_eur','raw_total_model_eur'],'')
 AUDIT=['variant_code','work_code','state','reason','estimated_price','schedule_kind','parts_model_eur','hours_model','consumables_model_eur','raw_total_model_eur','price_basis']
 RULE=['variant_code','work_code','interval_km','interval_months','estimated_price','interval_source','estimate_note','schedule_kind','price_basis','applicability','review_status']
@@ -110,7 +109,7 @@ def build(output):
     with (ROOT/'base-input/vehicle_variants.csv').open(encoding='utf-8',newline='') as f:variants=list(csv.DictReader(f));variant_fields=list(variants[0])
     with (ROOT/'base-input/vehicle_traits.csv').open(encoding='utf-8',newline='') as f:traits=[load_traits(x) for x in csv.DictReader(f)]
     assert len(traits)==len(variants) and all(a['code']==b['variant_code'] for a,b in zip(variants,traits))
-    stats=Counter();bywork=defaultdict(Counter);bymake=defaultdict(Counter);introws=[];market=[];images={};exceptions=[];samplecodes=set()
+    stats=Counter();bywork=defaultdict(Counter);bymake=defaultdict(Counter);introws=[];market=[];exceptions=[];samplecodes=set()
     requests=[('Renault','Megane 5 Doors','DIESEL',None),('Toyota','C-HR',None,'C-HR (2019)'),('Toyota','Yaris',None,'Yaris 5 Doors (2019)'),('Tesla','Model 3','BEV','Model 3 (2023)'),('Tesla','Model Y','BEV',None),('Kia','Picanto','PETROL',None),('Kia','EV6','BEV',None),('Volkswagen','Golf','DIESEL',None),('BMW','3 Series','PETROL',None)]
     for make,modelname,fuel,generation in requests:
         hit=next((t for t in traits if t['make']==make and modelname.lower() in t['model'].lower() and (fuel is None or t['fuel_class']==fuel) and (generation is None or t['generation']==generation) and t['year_from']>=2015 and (make!='Toyota' or t['is_hybrid'])),None)
@@ -123,13 +122,11 @@ def build(output):
         wh=['variant_code','make','model','generation','engine_label','year_from','year_to','price_basis']+[w['code'] for w in works]
         wide=writer(stack,output/'prices_by_vehicle.csv',wh)
         for v,t in zip(variants,traits):
-            v['image_path']=FALLBACK;vw.writerow(v)
+            vw.writerow(v)
             if v['code'] in samplecodes:sv.writerow(v)
             stats['variants']+=1;bymake[t['make']]['variants']+=1;t['_price_factors']=price_factors(t,model)
             values=dict.fromkeys(wh,'');values.update({k:t[k] for k in wh[:7]});values['price_basis']='MODELLED_NOT_OBSERVED; blank is not zero'
             reference=referenced(t);introws.extend(reference);market.extend(market_candidates(t))
-            gkey=(v['make'],v['model'],v['generation'])
-            group=images.setdefault(gkey,dict(group_id='img-'+hashlib.sha256('|'.join(gkey).encode()).hexdigest()[:20],make=v['make'],model=v['model'],generation=v['generation'],year_from=v['year_from'],year_to=v['year_to'],variant_codes=[]));group['variant_codes'].append(v['code'])
             available=0
             for w in works:
                 state,reason=decision(t,w);kind=schedule_kind(t,w);stats[state]+=1;bywork[w['code']][state]+=1
@@ -164,11 +161,6 @@ def build(output):
         for code,counts in bywork.items():bw.writerow(dict(work_code=code,**{k:counts[k] for k in bw.fieldnames[1:]}))
         bm=writer(stack,output/'coverage_by_make.csv',['make','variants','variants_with_price'])
         for make,c in sorted(bymake.items()):bm.writerow(dict(make=make,variants=c['variants'],variants_with_price=c['variants_with_price']))
-        ig=writer(stack,output/'image_groups.csv',['group_id','make','model','generation','year_from','year_to','representative_year','variant_count']);im=writer(stack,output/'image_group_variants.csv',['group_id','variant_code'])
-        for g in images.values():
-            end=int(g['year_to']) if g['year_to'] else 2026;start=int(g['year_from']);rep=min(2026,(start+max(start,end))//2)
-            ig.writerow({**{k:g[k] for k in ['group_id','make','model','generation','year_from','year_to']},'representative_year':rep,'variant_count':len(g['variant_codes'])})
-            for vc in g['variant_codes']:im.writerow(dict(group_id=g['group_id'],variant_code=vc))
     diagnostics=json.loads((ROOT/'config/diagnostics.json').read_text(encoding='utf-8'))
     extra={'HV_BATTERY_REPLACE':['pogonska baterija','neispravna visokonaponska baterija'],'ONBOARD_CHARGER':['ac punjenje ne radi','ugradjeni punjac'],'CHARGE_PORT':['ostecen prikljucak punjenja','konektor punjenja'],'WIPER_MOTOR':['brisaci se ne pokrecu','motor brisaca'],'BLOWER_MOTOR':['ventilator kabine ne radi','nema strujanja zraka'],'ENGINE_OIL_LEAK_TEST':['curenje ulja','trag ulja ispod motora'],'COOLING_PRESSURE_TEST':['gubi rashladnu tekucinu','curenje antifriza'],'FRONT_CALIPER':['prednja kocnica blokira','zagrijavanje prednjeg kotaca'],'CONTROL_ARM':['lupanje ovjesa','osteceno rame ovjesa'],'STEERING_RACK':['lupanje letve upravljaca','nepravilan rad upravljaca']}
     for work,phrases in extra.items():
@@ -178,7 +170,7 @@ def build(output):
         for row in diagnostics:dw.writerow(row)
     for n in ['work_definitions.csv','diagnostic_rules.csv']:shutil.copy2(output/n,sample/n)
     checksums(sample);checksums(output)
-    manifest={'version':'AF3-SQL-DATA-2.0','as_of':'2026-09-16','counts':dict(stats),'work_count':len(works),'reference_interval_count':len(introws),'market_review_interval_count':len(market),'image_group_count':len(images),'diagnostic_count':len(diagnostics),'sample_variant_count':len(samplecodes),'accuracy':'UNMEASURED model; not a national average, OEM prices or VIN-specific fitment','manufacturer_coverage':'Source-referenced model subset only. Never described as complete OEM coverage.','base_variant_sha256':digest(ROOT/'base-input/vehicle_variants.csv'),'base_traits_sha256':digest(ROOT/'base-input/vehicle_traits.csv'),'works_sha256':digest(ROOT/'config/works.json'),'model_sha256':digest(ROOT/'config/model.json'),'files':{p.name:digest(p) for p in output.iterdir() if p.is_file() and p.name!='build_manifest.json'}}
+    manifest={'version':'AF3-SQL-DATA-2.0','as_of':'2026-09-16','counts':dict(stats),'work_count':len(works),'reference_interval_count':len(introws),'market_review_interval_count':len(market),'diagnostic_count':len(diagnostics),'sample_variant_count':len(samplecodes),'accuracy':'UNMEASURED model; not a national average, OEM prices or VIN-specific fitment','manufacturer_coverage':'Source-referenced model subset only. Never described as complete OEM coverage.','base_variant_sha256':digest(ROOT/'base-input/vehicle_variants.csv'),'base_traits_sha256':digest(ROOT/'base-input/vehicle_traits.csv'),'works_sha256':digest(ROOT/'config/works.json'),'model_sha256':digest(ROOT/'config/model.json'),'files':{p.name:digest(p) for p in output.iterdir() if p.is_file() and p.name!='build_manifest.json'}}
     (output/'build_manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8');return manifest
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--output',type=Path,default=ROOT/'data');a=p.parse_args();print(json.dumps(build(a.output),indent=2))
