@@ -58,7 +58,6 @@ public final class Data {
     private final Integer powerHp;
     private final int from;
     private final Integer to;
-    private final String imagePath;
 
     public VariantRow(
         long id,
@@ -71,8 +70,7 @@ public final class Data {
         String transmission,
         Integer powerHp,
         int from,
-        Integer to,
-        String imagePath) {
+        Integer to) {
       this.id = id;
       this.code = code;
       this.make = make;
@@ -84,7 +82,6 @@ public final class Data {
       this.powerHp = powerHp;
       this.from = from;
       this.to = to;
-      this.imagePath = imagePath;
     }
 
     public long getId() {
@@ -131,9 +128,6 @@ public final class Data {
       return to;
     }
 
-    public String getImagePath() {
-      return imagePath;
-    }
   }
 
   /** VehicleRow - jednostavan prijenos podataka preko granice slojeva. */

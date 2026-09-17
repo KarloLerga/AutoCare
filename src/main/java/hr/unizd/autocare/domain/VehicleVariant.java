@@ -23,7 +23,6 @@ public class VehicleVariant {
   private String transmission;
   private int yearFrom;
   private Integer yearTo;
-  private String imagePath;
 
   protected VehicleVariant() {}
 
@@ -41,9 +40,11 @@ public class VehicleVariant {
     this.model = Checks.text(model, 150, "Model");
     this.generation = Checks.text(generation, 200, "Generacija");
     this.engineLabel = Checks.text(engineLabel, 240, "Motor");
+
     if (yearFrom < 1886 || yearFrom > 2100 || (yearTo != null && yearTo < yearFrom)) {
       throw new IllegalArgumentException("Nevaljan raspon godina.");
     }
+
     this.yearFrom = yearFrom;
     this.yearTo = yearTo;
     this.fuelType = Checks.optional(fuelType, 80, "Gorivo");
@@ -60,19 +61,16 @@ public class VehicleVariant {
       String bodyType,
       String fuelType,
       Integer powerHp,
-      String transmission,
-      String imagePath) {
+      String transmission) {
     this(code, make, model, generation, engineLabel, yearFrom, yearTo, fuelType);
     this.bodyType = Checks.optional(bodyType, 100, "Karoserija");
+
     if (powerHp != null && powerHp <= 0) {
       throw new IllegalArgumentException("Snaga mora biti pozitivna.");
     }
-    if (imagePath != null && (!imagePath.startsWith("/images/") || imagePath.contains(".."))) {
-      throw new IllegalArgumentException("Slika mora biti lokalni /images/ resurs.");
-    }
+
     this.powerHp = powerHp;
     this.transmission = Checks.optional(transmission, 120, "Mjenjac");
-    this.imagePath = imagePath;
   }
 
   public boolean covers(int year) {
@@ -125,9 +123,5 @@ public class VehicleVariant {
 
   public Integer getYearTo() {
     return yearTo;
-  }
-
-  public String getImagePath() {
-    return imagePath;
   }
 }

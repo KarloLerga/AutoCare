@@ -41,10 +41,6 @@ public final class DatabaseTool {
       ReviewedIntervalTool.run(args);
       return;
     }
-    if (action.equals("import-images")) {
-      ImagePathTool.run(args);
-      return;
-    }
     boolean update = action.equals("schema-update");
     if (update && !Arrays.asList(args).contains("--confirm-development-schema")) {
       throw new IllegalArgumentException(
@@ -210,9 +206,8 @@ public final class DatabaseTool {
                 integer(r, "year_to"),
                 value(r, "body_type"),
                 value(r, "fuel_type"),
-                integer(r, "power_hp"),
-                value(r, "transmission"),
-                value(r, "image_path")));
+                 integer(r, "power_hp"),
+                 value(r, "transmission")));
       }
       Set<String> known;
       try (EntityManager em = emf.createEntityManager()) {

@@ -38,8 +38,7 @@ final class Mapping {
         variant.getTransmission(),
         variant.getPowerHp(),
         variant.getYearFrom(),
-        variant.getYearTo(),
-        variant.getImagePath());
+        variant.getYearTo());
   }
 
   static VehicleRow vehicle(Vehicle vehicle, Long activeVehicleId) {
@@ -53,9 +52,11 @@ final class Mapping {
 
   static ServiceRow service(ServiceRecord serviceRecord) {
     StringJoiner names = new StringJoiner(", ");
+
     for (ServiceItem serviceItem : serviceRecord.getItems()) {
       names.add(serviceItem.getWork().getName());
     }
+
     return new ServiceRow(
         serviceRecord.getId(),
         serviceRecord.getServiceDate(),
@@ -77,5 +78,4 @@ final class Mapping {
         problem.getEstimateNote(),
         problem.getResolvedByService() == null ? null : problem.getResolvedByService().getId());
   }
-
 }
