@@ -1,5 +1,5 @@
 # AutoCare - Java 25, Swing, JPA/Hibernate, Azure SQL Database
-Projekt za Napredno objektno programiranje. Privatna evidencija vozila, odrzavanja, stvarnih servisa i problema. MVC + Service + Repository, Strategy za izracun intervala odrzavanja i mali Observer za osvjezavanje. Bez runtime LLM-a i vanjskog vehicle/image API-ja.
+Projekt za Napredno objektno programiranje. Privatna evidencija vozila, održavanja, stvarnih servisa i problema. MVC + Service + Repository, Strategy za izračun intervala održavanja i mali Observer za osvježavanje. Bez runtime LLM-a i vanjskog vehicle/image API-ja.
 
 ## Pokretanje
 Potreban je JDK 25 i lokalna konekcijska datoteka IZVAN repozitorija. Maven 3.9.16 bootstrap i sluzbeni wrapper priprema `scripts/Complete-Setup.ps1`. Skript ne stvara Azure bazu i ne mijenja billing; korisnikova postojeca baza mora vec postojati.
@@ -27,15 +27,16 @@ java -jar tools/setup/target/autocare-setup-1.0.0.jar sql-check
 # Nakon provjere tocne baze, backupa i ovisnosti promjenu primijeniti samo na tu bazu.
 java -Xmx768m -jar tools/setup/target/autocare-setup-1.0.0.jar import-complete-catalog tools/reference-data/data/vehicle_work_rules_complete.csv.gz
 java -Xmx768m -jar tools/setup/target/autocare-setup-1.0.0.jar apply-final-schema schema/09_complete_catalog_and_runtime_cleanup.sql
+java -Xmx768m -jar tools/setup/target/autocare-setup-1.0.0.jar apply-final-schema schema/10_croatian_work_names.sql
 java -Xmx768m -jar tools/setup/target/autocare-setup-1.0.0.jar final-audit schema/final_catalog_audit.sql
 .\mvnw.cmd javadoc:javadoc
 ```
 Runtime distribucija je `target/autocare-1.0.0.jar` s `target/lib/`; setup distribucija je odvojeni `tools/setup/target/autocare-setup-1.0.0.jar` s vlastitim `lib/`. Samo kopiranje JAR-a bez pripadajucih ovisnosti ne radi. Runtime JAR pokrece samo GUI; `sql-check`, `schema-update`, seed i import naredbe pripadaju setup JAR-u. Runtime ne upravlja DDL-om (`hbm2ddl=none`); `schema-update` je iskljucivo eksplicitna developerska naredba setup artefakta. Ne izvrsavati stare MySQL ili rename skripte.
 
 ## Podaci i istinitost
-Katalog sadrzi 30.366 varijanti, 120 konkretnih radova i 2.944.248 materijaliziranih pravila. Svako pravilo ima pozitivnu modeliranu cijenu; odrzavanje ima eksplicitni kilometarski ili mjesecni interval, a popravci nemaju izmisljeni interval. Jedna planska cijena sadrzi dijelove/rad i modelirana je po pravilima kataloga; to nije statisticki hrvatski prosjek ni servisna ponuda. Stvarno placeno cuva cente i nikad se ne preuzima iz procjene.
+Katalog sadrži 30.366 varijanti, 120 konkretnih radova i 2.908.857 materijaliziranih pravila. Svako pravilo ima pozitivnu modeliranu cijenu; održavanje ima eksplicitni kilometarski ili mjesečni interval, a popravci nemaju izmišljeni interval. Jedna planska cijena sadrži dijelove/rad i modelirana je po pravilima kataloga; to nije statistički hrvatski prosjek ni servisna ponuda. Stvarno plaćeno čuva cente i nikad se ne preuzima iz procjene.
 
-Intervali su rezultat pregledanih pravila i deterministickog modela; procjena ne tvrdi da zamjenjuje servisni prirucnik. Odrzavanje se prikazuje samo kada postoji u povijesti servisa, a statusi su `OK`, `SOON` i `DUE`. Problemi se unose rucno i povezuju s konkretnim radom iz kataloga. `OTHER_*` radovi nisu dio konacne sheme.
+Intervali su rezultat pregledanih pravila i determinističkog modela; procjena ne tvrdi da zamjenjuje servisni priručnik. Praćeno održavanje prikazuje se samo kada postoji u povijesti servisa, dok estimator nudi svako primjenjivo održavanje za aktivno vozilo. Statusi su `OK`, `SOON` i `DUE`. Problemi se unose ručno i povezuju s konkretnim radom iz kataloga. `OTHER_*` radovi nisu dio konačne sheme.
 
 ## Dokumentacija
 - `docs/ARCHITECTURE_FREEZE_AF3.md`: odluke A-O, transakcije, GUI, validacija.
@@ -46,9 +47,9 @@ Intervali su rezultat pregledanih pravila i deterministickog modela; procjena ne
 - `docs/PROJECT_REPORT.md`, `docs/GUI_AND_WIREFRAMES.md`, `docs/COURSE_ALIGNMENT_AND_DEFENSE.md`.
 - `docs/DEPENDENCIES_AND_SOURCES.md`, `tools/reference-data/README_HR.md`, `schema/08_plain_password_and_remove_images.sql`.
 - `docs/MASTER_CODEX_PROMPT.md`: lokalna fazna integracija i provjere.
-- `docs/ACCEPTANCE_CHECKLIST.md`, `docs/DATA_EXPLANATION_FOR_DEFENSE.md`: zavrsni kriteriji i obrana modela podataka.
+- `docs/ACCEPTANCE_CHECKLIST.md`, `docs/DATA_EXPLANATION_FOR_DEFENSE.md`: završni kriteriji i obrana modela podataka.
 - `data_model/`, `scripts/complete_catalog_rules.py`, `scripts/validate_complete_catalog.py`: reproducibilni generator i validacija kompletnog kataloga.
-- `schema/09_complete_catalog_and_runtime_cleanup.sql`, `schema/final_catalog_audit.sql`: guarded cleanup i read-only zavrsni audit.
+- `schema/09_complete_catalog_and_runtime_cleanup.sql`, `schema/10_croatian_work_names.sql`, `schema/final_catalog_audit.sql`: guarded cleanup, hrvatski nazivi i read-only završni audit.
 
 ## Sigurnost / besplatna ponuda
 Ne commitati local JSON, lozinke, tokene ni cijeli isporuceni ZIP. Provjera certifikata ostaje ukljucena. SQL Server Object Explorer i aplikaciju zatvoriti kada nisu potrebni da konekcije ne ometaju serverless mirovanje. Ne ukljucivati placeni nastavak koristenja radi prolaza testa. Detalji i izvori su u Azure vodicu (AZURE_SETUP.md).
