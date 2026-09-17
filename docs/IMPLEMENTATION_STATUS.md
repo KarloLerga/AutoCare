@@ -65,5 +65,5 @@ transakcije, repositoryji samo dohvaćaju/persistiraju, Strategy ostaje za dijag
 ostaje mali in-memory listener.
 
 Stvarni fazni commitovi: `f545934`, `74aae6f`, `c2cecff`, `33cebd9`, `39522e7`, `f869795`,
-`c78fd49`, `4b7e8ec`, `c842caa`.
+`c78fd49`, `4b7e8ec`, `c842caa`, `f2e5f88`.
 Dokumentacijski završni commit: `9f50aec`.
