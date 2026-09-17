@@ -14,6 +14,7 @@ public final class Checks {
     }
 
     String cleanValue = value.strip();
+
     if (cleanValue.length() > max) {
       throw new IllegalArgumentException(label + " je predugacak.");
     }
@@ -25,12 +26,12 @@ public final class Checks {
     if (value == null || value.isBlank()) {
       return null;
     }
+
     return text(value, max, label);
   }
 
   public static String email(String value) {
     String email = text(value, 254, "E-mail").toLowerCase(Locale.ROOT);
-
     int at = email.indexOf('@');
     int dot = email.lastIndexOf('.');
 
@@ -45,6 +46,7 @@ public final class Checks {
     if (value < 0) {
       throw new IllegalArgumentException("Kilometraza ne moze biti negativna.");
     }
+
     return value;
   }
 
@@ -53,6 +55,7 @@ public final class Checks {
       if (nullable) {
         return null;
       }
+
       throw new IllegalArgumentException("Unesite stvarno placenu cijenu.");
     }
 
@@ -63,9 +66,11 @@ public final class Checks {
     return value.setScale(2, RoundingMode.HALF_UP);
   }
 
-  public static void password(char[] value) {
-    if (value == null || value.length < 6) {
+  public static String password(String value) {
+    if (value == null || value.length() < 6) {
       throw new IllegalArgumentException("Lozinka treba imati najmanje 6 znakova.");
     }
+
+    return value;
   }
 }

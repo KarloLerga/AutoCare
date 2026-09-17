@@ -16,7 +16,6 @@ import hr.unizd.autocare.model.Data.ServiceInput;
 import hr.unizd.autocare.model.Data.VehicleInput;
 import hr.unizd.autocare.service.AppException;
 import hr.unizd.autocare.service.AuthService;
-import hr.unizd.autocare.service.PasswordHasher;
 import hr.unizd.autocare.service.ServiceRecordService;
 import hr.unizd.autocare.service.VehicleService;
 import jakarta.persistence.EntityManager;
@@ -26,7 +25,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
@@ -140,20 +138,16 @@ class SqlServerIT {
               null,
               List.of(new ItemInput(fixture.otherWork, null)),
               List.of());
-      char[] password = "test-only-password-buffer".toCharArray();
-      try {
-        assertThrows(
-            AppException.class,
-            () ->
-                fixture.auth.register(
-                    "Rollback test",
-                    email,
-                    password,
-                    new VehicleInput(fixture.variant, 2017, 100_000),
-                    List.of(good, bad)));
-      } finally {
-        Arrays.fill(password, '\0');
-      }
+      String password = "test-only-password-buffer";
+      assertThrows(
+          AppException.class,
+          () ->
+              fixture.auth.register(
+                  "Rollback test",
+                  email,
+                  password,
+                  new VehicleInput(fixture.variant, 2017, 100_000),
+                  List.of(good, bad)));
 
       // Novo citanje iz NOVOG EntityManagera, ne provjera starih Java objekata.
       fixture.inTransaction(
@@ -198,7 +192,7 @@ class SqlServerIT {
 
     Fixture(EntityManagerFactory factory) {
       this.factory = factory;
-      auth = new AuthService(factory, new PasswordHasher());
+      auth = new AuthService(factory);
       vehicles = new VehicleService(factory);
       services = new ServiceRecordService(factory);
       String prefix = "review-it-" + UUID.randomUUID();
@@ -246,17 +240,13 @@ class SqlServerIT {
     }
 
     long register() {
-      char[] password = "test-only-password-buffer".toCharArray();
-      try {
-        return auth.register(
-            "Integration test",
-            newEmail(),
-            password,
-            new VehicleInput(variant, 2017, 100_000),
-            List.of());
-      } finally {
-        Arrays.fill(password, '\0');
-      }
+      String password = "test-only-password-buffer";
+      return auth.register(
+          "Integration test",
+          newEmail(),
+          password,
+          new VehicleInput(variant, 2017, 100_000),
+          List.of());
     }
 
     long addProblem(long vehicle, String description) {

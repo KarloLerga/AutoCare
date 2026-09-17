@@ -13,7 +13,6 @@ import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.domain.WorkDefinition;
 import hr.unizd.autocare.model.Data.DiagnosticResult;
 import hr.unizd.autocare.model.Data.RuleData;
-import hr.unizd.autocare.service.PasswordHasher;
 import hr.unizd.autocare.strategy.DiagnosticStrategy;
 import hr.unizd.autocare.strategy.KeywordDiagnosticStrategy;
 import hr.unizd.autocare.view.components.Ui;
@@ -138,7 +137,7 @@ public final class CoreChecks {
         new Runnable() {
           @Override
           public void run() {
-            Checks.password("short".toCharArray());
+            Checks.password("short");
           }
         });
 
@@ -150,7 +149,7 @@ public final class CoreChecks {
           }
         });
 
-    Checks.password("simple".toCharArray());
+    Checks.password("simple");
     checks++;
   }
 
@@ -247,29 +246,12 @@ public final class CoreChecks {
         });
   }
 
-  public static void passwords() {
-    PasswordHasher passwordHasher = new PasswordHasher();
-    char[] password = "duga testna lozinka".toCharArray();
-
-    String firstHash = passwordHasher.hash(password);
-    String secondHash = passwordHasher.hash(password);
-
-    equal(false, firstHash.equals(secondHash));
-    equal(true, passwordHasher.verify(password, firstHash));
-    equal(false, passwordHasher.verify("wrong-password".toCharArray(), firstHash));
-    equal(false, passwordHasher.verify(password, "invalid"));
-    equal(false, passwordHasher.verify(password, "pbkdf2-sha256$1$bad$bad"));
-
-    Arrays.fill(password, '\0');
-  }
-
   public static void main(String[] arguments) throws Exception {
     maintenance();
     money();
     validation();
     diagnostics();
     entities();
-    passwords();
     System.out.println("Core checks passed: " + checks);
   }
 }

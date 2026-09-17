@@ -5,7 +5,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import java.util.Objects;
 
 /** Korisnicki racun i njegovo aktivno vozilo. */
 @Entity
@@ -16,36 +15,37 @@ public class AppUser {
 
   private String name;
   private String email;
-  private String passwordHash;
+  private String password;
 
   @ManyToOne
   private Vehicle activeVehicle;
 
   protected AppUser() {}
 
-  public AppUser(String name, String email, String passwordHash) {
+  public AppUser(String name, String email, String password) {
     this.name = Checks.text(name, 100, "Ime");
     this.email = Checks.email(email);
-    this.passwordHash = Objects.requireNonNull(passwordHash);
+    this.password = Checks.password(password);
   }
 
   public void activate(Vehicle vehicle) {
-    Objects.requireNonNull(vehicle);
+    if (vehicle == null) {
+      throw new IllegalArgumentException("Vozilo je obavezno.");
+    }
+
     boolean sameObject = vehicle.getOwner() == this;
     boolean sameId = id != null && id.equals(vehicle.getOwner().getId());
+
     if (!sameObject && !sameId) {
       throw new IllegalArgumentException("Vozilo nije vase.");
     }
+
     activeVehicle = vehicle;
   }
 
   public void changeProfile(String name, String email) {
     this.name = Checks.text(name, 100, "Ime");
     this.email = Checks.email(email);
-  }
-
-  public void changePasswordHash(String passwordHash) {
-    this.passwordHash = Objects.requireNonNull(passwordHash);
   }
 
   public Long getId() {
@@ -60,8 +60,8 @@ public class AppUser {
     return email;
   }
 
-  public String getPasswordHash() {
-    return passwordHash;
+  public String getPassword() {
+    return password;
   }
 
   public Vehicle getActiveVehicle() {
