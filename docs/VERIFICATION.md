@@ -2,7 +2,7 @@
 
 ## Current delta evidence - live Azure SQL compatibility
 
-Date: 2026-09-17. This is the first live validation of the post-F7 runtime naming delta. No
+Date: 2026-09-17. Live evidence commit: `d18fde7`. This is the first live validation of the post-F7 runtime naming delta. No
 history reset, rebase or force-push was used, and no 100-row synthetic seed was inserted.
 
 - `sql-check`: PASS against the selected existing Azure SQL database; SQL Server EngineEdition 5,

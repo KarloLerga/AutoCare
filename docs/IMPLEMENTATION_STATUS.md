@@ -3,7 +3,7 @@
 ## Delta nakon F7 — aktualni zapis
 
 Updated: 2026-09-17. Ovaj pass je integriran na prethodno pushani HEAD bez reseta ili izmjene
-postojece povijesti.
+postojece povijesti. Live evidence i aktualni SQL audit su zapisani u commitu `d18fde7`.
 
 | Delta stavka | Status | Commit / dokaz |
 |---|---|---|
@@ -13,7 +13,7 @@ postojece povijesti.
 | Legacy DB kompatibilnost | PASS | Read-only `schema/06_student_runtime_compat.sql` prvo je vratio ocekivani stari snake_case oblik; nakon tocne provjere baze primijenjene su samo njegove guarded minimalne izmjene. Ponovni read-only pregled potvrdio je oba nullable intervalna stupca i DB default za legacy `request_key`. |
 | Diagnostics i dijagrami | PASS (unchanged) | Nisu dirani `DiagnosticRule`, Strategy/Problem flow ni `.dot/.mmd/.png/.svg` datoteke. |
 | Maven/JDK25 verification | PASS | `git diff --check`, `clean verify`, `package`, `javadoc:javadoc`, runtime `install` i neovisni setup `clean test package` prosli. |
-| Stvarna Azure SQL/JPA provjera | PASS | `sql-check`, Hibernate `db-check` (`validate`) i read-only `scripts/verify-database.sql` prosli nad postojecim Azure SQL targetom; katalog je 30.366 varijanti / 122 rada / 1.650.435 pravila / 87 dijagnostickih pravila, bez duplikata. |
+| Stvarna Azure SQL/JPA provjera | PASS | Commit `d18fde7`; `sql-check`, Hibernate `db-check` (`validate`) i read-only `scripts/verify-database.sql` prosli nad postojecim Azure SQL targetom; katalog je 30.366 varijanti / 122 rada / 1.650.435 pravila / 87 dijagnostickih pravila, bez duplikata. |
 
 Delta ogranicenja: odvojeni `_test` profil i login/CRUD manual smoke te native Windows GUI ostaju
 `NOT_RUN`/`BLOCKED`; ne oznacavaju se kao PASS bez stvarnog izvrsenja. SQL patch nije radio rename,
