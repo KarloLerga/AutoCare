@@ -13,8 +13,6 @@ history/
 scripts/local-env.ps1
 .vscode/settings.json
 .vscode/launch.json
-tools/images/.cache/
-tools/images/download_errors.csv
 **/__pycache__/
 *.pyc
 *.log

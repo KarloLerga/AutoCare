@@ -79,5 +79,5 @@ snake_case, a DDL je izvan GUI runtimea (`hbm2ddl=none`). Service klase određuj
 repositoryji samo dohvaćaju/persistiraju, Strategy ostaje za dijagnostiku, a Observer ostaje mali
 in-memory listener.
 
-Stvarni fazni commitovi: `aab2703`, `004bcfc`, `baea586`, `12466bf`, `bb29613`; dokumentacijski commit slijedi nakon ove provjere.
+Stvarni fazni commitovi: `aab2703`, `004bcfc`, `baea586`, `12466bf`, `bb29613`, `5ee295e`.
 Raniji funkcionalni commitovi i detaljna povijest ostaju u Git DAG-u bez rewritea.
