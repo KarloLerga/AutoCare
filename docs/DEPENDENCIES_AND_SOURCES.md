@@ -6,7 +6,7 @@ Checked 2026-09-16. Pinning is a reproducibility decision, not a claim that a re
 | Java / Temurin | release 25, user's local 25.0.4.1 | Standard language, Swing, JDBC, PBKDF2; https://docs.oracle.com/en/java/javase/25/ |
 | Maven | 3.9.16 | Build; https://maven.apache.org/ref/3.9.16/apache-maven/ |
 | Jakarta Persistence | 3.2.0 | Mapping and EntityManager API; https://jakarta.ee/specifications/persistence/3.2/ |
-| Hibernate ORM + hikaricp integration | 7.4.8.Final | JPA provider/pool adapter; https://hibernate.org/orm/releases/7.4/ |
+| Hibernate ORM | 7.4.8.Final | JPA provider; runtime koristi mali built-in pool za single-user desktop; https://hibernate.org/orm/releases/7.4/ |
 | Microsoft JDBC | 13.4.0.jre11 | SQL Server driver, jre11 artifact supports Java11+ including25; https://learn.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server?view=sql-server-ver17 |
 | FlatLaf | 3.6.2 | Standard Swing look and feel; https://www.formdev.com/flatlaf/ |
 | SLF4J JUL binding | 2.0.17 | Logs to JDK logging; https://www.slf4j.org/ |
@@ -18,7 +18,7 @@ Checked 2026-09-16. Pinning is a reproducibility decision, not a claim that a re
 | Pillow | 12.3.0 | Image processing only; https://pillow.readthedocs.io/ |
 | Graphviz | system development tool | Render included DOT sources, not runtime dependency; https://graphviz.org/ |
 
-Maven resolves transitive libraries including HikariCP, Hibernate dependencies and JUnit components. Generate `mvn dependency:tree` on the real workstation for the exact effective inventory; do not infer versions of transitive jars from an unexecuted build. No MySQL Java/Python connector remains in the active database path.
+Maven resolves Hibernate transitive libraries and JUnit components. Generate `mvn dependency:tree` on the real workstation for the exact effective inventory; do not infer versions of transitive jars from an unexecuted build. No HikariCP dependency or MySQL connector remains in the active runtime database path.
 
 ## Database references
 - Free offer configuration, limits, opt-in billing and connections preventing pause: https://learn.microsoft.com/en-us/azure/azure-sql/database/free-offer?view=azuresql

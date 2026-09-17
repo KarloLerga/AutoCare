@@ -1,63 +1,34 @@
 classDiagram
-    class MainController
-    class ServicesController
-    class ProblemsController
-    class ServiceRecordService
-    class ProblemService
-    class AuthService
-    class VehicleService
-    class MaintenanceService
-    class TransactionRunner {
-        <<interface>>
-        read(callback)
-        write(callback)
-    }
-    class JpaTransactionRunner
-    class Repositories
-    class UserRepository
-    class VehicleRepository
-    class ServiceRecordRepository
-    class ProblemRepository
-    class CatalogRepository
-    class JpaUserRepository
-    class JpaVehicleRepository
-    class JpaServiceRecordRepository
-    class JpaProblemRepository
-    class JpaCatalogRepository
+    MainController --> AuthService
+    ServicesController --> ServiceRecordService
+    ProblemsController --> ProblemService
+    ServiceRecordService --> ServiceRecord
+    ProblemService --> DiagnosticStrategy
+    ProblemService --> Analysis
+    DiagnosticStrategy <|.. KeywordDiagnosticStrategy
+    ServiceRecordService --> ServiceRecordRepository
+    ProblemService --> ProblemRepository
+    ServiceRecordRepository <|.. JpaServiceRecordRepository
+    ProblemRepository <|.. JpaProblemRepository
+
     class DiagnosticStrategy {
         <<interface>>
         analyze(description, rules)
     }
-    class KeywordDiagnosticStrategy
-    class DiagnosticResult {
-        <<Data.DiagnosticResult>>
-        candidateId
-        score
-        price
+    class KeywordDiagnosticStrategy {
+        normalize(text)
+        analyze(description, rules)
     }
-    class ServiceInput
-    class ServiceDetail
-
-    MainController --> AuthService
-    ServicesController --> ServiceRecordService
-    ProblemsController --> ProblemService
-    ServiceRecordService --> TransactionRunner
-    ProblemService --> TransactionRunner
-    ProblemService --> DiagnosticStrategy
-    ServiceRecordService --> Repositories
-    ProblemService --> Repositories
-    JpaTransactionRunner ..|> TransactionRunner
-    JpaTransactionRunner --> JpaUserRepository
-    JpaTransactionRunner --> JpaVehicleRepository
-    JpaTransactionRunner --> JpaServiceRecordRepository
-    JpaTransactionRunner --> JpaProblemRepository
-    JpaTransactionRunner --> JpaCatalogRepository
-    JpaUserRepository ..|> UserRepository
-    JpaVehicleRepository ..|> VehicleRepository
-    JpaServiceRecordRepository ..|> ServiceRecordRepository
-    JpaProblemRepository ..|> ProblemRepository
-    JpaCatalogRepository ..|> CatalogRepository
-    KeywordDiagnosticStrategy ..|> DiagnosticStrategy
-    ProblemService --> DiagnosticResult
-    ServicesController --> ServiceInput
-    ServicesController --> ServiceDetail
+    class Analysis {
+        description
+        List DiagnosticResult results
+    }
+    class ServiceRecordService {
+        create(ownerId, vehicleId, input)
+        list(ownerId, vehicleId)
+        detail(ownerId, serviceId)
+    }
+    class ProblemService {
+        analyze(ownerId, vehicleId, description)
+        save(ownerId, vehicleId, preview)
+    }

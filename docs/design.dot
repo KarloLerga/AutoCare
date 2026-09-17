@@ -1,44 +1,25 @@
 digraph AutoCareDesign {
-    graph [
-        rankdir=LR,
-        bgcolor="white",
-        pad="0.3",
-        nodesep="0.5",
-        ranksep="0.8",
-        fontname="Helvetica",
-        label="AutoCare - application/design UML (non-persistent)",
-        labelloc=t
-    ];
-    node [
-        fontname="Helvetica",
-        shape=box,
-        style="rounded,filled",
-        fillcolor="#F4F7FB",
-        color="#176B87",
-        margin="0.18"
-    ];
+    graph [rankdir=LR, bgcolor="white", pad="0.3", nodesep="0.5", ranksep="0.8", fontname="Helvetica", label="AutoCare - aktualni aplikacijski odnosi", labelloc=t];
+    node [fontname="Helvetica", shape=box, style="rounded,filled", fillcolor="#F4F7FB", color="#176B87", margin="0.18"];
     edge [fontname="Helvetica", fontsize=10, color="#526477"];
 
     controller [label="Controllers\nMainController\nServicesController\nProblemsController"];
-    services [label="Services\nServiceRecordService\nProblemService\nAuthService\nVehicleService\nMaintenanceService"];
-    tx [label="<<interface>>\nTransactionRunner\nread / write"];
-    repos [label="Repositories\nRepositories aggregate\nUser / Vehicle / ServiceRecord\nProblem / Catalog interfaces"];
-    jpaTx [label="JpaTransactionRunner\nimplements TransactionRunner\ncreates all Jpa repositories\nwith one EntityManager"];
-    jpaRepos [label="Jpa*Repository\nimplements repository interfaces\nJPQL, persist, remove"];
+    services [label="Services\nAuthService\nVehicleService\nServiceRecordService\nMaintenanceService\nProblemService"];
+    repos [label="Repository interfaces\nUser / Vehicle / ServiceRecord\nProblem / Catalog"];
+    jpaRepos [label="Jpa*Repository\nimplements interfaces\nJPQL and EntityManager"];
     strategy [label="<<interface>>\nDiagnosticStrategy"];
     keyword [label="KeywordDiagnosticStrategy\nnormalization + scoring"];
-    result [label="Data.DiagnosticResult\nplain analysis result\nnot an entity"];
-    data [label="Data inputs/rows\nServiceInput / ServiceDetail\nVehicleInput / Analysis"];
+    result [label="Data.Analysis / DiagnosticResult\nplain temporary result"];
+    domain [label="Domain\nServiceRecord\nProblem / Vehicle"];
 
     controller -> services [label="calls use-cases"];
-    controller -> data [label="takes snapshots / displays rows"];
-    services -> tx [label="depends on interface"];
+    controller -> result [label="reads rows and preview"];
     services -> repos [label="uses contracts"];
+    services -> domain [label="business methods"];
     services -> strategy [label="ProblemService policy"];
-    services -> data [label="maps to DTO-like rows"];
-    jpaTx -> tx [style=dashed, label="implements"];
-    jpaTx -> jpaRepos [label="shared EM"];
-    jpaRepos -> repos [style=dashed, label="implements"];
+    services -> result [label="creates snapshots"];
+    repos -> jpaRepos [style=dashed, label="implemented by"];
+    jpaRepos -> domain [label="maps managed entities"];
     keyword -> strategy [style=dashed, label="implements"];
     strategy -> result [label="returns"];
 }
