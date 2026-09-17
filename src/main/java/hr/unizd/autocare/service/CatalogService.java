@@ -99,7 +99,6 @@ public final class CatalogService {
         rows.add(
             new WorkRow(
                 rule.getWork().getId(),
-                rule.getWork().getCode(),
                 rule.getWork().getName(),
                 rule.getWork().getCategory()));
       }

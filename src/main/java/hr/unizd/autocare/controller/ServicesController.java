@@ -1,6 +1,7 @@
 package hr.unizd.autocare.controller;
 
 import hr.unizd.autocare.app.Session;
+import hr.unizd.autocare.domain.ProblemStatus;
 import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.event.AppEvent;
 import hr.unizd.autocare.event.AppEvents;
@@ -61,7 +62,7 @@ public final class ServicesController {
   public void load() {
     try {
       frame.services.setRows(
-          serviceRecordService.list(session.owner(), session.active().getId()));
+          serviceRecordService.list(session.getOwnerId(), session.getActiveVehicle().getId()));
     } catch (RuntimeException exception) {
       Ui.error(frame.services, exception);
     }
@@ -74,7 +75,8 @@ public final class ServicesController {
       return;
     }
     try {
-      ServiceDetail detail = serviceRecordService.detail(session.owner(), selectedService.getId());
+      ServiceDetail detail =
+          serviceRecordService.detail(session.getOwnerId(), selectedService.getId());
       frame.services.showServiceDetails(detail);
     } catch (RuntimeException exception) {
       Ui.error(frame, exception);
@@ -82,12 +84,17 @@ public final class ServicesController {
   }
 
   private void create() {
-    long ownerId = session.owner();
-    long vehicleId = session.active().getId();
-    int currentMileage = session.active().getMileage();
+    long ownerId = session.getOwnerId();
+    long vehicleId = session.getActiveVehicle().getId();
+    int currentMileage = session.getActiveVehicle().getMileage();
     try {
       List<WorkRow> works = loadEditorWorks(ownerId, vehicleId);
-      List<ProblemRow> openProblems = problemService.list(ownerId, vehicleId);
+      List<ProblemRow> openProblems = new ArrayList<>();
+      for (ProblemRow problem : problemService.list(ownerId, vehicleId)) {
+        if (problem.getStatus() == ProblemStatus.OPEN) {
+          openProblems.add(problem);
+        }
+      }
       openEditor(ownerId, vehicleId, currentMileage, works, openProblems);
     } catch (RuntimeException exception) {
       Ui.error(frame, exception);

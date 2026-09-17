@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
-/** Korisnicki racun i njegovo aktivno vozilo. */
+/** Korisnički račun i njegovo aktivno vozilo. */
 @Entity
 public class AppUser {
   @Id

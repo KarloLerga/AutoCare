@@ -6,7 +6,6 @@ import hr.unizd.autocare.model.Data.WorkRow;
 import hr.unizd.autocare.view.components.Ui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -16,21 +15,18 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
-import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
-/** Ručni unos problema; tablica uvijek prikazuje otvorene i riješene probleme. */
+/** Ručni unos problema; otvoreni i riješeni problemi prikazani su zajedno. */
 public final class ProblemsView extends JPanel {
   public final JTextArea description = new JTextArea(3, 36);
   public final JComboBox<WorkRow> repair = new JComboBox<>();
   public final JButton estimate = Ui.button("Procijeni cijenu");
   public final JButton add = Ui.button("Spremi problem");
-  public final JButton detail = Ui.button("Detalj");
   public final JLabel estimateLabel = Ui.hint("Procjena: -");
   public final JTable table;
 
   private final DefaultTableModel tableModel;
-  private List<ProblemRow> problems = new ArrayList<>();
 
   public ProblemsView() {
     super(new BorderLayout(12, 12));
@@ -38,7 +34,7 @@ public final class ProblemsView extends JPanel {
     tableModel =
         new DefaultTableModel(
             new Object[][] {},
-            new String[] {"Opis problema", "Odabrani popravak", "Procjena", "Status", "Datum", "Servis"}) {
+            new String[] {"Opis problema", "Odabrani popravak", "Procjena", "Status", "Datum"}) {
           @Override
           public boolean isCellEditable(int row, int column) {
             return false;
@@ -47,7 +43,6 @@ public final class ProblemsView extends JPanel {
     table = new JTable(tableModel);
     table.setRowHeight(32);
     table.setAutoCreateRowSorter(true);
-    table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     table.setFillsViewportHeight(true);
     table.getTableHeader().setReorderingAllowed(false);
 
@@ -57,10 +52,10 @@ public final class ProblemsView extends JPanel {
     description.setWrapStyleWord(true);
     JPanel fields = Ui.form();
     Ui.field(fields, 0, "Opis problema", new JScrollPane(description));
-    Ui.field(fields, 1, "Popravak", repair);
+    Ui.field(fields, 1, "Mogući popravak", repair);
     editor.add(fields, BorderLayout.CENTER);
     JPanel actions = Ui.column();
-    actions.add(Ui.row(estimate, add, detail));
+    actions.add(Ui.row(estimate, add));
     actions.add(estimateLabel);
     editor.add(actions, BorderLayout.SOUTH);
 
@@ -83,35 +78,22 @@ public final class ProblemsView extends JPanel {
   }
 
   public void setRows(List<ProblemRow> values) {
-    problems = new ArrayList<>(values);
     tableModel.setRowCount(0);
-    for (ProblemRow problem : problems) {
+    for (ProblemRow problem : values) {
       tableModel.addRow(
           new Object[] {
             problem.getDescription(),
             problem.getSuggestedRepair() == null ? "-" : problem.getSuggestedRepair(),
             Ui.estimate(problem.getEstimatedCost()),
             Ui.problemStatus(problem.getStatus()),
-            Ui.date(problem.getCreatedAt().toLocalDate()),
-            problem.getResolvedServiceId() == null ? "-" : problem.getResolvedServiceId()
+            Ui.date(problem.getCreatedAt().toLocalDate())
           });
     }
   }
 
-  public List<ProblemRow> rows() {
-    return problems;
-  }
-
-  public ProblemRow selected() {
-    int selectedRow = table.getSelectedRow();
-    if (selectedRow < 0) {
-      return null;
-    }
-    return problems.get(table.convertRowIndexToModel(selectedRow));
-  }
-
   public void showEstimate(ProblemEstimate value) {
-    estimateLabel.setText("Procjena: " + value.getWorkName() + " / " + Ui.estimate(value.getEstimatedCost()));
+    estimateLabel.setText(
+        "Procjena: " + value.getWorkName() + " / " + Ui.estimate(value.getEstimatedCost()));
   }
 
   public void clearEditor() {
@@ -120,15 +102,4 @@ public final class ProblemsView extends JPanel {
     estimateLabel.setText("Procjena: -");
   }
 
-  public void showProblemDetails(ProblemRow problem) {
-    StringBuilder text = new StringBuilder(problem.getDescription());
-    text.append("\nPopravak: ")
-        .append(problem.getSuggestedRepair() == null ? "-" : problem.getSuggestedRepair());
-    text.append("\nProcjena: ").append(Ui.estimate(problem.getEstimatedCost()));
-    text.append("\nStatus: ").append(Ui.problemStatus(problem.getStatus()));
-    text.append("\nDatum: ").append(Ui.date(problem.getCreatedAt().toLocalDate()));
-    text.append("\nRiješeno servisom: ")
-        .append(problem.getResolvedServiceId() == null ? "-" : problem.getResolvedServiceId());
-    Ui.info(this, text.toString());
-  }
 }

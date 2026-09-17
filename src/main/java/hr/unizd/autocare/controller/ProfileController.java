@@ -38,7 +38,7 @@ public final class ProfileController {
 
   public void load() {
     try {
-      Account account = authService.account(session.owner());
+      Account account = authService.account(session.getOwnerId());
       frame.profile.name.setText(account.getName());
       frame.profile.email.setText(account.getEmail());
     } catch (RuntimeException exception) {
@@ -54,7 +54,7 @@ public final class ProfileController {
   private void save() {
     try {
       authService.profile(
-          session.owner(),
+          session.getOwnerId(),
           frame.profile.name.getText(),
           frame.profile.email.getText());
 

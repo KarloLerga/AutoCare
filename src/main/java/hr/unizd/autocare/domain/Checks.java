@@ -44,7 +44,7 @@ public final class Checks {
 
   public static int mileage(int value) {
     if (value < 0) {
-      throw new IllegalArgumentException("Kilometraza ne moze biti negativna.");
+      throw new IllegalArgumentException("Kilometraža ne može biti negativna.");
     }
 
     return value;
@@ -60,7 +60,7 @@ public final class Checks {
     }
 
     if (value.signum() < 0) {
-      throw new IllegalArgumentException("Cijena ne moze biti negativna.");
+      throw new IllegalArgumentException("Cijena ne može biti negativna.");
     }
 
     return value.setScale(2, RoundingMode.HALF_UP);

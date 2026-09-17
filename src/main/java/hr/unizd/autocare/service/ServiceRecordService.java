@@ -26,7 +26,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Poslovna granica za servis, njegove stavke, kilometrazu i rijesene probleme. */
+/** Poslovna granica za servis, njegove stavke, kilometražu i riješene probleme. */
 public final class ServiceRecordService {
   private final EntityManagerFactory entityManagerFactory;
 
@@ -49,7 +49,7 @@ public final class ServiceRecordService {
 
       Vehicle vehicle = vehicleRepository.findForOwner(ownerId, vehicleId);
       if (vehicle == null) {
-        throw new AppException("Vozilo nije pronadjeno.");
+        throw new AppException("Vozilo nije pronađeno.");
       }
 
       ServiceRecord serviceRecord =
@@ -83,7 +83,7 @@ public final class ServiceRecordService {
     validate(input, historical);
 
     if (input.getDate().getYear() < vehicle.getProductionYear()) {
-      throw new AppException("Servis ne moze biti prije godine proizvodnje.");
+      throw new AppException("Servis ne može biti prije godine proizvodnje.");
     }
 
     ServiceRecord serviceRecord =
@@ -120,7 +120,7 @@ public final class ServiceRecordService {
     for (Long problemId : problemIds) {
       Problem problem = problemRepository.findForOwner(vehicle.getOwner().getId(), problemId);
       if (problem == null) {
-        throw new AppException("Problem nije pronadjen.");
+        throw new AppException("Problem nije pronađen.");
       }
 
       problem.resolve(serviceRecord);
@@ -133,7 +133,7 @@ public final class ServiceRecordService {
     }
 
     if (input.getDate().isAfter(LocalDate.now())) {
-      throw new AppException("Datum servisa ne moze biti u buducnosti.");
+      throw new AppException("Datum servisa ne može biti u budućnosti.");
     }
 
     Checks.mileage(input.getMileage());
@@ -148,7 +148,7 @@ public final class ServiceRecordService {
     }
 
     if (historical && !input.getResolvedProblemIds().isEmpty()) {
-      throw new AppException("Pocetna povijest ne rjesava postojece probleme.");
+      throw new AppException("Početna povijest ne rješava postojeće probleme.");
     }
   }
 
@@ -190,7 +190,7 @@ public final class ServiceRecordService {
       List<ItemRow> items = new ArrayList<>();
       for (ServiceItem serviceItem : serviceRecord.getItems()) {
         WorkDefinition work = serviceItem.getWork();
-        items.add(new ItemRow(work.getName(), work.getCategory(), serviceItem.getActualPrice()));
+        items.add(new ItemRow(work.getName(), serviceItem.getActualPrice()));
       }
 
       return new ServiceDetail(

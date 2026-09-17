@@ -3,7 +3,6 @@ package hr.unizd.autocare.view.components;
 import hr.unizd.autocare.domain.Checks;
 import hr.unizd.autocare.domain.CostSummary;
 import hr.unizd.autocare.domain.MaintenanceStatus;
-import hr.unizd.autocare.domain.WorkCategory;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -200,10 +199,6 @@ public final class Ui {
 
   public static String problemStatus(hr.unizd.autocare.domain.ProblemStatus status) {
     return status == hr.unizd.autocare.domain.ProblemStatus.OPEN ? "Otvoren" : "Riješen";
-  }
-
-  public static String category(WorkCategory category) {
-    return category == WorkCategory.MAINTENANCE ? "Održavanje" : "Popravak";
   }
 
   public static boolean confirm(Component parent, String text) {

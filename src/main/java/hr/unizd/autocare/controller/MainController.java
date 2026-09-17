@@ -60,7 +60,7 @@ public final class MainController implements AppListener {
     services =
         new ServicesController(
             frame, serviceRecordService, catalogService, problemService, session, events);
-    maintenance = new MaintenanceController(frame, maintenanceService, session);
+    maintenance = new MaintenanceController(frame, maintenanceService, catalogService, session);
     problems = new ProblemsController(frame, problemService, catalogService, session, events);
     profile = new ProfileController(frame, authService, session, events);
 
@@ -112,12 +112,12 @@ public final class MainController implements AppListener {
   }
 
   private void refreshContext(boolean showDashboard) {
-    if (session.owner() == 0) {
+    if (session.getOwnerId() == 0) {
       return;
     }
     try {
-      VehicleRow activeVehicle = vehicleService.active(session.owner());
-      session.setActive(activeVehicle);
+      VehicleRow activeVehicle = vehicleService.active(session.getOwnerId());
+      session.setActiveVehicle(activeVehicle);
       frame.context(activeVehicle);
       frame.application();
       if (showDashboard) {
@@ -135,7 +135,7 @@ public final class MainController implements AppListener {
   }
 
   private void loadVisible() {
-    if (session.active() == null) {
+    if (session.getActiveVehicle() == null) {
       return;
     }
     String page = frame.page();
@@ -156,7 +156,8 @@ public final class MainController implements AppListener {
 
   private void loadDashboard() {
     try {
-      frame.dashboard.show(dashboardService.get(session.owner(), session.active().getId()));
+      frame.dashboard.showDashboard(
+          dashboardService.get(session.getOwnerId(), session.getActiveVehicle().getId()));
     } catch (RuntimeException exception) {
       Ui.error(frame.dashboard, exception);
     }
@@ -180,6 +181,7 @@ public final class MainController implements AppListener {
     frame.vehicles.setRows(new ArrayList<>());
     frame.services.setRows(new ArrayList<>());
     frame.maintenance.setRows(new ArrayList<>());
+    frame.maintenance.setAvailableWorks(new ArrayList<>());
     frame.problems.setRows(new ArrayList<>());
     frame.auth();
   }

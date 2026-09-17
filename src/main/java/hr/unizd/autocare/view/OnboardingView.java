@@ -126,7 +126,7 @@ public final class OnboardingView extends JPanel {
     vehicle.updating = true;
     vehicle.setMakes(List.of());
     vehicle.clearBelowMake();
-    vehicle.mileage.setText("0");
+    vehicle.mileage.setText("");
     vehicle.updating = false;
     setHistory(List.of());
     step(0);

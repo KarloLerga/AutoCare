@@ -4,28 +4,28 @@ import hr.unizd.autocare.model.Data.VehicleRow;
 
 /** Stanje prijavljenog desktop klijenta; koristi se samo na EDT-u. */
 public final class Session {
-  private long owner;
-  private VehicleRow active;
+  private long ownerId;
+  private VehicleRow activeVehicle;
 
-  public void login(long owner) {
-    this.owner = owner;
-    active = null;
+  public void login(long ownerId) {
+    this.ownerId = ownerId;
+    activeVehicle = null;
   }
 
   public void logout() {
-    owner = 0;
-    active = null;
+    ownerId = 0;
+    activeVehicle = null;
   }
 
-  public long owner() {
-    return owner;
+  public long getOwnerId() {
+    return ownerId;
   }
 
-  public VehicleRow active() {
-    return active;
+  public VehicleRow getActiveVehicle() {
+    return activeVehicle;
   }
 
-  public void setActive(VehicleRow active) {
-    this.active = active;
+  public void setActiveVehicle(VehicleRow activeVehicle) {
+    this.activeVehicle = activeVehicle;
   }
 }

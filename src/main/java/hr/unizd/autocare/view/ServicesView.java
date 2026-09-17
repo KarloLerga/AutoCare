@@ -31,7 +31,7 @@ public final class ServicesView extends JPanel {
     tableModel =
         new DefaultTableModel(
             new Object[][] {},
-            new String[] {"Datum", "Km", "Radovi", "Poznati trosak", "Napomena"}) {
+            new String[] {"Datum", "Km", "Radovi", "Poznati trošak", "Napomena"}) {
           @Override
           public boolean isCellEditable(int row, int column) {
             return false;
@@ -65,10 +65,6 @@ public final class ServicesView extends JPanel {
     }
   }
 
-  public List<ServiceRow> rows() {
-    return services;
-  }
-
   public ServiceRow selected() {
     int selectedRow = table.getSelectedRow();
     if (selectedRow < 0) {
@@ -93,7 +89,7 @@ public final class ServicesView extends JPanel {
     text.append(Ui.total(detail.getHeader().getTotal()));
     text.append("\nNapomena: ");
     text.append(Objects.toString(detail.getHeader().getNote(), "-"));
-    text.append("\n\nRijeseni problemi:\n");
+    text.append("\n\nRiješeni problemi:\n");
     for (String problem : detail.getResolvedProblems()) {
       text.append(problem);
       text.append("\n");
