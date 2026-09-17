@@ -18,7 +18,7 @@ public final class AppEvents {
   }
 
   public void publish(AppEvent event) {
-    for (AppListener listener : List.copyOf(listeners)) {
+    for (AppListener listener : listeners) {
       listener.onChange(event);
     }
   }
