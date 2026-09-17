@@ -5,18 +5,18 @@ import hr.unizd.autocare.model.Data.ServiceInput;
 import hr.unizd.autocare.model.Data.WorkRow;
 import hr.unizd.autocare.view.ServiceEditorDialog;
 import hr.unizd.autocare.view.components.Ui;
-import hr.unizd.autocare.view.components.WorkPicker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Zajednicki GUI dio editora, upotrebljiv za onboarding i stvarni servis. */
+/** Povezuje gumbe servisne forme s njezinim jednostavnim akcijama. */
 public final class ServiceEditorController {
   public ServiceEditorController(
       final ServiceEditorDialog view,
       final List<WorkRow> works,
       final ServiceEditorListener listener) {
+
     view.addMaintenance.addActionListener(
         new ActionListener() {
           @Override
@@ -24,6 +24,7 @@ public final class ServiceEditorController {
             add(view, works, WorkCategory.MAINTENANCE);
           }
         });
+
     view.addRepair.addActionListener(
         new ActionListener() {
           @Override
@@ -31,6 +32,7 @@ public final class ServiceEditorController {
             add(view, works, WorkCategory.REPAIR);
           }
         });
+
     view.remove.addActionListener(
         new ActionListener() {
           @Override
@@ -38,6 +40,7 @@ public final class ServiceEditorController {
             removeSelected(view);
           }
         });
+
     view.save.addActionListener(
         new ActionListener() {
           @Override
@@ -50,6 +53,7 @@ public final class ServiceEditorController {
             }
           }
         });
+
     view.cancel.addActionListener(
         new ActionListener() {
           @Override
@@ -57,6 +61,7 @@ public final class ServiceEditorController {
             view.dispose();
           }
         });
+
     Ui.escape(view);
   }
 
@@ -64,9 +69,11 @@ public final class ServiceEditorController {
     if (view.itemTable.isEditing() && !view.itemTable.getCellEditor().stopCellEditing()) {
       return;
     }
+
     int selectedRow = view.itemTable.getSelectedRow();
     if (selectedRow >= 0) {
-      view.items.remove(view.itemTable.convertRowIndexToModel(selectedRow));
+      int modelRow = view.itemTable.convertRowIndexToModel(selectedRow);
+      view.items.remove(modelRow);
     }
   }
 
@@ -79,7 +86,8 @@ public final class ServiceEditorController {
           choices.add(work);
         }
       }
-      WorkRow selectedWork = WorkPicker.choose(view, choices);
+
+      WorkRow selectedWork = view.chooseWork(choices);
       if (selectedWork != null) {
         view.items.add(selectedWork);
       }

@@ -5,7 +5,6 @@ import hr.unizd.autocare.domain.CostSummary;
 import hr.unizd.autocare.model.Data.MaintenanceRow;
 import hr.unizd.autocare.service.MaintenanceService;
 import hr.unizd.autocare.view.MainFrame;
-import hr.unizd.autocare.view.components.EstimateFormat;
 import hr.unizd.autocare.view.components.Ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,6 +23,7 @@ public final class MaintenanceController {
     this.frame = frame;
     this.maintenanceService = maintenanceService;
     this.session = session;
+
     frame.maintenance.estimate.addActionListener(
         new ActionListener() {
           @Override
@@ -38,6 +38,7 @@ public final class MaintenanceController {
       List<MaintenanceRow> rows =
           maintenanceService.list(session.owner(), session.active().getId());
       frame.maintenance.setRows(rows);
+
       if (rows.isEmpty()) {
         frame.maintenance.coverage.setText("Nema podataka o odrzavanju za ovu varijantu.");
       } else {
@@ -55,26 +56,33 @@ public final class MaintenanceController {
       Ui.info(frame, "Odaberite jedan ili vise redaka.");
       return;
     }
+
     List<BigDecimal> prices = new ArrayList<>();
     StringBuilder details = new StringBuilder();
+
     for (int selectedRow : selectedRows) {
       int modelRow = frame.maintenance.table.convertRowIndexToModel(selectedRow);
       MaintenanceRow maintenanceRow = frame.maintenance.rows().get(modelRow);
+
       prices.add(maintenanceRow.getPrice());
       details.append("\n");
       details.append(maintenanceRow.getName());
       details.append(": ");
-      details.append(EstimateFormat.display(maintenanceRow.getPrice()));
+      details.append(Ui.estimate(maintenanceRow.getPrice()));
+
       if (maintenanceRow.getPriceNote() != null) {
         details.append(" / ");
         details.append(maintenanceRow.getPriceNote());
       }
     }
+
     CostSummary summary = CostSummary.of(prices);
-    String message = "Informativna procjena: " + EstimateFormat.display(summary.getKnownTotal());
+    String message = "Informativna procjena: " + Ui.estimate(summary.getKnownTotal());
+
     if (summary.getUnknownCount() > 0) {
       message += " + stavke bez poznate procjene";
     }
+
     Ui.info(frame, message + details);
   }
 }
