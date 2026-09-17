@@ -1,0 +1,47 @@
+{
+  "variant_count": 30366,
+  "work_count_after_other_removal": 120,
+  "maintenance_work_count": 30,
+  "counts": {
+    "evaluated_pairs": 3643920,
+    "written_rules": 2944248,
+    "maintenance_rules": 728470,
+    "repair_rules": 2215778,
+    "price_filled_new_rule": 1293813,
+    "interval_filled_modeled_interval": 728470,
+    "not_applicable_pairs": 699672,
+    "interval_repair_no_interval": 2215778,
+    "price_filled_missing_price": 367519,
+    "price_kept_existing": 1257833,
+    "price_corrected_tier_price": 25083
+  },
+  "rules_per_variant_min": 56,
+  "rules_per_variant_max": 112,
+  "tier_counts": {
+    "EXOTIC": {
+      "rules": 67135
+    },
+    "PREMIUM": {
+      "rules": 940042
+    },
+    "PERFORMANCE": {
+      "rules": 74135
+    },
+    "MAINSTREAM": {
+      "rules": 1818724
+    },
+    "ECONOMY": {
+      "rules": 44212
+    }
+  },
+  "policy": {
+    "runtime_fallback": false,
+    "other_works_removed": [
+      "OTHER_MAINTENANCE",
+      "OTHER_REPAIR"
+    ],
+    "not_applicable_rows_stored": false,
+    "existing_prices_preserved_unless_low_outlier": true,
+    "existing_intervals_preserved": true
+  }
+}

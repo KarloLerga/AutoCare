@@ -97,7 +97,7 @@ final class SetupSqlSettings {
         + ";databaseName="
         + database
         + ";encrypt=true;trustServerCertificate=false"
-        + ";loginTimeout=60;socketTimeout=120000;applicationName=AutoCare-Setup;";
+        + ";loginTimeout=60;socketTimeout=900000;applicationName=AutoCare-Setup;";
   }
 
   Connection connect(boolean bulkCopy) throws SQLException {

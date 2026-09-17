@@ -2,639 +2,448 @@ package hr.unizd.autocare.tools;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Developer-only SQL Server importer. Existing Hibernate tables, bounded staging batches, no MERGE
- * or destructive reload.
- */
+/** Developer-only Azure SQL alat za validaciju, streaming import i završnu migraciju. */
 public final class SqlSeedTool {
   private static final int BATCH = 1000;
 
   private SqlSeedTool() {}
 
   public static void run(String[] args) {
-    if (args.length == 0) {
-      throw new IllegalArgumentException("Nedostaje SQL/seed naredba.");
-    }
-    String command = args[0];
-    if (command.equals("db-list")) {
-      try {
-        discover();
-      } catch (Exception ex) {
-        throw new IllegalStateException("Read-only db-list nije uspio: " + ex.getMessage(), ex);
-      }
-      return;
-    }
-    if (command.equals("sql-check")) {
-      try {
-        check();
-      } catch (Exception ex) {
-        throw new IllegalStateException("SQL provjera nije uspjela: " + ex.getMessage(), ex);
-      }
-      return;
-    }
     try {
-      if (args.length < 2) {
-        throw new IllegalArgumentException("Navedite folder seed podataka.");
+      switch (args[0]) {
+        case "db-list" -> discover();
+        case "sql-check" -> check();
+        case "import-complete-catalog" -> importCompleteCatalog(args);
+        case "apply-final-schema" -> applyFinalSchema(args);
+        case "final-audit" -> finalAudit(args);
+        default ->
+            throw new IllegalArgumentException(
+                "Naredbe: sql-check, db-list, import-complete-catalog, apply-final-schema, final-audit");
       }
-      Path dir = Path.of(args[1]);
-      validate(dir);
-      if (command.equals("seed-validate") || !Arrays.asList(args).contains("--apply")) {
-        System.out.println("DRY RUN zavrsen. Baza nije kontaktirana.");
-        return;
+    } catch (Exception exception) {
+      throw new IllegalStateException("SQL alat nije dovršen: " + exception.getMessage(), exception);
+    }
+  }
+
+  private static void discover() throws SQLException {
+    try (Connection connection = SetupSqlSettings.discovery().connect(false);
+        PreparedStatement statement =
+            connection.prepareStatement(
+                "SELECT name FROM sys.databases WHERE database_id>4 ORDER BY name");
+        ResultSet result = statement.executeQuery()) {
+      while (result.next()) {
+        System.out.println(result.getString(1));
       }
-      if (!command.equals("seed-all")) {
-        throw new IllegalArgumentException("Nepoznata seed naredba.");
-      }
-      if (!Arrays.asList(args).contains("--acknowledge-model-estimates")) {
-        throw new IllegalArgumentException(
-            "Potrebno --acknowledge-model-estimates: cijene su modelirane, ne provjereni trzisni"
-                + " prosjeci.");
-      }
-      SetupSqlSettings settings = SetupSqlSettings.environment(false);
-      if (!settings.database().equals(System.getenv("AUTOCARE_SEED_TARGET"))) {
-        throw new IllegalArgumentException(
-            "AUTOCARE_SEED_TARGET mora tocno odgovarati AUTOCARE_DB_NAME.");
-      }
-      boolean intervals = Arrays.asList(args).contains("--with-referenced-intervals");
-      boolean diagnostics = Arrays.asList(args).contains("--with-diagnostics");
-      boolean plain = Arrays.asList(args).contains("--plain-jdbc");
-      try (Connection c = settings.connect(!plain)) {
-        verifySchema(c);
-        lock(c);
-        c.setAutoCommit(false);
-        try {
-          works(c, dir);
-          variants(c, dir);
-          rules(c, dir);
-          if (intervals) {
-            intervals(c, dir);
-          }
-          if (diagnostics) {
-            diagnostics(c, dir);
-          }
-          c.commit();
-          report(c);
+    }
+  }
+
+  private static void check() throws SQLException {
+    SetupSqlSettings settings = SetupSqlSettings.environment(false);
+    try (Connection connection = settings.connect(false);
+        PreparedStatement statement =
+            connection.prepareStatement(
+                "SELECT DB_NAME(), CAST(SERVERPROPERTY('EngineEdition') AS int), SUSER_SNAME()")) {
+      try (ResultSet result = statement.executeQuery()) {
+        if (result.next()) {
           System.out.println(
-              "Uvoz dovrsen. Cijene/povijest drugih izvora nisu prepisane. Ponovni uvoz je"
-                  + " dopusten.");
-        } catch (Exception ex) {
-          try {
-            c.rollback();
-          } catch (SQLException rollback) {
-            ex.addSuppressed(rollback);
-          }
-          throw ex;
+              "SQL veza OK | baza="
+                  + result.getString(1)
+                  + " | EngineEdition="
+                  + result.getInt(2)
+                  + " | korisnik="
+                  + result.getString(3)
+                  + " | encrypt=true, trustServerCertificate=false");
         }
       }
-    } catch (Exception ex) {
-      throw new IllegalStateException(
-          "Seed nije dovrsen: "
-              + ex.getMessage()
-              + " Raniji paketi mogu biti spremljeni; nakon popravka isti uvoz smije se ponoviti."
-              + " Nije dopusteno TRUNCATE ni iskljucivanje TLS/FK.",
-          ex);
     }
   }
 
-  public static void discover() throws SQLException {
-    try (Connection c = SetupSqlSettings.discovery().connect(false);
-        PreparedStatement s =
-            c.prepareStatement("SELECT name FROM sys.databases WHERE database_id>4 ORDER BY name");
-        ResultSet r = s.executeQuery()) {
-      while (r.next()) {
-        System.out.println(r.getString(1));
-      }
+  private static void importCompleteCatalog(String[] args) throws Exception {
+    if (args.length < 2) {
+      throw new IllegalArgumentException("Navedite vehicle_work_rules_complete.csv.gz.");
     }
-    // Deliberately does not select, create, resize or change billing for any database.
-  }
+    Path path = Path.of(args[1]).toAbsolutePath().normalize();
+    if (!Files.isRegularFile(path) || Files.isSymbolicLink(path)) {
+      throw new IllegalArgumentException("Datoteka kataloga nije valjana.");
+    }
+    boolean apply = has(args, "--apply");
+    if (apply && !has(args, "--confirm-complete-catalog")) {
+      throw new IllegalArgumentException(
+          "Za stvarni import dodajte --apply --confirm-complete-catalog.");
+    }
 
-  public static void check() throws SQLException {
     SetupSqlSettings settings = SetupSqlSettings.environment(false);
-    try (Connection c = settings.connect(false);
-        PreparedStatement s =
-            c.prepareStatement(
-                "SELECT DB_NAME(), CAST(SERVERPROPERTY('EngineEdition') AS int), SUSER_SNAME()");
-        ResultSet r = s.executeQuery()) {
-      if (r.next()) {
-        System.out.println(
-            "SQL veza OK | baza="
-                + r.getString(1)
-                + " | EngineEdition="
-                + r.getInt(2)
-                + " | korisnik="
-                + r.getString(3)
-                + " | encrypt=true, trustServerCertificate=false");
+    try (Connection connection = settings.connect(apply)) {
+      verifyTables(connection);
+      Map<String, Long> variants = loadIds(connection, "vehicle_variant");
+      Map<String, Long> works = loadIds(connection, "work_definition");
+      Map<String, String> categories = loadCategories(connection);
+      long expected = validateFile(path, variants, works, categories);
+      System.out.println(
+          "Katalog je validan: " + expected + " pravila / " + variants.size() + " varijanti.");
+      if (!apply) {
+        System.out.println("DRY RUN: baza nije mijenjana.");
+        return;
+      }
+
+      lock(connection);
+      connection.setAutoCommit(false);
+      try {
+        rejectReferencedOtherWorks(connection);
+        rejectRuleForeignKeys(connection);
+        try (Statement delete = connection.createStatement()) {
+          delete.executeUpdate("DELETE FROM dbo.vehicle_work_rule");
+        }
+        long inserted = insertRules(connection, path, variants, works, categories);
+        if (inserted != expected) {
+          throw new SQLException("Broj uvezenih pravila se promijenio tijekom importa.");
+        }
+        connection.commit();
+        report(connection);
+        System.out.println("Kompletni katalog je atomarno uvezen.");
+      } catch (Exception failure) {
+        try {
+          connection.rollback();
+        } catch (SQLException rollback) {
+          failure.addSuppressed(rollback);
+        }
+        throw failure;
       }
     }
   }
 
-  private static void lock(Connection c) throws SQLException {
-    try (Statement s = c.createStatement();
-        ResultSet r =
-            s.executeQuery(
+  private static long validateFile(
+      Path path, Map<String, Long> variants, Map<String, Long> works, Map<String, String> categories)
+      throws IOException {
+    Set<String> seenVariants = new HashSet<>();
+    final long[] count = {0};
+    SeedFiles.read(
+        path,
+        row -> {
+          String variant = required(row, "variant_code");
+          String work = required(row, "work_code");
+          if (!variants.containsKey(variant)) {
+            throw new IllegalArgumentException("Nepoznata varijanta: " + variant);
+          }
+          String category = categories.get(work);
+          if (category == null || !works.containsKey(work)) {
+            throw new IllegalArgumentException("Nepoznat rad: " + work);
+          }
+          if (work.startsWith("OTHER_")) {
+            throw new IllegalArgumentException("OTHER rad nije dio finalnog kataloga: " + work);
+          }
+          BigDecimal price = decimal(row, "estimated_price");
+          if (price == null || price.signum() <= 0) {
+            throw new IllegalArgumentException("Cijena mora biti pozitivna: " + variant + "/" + work);
+          }
+          Integer km = positiveInteger(row, "interval_km");
+          Integer months = positiveInteger(row, "interval_months");
+          if ("MAINTENANCE".equals(category) && km == null && months == null) {
+            throw new IllegalArgumentException("Održavanje nema interval: " + variant + "/" + work);
+          }
+          if ("REPAIR".equals(category) && (km != null || months != null)) {
+            throw new IllegalArgumentException("Popravak ima interval: " + variant + "/" + work);
+          }
+          seenVariants.add(variant);
+          count[0]++;
+        });
+    if (seenVariants.size() != variants.size()) {
+      throw new IllegalArgumentException(
+          "Neke varijante nemaju pravila: " + (variants.size() - seenVariants.size()));
+    }
+    return count[0];
+  }
+
+  private static long insertRules(
+      Connection connection,
+      Path path,
+      Map<String, Long> variants,
+      Map<String, Long> works,
+      Map<String, String> categories)
+      throws IOException, SQLException {
+    long[] count = {0};
+    try (PreparedStatement insert =
+        connection.prepareStatement(
+            "INSERT INTO dbo.vehicle_work_rule"
+                + "(variant_id,work_id,interval_km,interval_months,estimated_price)"
+                + " VALUES (?,?,?,?,?)")) {
+      try {
+        SeedFiles.read(
+            path,
+            row -> {
+              try {
+                insert.setLong(1, variants.get(required(row, "variant_code")));
+                insert.setLong(2, works.get(required(row, "work_code")));
+                setInteger(insert, 3, positiveInteger(row, "interval_km"));
+                setInteger(insert, 4, positiveInteger(row, "interval_months"));
+                insert.setBigDecimal(5, decimal(row, "estimated_price"));
+                insert.addBatch();
+                count[0]++;
+                if (count[0] % BATCH == 0) {
+                  insert.executeBatch();
+                }
+                if (count[0] % 100_000 == 0) {
+                  System.out.println("Uvezeno " + count[0] + " pravila...");
+                }
+              } catch (SQLException exception) {
+                throw new ImportFailure(exception);
+              }
+            });
+      } catch (ImportFailure failure) {
+        throw failure.sqlException;
+      }
+      insert.executeBatch();
+    }
+    return count[0];
+  }
+
+  private static void applyFinalSchema(String[] args) throws Exception {
+    if (args.length < 2) {
+      throw new IllegalArgumentException("Navedite guarded SQL migraciju.");
+    }
+    if (!has(args, "--apply") || !has(args, "--confirm-final-schema")) {
+      System.out.println("DRY RUN: migracija nije primijenjena; dodajte --apply --confirm-final-schema.");
+      return;
+    }
+    Path path = Path.of(args[1]).toAbsolutePath().normalize();
+    String sql = Files.readString(path, StandardCharsets.UTF_8);
+    String applySql = sql.replace("DECLARE @Apply bit = 0;", "DECLARE @Apply bit = 1;");
+    if (applySql.equals(sql)) {
+      throw new IllegalArgumentException("Migracija nema očekivani @Apply guard.");
+    }
+    try (Connection connection = SetupSqlSettings.environment(false).connect(false);
+        Statement statement = connection.createStatement()) {
+      statement.execute(applySql);
+      System.out.println("Završna schema migracija je primijenjena.");
+    }
+  }
+
+  private static void finalAudit(String[] args) throws Exception {
+    if (args.length < 2) {
+      throw new IllegalArgumentException("Navedite SQL audit.");
+    }
+    String sql = Files.readString(Path.of(args[1]), StandardCharsets.UTF_8);
+    try (Connection connection = SetupSqlSettings.environment(false).connect(false);
+        Statement statement = connection.createStatement()) {
+      boolean result = statement.execute(sql);
+      while (true) {
+        if (result) {
+          printResult(statement.getResultSet());
+        }
+        if (statement.getMoreResults(Statement.CLOSE_CURRENT_RESULT)) {
+          result = true;
+          continue;
+        }
+        int update = statement.getUpdateCount();
+        if (update == -1) {
+          break;
+        }
+        result = false;
+      }
+    }
+  }
+
+  private static void printResult(ResultSet result) throws SQLException {
+    try (result) {
+      ResultSetMetaData metadata = result.getMetaData();
+      StringBuilder header = new StringBuilder();
+      for (int i = 1; i <= metadata.getColumnCount(); i++) {
+        if (i > 1) {
+          header.append('\t');
+        }
+        header.append(metadata.getColumnLabel(i));
+      }
+      System.out.println(header);
+      while (result.next()) {
+        StringBuilder line = new StringBuilder();
+        for (int i = 1; i <= metadata.getColumnCount(); i++) {
+          if (i > 1) {
+            line.append('\t');
+          }
+          line.append(result.getString(i));
+        }
+        System.out.println(line);
+      }
+    }
+  }
+
+  private static Map<String, Long> loadIds(Connection connection, String table) throws SQLException {
+    Map<String, Long> ids = new HashMap<>();
+    String sql = "SELECT id,code FROM dbo." + table;
+    try (PreparedStatement statement = connection.prepareStatement(sql);
+        ResultSet result = statement.executeQuery()) {
+      while (result.next()) {
+        ids.put(result.getString("code"), result.getLong("id"));
+      }
+    }
+    return ids;
+  }
+
+  private static Map<String, String> loadCategories(Connection connection) throws SQLException {
+    Map<String, String> categories = new HashMap<>();
+    try (PreparedStatement statement =
+            connection.prepareStatement("SELECT code,category FROM dbo.work_definition");
+        ResultSet result = statement.executeQuery()) {
+      while (result.next()) {
+        categories.put(result.getString(1), result.getString(2));
+      }
+    }
+    return categories;
+  }
+
+  private static void verifyTables(Connection connection) throws SQLException {
+    for (String table : new String[] {"vehicle_variant", "work_definition", "vehicle_work_rule"}) {
+      try (PreparedStatement statement =
+              connection.prepareStatement(
+                  "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA='dbo'"
+                      + " AND TABLE_NAME=?")) {
+        statement.setString(1, table);
+        try (ResultSet result = statement.executeQuery()) {
+          result.next();
+          if (result.getInt(1) != 1) {
+            throw new SQLException("Nedostaje dbo." + table);
+          }
+        }
+      }
+    }
+  }
+
+  private static void rejectReferencedOtherWorks(Connection connection) throws SQLException {
+    String sql =
+        "SELECT "
+            + "(SELECT COUNT_BIG(*) FROM dbo.service_item i JOIN dbo.work_definition w ON w.id=i.work_id"
+            + " WHERE w.code IN ('OTHER_MAINTENANCE','OTHER_REPAIR')),"
+            + "(SELECT COUNT_BIG(*) FROM dbo.problem p JOIN dbo.work_definition w ON w.id=p.suggested_repair_id"
+            + " WHERE w.code IN ('OTHER_MAINTENANCE','OTHER_REPAIR'))";
+    try (Statement statement = connection.createStatement(); ResultSet result = statement.executeQuery(sql)) {
+      result.next();
+      if (result.getLong(1) != 0 || result.getLong(2) != 0) {
+        throw new SQLException("OTHER radovi imaju korisničke reference; import je blokiran.");
+      }
+    }
+  }
+
+  private static void rejectRuleForeignKeys(Connection connection) throws SQLException {
+    try (PreparedStatement statement =
+            connection.prepareStatement(
+                "SELECT COUNT_BIG(*) FROM sys.foreign_keys WHERE referenced_object_id=OBJECT_ID('dbo.vehicle_work_rule')");
+        ResultSet result = statement.executeQuery()) {
+      result.next();
+      if (result.getLong(1) != 0) {
+        throw new SQLException("Druga tablica referencira vehicle_work_rule; import je blokiran.");
+      }
+    }
+  }
+
+  private static void lock(Connection connection) throws SQLException {
+    try (Statement statement = connection.createStatement();
+        ResultSet result =
+            statement.executeQuery(
                 "SET NOCOUNT ON; DECLARE @r int; EXEC @r=sys.sp_getapplock"
                     + " @Resource=N'AutoCare-reference-import',@LockMode='Exclusive',@LockOwner='Session',@LockTimeout=0;"
                     + " SELECT @r")) {
-      if (!r.next() || r.getInt(1) < 0) {
-        throw new SQLException("Drugi seed proces je aktivan.");
+      if (!result.next() || result.getInt(1) < 0) {
+        throw new SQLException("Drugi import je aktivan.");
       }
     }
   }
 
-  private static void verifySchema(Connection c) throws SQLException {
-    for (String table :
-        List.of("vehicle_variant", "work_definition", "vehicle_work_rule", "diagnostic_rule")) {
-      try (PreparedStatement s =
-          c.prepareStatement(
-              "SELECT COUNT(*) FROM sys.tables WHERE name=? AND schema_id=SCHEMA_ID(N'dbo')")) {
-        s.setString(1, table);
-        try (ResultSet r = s.executeQuery()) {
-          r.next();
-          if (r.getInt(1) != 1) {
-            throw new SQLException("Nedostaje dbo." + table + "; prvo Hibernate schema-update.");
-          }
-        }
-      }
-    }
-  }
-
-  /** Offline full streaming validation; a digest proves integrity, not automotive accuracy. */
-  public static void validate(Path dir) throws IOException {
-    SeedFiles.verifyManifest(dir);
-    Set<String> variants = new HashSet<>(), works = new HashSet<>();
-    Map<String, String> categories = new HashMap<>();
-    long v =
-        SeedFiles.read(
-            dir.resolve("vehicle_variants.csv"),
-            r -> {
-              String code = SeedFiles.text(r, "code", 80, true);
-              if (!variants.add(code)) {
-                throw new IllegalArgumentException("Duplicirana varijanta.");
-              }
-              for (String key : List.of("make", "model", "generation", "engine_label")) {
-                SeedFiles.text(
-                    r,
-                    key,
-                    switch (key) {
-                      case "make" -> 100;
-                      case "model" -> 150;
-                      case "generation" -> 200;
-                      default -> 240;
-                    },
-                    true);
-              }
-              Integer from = SeedFiles.integer(r, "year_from", 1886, 2100),
-                  to = SeedFiles.integer(r, "year_to", 1886, 2100);
-              if (from == null || (to != null && to < from)) {
-                throw new IllegalArgumentException("Nevaljan raspon godina.");
-              }
-              SeedFiles.integer(r, "power_hp", 1, 10000);
-              SeedFiles.text(r, "body_type", 100, false);
-              SeedFiles.text(r, "fuel_type", 80, false);
-              SeedFiles.text(r, "transmission", 120, false);
-            });
-    long w =
-        SeedFiles.read(
-            dir.resolve("work_definitions.csv"),
-            r -> {
-              String code = SeedFiles.text(r, "code", 80, true);
-              if (!works.add(code)) {
-                throw new IllegalArgumentException("Duplicirani rad.");
-              }
-              SeedFiles.text(r, "name", 160, true);
-              String cat = SeedFiles.text(r, "category", 20, true);
-              if (!Set.of("MAINTENANCE", "REPAIR").contains(cat)) {
-                throw new IllegalArgumentException("Nevaljana kategorija.");
-              }
-              categories.put(code, cat);
-              SeedFiles.text(r, "estimate_note", 1000, false);
-            });
-    Set<String> ended = new HashSet<>();
-    Set<String> currentWorks = new HashSet<>();
-    String[] last = {null};
-    long rules =
-        SeedFiles.read(
-            dir.resolve("vehicle_work_rules.csv.gz"),
-            r -> {
-              String variant = SeedFiles.text(r, "variant_code", 80, true),
-                  work = SeedFiles.text(r, "work_code", 80, true);
-              if (!variants.contains(variant) || !works.contains(work)) {
-                throw new IllegalArgumentException("Nepostojeci kod u pravilu.");
-              }
-              if (!variant.equals(last[0])) {
-                if (last[0] != null) {
-                  ended.add(last[0]);
-                }
-                if (ended.contains(variant)) {
-                  throw new IllegalArgumentException("Pravila nisu grupirana po varijanti.");
-                }
-                last[0] = variant;
-                currentWorks.clear();
-              }
-              if (!currentWorks.add(work)) {
-                throw new IllegalArgumentException("Duplicirani par varijanta/rad.");
-              }
-              SeedFiles.price(r, "estimated_price");
-              Integer km = SeedFiles.integer(r, "interval_km", 1, 1000000),
-                  months = SeedFiles.integer(r, "interval_months", 1, 1200);
-              if (km != null || months != null) {
-                throw new IllegalArgumentException(
-                    "Osnovni seed ne smije neprimjetno aktivirati intervale; odvojeni su u"
-                        + " referenced_intervals.csv.");
-              }
-              SeedFiles.text(r, "estimate_note", 1000, true);
-              SeedFiles.text(r, "interval_source", 1000, false);
-            });
-    Set<String> pairs = new HashSet<>();
-    long intervals =
-        SeedFiles.read(
-            dir.resolve("referenced_intervals.csv"),
-            r -> {
-              String vc = SeedFiles.text(r, "variant_code", 80, true),
-                  wc = SeedFiles.text(r, "work_code", 80, true);
-              if (!variants.contains(vc)
-                  || !"MAINTENANCE".equals(categories.get(wc))
-                  || !pairs.add(vc + "/" + wc)) {
-                throw new IllegalArgumentException("Nevaljan/dupliciran interval.");
-              }
-              Integer km = SeedFiles.integer(r, "interval_km", 1, 1000000),
-                  m = SeedFiles.integer(r, "interval_months", 1, 1200);
-              if (km == null && m == null) {
-                throw new IllegalArgumentException("Interval nema kriterij.");
-              }
-              SeedFiles.text(r, "interval_source", 1000, true);
-            });
-    Set<String> codes = new HashSet<>();
-    long diagnostics =
-        SeedFiles.read(
-            dir.resolve("diagnostic_rules.csv"),
-            r -> {
-              String code = SeedFiles.text(r, "code", 80, true),
-                  work = SeedFiles.text(r, "work_code", 80, true);
-              if (!codes.add(code) || !"REPAIR".equals(categories.get(work))) {
-                throw new IllegalArgumentException("Nevaljana dijagnostika.");
-              }
-              SeedFiles.text(r, "phrase", 160, true);
-              if (SeedFiles.integer(r, "weight", 1, 100) == null) {
-                throw new IllegalArgumentException("Tezina nedostaje.");
-              }
-            });
-    System.out.printf(
-        "Offline seed: %d varijanti, %d radova, %d pravila, %d referenciranih intervala, %d"
-            + " tekstualnih pravila.%n",
-        v, w, rules, intervals, diagnostics);
-  }
-
-  @FunctionalInterface
-  private interface BatchAction {
-    void accept(List<Map<String, String>> rows) throws Exception;
-  }
-
-  private static void batches(Path path, BatchAction action) throws Exception {
-    List<Map<String, String>> rows = new ArrayList<>(BATCH);
-    long[] processed = {0};
-    try {
-      SeedFiles.read(
-          path,
-          row -> {
-            rows.add(row);
-            if (rows.size() == BATCH) {
-              try {
-                action.accept(rows);
-                processed[0] += rows.size();
-                rows.clear();
-                if (processed[0] % 50000 == 0) {
-                  System.out.println(path.getFileName() + ": " + processed[0]);
-                }
-              } catch (Exception ex) {
-                throw new BatchFailure(ex);
-              }
-            }
-          });
-    } catch (BatchFailure ex) {
-      throw (Exception) ex.getCause();
-    }
-    if (!rows.isEmpty()) {
-      action.accept(rows);
-    }
-  }
-
-  private static final class BatchFailure extends RuntimeException {
-    BatchFailure(Exception cause) {
-      super(cause);
-    }
-  }
-
-  private static void execute(Connection c, String sql) throws SQLException {
-    try (Statement s = c.createStatement()) {
-      s.setQueryTimeout(120);
-      s.execute(sql);
-    }
-  }
-
-  private static void strings(
-      PreparedStatement s, int start, Map<String, String> row, String... keys) throws SQLException {
-    for (int i = 0; i < keys.length; i++) {
-      String v = row.get(keys[i]);
-      if (v == null || v.isBlank()) {
-        s.setNull(start + i, Types.NVARCHAR);
-      } else {
-        s.setNString(start + i, v);
-      }
-    }
-  }
-
-  private static void num(PreparedStatement s, int index, Map<String, String> row, String key)
-      throws SQLException {
-    String v = row.get(key);
-    if (v == null || v.isBlank()) {
-      s.setNull(index, Types.INTEGER);
-    } else {
-      s.setInt(index, Integer.parseInt(v));
-    }
-  }
-
-  private static void money(PreparedStatement s, int index, Map<String, String> row, String key)
-      throws SQLException {
-    String v = row.get(key);
-    if (v == null || v.isBlank()) {
-      s.setNull(index, Types.DECIMAL);
-    } else {
-      s.setBigDecimal(index, new BigDecimal(v));
-    }
-  }
-
-  private static void works(Connection c, Path dir) throws Exception {
-    execute(
-        c,
-        "CREATE TABLE #ac_w(code nvarchar(80) NOT NULL,name nvarchar(160) NOT NULL,category"
-            + " nvarchar(20) NOT NULL,estimate_note nvarchar(1000) NULL)");
-    batches(
-        dir.resolve("work_definitions.csv"),
-        rows -> {
-          try (PreparedStatement s = c.prepareStatement("INSERT INTO #ac_w VALUES(?,?,?,?)")) {
-            for (var r : rows) {
-              strings(s, 1, r, "code", "name", "category", "estimate_note");
-              s.addBatch();
-            }
-            s.executeBatch();
-          }
-          execute(
-              c,
-              "IF EXISTS(SELECT 1 FROM #ac_w s JOIN dbo.work_definition t ON t.code=s.code WHERE"
-                  + " t.category<>s.category) THROW 51000,'Postojeci work code ima drugo"
-                  + " znacenje/kategoriju.',1");
-          execute(
-              c,
-              "INSERT INTO"
-                  + " dbo.work_definition(code,name,category,default_estimated_price,estimate_note)"
-                  + " SELECT s.code,s.name,s.category,NULL,s.estimate_note FROM #ac_w s WHERE NOT"
-                  + " EXISTS(SELECT 1 FROM dbo.work_definition t WHERE t.code=s.code)");
-          execute(c, "DELETE FROM #ac_w");
-          c.commit();
-        });
-    execute(c, "DROP TABLE #ac_w");
-  }
-
-  private static void variants(Connection c, Path dir) throws Exception {
-    execute(
-        c,
-        "CREATE TABLE #ac_v(code nvarchar(80),make nvarchar(100),model nvarchar(150),generation"
-            + " nvarchar(200),engine_label nvarchar(240),body_type nvarchar(100),fuel_type"
-            + " nvarchar(80),power_hp int,transmission nvarchar(120),year_from int,year_to"
-            + " int)");
-    batches(
-        dir.resolve("vehicle_variants.csv"),
-        rows -> {
-          try (PreparedStatement s =
-              c.prepareStatement("INSERT INTO #ac_v VALUES(?,?,?,?,?,?,?,?,?,?,?)")) {
-            for (Map<String, String> r : rows) {
-              strings(
-                  s,
-                  1,
-                  r,
-                  "code",
-                  "make",
-                  "model",
-                  "generation",
-                  "engine_label",
-                  "body_type",
-                  "fuel_type");
-              num(s, 8, r, "power_hp");
-              strings(s, 9, r, "transmission");
-              num(s, 10, r, "year_from");
-              num(s, 11, r, "year_to");
-              s.addBatch();
-            }
-            s.executeBatch();
-          }
-          execute(
-              c,
-              "IF EXISTS(SELECT 1 FROM #ac_v s JOIN dbo.vehicle_variant t ON t.code=s.code WHERE"
-                  + " t.make<>s.make OR t.model<>s.model OR t.generation<>s.generation OR"
-                  + " t.engine_label<>s.engine_label OR t.year_from<>s.year_from OR"
-                  + " ISNULL(t.year_to,-1)<>ISNULL(s.year_to,-1)) THROW 51000,'Kataloski code ima"
-                  + " drugo znacenje; potreban review.',1");
-          execute(
-              c,
-              "INSERT INTO"
-                  + " dbo.vehicle_variant(code,make,model,generation,engine_label,body_type,fuel_type,power_hp,transmission,year_from,year_to)"
-                  + " SELECT"
-                  + " s.code,s.make,s.model,s.generation,s.engine_label,s.body_type,s.fuel_type,s.power_hp,s.transmission,s.year_from,s.year_to"
-                  + " FROM #ac_v s WHERE NOT EXISTS(SELECT 1 FROM dbo.vehicle_variant t WHERE"
-                  + " t.code=s.code)");
-          execute(c, "DELETE FROM #ac_v");
-          c.commit();
-        });
-    execute(c, "DROP TABLE #ac_v");
-  }
-
-  private static void rules(Connection c, Path dir) throws Exception {
-    execute(
-        c,
-        "CREATE TABLE #ac_r(variant_code nvarchar(80),work_code nvarchar(80),estimated_price"
-            + " decimal(9,2),estimate_note nvarchar(1000),interval_source nvarchar(1000))");
-    batches(
-        dir.resolve("vehicle_work_rules.csv.gz"),
-        rows -> {
-          try (PreparedStatement s = c.prepareStatement("INSERT INTO #ac_r VALUES(?,?,?,?,?)")) {
-            for (var r : rows) {
-              strings(s, 1, r, "variant_code", "work_code");
-              money(s, 3, r, "estimated_price");
-              strings(s, 4, r, "estimate_note", "interval_source");
-              s.addBatch();
-            }
-            s.executeBatch();
-          }
-          execute(
-              c,
-              "IF EXISTS(SELECT 1 FROM #ac_r s LEFT JOIN dbo.vehicle_variant v ON"
-                  + " v.code=s.variant_code LEFT JOIN dbo.work_definition w ON w.code=s.work_code"
-                  + " WHERE v.id IS NULL OR w.id IS NULL) THROW 51000,'Nedostaje varijanta ili"
-                  + " zahvat.',1");
-          execute(
-              c,
-              "INSERT INTO"
-                  + " dbo.vehicle_work_rule(variant_id,work_id,estimated_price,estimate_note,interval_source)"
-                  + " SELECT"
-                  + " v.id,w.id,s.estimated_price,s.estimate_note,s.interval_source"
-                  + " FROM #ac_r s JOIN dbo.vehicle_variant v ON v.code=s.variant_code JOIN"
-                  + " dbo.work_definition w ON w.code=s.work_code WHERE NOT EXISTS(SELECT 1 FROM"
-                  + " dbo.vehicle_work_rule t WHERE t.variant_id=v.id AND t.work_id=w.id)");
-          // A deliberate NULL with an existing reviewed note is NOT missing data to overwrite.
-          execute(
-              c,
-              "UPDATE t SET t.estimated_price=s.estimated_price,t.estimate_note=s.estimate_note FROM"
-                  + " dbo.vehicle_work_rule t JOIN dbo.vehicle_variant v ON v.id=t.variant_id JOIN"
-                  + " dbo.work_definition w ON w.id=t.work_id JOIN #ac_r s ON s.variant_code=v.code"
-                  + " AND s.work_code=w.code WHERE t.estimated_price IS NULL AND t.estimate_note IS"
-                  + " NULL AND s.estimated_price IS NOT NULL");
-          execute(c, "DELETE FROM #ac_r");
-          c.commit();
-        });
-    execute(c, "DROP TABLE #ac_r");
-  }
-
-  private static void intervals(Connection c, Path dir) throws Exception {
-    execute(
-        c,
-        "CREATE TABLE #ac_i(variant_code nvarchar(80),work_code nvarchar(80),interval_km"
-            + " int,interval_months int,interval_source nvarchar(1000))");
-    batches(
-        dir.resolve("referenced_intervals.csv"),
-        rows -> {
-          try (PreparedStatement s = c.prepareStatement("INSERT INTO #ac_i VALUES(?,?,?,?,?)")) {
-            for (var r : rows) {
-              strings(s, 1, r, "variant_code", "work_code");
-              num(s, 3, r, "interval_km");
-              num(s, 4, r, "interval_months");
-              strings(s, 5, r, "interval_source");
-              s.addBatch();
-            }
-            s.executeBatch();
-          }
-          execute(
-              c,
-              "INSERT INTO"
-                  + " dbo.vehicle_work_rule(variant_id,work_id,interval_km,interval_months,interval_source)"
-                  + " SELECT v.id,w.id,s.interval_km,s.interval_months,s.interval_source"
-                  + " FROM #ac_i s JOIN dbo.vehicle_variant v ON v.code=s.variant_code JOIN"
-                  + " dbo.work_definition w ON w.code=s.work_code WHERE NOT EXISTS(SELECT 1 FROM"
-                  + " dbo.vehicle_work_rule t WHERE t.variant_id=v.id AND t.work_id=w.id)");
-          execute(
-              c,
-              "UPDATE t SET"
-                  + " t.interval_km=s.interval_km,t.interval_months=s.interval_months,t.interval_source=s.interval_source"
-                  + " FROM dbo.vehicle_work_rule t JOIN dbo.vehicle_variant v ON v.id=t.variant_id"
-                  + " JOIN dbo.work_definition w ON w.id=t.work_id JOIN #ac_i s ON"
-                  + " s.variant_code=v.code AND s.work_code=w.code WHERE t.interval_km IS NULL AND"
-                  + " t.interval_months IS NULL AND (t.interval_source"
-                  + " IS NULL OR t.interval_source LIKE N'AC-SCHEDULE-%')");
-          execute(c, "DELETE FROM #ac_i");
-          c.commit();
-        });
-    execute(c, "DROP TABLE #ac_i");
-  }
-
-  private static void diagnostics(Connection c, Path dir) throws Exception {
-    disableKnownLegacyDiagnostics(c);
-    execute(
-        c,
-        "CREATE TABLE #ac_d(code nvarchar(80),work_code nvarchar(80),phrase nvarchar(160),weight"
-            + " int,active bit)");
-    batches(
-        dir.resolve("diagnostic_rules.csv"),
-        rows -> {
-          try (PreparedStatement s = c.prepareStatement("INSERT INTO #ac_d VALUES(?,?,?,?,?)")) {
-            for (var r : rows) {
-              strings(s, 1, r, "code", "work_code", "phrase");
-              num(s, 4, r, "weight");
-              s.setBoolean(5, "1".equals(r.get("active")));
-              s.addBatch();
-            }
-            s.executeBatch();
-          }
-          execute(
-              c,
-              "IF EXISTS(SELECT 1 FROM #ac_d s JOIN dbo.diagnostic_rule t ON t.code=s.code JOIN"
-                  + " dbo.work_definition w ON w.id=t.candidate_id WHERE s.work_code<>w.code OR"
-                  + " s.phrase<>t.phrase OR s.weight<>t.weight) THROW 51000,'Izmijenjeno"
-                  + " dijagnosticko pravilo istoga koda; potreban review.',1");
-          execute(
-              c,
-              "INSERT INTO dbo.diagnostic_rule(code,candidate_id,phrase,weight,active) SELECT"
-                  + " s.code,w.id,s.phrase,s.weight,s.active FROM #ac_d s JOIN dbo.work_definition w"
-                  + " ON w.code=s.work_code WHERE w.category=N'REPAIR' AND NOT EXISTS(SELECT 1 FROM"
-                  + " dbo.diagnostic_rule t WHERE t.code=s.code)");
-          execute(c, "DELETE FROM #ac_d");
-          c.commit();
-        });
-    execute(c, "DROP TABLE #ac_d");
-  }
-
-  private static void disableKnownLegacyDiagnostics(Connection c) throws SQLException {
-    String[][] known = {
-      {"ac-warm", "AC_COMPRESSOR", "slabo hladi", "4"},
-      {"ac-noise", "AC_COMPRESSOR", "zvizdi", "2"},
-      {"fan-idle", "RADIATOR_FAN", "u leru", "3"},
-      {"fan-heat", "RADIATOR_FAN", "pregrijava", "5"},
-      {"ac-fluid", "AC_SERVICE", "slabo hladi", "2"},
-      {"bat-start", "BATTERY", "tesko pali", "2"},
-      {"bat-slow", "BATTERY", "sporo vergla", "5"},
-      {"glow-cold", "GLOW_PLUGS", "hladan", "3"},
-      {"glow-start", "GLOW_PLUGS", "tesko pali", "2"}
-    };
-    try (PreparedStatement find =
-            c.prepareStatement(
-                "SELECT w.code,r.phrase,r.weight FROM dbo.diagnostic_rule r JOIN dbo.work_definition"
-                    + " w ON w.id=r.candidate_id WHERE r.code=?");
-        PreparedStatement disable =
-            c.prepareStatement("UPDATE dbo.diagnostic_rule SET active=0 WHERE code=?")) {
-      for (String[] row : known) {
-        find.setString(1, row[0]);
-        try (ResultSet r = find.executeQuery()) {
-          if (!r.next()) {
-            continue;
-          }
-          if (!row[1].equals(r.getString(1))
-              || !row[2].equals(r.getString(2))
-              || Integer.parseInt(row[3]) != r.getInt(3)) {
-            throw new SQLException(
-                "Promijenjeno staro DEMO pravilo; potreban pregled, ne automatsko prepisivanje.");
-          }
-        }
-        disable.setString(1, row[0]);
-        disable.executeUpdate();
-      }
-    }
-  }
-
-  private static void report(Connection c) throws SQLException {
-    try (Statement s = c.createStatement();
-        ResultSet r =
-            s.executeQuery(
-                "SELECT (SELECT COUNT_BIG(*) FROM dbo.vehicle_variant),(SELECT COUNT_BIG(*) FROM"
-                    + " dbo.work_definition),(SELECT COUNT_BIG(*) FROM dbo.vehicle_work_rule),(SELECT"
-                    + " COUNT_BIG(*) FROM dbo.diagnostic_rule)")) {
-      r.next();
+  private static void report(Connection connection) throws SQLException {
+    String sql =
+        "SELECT "
+            + "(SELECT COUNT_BIG(*) FROM dbo.vehicle_variant) AS variants,"
+            + "(SELECT COUNT_BIG(*) FROM dbo.work_definition) AS works,"
+            + "(SELECT COUNT_BIG(*) FROM dbo.vehicle_work_rule) AS rules,"
+            + "(SELECT COUNT_BIG(*) FROM dbo.vehicle_work_rule r JOIN dbo.work_definition w ON w.id=r.work_id WHERE w.category='MAINTENANCE') AS maintenance_rules,"
+            + "(SELECT COUNT_BIG(*) FROM dbo.vehicle_work_rule r JOIN dbo.work_definition w ON w.id=r.work_id WHERE w.category='REPAIR') AS repair_rules";
+    try (Statement statement = connection.createStatement(); ResultSet result = statement.executeQuery(sql)) {
+      result.next();
       System.out.printf(
-          "Ukupno u bazi: %d varijanti / %d radova / %d pravila / %d dijagnostickih pravila.%n",
-          r.getLong(1), r.getLong(2), r.getLong(3), r.getLong(4));
+          "Baza nakon importa: %d varijanti / %d radova / %d pravila (%d održavanje, %d popravci).%n",
+          result.getLong(1),
+          result.getLong(2),
+          result.getLong(3),
+          result.getLong(4),
+          result.getLong(5));
+    }
+  }
+
+  private static String required(Map<String, String> row, String key) {
+    String value = row.get(key);
+    if (value == null || value.isBlank()) {
+      throw new IllegalArgumentException("Nedostaje vrijednost: " + key);
+    }
+    return value.strip();
+  }
+
+  private static Integer positiveInteger(Map<String, String> row, String key) {
+    String value = row.get(key);
+    if (value == null || value.isBlank()) {
+      return null;
+    }
+    int parsed;
+    try {
+      parsed = Integer.parseInt(value.strip());
+    } catch (NumberFormatException exception) {
+      throw new IllegalArgumentException("Nevaljan cijeli broj u " + key + ".");
+    }
+    if (parsed <= 0) {
+      throw new IllegalArgumentException("Vrijednost mora biti pozitivna u " + key + ".");
+    }
+    return parsed;
+  }
+
+  private static BigDecimal decimal(Map<String, String> row, String key) {
+    String value = row.get(key);
+    if (value == null || value.isBlank()) {
+      return null;
+    }
+    try {
+      return new BigDecimal(value.strip());
+    } catch (NumberFormatException exception) {
+      throw new IllegalArgumentException("Nevaljan decimalni broj u " + key + ".");
+    }
+  }
+
+  private static void setInteger(PreparedStatement statement, int index, Integer value)
+      throws SQLException {
+    if (value == null) {
+      statement.setNull(index, Types.INTEGER);
+    } else {
+      statement.setInt(index, value);
+    }
+  }
+
+  private static boolean has(String[] args, String value) {
+    for (String arg : args) {
+      if (value.equals(arg)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private static final class ImportFailure extends RuntimeException {
+    private final SQLException sqlException;
+
+    private ImportFailure(SQLException sqlException) {
+      super(sqlException);
+      this.sqlException = sqlException;
     }
   }
 }

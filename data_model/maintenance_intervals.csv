@@ -1,0 +1,31 @@
+work_code,strategy,interval_km,interval_months,note
+OIL_SERVICE,COMBINED,15000,12,Okvirni redovni servis ulja i filtra.
+AIR_FILTER,COMBINED,30000,24,Okvirni interval zamjene filtra zraka.
+CABIN_FILTER,COMBINED,15000,12,Okvirni godišnji interval.
+FUEL_FILTER,COMBINED,30000,24,Okvirni interval filtra goriva.
+BRAKE_FLUID,TIME,,24,Okvirna zamjena kočione tekućine svake dvije godine.
+COOLANT,COMBINED,60000,48,Okvirni interval rashladne tekućine.
+TIMING_BELT_PUMP,COMBINED,100000,60,Okvirni interval kompleta zupčastog remena i vodene pumpe.
+SPARK_PLUGS,COMBINED,45000,36,Okvirni interval svjećica.
+AUX_BELT,COMBINED,60000,48,Okvirni interval pomoćnog remena i natezača.
+MANUAL_GEARBOX_OIL,COMBINED,60000,60,Okvirni interval ulja ručnog mjenjača.
+AUTO_GEARBOX_OIL,COMBINED,60000,48,Okvirni interval servisa automatskog mjenjača.
+SCHEDULED_INSPECTION,COMBINED,15000,12,Okvirni redovni servisni pregled.
+BRAKE_FLUID_CHECK,TIME,,12,Godišnja provjera kočione tekućine.
+WIPER_REPLACE,TIME,,12,Okvirna godišnja zamjena prednjih metlica.
+TYRE_ROTATION,COMBINED,10000,12,Okvirna rotacija kotača gdje je primjenjivo.
+TYRE_PRESSURE_CHECK,TIME,,1,Mjesečna provjera tlaka i stanja guma.
+TYRE_MOUNT_BALANCE,COMBINED,15000,12,Okvirna godišnja ili sezonska kontrola i balansiranje.
+TYRE_REPLACE_SET,COMBINED,45000,48,Okvirni interval kompleta guma za studentski model.
+WHEEL_ALIGNMENT,COMBINED,20000,24,Okvirna kontrola geometrije kotača.
+AC_DISINFECTION,TIME,,12,Okvirna godišnja dezinfekcija ventilacije.
+BATTERY_TEST,TIME,,12,Okvirna godišnja provjera 12 V akumulatora.
+BRAKE_INSPECTION,COMBINED,15000,12,Redovita kontrola kočnica.
+BRAKE_CALIPER_CLEAN,COMBINED,30000,24,Okvirni preventivni interval čišćenja i podmazivanja čeljusti.
+BODY_CORROSION_CHECK,TIME,,12,Okvirna godišnja provjera podvozja i korozije.
+HYBRID_BATTERY_FILTER,COMBINED,30000,24,Okvirni interval filtra hlađenja hibridne baterije.
+TRACTION_BATTERY_TEST,TIME,,24,Okvirna dvogodišnja dijagnostika pogonske baterije.
+EV_DRIVE_FLUID,COMBINED,100000,60,Okvirni interval ulja reduktora električnog pogona gdje je primjenjivo.
+DIFFERENTIAL_OIL,COMBINED,60000,48,Okvirni interval ulja zasebnog diferencijala.
+TRANSFER_CASE_OIL,COMBINED,60000,48,Okvirni interval ulja razvodnika pogona.
+HV_COOLANT,COMBINED,100000,60,Okvirni interval rashladne tekućine visokonaponskog sustava gdje je primjenjivo.
