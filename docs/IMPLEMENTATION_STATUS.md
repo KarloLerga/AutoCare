@@ -10,13 +10,15 @@ postojece povijesti.
 | Runtime physical naming strategy | PASS | `be08831`; `persistence.xml` koristi `CamelCaseToUnderscoresNamingStrategy`. |
 | Fizicki index/constraint nazivi | PASS | `VehicleVariant` koristi `year_from`, `ServiceItem` koristi `service_record_id`; `VehicleWorkRule` ostaje `variant_id,work_id`. |
 | Maintenance bez ScheduleKind logike | PASS | `MaintenanceCalculator` ima samo intervalni `calculate(...)`; `MaintenanceService` koristi specificni rule ili WorkDefinition fallback. |
-| Legacy DB kompatibilnost | PREPARED / NOT_RUN | `schema/06_student_runtime_compat.sql` je dodan s `@Apply = 0`; live SQL nije izvrsen jer nema dostupne privatne konekcijske datoteke ni potvrdenog imena baze u ovom okruzenju. |
+| Legacy DB kompatibilnost | PASS | Read-only `schema/06_student_runtime_compat.sql` prvo je vratio ocekivani stari snake_case oblik; nakon tocne provjere baze primijenjene su samo njegove guarded minimalne izmjene. Ponovni read-only pregled potvrdio je oba nullable intervalna stupca i DB default za legacy `request_key`. |
 | Diagnostics i dijagrami | PASS (unchanged) | Nisu dirani `DiagnosticRule`, Strategy/Problem flow ni `.dot/.mmd/.png/.svg` datoteke. |
 | Maven/JDK25 verification | PASS | `git diff --check`, `clean verify`, `package`, `javadoc:javadoc`, runtime `install` i neovisni setup `clean test package` prosli. |
+| Stvarna Azure SQL/JPA provjera | PASS | `sql-check`, Hibernate `db-check` (`validate`) i read-only `scripts/verify-database.sql` prosli nad postojecim Azure SQL targetom; katalog je 30.366 varijanti / 122 rada / 1.650.435 pravila / 87 dijagnostickih pravila, bez duplikata. |
 
-Delta ogranicenja: Hibernate `validate` prema stvarnoj Azure bazi, apply compat skripte, login/CRUD
-manual smoke i native Windows GUI ostaju `NOT_RUN`/`BLOCKED`; ne oznacavaju se kao PASS bez stvarnog
-izvrsenja. SQL patch ne radi rename, rebuild ni brisanje podataka.
+Delta ogranicenja: odvojeni `_test` profil i login/CRUD manual smoke te native Windows GUI ostaju
+`NOT_RUN`/`BLOCKED`; ne oznacavaju se kao PASS bez stvarnog izvrsenja. SQL patch nije radio rename,
+rebuild, backfill ni brisanje podataka. Puni seed nije ponovno pokretan jer je postojece katalog
+punjenje vec provjereno i ponovno punjenje nije potrebno za ovu runtime kompatibilnost.
 
 ## V2 studentska simplifikacija — baseline prije delta passa
 
