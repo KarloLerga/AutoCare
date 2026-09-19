@@ -1,2 +1,0 @@
-Offline validation passed: {"variants": 30366, "works": 39, "rules": 625668, "interval_rules": 14, "diagnostic_rules": 67}
-DRY RUN ONLY: no database connection made. Add --check-db for a read-only connection check, or --apply with explicit estimate acknowledgement.

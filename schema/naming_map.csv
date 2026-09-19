@@ -1,70 +1,52 @@
-entity_before,entity_after,table_before,table_after,field_before,field_after,column_before,column_after
-User,AppUser,app_user,AppUser,id,id,id,id
-User,AppUser,app_user,AppUser,version,version,version,version
-User,AppUser,app_user,AppUser,name,name,name,name
-User,AppUser,app_user,AppUser,email,email,email,email
-User,AppUser,app_user,AppUser,passwordHash,passwordHash,password_hash,passwordHash
-User,AppUser,app_user,AppUser,activeVehicle,activeVehicle,active_vehicle_id,activeVehicle_id
-VehicleVariant,VehicleVariant,vehicle_variant,VehicleVariant,id,id,id,id
-VehicleVariant,VehicleVariant,vehicle_variant,VehicleVariant,code,code,code,code
-VehicleVariant,VehicleVariant,vehicle_variant,VehicleVariant,make,make,make,make
-VehicleVariant,VehicleVariant,vehicle_variant,VehicleVariant,model,model,model,model
-VehicleVariant,VehicleVariant,vehicle_variant,VehicleVariant,generation,generation,generation,generation
-VehicleVariant,VehicleVariant,vehicle_variant,VehicleVariant,engineLabel,engineLabel,engine_label,engineLabel
-VehicleVariant,VehicleVariant,vehicle_variant,VehicleVariant,bodyType,bodyType,body_type,bodyType
-VehicleVariant,VehicleVariant,vehicle_variant,VehicleVariant,fuelType,fuelType,fuel_type,fuelType
-VehicleVariant,VehicleVariant,vehicle_variant,VehicleVariant,powerHp,powerHp,power_hp,powerHp
-VehicleVariant,VehicleVariant,vehicle_variant,VehicleVariant,transmission,transmission,transmission,transmission
-VehicleVariant,VehicleVariant,vehicle_variant,VehicleVariant,yearFrom,yearFrom,year_from,yearFrom
-VehicleVariant,VehicleVariant,vehicle_variant,VehicleVariant,yearTo,yearTo,year_to,yearTo
-VehicleVariant,VehicleVariant,vehicle_variant,VehicleVariant,imagePath,imagePath,image_path,imagePath
-Vehicle,Vehicle,vehicle,Vehicle,id,id,id,id
-Vehicle,Vehicle,vehicle,Vehicle,version,version,version,version
-Vehicle,Vehicle,vehicle,Vehicle,owner,owner,owner_id,owner_id
-Vehicle,Vehicle,vehicle,Vehicle,variant,variant,variant_id,variant_id
-Vehicle,Vehicle,vehicle,Vehicle,year,productionYear,production_year,productionYear
-Vehicle,Vehicle,vehicle,Vehicle,currentMileage,currentMileage,current_mileage,currentMileage
-WorkDefinition,WorkDefinition,work_definition,WorkDefinition,id,id,id,id
-WorkDefinition,WorkDefinition,work_definition,WorkDefinition,code,code,code,code
-WorkDefinition,WorkDefinition,work_definition,WorkDefinition,name,name,name,name
-WorkDefinition,WorkDefinition,work_definition,WorkDefinition,category,category,category,category
-WorkDefinition,WorkDefinition,work_definition,WorkDefinition,,defaultIntervalKm,,defaultIntervalKm
-WorkDefinition,WorkDefinition,work_definition,WorkDefinition,,defaultIntervalMonths,,defaultIntervalMonths
-WorkDefinition,WorkDefinition,work_definition,WorkDefinition,defaultEstimatedPrice,defaultEstimatedPrice,default_estimated_price,defaultEstimatedPrice
-WorkDefinition,WorkDefinition,work_definition,WorkDefinition,estimateNote,estimateNote,estimate_note,estimateNote
-VehicleWorkRule,VehicleWorkRule,vehicle_work_rule,VehicleWorkRule,id,id,id,id
-VehicleWorkRule,VehicleWorkRule,vehicle_work_rule,VehicleWorkRule,variant,variant,variant_id,variant_id
-VehicleWorkRule,VehicleWorkRule,vehicle_work_rule,VehicleWorkRule,work,work,work_id,work_id
-VehicleWorkRule,VehicleWorkRule,vehicle_work_rule,VehicleWorkRule,intervalKm,intervalKm,interval_km,intervalKm
-VehicleWorkRule,VehicleWorkRule,vehicle_work_rule,VehicleWorkRule,scheduleKind,scheduleKind,schedule_kind,scheduleKind
-VehicleWorkRule,VehicleWorkRule,vehicle_work_rule,VehicleWorkRule,intervalMonths,intervalMonths,interval_months,intervalMonths
-VehicleWorkRule,VehicleWorkRule,vehicle_work_rule,VehicleWorkRule,estimatedPrice,estimatedPrice,estimated_price,estimatedPrice
-VehicleWorkRule,VehicleWorkRule,vehicle_work_rule,VehicleWorkRule,intervalSource,intervalSource,interval_source,intervalSource
-VehicleWorkRule,VehicleWorkRule,vehicle_work_rule,VehicleWorkRule,estimateNote,estimateNote,estimate_note,estimateNote
-ServiceRecord,ServiceRecord,service_record,ServiceRecord,id,id,id,id
-ServiceRecord,ServiceRecord,service_record,ServiceRecord,vehicle,vehicle,vehicle_id,vehicle_id
-ServiceRecord,ServiceRecord,service_record,ServiceRecord,date,serviceDate,service_date,serviceDate
-ServiceRecord,ServiceRecord,service_record,ServiceRecord,mileage,mileage,mileage,mileage
-ServiceRecord,ServiceRecord,service_record,ServiceRecord,note,note,note,note
-ServiceItem,ServiceItem,service_item,ServiceItem,id,id,id,id
-ServiceItem,ServiceItem,service_item,ServiceItem,serviceRecord,serviceRecord,service_record_id,serviceRecord_id
-ServiceItem,ServiceItem,service_item,ServiceItem,work,work,work_id,work_id
-ServiceItem,ServiceItem,service_item,ServiceItem,actualPrice,actualPrice,actual_price,actualPrice
-Problem,Problem,problem,Problem,id,id,id,id
-Problem,Problem,problem,Problem,version,version,version,version
-Problem,Problem,problem,Problem,vehicle,vehicle,vehicle_id,vehicle_id
-Problem,Problem,problem,Problem,requestKey,requestKey,request_key,requestKey
-Problem,Problem,problem,Problem,description,description,description,description
-Problem,Problem,problem,Problem,status,status,status,status
-Problem,Problem,problem,Problem,createdAt,createdAt,created_at,createdAt
-Problem,Problem,problem,Problem,suggestedRepair,suggestedRepair,suggested_repair_id,suggestedRepair_id
-Problem,Problem,problem,Problem,matchPercent,matchPercent,match_percent,matchPercent
-Problem,Problem,problem,Problem,estimatedCost,estimatedCost,estimated_cost,estimatedCost
-Problem,Problem,problem,Problem,estimateNote,estimateNote,estimate_note,estimateNote
-Problem,Problem,problem,Problem,resolvedByService,resolvedByService,resolved_by_service_id,resolvedByService_id
-DiagnosticRule,DiagnosticRule,diagnostic_rule,DiagnosticRule,id,id,id,id
-DiagnosticRule,DiagnosticRule,diagnostic_rule,DiagnosticRule,code,code,code,code
-DiagnosticRule,DiagnosticRule,diagnostic_rule,DiagnosticRule,candidate,candidate,candidate_id,candidate_id
-DiagnosticRule,DiagnosticRule,diagnostic_rule,DiagnosticRule,phrase,phrase,phrase,phrase
-DiagnosticRule,DiagnosticRule,diagnostic_rule,DiagnosticRule,weight,weight,weight,weight
-DiagnosticRule,DiagnosticRule,diagnostic_rule,DiagnosticRule,active,active,active,active
+java_entity,sql_table,java_field,sql_column,notes
+AppUser,app_user,id,id,PK
+AppUser,app_user,name,name,
+AppUser,app_user,email,email,
+AppUser,app_user,password,password,plain student-project password
+AppUser,app_user,activeVehicle,active_vehicle_id,FK -> vehicle.id
+VehicleVariant,vehicle_variant,id,id,PK
+VehicleVariant,vehicle_variant,code,code,
+VehicleVariant,vehicle_variant,make,make,
+VehicleVariant,vehicle_variant,model,model,
+VehicleVariant,vehicle_variant,generation,generation,
+VehicleVariant,vehicle_variant,engineLabel,engine_label,
+VehicleVariant,vehicle_variant,bodyType,body_type,
+VehicleVariant,vehicle_variant,fuelType,fuel_type,
+VehicleVariant,vehicle_variant,powerHp,power_hp,
+VehicleVariant,vehicle_variant,transmission,transmission,
+VehicleVariant,vehicle_variant,yearFrom,year_from,
+VehicleVariant,vehicle_variant,yearTo,year_to,
+VehicleVariant,vehicle_variant,priceClass,price_class,VehiclePriceClass string enum
+Vehicle,vehicle,id,id,PK
+Vehicle,vehicle,owner,owner_id,FK -> app_user.id
+Vehicle,vehicle,variant,variant_id,FK -> vehicle_variant.id
+Vehicle,vehicle,productionYear,production_year,
+Vehicle,vehicle,currentMileage,current_mileage,
+WorkDefinition,work_definition,id,id,PK
+WorkDefinition,work_definition,code,code,
+WorkDefinition,work_definition,name,name,
+WorkDefinition,work_definition,category,category,WorkCategory string enum
+WorkDefinition,work_definition,catalogCategory,catalog_category,CatalogCategory string enum
+WorkDefinition,work_definition,intervalKm,interval_km,nullable for repair or time-only maintenance
+WorkDefinition,work_definition,intervalMonths,interval_months,nullable for repair or km-only maintenance
+WorkPriceRange,work_price_range,id,id,PK
+WorkPriceRange,work_price_range,work,work_id,FK -> work_definition.id
+WorkPriceRange,work_price_range,priceClass,price_class,VehiclePriceClass string enum
+WorkPriceRange,work_price_range,minPrice,min_price,
+WorkPriceRange,work_price_range,maxPrice,max_price,
+ServiceRecord,service_record,id,id,PK
+ServiceRecord,service_record,vehicle,vehicle_id,FK -> vehicle.id
+ServiceRecord,service_record,serviceDate,service_date,
+ServiceRecord,service_record,mileage,mileage,
+ServiceRecord,service_record,note,note,
+ServiceItem,service_item,id,id,PK
+ServiceItem,service_item,serviceRecord,service_record_id,FK -> service_record.id
+ServiceItem,service_item,work,work_id,FK -> work_definition.id
+ServiceItem,service_item,actualPrice,actual_price,stvarno plaćeno
+Problem,problem,id,id,PK
+Problem,problem,vehicle,vehicle_id,FK -> vehicle.id
+Problem,problem,description,description,
+Problem,problem,category,category,ProblemCategory string enum
+Problem,problem,status,status,ProblemStatus string enum
+Problem,problem,createdAt,created_at,
+Problem,problem,resolvedByService,resolved_by_service_id,nullable FK -> service_record.id

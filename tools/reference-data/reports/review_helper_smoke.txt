@@ -1,1 +1,0 @@
-PASS: reviewed-row CLI accepted one explicitly synthetic fixture and rounded 284.00 to 280.00 without inventing intervals; rejected a fixture without applicability evidence. Temporary fixture outputs removed. No real vehicle row was approved by this test.
