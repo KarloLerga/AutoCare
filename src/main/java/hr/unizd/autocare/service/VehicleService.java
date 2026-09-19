@@ -70,7 +70,7 @@ public final class VehicleService {
     }
   }
 
-  public long add(long ownerId, VehicleInput input) {
+  public void add(long ownerId, VehicleInput input) {
     validate(input);
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();
@@ -90,7 +90,6 @@ public final class VehicleService {
       Vehicle vehicle = new Vehicle(user, variant, input.getYear(), input.getMileage());
       vehicleRepository.add(vehicle);
       transaction.commit();
-      return vehicle.getId();
     } catch (RuntimeException exception) {
       if (transaction.isActive()) {
         transaction.rollback();

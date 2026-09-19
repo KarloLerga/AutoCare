@@ -96,19 +96,19 @@ public final class CatalogView extends JPanel {
     if (row.getWorkCategory() == WorkCategory.REPAIR) {
       return "-";
     }
-    StringBuilder result = new StringBuilder();
+    String result = "";
     if (row.getIntervalKm() != null) {
-      result.append(Ui.km(row.getIntervalKm()));
+      result = Ui.km(row.getIntervalKm());
     }
     if (row.getIntervalMonths() != null) {
-      if (result.length() > 0) {
-        result.append(" / ");
+      if (!result.isEmpty()) {
+        result += " / ";
       }
-      result.append(row.getIntervalMonths()).append(" mj.");
+      result += row.getIntervalMonths() + " mj.";
     }
-    if (result.length() == 0) {
+    if (result.isEmpty()) {
       return "-";
     }
-    return result.toString();
+    return result;
   }
 }

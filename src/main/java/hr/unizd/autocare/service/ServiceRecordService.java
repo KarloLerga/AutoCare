@@ -34,7 +34,7 @@ public final class ServiceRecordService {
     this.entityManagerFactory = entityManagerFactory;
   }
 
-  public long create(long ownerId, long vehicleId, ServiceInput input) {
+  public void create(long ownerId, long vehicleId, ServiceInput input) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();
 
@@ -52,17 +52,15 @@ public final class ServiceRecordService {
         throw new IllegalArgumentException("Vozilo nije pronađeno.");
       }
 
-      ServiceRecord serviceRecord =
-          saveInside(
-              catalogRepository,
-              serviceRecordRepository,
-              problemRepository,
-              vehicle,
-              input,
-              false);
+      saveInside(
+          catalogRepository,
+          serviceRecordRepository,
+          problemRepository,
+          vehicle,
+          input,
+          false);
 
       transaction.commit();
-      return serviceRecord.getId();
     } catch (RuntimeException exception) {
       if (transaction.isActive()) {
         transaction.rollback();

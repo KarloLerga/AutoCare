@@ -39,7 +39,7 @@ public final class ProblemService {
     }
   }
 
-  public long create(
+  public void create(
       long ownerId,
       long vehicleId,
       String description,
@@ -55,7 +55,6 @@ public final class ProblemService {
       Problem problem = new Problem(vehicle, description, category, LocalDateTime.now());
       new JpaProblemRepository(entityManager).add(problem);
       transaction.commit();
-      return problem.getId();
     } catch (RuntimeException exception) {
       if (transaction.isActive()) {
         transaction.rollback();

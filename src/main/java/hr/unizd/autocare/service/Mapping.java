@@ -47,20 +47,20 @@ final class Mapping {
   }
 
   static ServiceRow service(ServiceRecord serviceRecord) {
-    StringBuilder names = new StringBuilder();
+    String names = "";
 
     for (ServiceItem serviceItem : serviceRecord.getItems()) {
-      if (names.length() > 0) {
-        names.append(", ");
+      if (!names.isEmpty()) {
+        names += ", ";
       }
-      names.append(serviceItem.getWork().getName());
+      names += serviceItem.getWork().getName();
     }
 
     return new ServiceRow(
         serviceRecord.getId(),
         serviceRecord.getServiceDate(),
         serviceRecord.getMileage(),
-        names.toString(),
+        names,
         serviceRecord.total(),
         serviceRecord.getNote());
   }
