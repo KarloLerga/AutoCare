@@ -38,7 +38,6 @@ public final class Data {
     public String getEmail() {
       return email;
     }
-
   }
 
   public static final class VariantRow {
@@ -436,7 +435,6 @@ public final class Data {
     public MaintenanceStatus getStatus() {
       return status;
     }
-
   }
 
 

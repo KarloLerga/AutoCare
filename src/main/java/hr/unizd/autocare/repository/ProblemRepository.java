@@ -3,7 +3,7 @@ package hr.unizd.autocare.repository;
 import hr.unizd.autocare.domain.Problem;
 import java.util.List;
 
-/** Transakcijski repository; sam ne otvara niti zatvara EntityManager. */
+/** Dohvat i spremanje bilješki vozila. */
 public interface ProblemRepository {
   void add(Problem problem);
 

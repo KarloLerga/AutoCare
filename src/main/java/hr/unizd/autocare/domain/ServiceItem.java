@@ -31,10 +31,6 @@ public class ServiceItem {
     this.actualPrice = Checks.money(actualPrice, true);
   }
 
-  public Long getId() {
-    return id;
-  }
-
   public ServiceRecord getServiceRecord() {
     return serviceRecord;
   }

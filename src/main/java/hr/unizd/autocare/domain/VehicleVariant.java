@@ -7,7 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-/** Identitet kataloške varijante vozila, bez podataka o korisnikovim servisima. */
+/** Kataloška varijanta vozila koju aplikacija samo čita iz baze. */
 @Entity
 public class VehicleVariant {
   @Id
@@ -31,64 +31,12 @@ public class VehicleVariant {
 
   protected VehicleVariant() {}
 
-  public VehicleVariant(
-      String code,
-      String make,
-      String model,
-      String generation,
-      String engineLabel,
-      int yearFrom,
-      Integer yearTo,
-      String fuelType) {
-    this.code = Checks.text(code, 80, "Kod");
-    this.make = Checks.text(make, 100, "Marka");
-    this.model = Checks.text(model, 150, "Model");
-    this.generation = Checks.text(generation, 200, "Generacija");
-    this.engineLabel = Checks.text(engineLabel, 240, "Motor");
-
-    if (yearFrom < 1886 || yearFrom > 2100 || (yearTo != null && yearTo < yearFrom)) {
-      throw new IllegalArgumentException("Nevaljan raspon godina.");
-    }
-
-    this.yearFrom = yearFrom;
-    this.yearTo = yearTo;
-    this.fuelType = Checks.optional(fuelType, 80, "Gorivo");
-    this.priceClass = VehiclePriceClass.STANDARD;
-  }
-
-  public VehicleVariant(
-      String code,
-      String make,
-      String model,
-      String generation,
-      String engineLabel,
-      int yearFrom,
-      Integer yearTo,
-      String bodyType,
-      String fuelType,
-      Integer powerHp,
-      String transmission) {
-    this(code, make, model, generation, engineLabel, yearFrom, yearTo, fuelType);
-    this.bodyType = Checks.optional(bodyType, 100, "Karoserija");
-
-    if (powerHp != null && powerHp <= 0) {
-      throw new IllegalArgumentException("Snaga mora biti pozitivna.");
-    }
-
-    this.powerHp = powerHp;
-    this.transmission = Checks.optional(transmission, 120, "Mjenjač");
-  }
-
   public boolean covers(int year) {
     return year >= yearFrom && (yearTo == null || year <= yearTo);
   }
 
   public Long getId() {
     return id;
-  }
-
-  public String getCode() {
-    return code;
   }
 
   public String getMake() {
@@ -105,10 +53,6 @@ public class VehicleVariant {
 
   public String getEngineLabel() {
     return engineLabel;
-  }
-
-  public String getBodyType() {
-    return bodyType;
   }
 
   public String getFuelType() {

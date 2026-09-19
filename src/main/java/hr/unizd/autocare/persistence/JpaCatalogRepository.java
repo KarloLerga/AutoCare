@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
-/** JPA upiti koriste vezane parametre i postojeći EntityManager. */
+/** JPA pristup katalogu vozila i zahvata. */
 public final class JpaCatalogRepository implements CatalogRepository {
   private final EntityManager entityManager;
 

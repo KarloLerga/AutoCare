@@ -5,7 +5,7 @@ import hr.unizd.autocare.domain.ServiceItem;
 import hr.unizd.autocare.domain.ServiceRecord;
 import java.util.List;
 
-/** Transakcijski repository; sam ne otvara niti zatvara EntityManager. */
+/** Dohvat i spremanje servisne povijesti. */
 public interface ServiceRecordRepository {
   void add(ServiceRecord serviceRecord);
 

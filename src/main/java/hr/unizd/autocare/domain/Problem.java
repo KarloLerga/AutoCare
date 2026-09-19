@@ -69,10 +69,6 @@ public class Problem {
     return id;
   }
 
-  public Vehicle getVehicle() {
-    return vehicle;
-  }
-
   public String getDescription() {
     return description;
   }
@@ -87,9 +83,5 @@ public class Problem {
 
   public LocalDateTime getCreatedAt() {
     return createdAt;
-  }
-
-  public ServiceRecord getResolvedByService() {
-    return resolvedByService;
   }
 }
