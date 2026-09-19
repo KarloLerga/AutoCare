@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-/** Kaskadni izbor marka → model → godina → točna varijanta. */
+/** Odabir marke, modela, godine i varijante vozila. */
 public final class VehicleForm extends JPanel {
   public final JComboBox<String> make = new JComboBox<>();
   public final JComboBox<String> model = new JComboBox<>();
@@ -107,7 +107,10 @@ public final class VehicleForm extends JPanel {
       details.setText("Odaberite točnu varijantu.");
       return;
     }
-    String power = selected.getPowerHp() == null ? "? KS" : selected.getPowerHp() + " KS";
+    String power = "? KS";
+    if (selected.getPowerHp() != null) {
+      power = selected.getPowerHp() + " KS";
+    }
     String transmission = selected.getTransmission();
     if (transmission == null || transmission.isBlank()) {
       transmission = "Mjenjač nije naveden";

@@ -9,6 +9,7 @@ import hr.unizd.autocare.view.components.Ui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Window;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,10 +49,7 @@ public final class ServiceEditorDialog extends JDialog {
 
   public ServiceEditorDialog(
       Window owner, int mileageValue, boolean historical, List<ProblemRow> problems) {
-    super(
-        owner,
-        historical ? "Početna povijest — novi zapis" : "Novi servis",
-        ModalityType.APPLICATION_MODAL);
+    super(owner, dialogTitle(historical), ModalityType.APPLICATION_MODAL);
     this.historical = historical;
     this.problems = new ArrayList<>(problems);
     mileage = new JTextField(Integer.toString(mileageValue), 12);
@@ -74,7 +72,10 @@ public final class ServiceEditorDialog extends JDialog {
             new Object[][] {}, new String[] {"Riješen", "Bilješka riješena ovim servisom"}) {
           @Override
           public Class<?> getColumnClass(int column) {
-            return column == 0 ? Boolean.class : String.class;
+            if (column == 0) {
+              return Boolean.class;
+            }
+            return String.class;
           }
 
           @Override
@@ -88,6 +89,7 @@ public final class ServiceEditorDialog extends JDialog {
 
     setSize(940, 700);
     setLocationRelativeTo(owner);
+    setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     date.setToolTipText("Datum u obliku 15.09.2026.");
 
     JPanel root = new JPanel(new BorderLayout(12, 12));
@@ -116,11 +118,11 @@ public final class ServiceEditorDialog extends JDialog {
     note.setWrapStyleWord(true);
     lower.add(new JLabel("Napomena"));
     lower.add(new JScrollPane(note));
-    lower.add(
-        Ui.hint(
-            historical
-                ? "Nepoznatu cijenu starog servisa možete ostaviti praznom."
-                : "Unesite stvarno plaćeni iznos za svaku stavku."));
+    String priceHint = "Unesite stvarno plaćeni iznos za svaku stavku.";
+    if (historical) {
+      priceHint = "Nepoznatu cijenu starog servisa možete ostaviti praznom.";
+    }
+    lower.add(Ui.hint(priceHint));
     if (!this.problems.isEmpty()) {
       JTable problemTable = new JTable(problemsTableModel);
       problemTable.setRowHeight(28);
@@ -136,6 +138,14 @@ public final class ServiceEditorDialog extends JDialog {
     getRootPane().setDefaultButton(save);
   }
 
+
+  private static String dialogTitle(boolean historical) {
+    if (historical) {
+      return "Početna povijest — novi zapis";
+    }
+    return "Novi servis";
+  }
+
   public void setWorks(List<WorkRow> works) {
     availableWorks.clear();
     availableWorks.addAll(works);
@@ -144,8 +154,10 @@ public final class ServiceEditorDialog extends JDialog {
   }
 
   public void filterWorks() {
-    WorkCategory selectedCategory =
-        type.getSelectedIndex() == 0 ? WorkCategory.MAINTENANCE : WorkCategory.REPAIR;
+    WorkCategory selectedCategory = WorkCategory.REPAIR;
+    if (type.getSelectedIndex() == 0) {
+      selectedCategory = WorkCategory.MAINTENANCE;
+    }
     List<WorkRow> filtered = new ArrayList<>();
     for (WorkRow row : availableWorks) {
       if (row.getCategory() == selectedCategory) {
@@ -204,9 +216,9 @@ public final class ServiceEditorDialog extends JDialog {
 
   private static final class AddedItem {
     private final WorkRow work;
-    private final java.math.BigDecimal price;
+    private final BigDecimal price;
 
-    private AddedItem(WorkRow work, java.math.BigDecimal price) {
+    private AddedItem(WorkRow work, BigDecimal price) {
       this.work = work;
       this.price = price;
     }

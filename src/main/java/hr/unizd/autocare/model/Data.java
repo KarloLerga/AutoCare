@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Nepromjenjivi ulazi i rezultati između poslovnog sloja i Swinga. */
+/** Jednostavni podaci koje razmjenjuju slojevi aplikacije. */
 public final class Data {
   private Data() {}
 
@@ -436,7 +436,6 @@ public final class Data {
       return status;
     }
   }
-
 
   public static final class CatalogRow {
     private final String name;

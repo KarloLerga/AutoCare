@@ -1,6 +1,5 @@
 package hr.unizd.autocare.service;
 
-import hr.unizd.autocare.domain.Checks;
 import hr.unizd.autocare.domain.Problem;
 import hr.unizd.autocare.domain.ProblemCategory;
 import hr.unizd.autocare.domain.Vehicle;
@@ -28,7 +27,7 @@ public final class ProblemService {
     try {
       VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
       if (vehicleRepository.findForOwner(ownerId, vehicleId) == null) {
-        throw new AppException("Vozilo nije pronađeno.");
+        throw new IllegalArgumentException("Vozilo nije pronađeno.");
       }
       List<ProblemRow> rows = new ArrayList<>();
       for (Problem problem : new JpaProblemRepository(entityManager).list(ownerId, vehicleId)) {
@@ -45,16 +44,15 @@ public final class ProblemService {
       long vehicleId,
       String description,
       ProblemCategory category) {
-    String cleanDescription = Checks.text(description, 2000, "Bilješka");
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();
     try {
       transaction.begin();
       Vehicle vehicle = new JpaVehicleRepository(entityManager).findForOwner(ownerId, vehicleId);
       if (vehicle == null) {
-        throw new AppException("Vozilo nije pronađeno.");
+        throw new IllegalArgumentException("Vozilo nije pronađeno.");
       }
-      Problem problem = new Problem(vehicle, cleanDescription, category, LocalDateTime.now());
+      Problem problem = new Problem(vehicle, description, category, LocalDateTime.now());
       new JpaProblemRepository(entityManager).add(problem);
       transaction.commit();
       return problem.getId();
@@ -75,7 +73,7 @@ public final class ProblemService {
       transaction.begin();
       Problem problem = new JpaProblemRepository(entityManager).findForOwner(ownerId, problemId);
       if (problem == null) {
-        throw new AppException("Bilješka nije pronađena.");
+        throw new IllegalArgumentException("Bilješka nije pronađena.");
       }
       problem.close();
       transaction.commit();

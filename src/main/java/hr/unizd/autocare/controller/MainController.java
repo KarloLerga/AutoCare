@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.JButton;
 
-/** Glavna navigacija, session i ponovno učitavanje aktivnog vozila. */
+/** Glavna navigacija i podaci prijavljenog korisnika. */
 public final class MainController implements AppListener {
   private final MainFrame frame;
   private final Session session;

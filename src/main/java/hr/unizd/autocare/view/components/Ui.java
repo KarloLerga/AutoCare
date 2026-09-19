@@ -3,6 +3,7 @@ package hr.unizd.autocare.view.components;
 import hr.unizd.autocare.domain.Checks;
 import hr.unizd.autocare.domain.CostSummary;
 import hr.unizd.autocare.domain.MaintenanceStatus;
+import hr.unizd.autocare.domain.ProblemStatus;
 import hr.unizd.autocare.domain.WorkCategory;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -25,10 +26,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.BoxLayout;
 import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 import java.awt.event.ActionListener;
-import javax.swing.BoxLayout;
 
 /** Standardni Swing layouti i formatiranje, bez poslovnih pravila. */
 public final class Ui {
@@ -169,7 +170,10 @@ public final class Ui {
   }
 
   public static String workCategory(WorkCategory category) {
-    return category == WorkCategory.MAINTENANCE ? "Održavanje" : "Popravak";
+    if (category == WorkCategory.MAINTENANCE) {
+      return "Održavanje";
+    }
+    return "Popravak";
   }
 
   public static String total(CostSummary summary) {
@@ -181,13 +185,17 @@ public final class Ui {
   }
 
   public static String date(LocalDate date) {
-    return date == null ? "-" : date.format(DATE);
+    if (date == null) {
+      return "-";
+    }
+    return date.format(DATE);
   }
 
   public static String km(Integer mileage) {
-    return mileage == null
-        ? "-"
-        : String.format(Locale.forLanguageTag("hr-HR"), "%,d km", mileage);
+    if (mileage == null) {
+      return "-";
+    }
+    return String.format(Locale.forLanguageTag("hr-HR"), "%,d km", mileage);
   }
 
   public static String status(MaintenanceStatus status) {
@@ -200,8 +208,11 @@ public final class Ui {
     return "Dospjelo";
   }
 
-  public static String problemStatus(hr.unizd.autocare.domain.ProblemStatus status) {
-    return status == hr.unizd.autocare.domain.ProblemStatus.OPEN ? "Aktivna" : "Riješena";
+  public static String problemStatus(ProblemStatus status) {
+    if (status == ProblemStatus.OPEN) {
+      return "Aktivna";
+    }
+    return "Riješena";
   }
 
   public static boolean confirm(Component parent, String text) {
@@ -215,7 +226,10 @@ public final class Ui {
   }
 
   public static void error(Component parent, Throwable error) {
-    String message = error.getMessage() == null ? "Operacija nije uspjela." : error.getMessage();
+    String message = error.getMessage();
+    if (message == null || message.isBlank()) {
+      message = "Operacija nije uspjela.";
+    }
     JOptionPane.showMessageDialog(parent, message, "AutoCare", JOptionPane.ERROR_MESSAGE);
   }
 

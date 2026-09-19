@@ -18,7 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
-/** Registracija je kartica istog JFramea, bez zasebnog modalnog onboarding prozora. */
+/** Koraci registracije korisnika i prvog vozila. */
 public final class OnboardingView extends JPanel {
   public final JTextField name = new JTextField(25);
   public final JTextField email = new JTextField(25);

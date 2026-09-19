@@ -7,7 +7,6 @@ import hr.unizd.autocare.view.components.Ui;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -88,7 +87,12 @@ public final class ServicesView extends JPanel {
     text.append("\nUkupno: ");
     text.append(Ui.total(detail.getHeader().getTotal()));
     text.append("\nNapomena: ");
-    text.append(Objects.toString(detail.getHeader().getNote(), "-"));
+    String note = detail.getHeader().getNote();
+    if (note == null || note.isBlank()) {
+      text.append("-");
+    } else {
+      text.append(note);
+    }
     text.append("\n\nRiješene bilješke:\n");
     for (String problem : detail.getResolvedProblems()) {
       text.append(problem);

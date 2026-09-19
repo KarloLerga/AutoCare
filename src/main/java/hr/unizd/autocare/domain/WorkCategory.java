@@ -1,6 +1,6 @@
 package hr.unizd.autocare.domain;
 
-/** Razlikuje preventivno održavanje i popravak bez umjetnog nasljeđivanja. */
+/** Razlikuje održavanje i popravak. */
 public enum WorkCategory {
   MAINTENANCE,
   REPAIR

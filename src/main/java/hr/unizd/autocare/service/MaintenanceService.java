@@ -35,7 +35,7 @@ public final class MaintenanceService {
       VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
       Vehicle vehicle = vehicleRepository.findForOwner(ownerId, vehicleId);
       if (vehicle == null) {
-        throw new AppException("Vozilo nije pronađeno.");
+        throw new IllegalArgumentException("Vozilo nije pronađeno.");
       }
       return calculate(
           new JpaCatalogRepository(entityManager),

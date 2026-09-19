@@ -7,7 +7,7 @@ import hr.unizd.autocare.domain.WorkDefinition;
 import hr.unizd.autocare.domain.WorkPriceRange;
 import java.util.List;
 
-/** Repository za katalog vozila, standardnih zahvata i informativnih cijena. */
+/** Dohvat kataloga vozila, zahvata i cijena. */
 public interface CatalogRepository {
   List<String> makes();
 

@@ -32,7 +32,13 @@ public class VehicleVariant {
   protected VehicleVariant() {}
 
   public boolean covers(int year) {
-    return year >= yearFrom && (yearTo == null || year <= yearTo);
+    if (year < yearFrom) {
+      return false;
+    }
+    if (yearTo != null && year > yearTo) {
+      return false;
+    }
+    return true;
   }
 
   public Long getId() {

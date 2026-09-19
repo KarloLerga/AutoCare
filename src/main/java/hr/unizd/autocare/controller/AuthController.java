@@ -163,7 +163,8 @@ public final class AuthController {
               catalogService.onboardingWorks(vehicleInput.getVariantId(), WorkCategory.MAINTENANCE));
       works.addAll(
           catalogService.onboardingWorks(vehicleInput.getVariantId(), WorkCategory.REPAIR));
-      ServiceEditorDialog editor = new ServiceEditorDialog(frame, vehicleInput.getMileage(), true, List.of());
+      ServiceEditorDialog editor =
+          new ServiceEditorDialog(frame, vehicleInput.getMileage(), true, List.of());
       new ServiceEditorController(
           editor,
           works,
@@ -175,8 +176,8 @@ public final class AuthController {
                 throw new IllegalArgumentException(
                     "Povijest ne može imati veću kilometražu od trenutnog stanja.");
               }
-              historyVariantId = vehicleInput.getVariantId();
               registrationHistory.add(serviceInput);
+              historyVariantId = vehicleInput.getVariantId();
               onboardingView.setHistory(registrationHistory);
               editor.dispose();
             }

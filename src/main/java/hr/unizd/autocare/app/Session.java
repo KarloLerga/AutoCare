@@ -2,7 +2,7 @@ package hr.unizd.autocare.app;
 
 import hr.unizd.autocare.model.Data.VehicleRow;
 
-/** Stanje prijavljenog desktop klijenta; koristi se samo na EDT-u. */
+/** Podaci o trenutno prijavljenom korisniku i aktivnom vozilu. */
 public final class Session {
   private long ownerId;
   private VehicleRow activeVehicle;

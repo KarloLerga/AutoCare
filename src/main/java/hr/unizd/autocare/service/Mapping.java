@@ -11,10 +11,8 @@ import hr.unizd.autocare.model.Data.ProblemRow;
 import hr.unizd.autocare.model.Data.ServiceRow;
 import hr.unizd.autocare.model.Data.VariantRow;
 import hr.unizd.autocare.model.Data.VehicleRow;
-import java.util.Objects;
-import java.util.StringJoiner;
 
-/** Mapira točno potrebne podatke dok je persistence context otvoren. */
+/** Pretvara domenske objekte u podatke koje prikazuje GUI. */
 final class Mapping {
   private Mapping() {}
 
@@ -35,19 +33,27 @@ final class Mapping {
   }
 
   static VehicleRow vehicle(Vehicle vehicle, Long activeVehicleId) {
+    boolean active = false;
+    if (activeVehicleId != null && vehicle.getId().equals(activeVehicleId)) {
+      active = true;
+    }
+
     return new VehicleRow(
         vehicle.getId(),
         variant(vehicle.getVariant()),
         vehicle.getProductionYear(),
         vehicle.getCurrentMileage(),
-        Objects.equals(vehicle.getId(), activeVehicleId));
+        active);
   }
 
   static ServiceRow service(ServiceRecord serviceRecord) {
-    StringJoiner names = new StringJoiner(", ");
+    StringBuilder names = new StringBuilder();
 
     for (ServiceItem serviceItem : serviceRecord.getItems()) {
-      names.add(serviceItem.getWork().getName());
+      if (names.length() > 0) {
+        names.append(", ");
+      }
+      names.append(serviceItem.getWork().getName());
     }
 
     return new ServiceRow(

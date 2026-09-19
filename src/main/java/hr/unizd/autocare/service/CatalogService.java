@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/** Čitanje kataloga vozila, standardnih zahvata i informativnih raspona cijena. */
+/** Čitanje kataloga vozila, zahvata i informativnih raspona cijena. */
 public final class CatalogService {
   private final EntityManagerFactory entityManagerFactory;
 
@@ -68,12 +68,21 @@ public final class CatalogService {
     }
   }
 
+  public List<WorkRow> works(WorkCategory category) {
+    EntityManager entityManager = entityManagerFactory.createEntityManager();
+    try {
+      return workRows(new JpaCatalogRepository(entityManager).works(category));
+    } finally {
+      entityManager.close();
+    }
+  }
+
   public List<WorkRow> works(long ownerId, long vehicleId, WorkCategory category) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
       VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
       if (vehicleRepository.findForOwner(ownerId, vehicleId) == null) {
-        throw new AppException("Vozilo nije pronađeno.");
+        throw new IllegalArgumentException("Vozilo nije pronađeno.");
       }
       return workRows(new JpaCatalogRepository(entityManager).works(category));
     } finally {
@@ -86,7 +95,7 @@ public final class CatalogService {
     try {
       CatalogRepository repository = new JpaCatalogRepository(entityManager);
       if (repository.findVariant(variantId) == null) {
-        throw new AppException("Odaberite postojeću varijantu vozila.");
+        throw new IllegalArgumentException("Odaberite postojeću varijantu vozila.");
       }
       return workRows(repository.works(category));
     } finally {
@@ -103,22 +112,33 @@ public final class CatalogService {
     try {
       Vehicle vehicle = new JpaVehicleRepository(entityManager).findForOwner(ownerId, vehicleId);
       if (vehicle == null) {
-        throw new AppException("Vozilo nije pronađeno.");
+        throw new IllegalArgumentException("Vozilo nije pronađeno.");
       }
 
-      String search = searchText == null ? "" : searchText.trim().toLowerCase(Locale.ROOT);
+      String search = "";
+      if (searchText != null) {
+        search = searchText.trim().toLowerCase(Locale.ROOT);
+      }
+
       List<CatalogRow> rows = new ArrayList<>();
-      for (WorkPriceRange price :
-          new JpaCatalogRepository(entityManager).priceRanges(vehicle.getVariant().getPriceClass())) {
+      CatalogRepository repository = new JpaCatalogRepository(entityManager);
+      List<WorkPriceRange> prices = repository.priceRanges(vehicle.getVariant().getPriceClass());
+
+      for (WorkPriceRange price : prices) {
         WorkDefinition work = price.getWork();
+
         if (selectedCategory != null && work.getCatalogCategory() != selectedCategory) {
           continue;
         }
-        if (!search.isEmpty()
-            && !work.getName().toLowerCase(Locale.ROOT).contains(search)
-            && !work.getCode().toLowerCase(Locale.ROOT).contains(search)) {
-          continue;
+
+        if (!search.isEmpty()) {
+          String name = work.getName().toLowerCase(Locale.ROOT);
+          String code = work.getCode().toLowerCase(Locale.ROOT);
+          if (!name.contains(search) && !code.contains(search)) {
+            continue;
+          }
         }
+
         rows.add(
             new CatalogRow(
                 work.getName(),

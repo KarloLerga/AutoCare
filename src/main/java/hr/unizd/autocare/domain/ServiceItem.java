@@ -6,9 +6,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import java.math.BigDecimal;
-import java.util.Objects;
 
-/** Jedan izvršeni zahvat; actualPrice je stvarno plaćeno, a ne procjena. */
+/** Jedan izvršeni zahvat i stvarno plaćena cijena. */
 @Entity
 public class ServiceItem {
   @Id
@@ -26,8 +25,15 @@ public class ServiceItem {
   protected ServiceItem() {}
 
   ServiceItem(ServiceRecord serviceRecord, WorkDefinition work, BigDecimal actualPrice) {
-    this.serviceRecord = Objects.requireNonNull(serviceRecord);
-    this.work = Objects.requireNonNull(work);
+    if (serviceRecord == null) {
+      throw new IllegalArgumentException("Servis je obavezan.");
+    }
+    if (work == null) {
+      throw new IllegalArgumentException("Rad je obavezan.");
+    }
+
+    this.serviceRecord = serviceRecord;
+    this.work = work;
     this.actualPrice = Checks.money(actualPrice, true);
   }
 

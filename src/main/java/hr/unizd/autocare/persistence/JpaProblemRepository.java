@@ -31,7 +31,10 @@ public final class JpaProblemRepository implements ProblemRepository {
             .setParameter("ownerId", ownerId)
             .setMaxResults(1)
             .getResultList();
-    return problems.isEmpty() ? null : problems.get(0);
+    if (problems.isEmpty()) {
+      return null;
+    }
+    return problems.get(0);
   }
 
   @Override
@@ -41,12 +44,10 @@ public final class JpaProblemRepository implements ProblemRepository {
             "select problem from Problem problem "
                 + "where problem.vehicle.id=:vehicleId "
                 + "and problem.vehicle.owner.id=:ownerId "
-                + "order by case when problem.status=:openStatus then 0 else 1 end, "
-                + "problem.createdAt desc,problem.id desc",
+                + "order by problem.createdAt desc,problem.id desc",
             Problem.class)
         .setParameter("vehicleId", vehicleId)
         .setParameter("ownerId", ownerId)
-        .setParameter("openStatus", ProblemStatus.OPEN)
         .getResultList();
   }
 
