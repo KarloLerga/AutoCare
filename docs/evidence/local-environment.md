@@ -16,6 +16,10 @@ Date: 2026-09-19
 - `scripts/check-runtime-style.ps1`: 71 Java files.
 - `scripts/check-secrets.ps1` and Python `py_compile`.
 
-## BLOCKED
+## Azure SQL PASS
 
-`scripts/Complete-Setup.ps1 -ConfigPath ...` completed the local build/setup stages but Azure SQL `sql-check` was rejected by the server firewall for the current public client IP. Therefore the professor migration, final SQL audit and GUI smoke are not marked PASS.
+`scripts/Complete-Setup.ps1 -ConfigPath ...` completed the local build/setup stages, passed the Azure SQL connection and read-only dry-run, applied migration `11`, and ran audit `12` with `final_error_count = 0`.
+
+Confirmed database counts: `vehicle_variant=30366`, `work_definition=120`, `work_price_range=600`, `problem_count=2`, `service_record_count=6`, `service_item_count=11`. The old `vehicle_work_rule`, `diagnostic_rule`, `suggested_repair_id` and `estimated_cost` structures are absent.
+
+GUI smoke for the new model remains pending until the application window is launched and inspected.

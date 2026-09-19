@@ -1,0 +1,11 @@
+Professor model Azure validation
+Executed: 2026-09-19, after the firewall rule became effective.
+
+Command: Complete-Setup.ps1 with the external private connection config and -ApplyProfessorModel.
+Local build and setup package: PASS.
+Azure SQL connection: PASS.
+Read-only dry-run: PASS; base counts were vehicle_variant=30366, work_definition=120, old_variant_rules=2908857, current_price_ranges=0.
+Migration 11: PASS; vehicle_variant=30366, work_definition=120, work_price_range=600, old_variant_rule_table_exists=0, diagnostic_rule_table_exists=0, notes_without_category=0.
+Audit 12: PASS; final_error_count=0.
+Additional confirmed counts: problem=2, service_record=6, service_item=11.
+Credentials and public IP addresses are intentionally omitted.

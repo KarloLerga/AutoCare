@@ -1,6 +1,6 @@
-# AutoCare Codex final package status
+# AutoCare finalni status
 
-Ovo je paket koji treba uploadati Codexu za završnu integraciju u stvarni Git repo.
+Profesorov finalni model je integriran u stvarni Git repo i pushan na `main`.
 
 ## Završeno u paketu
 
@@ -13,24 +13,19 @@ Ovo je paket koji treba uploadati Codexu za završnu integraciju u stvarni Git r
 - Ažurirana finalna dokumentacija i dijagrami.
 - Codex start prompt u `00_CODEX_START_HERE.md`.
 
-## Lokalno PASS
+## Potvrđeno PASS
 
+- Java 25 Maven `clean verify`: 12 testova, 0 grešaka
+- setup package i Javadoc
 - final data validator: 0 errors
-- CoreChecks: 37 checks
-- SqlOfflineChecks: 4 checks
-- main + test Java compile sanity protiv lokalnih API stubova
-- Python py_compile
-- deterministic migration regeneration
-- runtime style static scan
-- legacy diagnostic runtime scan
+- deterministic migration regeneration i hash
+- runtime style, secret check i Python `py_compile`
+- Azure SQL dry-run, migracija i audit: `final_error_count = 0`
+- Azure counts: 30.366 varijanti, 120 radova, 600 raspona
+- Git commit/push na `main`
 
-## Codex mora stvarno potvrditi
+## Preostalo
 
-- Java 25 Maven `clean verify`
-- Javadoc
-- stvarni Azure SQL dry-run + migration
-- `final_error_count = 0`
-- Windows Swing GUI smoke
-- Git commit/push
+Windows Swing GUI je pokrenut, ali interaktivni klik-smoke ostaje NOT_RUN jer Computer Use kanal nije bio dostupan.
 
-Detalji su u `00_CODEX_START_HERE.md` i `docs/FINAL_LOCAL_VERIFICATION.md`.
+Detalji su u `docs/IMPLEMENTATION_STATUS.md` i `docs/FINAL_LOCAL_VERIFICATION.md`.
