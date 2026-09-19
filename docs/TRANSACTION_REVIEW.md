@@ -9,7 +9,7 @@ Service određuje poslovnu granicu, a JPA/Hibernate i `EntityTransaction` tehni�
 2. provjerava korisnika i vlasništvo vozila
 3. sprema servis i sve stavke
 4. povećava kilometražu ako treba
-5. rješava odabrane otvorene probleme
+5. rješava odabrane aktivne bilješke
 6. commit-a ili rollback-a
 7. zatvara EntityManager
 

@@ -1,26 +1,17 @@
-# Kratko objašnjenje modela podataka za obranu
+# Kako objasniti podatke i procjene na obrani
 
-Cijene u AutoCare nisu servisne ponude. To su okvirne procjene za studentsku aplikaciju.
+Aplikacija više nema milijune cijena po točnoj varijanti vozila.
 
-Za svaki konkretni `VehicleVariant` i svaki popravak/održavanje koji ima smisla za taj tip vozila unaprijed postoji `VehicleWorkRule`.
-Zato runtime ne pogađa cijenu i ne koristi fallback vrijednost.
+Postoje tri razine podataka:
 
-Procjena je pripremljena offline iz:
-- osnovne cijene dijelova,
-- procijenjenog vremena rada,
-- satnice,
-- karakteristika vozila,
-- cjenovnog razreda marke (economy/mainstream/premium/performance/exotic),
-- postojećih ranije modeliranih podataka.
+1. `VehicleVariant` - identitet vozila i široka `VehiclePriceClass`.
+2. `WorkDefinition` - 120 standardnih zahvata i, za održavanje, interval.
+3. `WorkPriceRange` - min/max informativna cijena zahvata za jednu od pet cjenovnih klasa.
 
-Postojeća dobra procjena ostaje sačuvana. Model popunjava rupe i korigira samo očito preniske outliere.
-Zbog tier faktora egzotični automobili imaju znatno više okvirne cijene od mainstream automobila.
+Zato je finalna tablica cijena samo 120 x 5 = 600 redaka.
 
-Neprimjenjivi radovi nemaju rule. Primjer: električni Tesla nema zupčasti remen motora, svjećice ili DPF.
+Raspon je namjerno informativan. Ne tvrdi da zna VIN, konkretne dijelove, satnicu odabranog mehaničara ili stvarnu dijagnozu. Stvarno plaćena cijena unosi se tek u `ServiceItem.actualPrice` nakon odlaska kod mehaničara.
 
-Kod održavanja je interval također unaprijed materijaliziran u ruleu. Ako je postojao konkretniji interval, zadržan je. Inače je unaprijed upisan okvirni km/vremenski interval iz finalne intervalne tablice.
+Za česte zahvate STANDARD klasa kalibrirana je prema javnim hrvatskim servisnim cjenicima. Ostali radovi sažeti su iz ranije pripremljenog detaljnog modela u široke klase kako bi se izbjegla lažna preciznost i ogromna baza.
 
-Strategy pattern nije za cijene. Koristi se za izračun statusa održavanja:
-- samo kilometri,
-- samo vrijeme,
-- kilometri + vrijeme.
+Strategy pattern nije za cijene. Koristi se samo za maintenance status prema kilometrima, vremenu ili oba kriterija.

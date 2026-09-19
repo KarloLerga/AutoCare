@@ -1,1 +1,0 @@
-Historical evidence from an earlier phase: 86 production Java source files compiled under javac21 against temporary local JPA/FlatLaf API substitutes. The substitutes are NOT included in this package and this record does not describe the current runtime. Current verification uses the real JDK 25/Maven build and the current setup tool; see docs/VERIFICATION.md.

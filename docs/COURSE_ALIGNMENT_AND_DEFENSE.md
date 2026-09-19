@@ -1,66 +1,53 @@
-# AutoCare — veza s kolegijem i obrana
+# Usklađenost s NOOP gradivom i obrana
 
-Ovo je studentska Java 25 Swing aplikacija za evidenciju vozila. Kod je namjerno izravan: obični
-konstruktori, getteri, kolekcije, petlje, `if/else`, anonimni Swing listeneri i jasna podjela
-odgovornosti. AI pomoć i izvorni materijali trebaju se navesti prema pravilima kolegija.
+## MVC + baza
 
-## Arhitektura
+Projekt jasno odvaja:
 
-```text
-View → Controller → Service → Repository interface → JPA repository → Azure SQL
-                         ↓
-                       Domain
-```
+- View - Swing komponente i prikaz;
+- Controller - GUI event i poziv use-casea;
+- Service - poslovna pravila i transakcija;
+- Domain - stanje i ponašanje entiteta;
+- Repository/DAO - JPA dohvat/spremanje;
+- Azure SQL - trajna pohrana.
 
-- View gradi Swing komponente, čita unos i prikazuje rezultate.
-- Controller registrira `ActionListener`, poziva Service i prosljeđuje rezultate Viewu.
-- Service provodi use-case, validira poslovni tok i izravno pokazuje granicu transakcije.
-- Repository radi samo JPQL/JPA dohvat i spremanje nad proslijeđenim `EntityManagerom`.
-- Domain čuva jednostavna pravila poput rasta kilometraže, jedinstvenih stavki i rješavanja problema.
+To odgovara profesorovom zahtjevu da Swing ne sadrži SQL niti glavna poslovna pravila.
 
-## OOP obrasci koji imaju stvarnu ulogu
+## Strategy
 
-Strategy je `DiagnosticStrategy`; `KeywordDiagnosticStrategy` računa postojeće ponderirano
-podudaranje 87 aktivnih pravila. Observer je `AppEvents`: Controller se registrira, nakon uspješnog
-spremanja objavi događaj, a glavni Controller osvježi trenutni ekran. Repository sučelja su primjer
-odvajanja pristupa bazi od poslovne logike. Kompozicija `ServiceRecord`–`ServiceItem` predstavlja
-jedan servis s njegovim stavkama.
+Strategy više nije umjetno vezan uz dijagnostiku. Koristi se tamo gdje stvarno postoje tri izmjenjiva načina računanja maintenance intervala:
 
-Nisu uvedeni framework za dependency injection, Spring, Lombok, REST, runtime AI ili vanjski image
-API. Java runtime koristi klasične ActionListener objekte i obične `JTable`/`DefaultTableModel`
-tablice, što je lakše objasniti na obrani.
+- `MileageMaintenanceStrategy`
+- `TimeMaintenanceStrategy`
+- `CombinedMaintenanceStrategy`
 
-## Transakcijski primjer
+`MaintenanceCalculator` bira strategiju prema tome ima li WorkDefinition km interval, vremenski interval ili oba.
 
-`ServiceRecordService.create` u jednoj transakciji:
+Na obrani se može objasniti Open/Closed korist: novi način računanja može se dodati kao nova implementacija bez mijenjanja Viewa ili baze servisne povijesti.
 
-1. otvori `EntityManager` i `EntityTransaction`
-2. provjeri korisnika i njegovo vozilo
-3. učita radove i kreira `ServiceRecord`/`ServiceItem` objekte
-4. poveća kilometražu samo ako je nova vrijednost veća
-5. riješi odabrane otvorene probleme istog vozila
-6. napravi commit ili rollback na iznimku
-7. zatvori `EntityManager`
+## Repository
 
-Registracija analogno sprema račun, prvo vozilo i početnu povijest kao jednu cjelinu.
+Repository sučelja su mala i konkretna. JPA implementacije koriste postojeći EntityManager. Ne postoji jedan generički repository koji skriva cijelu aplikaciju.
 
-## Pitanja za obranu
+## Transakcija
 
-- Zašto je `actualPrice` odvojen od informativne procjene? Zato što se stvarno plaćeni iznos ne smije
-  izmišljati iz modela.
-- Zašto je SQL u `snake_case`, a Java u camelCase? Hibernate physical naming strategy prevodi
-  konvenciju bez masovnog preimenovanja baze.
-- Zašto repository ne validira vlasništvo? Service određuje poslovni use-case; repository samo vraća
-  objekt ili `null`.
-- Zašto `NO_DATA` nije isto što i OK? Nedostatak intervala ili povijesti nije dokaz da rad nije potreban.
-- Zašto je dijagnostika Strategy? Algoritam se može zamijeniti bez promjene Controller/Service toka.
-- Zašto nema skrivene asinkrone infrastrukture? Za ovaj studentski desktop čitljiv sinkroni poziv je
-  dovoljna odluka; GUI provjera ostaje zaseban ručni test.
+Najbolji primjer je spremanje servisa. ServiceRecord, njegove stavke, nova kilometraža i rješavanje odabranih bilješki moraju uspjeti ili pasti kao jedna cjelina. Zato `ServiceRecordService` eksplicitno radi begin/commit/rollback.
 
-## Obrambeni redoslijed
+## Observer/listener
 
-Registracija i login → izbor aktivnog vozila → dodavanje/izmjena kilometraže → servis s više stavki
-→ stvarne cijene → maintenance status → analiza problema → spremanje problema → rješavanje problema
-servisom → dashboard → profil i odjava.
+`AppEvents` je mali pomoćni mehanizam. Nakon spremanja servisa, promjene vozila ili bilješke povezani ekran se može ponovno učitati bez direktnog vezanja svih Controllera međusobno.
 
-Stvarne build, SQL i blokirane GUI provjere zapisane su u `docs/VERIFICATION.md`.
+## BigDecimal
+
+Stvarne i informativne cijene koriste BigDecimal. `actualPrice` je stvarno plaćeno, a `WorkPriceRange.minPrice/maxPrice` je informativna procjena. Ta dva podatka se ne miješaju.
+
+## Što je namjerno izostavljeno
+
+- Spring / Spring Data
+- automatska dijagnostika
+- State pattern za samo OPEN/RESOLVED
+- Factory/Command/Decorator bez stvarne potrebe
+- runtime AI/API integracije
+- velika per-variant rules matrica
+
+Cilj je obranjiv studentski projekt, a ne enterprise arhitektura.

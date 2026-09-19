@@ -1,33 +1,51 @@
-# AutoCare local agent instructions
+# AutoCare - finalne upute za Codex / AI integratora
 
-The final runtime/code/data in this repository are authoritative. Some older files in `docs/` describe earlier iterations and will be reconciled only in the final documentation pass; do not reintroduce removed architecture from an old prompt or diagram.
+Ovaj projekt je već arhitekturno odlučen. Ne vraćaj staru automatsku dijagnostiku i ne izmišljaj novi sloj ili framework.
 
-Use Java 25, Maven, Swing/FlatLaf, JPA `EntityManager`, Hibernate and Azure SQL Server. Do not add Spring, MySQL, runtime AI, image APIs or a new UI framework.
+## Autoritativni model
 
-Keep the student-readable runtime style:
-- no lambdas, Stream API, Optional, `java.util.function`, `var`, records or generic callback frameworks in `src/main/java`;
-- classic anonymous Swing listeners, ordinary loops and explicit `if/else`;
-- Service owns business rules/transactions, Repository owns persistence queries, Controller handles GUI events, View renders Swing.
+Aplikacija je za **vlasnika vozila**, ne za servis.
 
-Final functional decisions:
-- keyword/scoring diagnostic rules are removed; do not recreate `DiagnosticRule`, `DiagnosticStrategy`, `KeywordDiagnosticStrategy` or `AnalysisDialog`;
-- Strategy is used for mileage/time/combined maintenance interval calculation;
-- problem entry is manual description + selected applicable repair + materialized price estimate;
-- existing vehicle identity is immutable in the UI; only mileage can be updated;
-- maintenance tracking shows only works that have service history, while the inline estimator may estimate every applicable maintenance work for the active vehicle;
-- service entry records actual paid price and never displays modelled price as actual price;
-- no manual refresh/status footer, vehicle images, password hashing or `OTHER_*` work flow.
+Tri odvojene funkcije:
+1. Bilješke - slobodan tekst + gruba kategorija, bez dijagnoze.
+2. Katalog - searchable informativni rasponi cijena standardnih zahvata.
+3. Servisi - stvarno napravljeni radovi i stvarno plaćene cijene nakon mehaničara.
 
-Final materialized catalogue:
-- 30,366 vehicle variants;
-- 120 final work definitions;
-- 2,908,857 applicable variant/work rules;
-- every stored rule has a positive concrete modelled price;
-- every stored maintenance rule has a concrete km and/or month interval;
-- repair rules have no preventive interval;
-- runtime fallback prices/intervals are not allowed;
-- obvious non-applicable hardware pairs are absent (for example BEV combustion jobs and explicit FWD transfer-case/differential service).
+Ne vraćati `DiagnosticRule`, keyword scoring, match %, suggested repair na Problem ili automatsko pogađanje kvara.
 
-Credentials stay outside the repository in the user's private connection file. Never print or commit them. To update the live Azure database, use the guarded import/migrations in `scripts/Complete-Setup.ps1`; do not claim live DB PASS unless the commands actually ran.
+## Kod
 
-Preserve user work and real Git history. Never force-push or fabricate verification. If a check cannot run, report `NOT_RUN`/`BLOCKED` instead of PASS. Respond to the user in Croatian.
+- Java 25, Swing/FlatLaf, Maven, JPA `EntityManager`, Hibernate, Azure SQL Server.
+- Bez Springa, Lomboka, DI frameworka, MapStructa, runtime AI-ja i image API-ja.
+- `src/main/java` mora ostati studentski čitljiv: bez lambda izraza, Stream API-ja, Optionala, `java.util.function`, `var`, recorda i generičkih callback frameworka.
+- Koristi obične `for` petlje, `if/else`, klasične anonimne `ActionListener` klase i eksplicitne transakcije.
+- View prikazuje Swing; Controller obrađuje GUI događaj; Service radi poslovna pravila/transakciju; Repository s postojećim EntityManagerom radi JPA upit.
+- Ne spajati Service/Repository/View samo radi kraćeg broja datoteka.
+
+## Finalni podaci
+
+- 30.366 `VehicleVariant`
+- 120 `WorkDefinition`
+- 30 MAINTENANCE + 90 REPAIR
+- 5 `VehiclePriceClass`
+- 600 `WorkPriceRange`
+- nema runtime per-variant `VehicleWorkRule` matrice
+- maintenance interval je na `WorkDefinition`
+- Katalog nema runtime fallback cijenu; svih 600 raspona mora postojati u bazi
+
+## Baza
+
+Autoritativna migracija je `schema/11_professor_model.sql`, audit `schema/12_professor_model_audit.sql`.
+Ne pokretati stare 01-10 migracije niti stare complete-catalog importere.
+
+Na pravom razvojnom računalu:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\Complete-Setup.ps1 `
+  -ConfigPath .\connection.local.json `
+  -ApplyProfessorModel
+```
+
+Nakon toga `final_error_count` iz audita mora biti 0.
+
+Nikada ne tvrdi da je Azure migracija ili GUI PASS ako stvarno nije pokrenuta. Ne commitati lozinke ili connection.local.json.

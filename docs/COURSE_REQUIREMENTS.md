@@ -1,19 +1,17 @@
-# Zahtjevi predmeta i trag do artefakata
-Temelj je tekst koji je korisnik dostavio, ne novo proizvoljno bodovanje. Projekt i zavrsna prezentacija obavezni su bez obzira na nacin polaganja. Korisnik navodi prezentaciju/provjeru samostalnosti35min i teorijsko razumijevanje10min; individualne vjezbe/GitHub problemski zadaci nisu zamijenjeni ovim projektom.
+# Zahtjevi predmeta i trag do projekta
 
-| Zahtjev | Artefakt / dokaz |
+| Zahtjev | Gdje je pokriven |
 |---|---|
-| Aplikacija komunicira sa server bazom, MVC | Java source, ARCHITECTURE_FREEZE, stvarni Azure SQL dokaz lokalno |
-| Drugi problem od demonstracija s vjezbi | AutoCare vozila/odrzavanje/servisi/problemi |
-| Maven upravlja ovisnostima | pom.xml i stvarni wrapper/build |
-| API dokumentacija Javadoc | Maven javadoc:javadoc i generirani HTML |
-| Opis problema | PROJECT_REPORT |
-| Konceptualni model nacina rjesenja | PROJECT_REPORT, architecture/domain dijagrami |
-| Wireframe korisnickog sucelja s opisom | GUI_AND_WIREFRAMES svih12tokova + prilozeni izvorni PDF u privatnoj gradji |
-| Opis dijagrama klasa | domain.mmd/dot/png/svg (persistentna domena), design.mmd/dot/png/svg (aplikacijski odnosi), TYPE_CATALOG, DATABASE_AND_JPA |
-| ERD i opis baze | erd.mmd/dot/png/svg, DATABASE_AND_JPA; uskladiti s pravom shemom |
-| Objasnjenje primijenjenih principa/patterna/visenitnosti | COURSE_ALIGNMENT_AND_DEFENSE, ARCHITECTURE_FREEZE |
-| Vanjske biblioteke, zasto, lokacija, dokumentacija | DEPENDENCIES_AND_SOURCES i actual dependency tree |
-| Git aciklicki graf stvarne povijesti | export-git-history.ps1 nakon stvarnih commitova |
+| Java aplikacija + server baza + MVC | `src/main/java`, `PROJECT_REPORT.md`, Azure SQL/JPA |
+| Problem različit od vježbi | osobna evidencija vozila, servisa, održavanja, bilješki i kataloga |
+| Maven | `pom.xml`, Maven Wrapper |
+| Javadoc | `mvnw.cmd javadoc:javadoc` |
+| Opis problema/rješenja | `PROJECT_REPORT.md` |
+| GUI/wireframe opis | `GUI_AND_WIREFRAMES.md` |
+| Dijagram klasa | `domain.mmd`, `design.mmd` |
+| ERD | `erd.mmd`, `DATABASE_AND_JPA.md` |
+| Principi/patterni | `COURSE_ALIGNMENT_AND_DEFENSE.md` |
+| Vanjske biblioteke | `DEPENDENCIES_AND_SOURCES.md` |
+| Git DAG | izvesti iz stvarne povijesti repozitorija prije predaje |
 
-Minimalni MVC+baza zahtjev nije tvrdnja o maksimalnoj ocjeni. Strategy, Observer i SwingWorker uvedeni su radi stvarnog problema; nije dodan svaki pattern radi bodova. Profesorov review ne znaci da je finalni SQL Server/AF3 naknadno odobren. Student treba razumjeti i moci obraniti implementaciju; AI-pomoc ne mijenja zahtjev provjere samostalnosti/razumijevanja.
+Profesorov zadnji review mijenja funkcionalni model, ali ne mijenja osnovnu slojevitu arhitekturu: View -> Controller -> Service -> Domain/Repository -> JPA -> baza.

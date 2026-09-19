@@ -1,98 +1,73 @@
-# FINAL ACCEPTANCE CHECKLIST
+# Finalni acceptance checklist
 
-## Data
-- [ ] 30,366 variants
-- [ ] OTHER_MAINTENANCE i OTHER_REPAIR uklonjeni
-- [ ] svaki spremljeni VehicleWorkRule ima estimatedPrice > 0
-- [ ] svaki maintenance rule ima km ili months interval
-- [ ] nijedan repair rule nema preventivni interval
-- [ ] nema duplicate variant/work
-- [ ] BEV nema OIL_SERVICE, SPARK_PLUGS, TIMING_BELT_PUMP, DPF_REPLACEMENT
-- [ ] postojeće dobre cijene auditirane kao KEPT_EXISTING
-- [ ] prazne cijene popunjene
-- [ ] postojeći intervali sačuvani
-- [ ] prazni maintenance intervali popunjeni
+## Build
 
-## Diagnostics -> Problems
-- [ ] diagnostic_rule table nema
-- [ ] DiagnosticStrategy/KeywordDiagnosticStrategy nema
-- [ ] AnalysisDialog nema
-- [ ] RuleData/DiagnosticResult/Analysis nema
-- [ ] problem korisnik ručno bira repair
-- [ ] Procijeni cijenu čita konkretni VehicleWorkRule
-- [ ] OPEN i RESOLVED se vide zajedno sa Status stupcem
+- [ ] Java 25 aktivna na korisnikovom računalu
+- [ ] `mvnw.cmd clean verify` PASS
+- [ ] `mvnw.cmd javadoc:javadoc` PASS
+- [x] Java main source interni compile sanity PASS u ChatGPT okruženju (API stubovi; nije zamjena za Maven)
+- [x] `scripts/validate_professor_catalog.py` PASS
+- [x] runtime static style scan PASS
+- [x] nema starih diagnostic runtime klasa
 
-## Strategy
-- [ ] MileageMaintenanceStrategy
-- [ ] TimeMaintenanceStrategy
-- [ ] CombinedMaintenanceStrategy
-- [ ] MaintenanceCalculator bira strategiju jednostavnim if/else
-- [ ] nema lambda/stream
+## Finalni podaci
 
-## Maintenance
-- [ ] tablica prikazuje samo već servisirana/tracked održavanja
-- [ ] nema Nema podataka redaka
-- [ ] nakon prvog servisa maintenance se odmah pojavi
-- [ ] next km/date se računaju
-- [ ] inline Procijeni cijenu i interval radi za svaki ponuđeni maintenance work
-- [ ] nema tehničkog AC-MODEL popup teksta
+- [x] 30.366 vehicle variants
+- [x] 120 work definitions
+- [x] 30 maintenance
+- [x] 90 repair
+- [x] 5 vehicle price classes
+- [x] 600 work price ranges
+- [x] svaki work ima svih 5 price ranges
+- [x] svaki price range ima pozitivan min i max >= min
+- [x] svaki maintenance ima km i/ili month interval
+- [x] repair nema preventivni interval
 
-## Dashboard/sidebar
-- [ ] 4 bordered cards
-- [ ] Ikonli ikone
-- [ ] sljedeće održavanje umjesto 0/0/Nema podataka counta
-- [ ] nema Osvježi
-- [ ] nema Aktivno vozilo #ID
-- [ ] nema AutoCare / NOOP
-- [ ] datum je vidljiv uz aktivni auto
-- [ ] servis odmah osvježi sidebar kilometražu
+## Bilješke
 
-## Vehicle form
-- [ ] Marka -> Model -> Godina -> Varijanta dropdowni
-- [ ] nema search tablice varijanti
-- [ ] godina je JComboBox
-- [ ] kilometraža je JTextField
-- [ ] novo vozilo mileage field je prazan
-- [ ] postojeće vozilo nema edit identiteta
-- [ ] postoji samo Promijeni kilometražu
+- [x] slobodan opis
+- [x] gruba kategorija
+- [x] OPEN/RESOLVED
+- [x] manual close
+- [x] opcionalno rješavanje stvarnim servisom
+- [x] nema suggested repair / estimated cost / match score
 
-## Service editor
-- [ ] procijenjena cijena se ne prikazuje kod biranja servisne stavke
-- [ ] type + work + actualPrice + Dodaj su na istom dialogu
-- [ ] nema WorkPicker popup-a
-- [ ] nema custom ServiceItemsModel
-- [ ] Ukloni odabranu stavku ostaje jednostavan gumb
-- [ ] service detail ostaje
+## Katalog
 
-## Registration
-- [ ] registracija/onboarding u istom JFrameu
-- [ ] CardLayout login/register
-- [ ] račun -> prvo vozilo -> history
+- [x] zaseban ekran
+- [x] search po nazivu/kodu
+- [x] filter kategorije
+- [x] min-max cijena prema VehiclePriceClass aktivnog vozila
+- [x] maintenance interval vidljiv u katalogu
+- [x] procjena se ne sprema kao actualPrice
 
-## Croatian UI
-- [ ] korisnički stringovi imaju č/ć/ž/š/đ
-- [ ] work names očišćeni gdje je očita hrvatska ASCII transliteracija
-- [ ] work codes nisu promijenjeni
+## Servisi i održavanje
 
-## Runtime style
-- [ ] no lambda
-- [ ] no stream
-- [ ] no Optional
-- [ ] no java.util.function
-- [ ] no var/record
-- [ ] klasični ActionListener
-- [ ] opisna imena
+- [x] datum + kilometraža + stavke + stvarno plaćeno + napomena
+- [x] jedna transakcija za servis, stavke, kilometražu i riješene bilješke
+- [x] povijesni servis ne smanjuje trenutnu kilometražu
+- [x] maintenance se računa iz servisne povijesti
+- [x] Mileage / Time / Combined Strategy
 
-## Build/DB
-- [ ] git diff --check
-- [ ] Maven clean verify
-- [ ] package
-- [ ] Javadoc
-- [ ] setup build/test
-- [ ] runtime style checker
-- [ ] secret checker
-- [ ] Azure SQL import
-- [ ] final_catalog_audit.sql pass
-- [ ] sql-check pass
-- [ ] db-check pass
-- [ ] GUI smoke PASS ili iskreno NOT_RUN
+## Azure SQL
+
+- [ ] dry-run `Complete-Setup.ps1` PASS na stvarnoj bazi
+- [ ] `-ApplyProfessorModel` PASS
+- [ ] `final_error_count = 0`
+- [ ] `vehicle_work_rule` ne postoji
+- [ ] `diagnostic_rule` ne postoji
+- [ ] `problem.suggested_repair_id` ne postoji
+- [ ] `problem.estimated_cost` ne postoji
+
+## Ručni GUI
+
+- [ ] registracija i prvo vozilo
+- [ ] login/logout
+- [ ] više vozila i active vehicle persistence
+- [ ] ažuriranje kilometraže
+- [ ] create/close bilješke
+- [ ] catalog search/filter
+- [ ] novi servis s maintenance i repair stavkom
+- [ ] rješavanje bilješke servisom
+- [ ] novi maintenance interval nakon servisa
+- [ ] Dashboard vrijednosti osvježene

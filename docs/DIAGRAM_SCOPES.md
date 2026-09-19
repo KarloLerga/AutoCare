@@ -1,29 +1,21 @@
-# Opseg dijagrama
+# Opseg finalnih dijagrama
 
-Dijagrami su tri različita pogleda na isti aktualni kod. DOT/Mermaid izvori i renderirane PNG/SVG
-datoteke moraju ostati međusobno usklađeni.
+## Arhitektura
 
-## 1. Arhitektura
+`architecture.mmd/png` prikazuje tok View -> Controller -> Service -> Repository -> JPA/Hibernate -> Azure SQL. Service je vlasnik transakcije.
 
-`architecture.*` prikazuje View → Controller → Service → Repository → JPA/Hibernate → Azure SQL.
-Domain tipovi koriste se između Service i Repository sloja. Service je vlasnik poslovne granice
-transakcije; repositoryji imaju samo dohvat/persistiranje.
+## Persistentna domena
 
-## 2. Persistentna domena
+`domain.mmd/png` treba prikazivati samo osam persistentnih entiteta: AppUser, VehicleVariant, Vehicle, WorkDefinition, WorkPriceRange, ServiceRecord, ServiceItem i Problem, plus bitne enumove/kardinalnosti.
 
-`domain.*` prikazuje devet aktualnih entiteta i enumove koji su dio Java domene. Ne prikazuje
-Controller, Strategy ni privremene DTO rezultate kao tablice. Kardinalnosti su fizičke/poslovne:
-vozilo ima ownera i varijantu, servis pripada vozilu i ima stavke, problem pripada vozilu i može biti
-riješen jednim servisom.
+Ne prikazivati stare DiagnosticRule ili VehicleWorkRule klase.
 
-## 3. Aplikacijski odnosi
+## Aplikacijski odnosi
 
-`design.*` prikazuje reprezentativne Controller/Service/Repository odnose te
-`DiagnosticStrategy`/`KeywordDiagnosticStrategy` i `Data` rezultate. Transakcija je nacrtana kao
-odgovornost Service klase i neposredni JPA lifecycle, bez dodatnog generičkog posrednika.
+`design.mmd/png` prikazuje reprezentativne Controller/Service/Repository odnose, Maintenance Strategy i AppEvents/listener mehanizam. Nema dijagnostičkog Strategyja.
 
-## 4. ERD
+## ERD
 
-`erd.*` prikazuje fizičke `dbo` `snake_case` tablice, PK/FK i važne podatke. Ne prikazuje pomoćne
-Java klase. Nakon završnog cleanup-a u ERD-u nema legacy `version`, `request_key` ni `schedule_kind`
-stupaca. Brojevi i tipovi odgovaraju live SQL auditu gdje je navedeno u `docs/VERIFICATION.md`.
+`erd.mmd/png` prikazuje finalne fizičke `dbo` tablice i važne PK/FK veze. Finalni ERD uključuje `work_price_range`, `vehicle_variant.price_class`, `work_definition.catalog_category/interval_*` i `problem.category`.
+
+Ne prikazuje `vehicle_work_rule`, `diagnostic_rule`, `suggested_repair_id` ni `estimated_cost` jer nakon migracije ne postoje.

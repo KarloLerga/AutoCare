@@ -1,70 +1,56 @@
-# AutoCare — aktualni arhitekturni ugovor
+# Architecture Freeze - finalni profesorov model
 
-Ovaj dokument je završna, pojednostavljena verzija ranijih AF3 odluka. Vrijedi za trenutni runtime;
-stare prijedloge koji nisu u kodu ne treba prezentirati kao aktivne mogućnosti.
-
-## Tehnologija i granice
-
-Java 25, Maven, Swing/FlatLaf, Jakarta Persistence, Hibernate i Microsoft SQL Server/Azure SQL.
-Nema Springa, Lomboka, REST-a, runtime AI-ja, vanjskog image API-ja, BLOB slika ni dodatnih tablica.
-Slike su lokalni classpath resources i moraju proći zaseban pregled izvora/licence.
+Ovaj dokument zamjenjuje prethodne arhitekturne freeze odluke.
 
 ## Slojevi
 
-```text
-View
-  ↓
-Controller
-  ↓
-Service
-  ↓
-Repository sučelja
-  ↓
-JPA repositoryji / Hibernate
-  ↓
-Azure SQL
-```
+`Swing View -> Controller -> Service -> Repository -> JPA EntityManager/Hibernate -> Azure SQL`
 
-Controlleri ne pristupaju JPA-i. Viewi posjeduju Swing prikaz detalja. Servicei rade use-case i
-transakciju. Repositoryji samo dohvaćaju/persistiraju. Domain nema UI ni SQL kod.
+View prikazuje podatke i prikuplja unos. Controller prima GUI događaj i poziva Service. Service drži poslovna pravila i transakcijske granice. Repository sadrži JPA dohvat/spremanje. Domain ne ovisi o Swingu ni SQL-u.
 
-## Persistence
+## Persistentni model
 
-Postoji devet entiteta: `AppUser`, `VehicleVariant`, `Vehicle`, `WorkDefinition`, `VehicleWorkRule`,
-`ServiceRecord`, `ServiceItem`, `Problem` i `DiagnosticRule`. Java polja su čitljiva camelCase,
-postojeće SQL tablice i stupci su `dbo`/`snake_case`, a naming strategy radi prijevod.
+Točno osam entiteta:
 
-Fizički DDL je vlasništvo baze; runtime `hbm2ddl=none`. Entiteti imaju samo ORM anotacije potrebne
-za identitet, veze, kolekciju stavki i string enumove. `actual_price` je stvarno plaćeno, dok su
-`estimated_price` i default procjene informativne.
+1. `AppUser`
+2. `VehicleVariant`
+3. `Vehicle`
+4. `WorkDefinition`
+5. `WorkPriceRange`
+6. `ServiceRecord`
+7. `ServiceItem`
+8. `Problem`
 
-## Poslovne odluke
+Nema `VehicleWorkRule` ni `DiagnosticRule`.
 
-- Korisnik ima više vozila i jedno aktivno vozilo.
-- Servis ima datum, kilometražu, napomenu i jednu ili više stavki.
-- Kilometraža se ne smanjuje; odabrani otvoreni problemi istog vozila mogu se riješiti servisom.
-- Maintenance koristi kilometarske i/ili mjesečne intervale te statuse `NO_DATA`, `OK`, `SOON`, `DUE`.
-- Dijagnostika zadržava postojeću formulu i 87 pravila; rezultat je informativan, ne dijagnoza.
-- Izvori i review podataka nisu automatski odobrenje; modelirane cijene nisu nacionalni prosjek.
+## Bilješke
 
-## Transakcije
+`Problem` je korisnikova bilješka, ne dijagnoza. Ima opis, `ProblemCategory`, status, datum i opcionalni `resolvedByService`.
 
-Svaki Service write use-case izravno radi `begin → poslovni koraci → commit`, a na RuntimeException
-rollback i u `finally` zatvara EntityManager. Registracija koristi istu granicu za račun, vozilo i
-početnu povijest. Read operacije otvore EM, mapiraju rezultat i zatvore ga. Nema skrivene transakcijske
-infrastrukture ni globalnog EntityManagera.
+## Katalog
 
-## Baza i cleanup
+`WorkDefinition` je standardni zahvat. `WorkPriceRange` povezuje zahvat i `VehiclePriceClass` s min/max informativnom cijenom.
 
-`schema/07_final_student_cleanup.sql` je povijesni cleanup za legacy kolone. Aktualni
-`schema/08_plain_password_and_remove_images.sql` je read-only po defaultu: preimenuje
-`app_user.password_hash` u `password`, eksplicitno poništava stare nereverzibilne vjerodajnice i
-uklanja `vehicle_variant.image_path`. Ne briše tablice, katalog, korisničke podatke ni servisnu
-povijest. `scripts/verify-database.sql` ostaje završna read-only provjera.
+Finalni seed ima 120 workova x 5 klasa = 600 rangeova.
 
-## Status
+## Održavanje
 
-Live Azure counts nakon cleanupa: 30.366 varijanti, 122 rada, 1.650.435 scoped pravila i 87
-dijagnostičkih pravila. Maven/JDK25, Javadoc, setup package, style scanner, SQL check i JPA mapping
-smoke su PASS. Odvojeni `_test` profil je NOT_RUN, a ručni Windows GUI smoke je BLOCKED; detalji su u
-`docs/VERIFICATION.md`.
+Maintenance interval je na `WorkDefinition` kao `intervalKm` i/ili `intervalMonths`. Servisna povijest je izvor istine. Strategy bira Mileage, Time ili Combined izračun.
+
+## Transakcija
+
+`ServiceRecordService.create()` je glavni primjer transakcijske granice: jedan EntityManager, begin, spremanje servisa i stavki, update kilometraže, rješavanje označenih bilješki, commit ili rollback.
+
+## Schema lifecycle
+
+Runtime je `hbm2ddl.auto=none`. Postojeća Azure SQL baza prelazi na finalni model preko `schema/11_professor_model.sql`, a `schema/12_professor_model_audit.sql` mora završiti s `final_error_count = 0`.
+
+## Finalni countovi
+
+- 30.366 vehicle variants
+- 120 work definitions
+- 600 price ranges
+- 30 maintenance
+- 90 repair
+
+Live Azure countovi se ne smiju označiti PASS dok migracija stvarno nije pokrenuta na korisnikovom računalu.

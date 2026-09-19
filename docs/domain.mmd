@@ -1,64 +1,61 @@
 classDiagram
-    AppUser "1" <-- "1..*" Vehicle : owner
-    AppUser "0..1" --> "0..1" Vehicle : activeVehicle
-    Vehicle "*" --> "1" VehicleVariant : variant
-    ServiceRecord "*" --> "1" Vehicle : vehicle
-    ServiceRecord "1" *-- "1..*" ServiceItem : items
-    ServiceItem "*" --> "1" WorkDefinition : work
-    VehicleWorkRule "*" --> "1" VehicleVariant : variant
-    VehicleWorkRule "*" --> "1" WorkDefinition : work
-    Problem "*" --> "1" Vehicle : vehicle
-    Problem "*" --> "0..1" WorkDefinition : suggestedRepair
-    Problem "*" --> "0..1" ServiceRecord : resolvedByService
-    DiagnosticRule "*" --> "1" WorkDefinition : candidate
-    WorkDefinition --> WorkCategory
-    Problem --> ProblemStatus
-
     class AppUser {
-        Long id
-        String name
-        String email
-        String password
-        activate(Vehicle)
+      Long id
+      String name
+      String email
     }
     class Vehicle {
-        Long id
-        int productionYear
-        int currentMileage
-        changeIdentity(VehicleVariant, int)
-        updateMileage(int)
+      Long id
+      int productionYear
+      int currentMileage
+      updateMileage()
+    }
+    class VehicleVariant {
+      Long id
+      String make
+      String model
+      String generation
+      String engineLabel
+      VehiclePriceClass priceClass
+    }
+    class WorkDefinition {
+      Long id
+      String code
+      String name
+      WorkCategory category
+      CatalogCategory catalogCategory
+      Integer intervalKm
+      Integer intervalMonths
+    }
+    class WorkPriceRange {
+      VehiclePriceClass priceClass
+      BigDecimal minPrice
+      BigDecimal maxPrice
     }
     class ServiceRecord {
-        Long id
-        LocalDate serviceDate
-        int mileage
-        addItem(WorkDefinition, BigDecimal)
-        total() CostSummary
+      Long id
+      LocalDate serviceDate
+      int mileage
+      String note
     }
     class ServiceItem {
-        Long id
-        BigDecimal actualPrice
-    }
-    class VehicleWorkRule {
-        Integer intervalKm
-        Integer intervalMonths
-        BigDecimal estimatedPrice
-        String intervalSource
+      BigDecimal actualPrice
     }
     class Problem {
-        ProblemStatus status
-        String description
-        BigDecimal matchPercent
-        BigDecimal estimatedCost
-        resolve(ServiceRecord)
+      String description
+      ProblemCategory category
+      ProblemStatus status
+      LocalDateTime createdAt
+      close()
+      resolve()
     }
-    class WorkCategory {
-        <<enumeration>>
-        MAINTENANCE
-        REPAIR
-    }
-    class ProblemStatus {
-        <<enumeration>>
-        OPEN
-        RESOLVED
-    }
+
+    AppUser "1" --> "1..*" Vehicle : owns
+    AppUser --> Vehicle : activeVehicle
+    Vehicle "*" --> "1" VehicleVariant
+    Vehicle "1" --> "0..*" ServiceRecord
+    ServiceRecord "1" *-- "1..*" ServiceItem
+    ServiceItem "*" --> "1" WorkDefinition
+    WorkDefinition "1" --> "5" WorkPriceRange
+    Vehicle "1" --> "0..*" Problem
+    Problem "0..*" --> "0..1" ServiceRecord : resolvedBy

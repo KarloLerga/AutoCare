@@ -1,71 +1,85 @@
-# AutoCare — baza i JPA ugovor
+# Finalni JPA i SQL model
 
-## Aktualna odluka
+## Persistentni entiteti
 
-Java koristi čitljiva camelCase/PascalCase imena, a postojeća Azure SQL baza ostaje u fizičkom
-`snake_case` obliku. `src/main/resources/META-INF/persistence.xml` koristi
-`CamelCaseToUnderscoresNamingStrategy`, pa runtime ne treba desetke `@Column(name=...)` anotacija.
-Runtime ima `hibernate.hbm2ddl.auto=none`; DDL i cleanup provjeravaju se zasebnim SQL/setup alatima.
+### AppUser
+Korisnički račun i veza na aktivno vozilo.
 
-Baza je vlasnik fizičkih duljina, nullabilityja, indeksa, unique/check/FK constrainta, precisiona i
-identity postavki. Java entiteti zadržavaju samo ORM značenje: `@Entity`, ID/identity, veze,
-`@OneToMany` i string-enum mapiranje.
+### Vehicle
+Korisnikovo konkretno vozilo: owner, VehicleVariant, godina proizvodnje i trenutačna kilometraža.
 
-## Tablice
+### VehicleVariant
+Referentni katalog vozila. Uz marku/model/generaciju/motor sadrži samo jednu novu informaciju potrebnu za Katalog: `VehiclePriceClass priceClass`.
 
-| Java entitet | SQL tablica |
-|---|---|
-| `AppUser` | `dbo.app_user` |
-| `VehicleVariant` | `dbo.vehicle_variant` |
-| `Vehicle` | `dbo.vehicle` |
-| `WorkDefinition` | `dbo.work_definition` |
-| `VehicleWorkRule` | `dbo.vehicle_work_rule` |
-| `ServiceRecord` | `dbo.service_record` |
-| `ServiceItem` | `dbo.service_item` |
-| `Problem` | `dbo.problem` |
-| `DiagnosticRule` | `dbo.diagnostic_rule` |
+### WorkDefinition
+Standardni zahvat:
+- code
+- name
+- WorkCategory (`MAINTENANCE` / `REPAIR`)
+- CatalogCategory
+- intervalKm
+- intervalMonths
 
-## Mapirana polja
+Repair nema preventivni interval. Maintenance ima najmanje jedan interval.
 
-| Entitet | Java polje → SQL stupac |
-|---|---|
-| AppUser | `id`, `name`, `email`, `password`, `activeVehicle → active_vehicle_id` |
-| VehicleVariant | `id`, `code`, `make`, `model`, `generation`, `engineLabel → engine_label`, `bodyType → body_type`, `fuelType → fuel_type`, `powerHp → power_hp`, `transmission`, `yearFrom → year_from`, `yearTo → year_to` |
-| Vehicle | `id`, `owner → owner_id`, `variant → variant_id`, `productionYear → production_year`, `currentMileage → current_mileage` |
-| WorkDefinition | `id`, `code`, `name`, `category`, `defaultIntervalKm → default_interval_km`, `defaultIntervalMonths → default_interval_months`, `defaultEstimatedPrice → default_estimated_price`, `estimateNote → estimate_note` |
-| VehicleWorkRule | `id`, `variant → variant_id`, `work → work_id`, `intervalKm → interval_km`, `intervalMonths → interval_months`, `estimatedPrice → estimated_price`, `intervalSource → interval_source`, `estimateNote → estimate_note` |
-| ServiceRecord | `id`, `vehicle → vehicle_id`, `serviceDate → service_date`, `mileage`, `note` |
-| ServiceItem | `id`, `serviceRecord → service_record_id`, `work → work_id`, `actualPrice → actual_price` |
-| Problem | `id`, `vehicle → vehicle_id`, `description`, `status`, `createdAt → created_at`, `suggestedRepair → suggested_repair_id`, `matchPercent → match_percent`, `estimatedCost → estimated_cost`, `estimateNote → estimate_note`, `resolvedByService → resolved_by_service_id` |
-| DiagnosticRule | `id`, `code`, `candidate → candidate_id`, `phrase`, `weight`, `active` |
+### WorkPriceRange
+Informativna cijena jednog WorkDefinitiona za jednu VehiclePriceClass:
+- work
+- priceClass
+- minPrice
+- maxPrice
 
-`ServiceRecord.items` je inverse Java kolekcija (`mappedBy=serviceRecord`) i nema vlastiti stupac.
-`ServiceItem.actualPrice` znači stvarno plaćeni iznos; `VehicleWorkRule.estimatedPrice` i
-`WorkDefinition.defaultEstimatedPrice` su samo informativne procjene. NULL nije nula.
+Baza mora imati točno jednu kombinaciju work + priceClass. Finalni seed: 600 redaka.
 
-## Fizički cleanup
+### ServiceRecord
+Stvarni servis korisnikovog vozila: datum, kilometraža, napomena i stavke.
 
-`schema/07_final_student_cleanup.sql` je read-only po defaultu. Nakon točnog targeta i pregleda
-ovisnosti može ukloniti samo:
+### ServiceItem
+Jedna stvarno napravljena stavka servisnog zapisa. Pokazuje na WorkDefinition i čuva `actualPrice` koji korisnik ručno unosi.
 
-- `app_user.version`
-- `vehicle.version`
-- `problem.version`
-- `problem.request_key`
-- `service_record.request_key`
-- `vehicle_work_rule.schedule_kind`
+### Problem
+Tehničko ime entiteta ostaje `Problem`, ali GUI ga prikazuje kao Bilješku:
+- vehicle
+- description
+- ProblemCategory
+- ProblemStatus
+- createdAt
+- optional resolvedByService
 
-`schema/08_plain_password_and_remove_images.sql` je zaseban read-only-by-default patch za aktualni
-studentski ugovor. Preimenuje `app_user.password_hash` u `password`, po eksplicitnom reset modu
-poništava stare nereverzibilne hashirane vjerodajnice, te uklanja `vehicle_variant.image_path`.
-Ne briše korisnike, vozila, servisnu povijest, katalog ni dijagnostička pravila.
+Nema suggested repair, estimated cost ni diagnostic score.
 
-Skripta preko `sys.*` pronalazi samo pripadajuće default/index/key/FK/check ovisnosti, provjerava
-početne i završne counts i ne radi drop tablica, reset, rename, backfill ni re-seed.
+## Uklonjeno iz finalnog modela
 
-## Provjera
+- VehicleWorkRule
+- DiagnosticRule
+- KeywordDiagnosticStrategy i analiza simptoma
+- suggested_repair_id
+- estimated_cost na problemu
+- per-variant cijene i intervali
 
-Za read-only pregled koristiti `scripts/verify-database.sql`. Završni live audit potvrđuje
-`30.366 / 122 / 1.650.435 / 87` za varijante, radove, scoped rules i dijagnostička pravila; duplicate
-provjere su 0, a cleanup kolone su odsutne. Stvarni datumi i blokade nalaze se u
-`docs/VERIFICATION.md`.
+## Transakcije
+
+Primjer `ServiceRecordService.create`:
+
+1. otvori EntityManager;
+2. `transaction.begin()`;
+3. dohvati Vehicle;
+4. kreira ServiceRecord i ServiceItem zapise;
+5. po potrebi podigne currentMileage;
+6. riješi odabrane aktivne bilješke;
+7. commit;
+8. rollback na RuntimeException;
+9. zatvori EntityManager.
+
+Repositoryji u koracima 3-6 koriste isti EntityManager.
+
+## Naming
+
+Java ostaje camelCase, Azure SQL snake_case. Hibernate `CamelCaseToUnderscoresNamingStrategy` mapira, primjerice:
+
+- `priceClass` -> `price_class`
+- `catalogCategory` -> `catalog_category`
+- `intervalKm` -> `interval_km`
+- `resolvedByService` -> `resolved_by_service_id`
+
+Zato nisu potrebne `@Column(name=...)` anotacije na svakom polju.

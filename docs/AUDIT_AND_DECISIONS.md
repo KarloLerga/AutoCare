@@ -1,42 +1,50 @@
-# Audit i odluke — završni studentski cleanup
+# Završni audit i odluke nakon profesorovog zadnjeg reviewa
 
-## Što je zadržano
+## Funkcionalni model
 
-- Java 25, Swing/FlatLaf, JPA/Hibernate i Azure SQL.
-- devet entiteta, pet repository sučelja, MVC + Service slojevi
-- stvarno plaćeni `actualPrice` odvojeno od informativnih procjena
-- maintenance kalkulacija po km/mjesecima i statusi `NO_DATA`, `OK`, `SOON`, `DUE`
-- `DiagnosticStrategy` i postojeći scoring 87 pravila
-- mali Observer za osvježavanje nakon uspješnog spremanja
+Profesorov finalni workflow razdvaja tri odgovornosti:
 
-## Što je namjerno uklonjeno
+1. Bilješke - slobodan opis onoga što vlasnik primjećuje.
+2. Katalog - informativni raspon troška standardnog zahvata.
+3. Servisi - stvarno odrađeni radovi i stvarno plaćene cijene nakon odlaska kod mehaničara.
 
-- generička transakcijska/callback infrastruktura
-- asinkroni UI helper za obične DB pozive
-- generička tablična komponenta
-- request-key/idempotency tok za problem i servis
-- optimistic `version` polja
-- legacy plan metadata kolona
-- hashiranje lozinki i per-vehicle image metadata/pipeline
-- Clock dependency kroz sve Service konstruktore
-
-Razlog je čitljivost za kolegij: poslovna odluka i lifecycle trebaju biti vidljivi u klasi, a ne
-raspršeni kroz dodatne apstrakcije.
+Zbog toga su uklonjeni automatska dijagnostika i per-variant matrica pravila.
 
 ## Baza
 
-Fizički SQL ostaje `snake_case`; Java mapiranje radi naming strategy. Runtime ne upravlja shemom
-(`hbm2ddl=none`). `schema/08_plain_password_and_remove_images.sql` je read-only po defaultu i
-prebačen je tek nakon read-only pregleda. Kataloški counts su ostali 30.366 / 122 / 1.650.435 / 87;
-`app_user.password` je aktualna nullable tekstualna kolona, a `vehicle_variant.image_path` je uklonjen.
+Finalni referentni podaci:
 
-## Podaci i izvori
+- 30.366 `vehicle_variant`
+- 120 `work_definition`
+- 600 `work_price_range`
+- 30 maintenance radova
+- 90 repair radova
+- 5 vehicle price classes
 
-Modelirane procjene nisu nacionalni prosjek. Review izvori i rasporedi nisu automatsko odobrenje.
-Per-vehicle fotografije i enrichment/import pipeline nisu dio aktualnog paketa; UI koristi samo
-dekorativne FontAwesome6 Ikonli ikone, a runtime ne zove vanjski image API.
+Finalni model namjerno nema tablice `vehicle_work_rule` i `diagnostic_rule`.
 
-## Evidencija
+`problem` više nema `suggested_repair_id` ni `estimated_cost`; dobiva `category`.
 
-Stvarni commitovi i naredbe nalaze se u `docs/IMPLEMENTATION_STATUS.md` i `docs/VERIFICATION.md`.
-Nema izmišljene SQL, GUI ili integration PASS oznake.
+`work_definition` dobiva `catalog_category`, `interval_km` i `interval_months`.
+
+`vehicle_variant` dobiva `price_class`.
+
+## JPA
+
+- field access;
+- minimalne potrebne anotacije;
+- camelCase Java + snake_case SQL preko Hibernate naming strategyja;
+- `EntityManagerFactory` jednom;
+- kratkotrajni `EntityManager` po use-caseu;
+- eksplicitna transakcija u Serviceu kada operacija dira više objekata/repositoryja;
+- runtime `hbm2ddl.auto=none` jer se završna postojeća Azure baza migrira guarded SQL skriptom.
+
+## Cijene
+
+Cijene su informativni min-max rasponi po širokoj klasi vozila. Rasponi su precomputed seed podaci. Runtime nema AI, fallback matematiku ni vanjske API pozive.
+
+Stvarni trošak dolazi isključivo iz `ServiceItem.actualPrice`.
+
+## Studentski stil
+
+Namjerno se izbjegavaju lambda/Stream/Optional/var/record, generic transaction helperi i dodatni frameworki. Dulji eksplicitni `begin/commit/rollback` kod je prihvatljiv jer je lakši za objasniti na obrani.

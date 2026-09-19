@@ -1,23 +1,26 @@
-# Što je već odlučeno u ovom paketu
+# Zaključane odluke finalnog modela
 
-Codex ne treba sam donositi ove odluke:
+Ove odluke ne treba ponovno otvarati tijekom Codex integracije.
 
-1. Neprimjenjivi vehicle/work par nema VehicleWorkRule.
-2. Svaki spremljeni rule ima pozitivnu cijenu.
-3. Svaki maintenance rule ima konkretan interval.
-4. Postojeće dobre cijene se čuvaju; rupe se popunjavaju; preniski tier/outlier slučajevi se auditirano korigiraju.
-5. Fixed i ručno modelirani radovi imaju tier multiplikatore 0.90 / 1.00 / 1.25 / 1.65 / 2.80.
-6. Eksplicitne 0-model osnovice su u price_overrides.csv.
-7. Svi maintenance intervali su u maintenance_intervals.csv.
-8. OTHER_MAINTENANCE i OTHER_REPAIR odlaze.
-9. Keyword dijagnostika odlazi.
-10. Strategy prelazi na Mileage / Time / Combined maintenance.
-11. Problemi postaju opis + ručni repair + Procijeni cijenu.
-12. Maintenance screen prikazuje samo tracked radove i ima inline estimator.
-13. Service editor odmah prima stvarno plaćenu cijenu i ne prikazuje procijenjenu.
-14. Vehicle picker je Marka -> Model -> Godina -> Varijanta.
-15. Identitet postojećeg vozila se ne uređuje; samo kilometraža.
-16. Registration/onboarding ide u isti JFrame.
-17. Sidebar nema refresh, DB ID ni NOOP; ima datum i automatski refresh kilometraže.
-18. Dashboard ima 4 bordered Ikonli kartice i jedno sljedeće održavanje.
-19. User-visible hrvatski tekst koristi kvačice.
+1. Aplikacija je za privatnog vlasnika vozila, ne za auto-servis.
+2. Bilješka je samo opis onoga što korisnik primjećuje + gruba kategorija + status.
+3. Bilješka nema suggested repair, estimated cost, score ni automatsku dijagnostiku.
+4. Informativne cijene postoje samo u zasebnom Katalogu.
+5. Katalog ima 120 standardnih zahvata i search/filter.
+6. Procjena je min-max raspon, ne jedna "točna" cijena.
+7. Postoji 5 širokih cjenovnih klasa: ECONOMY, STANDARD, PREMIUM, PERFORMANCE, EXOTIC.
+8. Svaki WorkDefinition ima svih 5 WorkPriceRange zapisa - ukupno 600.
+9. VehicleVariant pamti samo svoju cjenovnu klasu; nema runtime per-variant rules matrice.
+10. Nema posebnog EV applicability enginea; katalog ostaje jednostavan i širok.
+11. Maintenance interval je na WorkDefinitionu i može biti km, mjeseci ili oba.
+12. Strategy je isključivo Mileage/Time/Combined maintenance calculation.
+13. Održavanje se prati samo kada postoji stvarni ServiceItem u povijesti.
+14. Stvarna cijena postoji samo kao ServiceItem.actualPrice.
+15. Procjena iz Kataloga nikad se automatski ne kopira u actualPrice.
+16. Servis može zatvoriti nula, jednu ili više aktivnih bilješki.
+17. Dashboard prikazuje stvarni total, sljedeće praćeno održavanje, aktivne bilješke i kilometražu.
+18. Vehicle picker je Marka -> Model -> Godina -> Varijanta.
+19. Identitet postojećeg vozila se ne uređuje; korisnik ažurira kilometražu.
+20. Nema računa/privitaka ni slika vozila u finalnom studentskom prolazu.
+21. Runtime koristi Swing + JPA EntityManager + Hibernate + Azure SQL, bez Springa.
+22. Kod ostaje eksplicitan i početnički čitljiv, u stilu profesorovih vježbi.
