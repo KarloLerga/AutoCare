@@ -6,7 +6,7 @@ import hr.unizd.autocare.repository.ProblemRepository;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 
-/** JPA upiti za ručno unesene probleme. */
+/** JPA pristup bilješkama vozila. */
 public final class JpaProblemRepository implements ProblemRepository {
   private final EntityManager entityManager;
 
@@ -24,8 +24,7 @@ public final class JpaProblemRepository implements ProblemRepository {
     List<Problem> problems =
         entityManager
             .createQuery(
-                "select problem from Problem problem "
-                    + "left join fetch problem.resolvedByService where problem.id=:problemId "
+                "select problem from Problem problem where problem.id=:problemId "
                     + "and problem.vehicle.owner.id=:ownerId",
                 Problem.class)
             .setParameter("problemId", problemId)

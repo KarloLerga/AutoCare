@@ -61,10 +61,6 @@ public final class VehiclesView extends JPanel {
     }
   }
 
-  public List<VehicleRow> rows() {
-    return vehicles;
-  }
-
   public VehicleRow selected() {
     int selectedRow = table.getSelectedRow();
     if (selectedRow < 0) {

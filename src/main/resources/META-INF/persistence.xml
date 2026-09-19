@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence xmlns="https://jakarta.ee/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_2.xsd" version="3.2">
- <persistence-unit name="autocare" transaction-type="RESOURCE_LOCAL">
-  <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-  <class>hr.unizd.autocare.domain.AppUser</class>
-  <class>hr.unizd.autocare.domain.VehicleVariant</class>
-  <class>hr.unizd.autocare.domain.Vehicle</class>
-  <class>hr.unizd.autocare.domain.WorkDefinition</class>
-  <class>hr.unizd.autocare.domain.WorkPriceRange</class>
-  <class>hr.unizd.autocare.domain.ServiceRecord</class>
-  <class>hr.unizd.autocare.domain.ServiceItem</class>
-  <class>hr.unizd.autocare.domain.Problem</class>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_2.xsd"
+             version="3.2">
+  <persistence-unit name="autocare" transaction-type="RESOURCE_LOCAL">
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-  <exclude-unlisted-classes>true</exclude-unlisted-classes>
-  <properties>
-   <property name="jakarta.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
-   <property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect"/>
-   <property name="hibernate.default_schema" value="dbo"/>
-   <property name="hibernate.use_nationalized_character_data" value="true"/>
-   <property name="hibernate.physical_naming_strategy"
-             value="org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy"/>
-   <property name="hibernate.hbm2ddl.auto" value="none"/>
-   <property name="hibernate.hbm2ddl.halt_on_error" value="true"/>
-   <property name="hibernate.show_sql" value="false"/>
-   <property name="hibernate.jdbc.time_zone" value="UTC"/>
-   <property name="hibernate.connection.pool_size" value="2"/>
-  </properties>
- </persistence-unit>
+    <class>hr.unizd.autocare.domain.AppUser</class>
+    <class>hr.unizd.autocare.domain.VehicleVariant</class>
+    <class>hr.unizd.autocare.domain.Vehicle</class>
+    <class>hr.unizd.autocare.domain.WorkDefinition</class>
+    <class>hr.unizd.autocare.domain.WorkPriceRange</class>
+    <class>hr.unizd.autocare.domain.ServiceRecord</class>
+    <class>hr.unizd.autocare.domain.ServiceItem</class>
+    <class>hr.unizd.autocare.domain.Problem</class>
+
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+
+    <properties>
+      <property name="jakarta.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect"/>
+      <property name="hibernate.default_schema" value="dbo"/>
+      <property name="hibernate.use_nationalized_character_data" value="true"/>
+      <property name="hibernate.physical_naming_strategy"
+                value="org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy"/>
+      <property name="hibernate.hbm2ddl.auto" value="none"/>
+    </properties>
+  </persistence-unit>
 </persistence>

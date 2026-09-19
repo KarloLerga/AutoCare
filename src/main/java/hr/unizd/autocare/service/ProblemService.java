@@ -67,6 +67,7 @@ public final class ProblemService {
       entityManager.close();
     }
   }
+
   public void close(long ownerId, long problemId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();
@@ -87,5 +88,4 @@ public final class ProblemService {
       entityManager.close();
     }
   }
-
 }

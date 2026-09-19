@@ -191,10 +191,6 @@ public final class VehiclesController {
     if (vehicle == null) {
       return;
     }
-    if (frame.vehicles.rows().size() <= 1) {
-      Ui.info(frame, "Posljednje vozilo nije moguće obrisati.");
-      return;
-    }
     if (!Ui.confirm(frame, "Trajno obrisati vozilo, njegove servise i bilješke?")) {
       return;
     }

@@ -3,7 +3,7 @@ package hr.unizd.autocare.repository;
 import hr.unizd.autocare.domain.Vehicle;
 import java.util.List;
 
-/** Transakcijski repository; sam ne otvara niti zatvara EntityManager. */
+/** Dohvat i spremanje korisnikovih vozila. */
 public interface VehicleRepository {
   Vehicle findForOwner(long ownerId, long vehicleId);
 

@@ -5,7 +5,7 @@ import jakarta.persistence.Persistence;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Otvara jednu tvornicu EntityManagera za zivotni vijek aplikacije. */
+/** Otvara jednu tvornicu EntityManagera za životni vijek aplikacije. */
 public final class DatabaseConfig {
 
   private DatabaseConfig() {}
@@ -22,8 +22,7 @@ public final class DatabaseConfig {
             + host
             + ":1433;databaseName="
             + database
-            + ";encrypt=true;trustServerCertificate=false"
-            + ";loginTimeout=60;socketTimeout=120000;applicationName=AutoCare;";
+            + ";encrypt=true;trustServerCertificate=false;";
 
     properties.put("jakarta.persistence.jdbc.url", jdbcUrl);
     properties.put("jakarta.persistence.jdbc.user", username);

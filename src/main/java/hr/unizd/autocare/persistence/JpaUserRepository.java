@@ -5,7 +5,7 @@ import hr.unizd.autocare.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 
-/** JPA upiti koriste vezane parametre i postojeci EntityManager. */
+/** JPA pristup korisnicima. */
 public final class JpaUserRepository implements UserRepository {
   private final EntityManager entityManager;
 

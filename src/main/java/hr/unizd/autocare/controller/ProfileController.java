@@ -1,8 +1,6 @@
 package hr.unizd.autocare.controller;
 
 import hr.unizd.autocare.app.Session;
-import hr.unizd.autocare.event.AppEvent;
-import hr.unizd.autocare.event.AppEvents;
 import hr.unizd.autocare.model.Data.Account;
 import hr.unizd.autocare.service.AuthService;
 import hr.unizd.autocare.view.MainFrame;
@@ -10,22 +8,17 @@ import hr.unizd.autocare.view.components.Ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/** Uredjivanje osnovnih podataka profila. */
+/** Uređivanje osnovnih podataka profila. */
 public final class ProfileController {
   private final MainFrame frame;
   private final AuthService authService;
   private final Session session;
-  private final AppEvents events;
 
   public ProfileController(
-      MainFrame frame,
-      AuthService authService,
-      Session session,
-      AppEvents events) {
+      MainFrame frame, AuthService authService, Session session) {
     this.frame = frame;
     this.authService = authService;
     this.session = session;
-    this.events = events;
 
     frame.profile.save.addActionListener(
         new ActionListener() {
@@ -58,7 +51,7 @@ public final class ProfileController {
           frame.profile.name.getText(),
           frame.profile.email.getText());
 
-      events.publish(AppEvent.PROFILE_CHANGED);
+      load();
     } catch (RuntimeException exception) {
       Ui.error(frame.profile, exception);
     }

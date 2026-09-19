@@ -14,11 +14,8 @@ import hr.unizd.autocare.service.ServiceRecordService;
 import hr.unizd.autocare.service.VehicleService;
 import hr.unizd.autocare.view.MainFrame;
 import hr.unizd.autocare.view.components.Ui;
-import jakarta.persistence.EntityManagerFactory;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.JButton;
@@ -29,8 +26,6 @@ public final class MainController implements AppListener {
   private final Session session;
   private final VehicleService vehicleService;
   private final DashboardService dashboardService;
-  private final AppEvents events;
-  private final EntityManagerFactory entityManagerFactory;
   private final VehiclesController vehicles;
   private final CatalogController catalog;
   private final ServicesController services;
@@ -48,14 +43,11 @@ public final class MainController implements AppListener {
       MaintenanceService maintenanceService,
       ProblemService problemService,
       DashboardService dashboardService,
-      AppEvents events,
-      EntityManagerFactory entityManagerFactory) {
+      AppEvents events) {
     this.frame = frame;
     this.session = session;
     this.vehicleService = vehicleService;
     this.dashboardService = dashboardService;
-    this.events = events;
-    this.entityManagerFactory = entityManagerFactory;
 
     vehicles = new VehiclesController(frame, vehicleService, catalogService, session, events);
     services =
@@ -63,8 +55,8 @@ public final class MainController implements AppListener {
             frame, serviceRecordService, catalogService, problemService, session, events);
     maintenance = new MaintenanceController(frame, maintenanceService, session);
     catalog = new CatalogController(frame, catalogService, session);
-    problems = new ProblemsController(frame, problemService, session, events);
-    profile = new ProfileController(frame, authService, session, events);
+    problems = new ProblemsController(frame, problemService, session);
+    profile = new ProfileController(frame, authService, session);
 
     new AuthController(
         frame,
@@ -97,13 +89,6 @@ public final class MainController implements AppListener {
           @Override
           public void actionPerformed(ActionEvent event) {
             logout();
-          }
-        });
-    frame.addWindowListener(
-        new WindowAdapter() {
-          @Override
-          public void windowClosing(WindowEvent event) {
-            close();
           }
         });
   }
@@ -171,10 +156,8 @@ public final class MainController implements AppListener {
   public void onChange(AppEvent event) {
     if (event == AppEvent.ACTIVE_VEHICLE_CHANGED) {
       refreshContext(true);
-    } else if (event == AppEvent.VEHICLE_CHANGED || event == AppEvent.SERVICE_SAVED) {
-      refreshContext(false);
     } else {
-      loadVisible();
+      refreshContext(false);
     }
   }
 
@@ -190,12 +173,5 @@ public final class MainController implements AppListener {
     frame.catalog.setRows(new ArrayList<>());
     frame.problems.setRows(new ArrayList<>());
     frame.auth();
-  }
-
-  private void close() {
-    events.remove(this);
-    session.logout();
-    frame.dispose();
-    entityManagerFactory.close();
   }
 }

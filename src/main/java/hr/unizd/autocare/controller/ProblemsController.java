@@ -1,8 +1,6 @@
 package hr.unizd.autocare.controller;
 
 import hr.unizd.autocare.app.Session;
-import hr.unizd.autocare.event.AppEvent;
-import hr.unizd.autocare.event.AppEvents;
 import hr.unizd.autocare.model.Data.ProblemRow;
 import hr.unizd.autocare.service.ProblemService;
 import hr.unizd.autocare.view.MainFrame;
@@ -15,17 +13,12 @@ public final class ProblemsController {
   private final MainFrame frame;
   private final ProblemService problemService;
   private final Session session;
-  private final AppEvents events;
 
   public ProblemsController(
-      MainFrame frame,
-      ProblemService problemService,
-      Session session,
-      AppEvents events) {
+      MainFrame frame, ProblemService problemService, Session session) {
     this.frame = frame;
     this.problemService = problemService;
     this.session = session;
-    this.events = events;
 
     frame.problems.add.addActionListener(
         new ActionListener() {
@@ -61,7 +54,7 @@ public final class ProblemsController {
           frame.problems.description.getText(),
           frame.problems.selectedCategory());
       frame.problems.clearEditor();
-      events.publish(AppEvent.PROBLEM_SAVED);
+      load();
     } catch (RuntimeException exception) {
       Ui.error(frame.problems, exception);
     }
@@ -79,7 +72,7 @@ public final class ProblemsController {
     }
     try {
       problemService.close(session.getOwnerId(), selected.getId());
-      events.publish(AppEvent.PROBLEM_SAVED);
+      load();
     } catch (RuntimeException exception) {
       Ui.error(frame.problems, exception);
     }

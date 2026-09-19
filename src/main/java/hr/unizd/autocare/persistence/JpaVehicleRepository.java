@@ -5,7 +5,7 @@ import hr.unizd.autocare.repository.VehicleRepository;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 
-/** JPA upiti koriste vezane parametre i postojeci EntityManager. */
+/** JPA pristup korisnikovim vozilima. */
 public final class JpaVehicleRepository implements VehicleRepository {
   private final EntityManager entityManager;
 

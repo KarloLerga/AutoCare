@@ -8,7 +8,7 @@ import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.util.List;
 
-/** JPA upiti koriste vezane parametre i postojeci EntityManager. */
+/** JPA upiti koriste vezane parametre i postojeći EntityManager. */
 public final class JpaServiceRecordRepository implements ServiceRecordRepository {
   private final EntityManager entityManager;
 

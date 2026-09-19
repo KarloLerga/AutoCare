@@ -13,6 +13,8 @@ import hr.unizd.autocare.service.VehicleService;
 import hr.unizd.autocare.view.MainFrame;
 import jakarta.persistence.EntityManagerFactory;
 import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -62,9 +64,9 @@ public final class Main {
           maintenanceService,
           problemService,
           dashboardService,
-          events,
-          entityManagerFactory);
+          events);
 
+      closeDatabaseWhenWindowCloses(frame, entityManagerFactory);
       frame.setVisible(true);
     } catch (RuntimeException exception) {
       if (entityManagerFactory != null) {
@@ -73,10 +75,22 @@ public final class Main {
 
       JOptionPane.showMessageDialog(
           null,
-          "Povezivanje nije uspjelo. Provjerite mrezu i vanjsku konfiguraciju baze.",
+          "Povezivanje nije uspjelo. Provjerite mrežu i vanjsku konfiguraciju baze.",
           "AutoCare",
           JOptionPane.ERROR_MESSAGE);
     }
+  }
+
+  private static void closeDatabaseWhenWindowCloses(
+      MainFrame frame, EntityManagerFactory entityManagerFactory) {
+    frame.addWindowListener(
+        new WindowAdapter() {
+          @Override
+          public void windowClosing(WindowEvent event) {
+            frame.dispose();
+            entityManagerFactory.close();
+          }
+        });
   }
 
   private static void initializeLookAndFeel() {
