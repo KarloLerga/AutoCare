@@ -32,6 +32,7 @@ public final class MainController implements AppListener {
   private final AppEvents events;
   private final EntityManagerFactory entityManagerFactory;
   private final VehiclesController vehicles;
+  private final CatalogController catalog;
   private final ServicesController services;
   private final MaintenanceController maintenance;
   private final ProblemsController problems;
@@ -60,8 +61,9 @@ public final class MainController implements AppListener {
     services =
         new ServicesController(
             frame, serviceRecordService, catalogService, problemService, session, events);
-    maintenance = new MaintenanceController(frame, maintenanceService, catalogService, session);
-    problems = new ProblemsController(frame, problemService, catalogService, session, events);
+    maintenance = new MaintenanceController(frame, maintenanceService, session);
+    catalog = new CatalogController(frame, catalogService, session);
+    problems = new ProblemsController(frame, problemService, session, events);
     profile = new ProfileController(frame, authService, session, events);
 
     new AuthController(
@@ -147,7 +149,9 @@ public final class MainController implements AppListener {
       services.load();
     } else if (page.equals("Održavanje")) {
       maintenance.load();
-    } else if (page.equals("Problemi")) {
+    } else if (page.equals("Katalog")) {
+      catalog.load();
+    } else if (page.equals("Bilješke")) {
       problems.load();
     } else if (page.equals("Profil")) {
       profile.load();
@@ -181,7 +185,9 @@ public final class MainController implements AppListener {
     frame.vehicles.setRows(new ArrayList<>());
     frame.services.setRows(new ArrayList<>());
     frame.maintenance.setRows(new ArrayList<>());
-    frame.maintenance.setAvailableWorks(new ArrayList<>());
+    frame.catalog.search.setText("");
+    frame.catalog.category.setSelectedIndex(0);
+    frame.catalog.setRows(new ArrayList<>());
     frame.problems.setRows(new ArrayList<>());
     frame.auth();
   }

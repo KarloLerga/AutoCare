@@ -8,7 +8,7 @@ import jakarta.persistence.ManyToOne;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-/** Jedan izvrseni zahvat; actualPrice je stvarno placeno, a ne procjena. */
+/** Jedan izvršeni zahvat; actualPrice je stvarno plaćeno, a ne procjena. */
 @Entity
 public class ServiceItem {
   @Id

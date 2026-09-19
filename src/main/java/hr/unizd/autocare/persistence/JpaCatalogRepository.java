@@ -1,9 +1,10 @@
 package hr.unizd.autocare.persistence;
 
+import hr.unizd.autocare.domain.VehiclePriceClass;
 import hr.unizd.autocare.domain.VehicleVariant;
-import hr.unizd.autocare.domain.VehicleWorkRule;
 import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.domain.WorkDefinition;
+import hr.unizd.autocare.domain.WorkPriceRange;
 import hr.unizd.autocare.repository.CatalogRepository;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
@@ -50,13 +51,11 @@ public final class JpaCatalogRepository implements CatalogRepository {
             .setParameter("make", make)
             .setParameter("model", model)
             .getResultList();
+
     TreeSet<Integer> years = new TreeSet<>();
     int currentYear = LocalDate.now().getYear();
     for (VehicleVariant variant : variants) {
-      int to =
-          variant.getYearTo() == null
-              ? currentYear
-              : Math.min(currentYear, variant.getYearTo());
+      int to = variant.getYearTo() == null ? currentYear : Math.min(currentYear, variant.getYearTo());
       for (int year = variant.getYearFrom(); year <= to; year++) {
         years.add(year);
       }
@@ -100,28 +99,14 @@ public final class JpaCatalogRepository implements CatalogRepository {
   }
 
   @Override
-  public VehicleWorkRule findRule(long variantId, long workId) {
-    List<VehicleWorkRule> rules =
-        entityManager
-            .createQuery(
-                "select rule from VehicleWorkRule rule join fetch rule.work "
-                    + "where rule.variant.id=:variantId and rule.work.id=:workId",
-                VehicleWorkRule.class)
-            .setParameter("variantId", variantId)
-            .setParameter("workId", workId)
-            .setMaxResults(1)
-            .getResultList();
-    return rules.isEmpty() ? null : rules.get(0);
-  }
-
-  @Override
-  public List<VehicleWorkRule> rules(long variantId) {
+  public List<WorkPriceRange> priceRanges(VehiclePriceClass priceClass) {
     return entityManager
         .createQuery(
-            "select rule from VehicleWorkRule rule join fetch rule.work "
-                + "where rule.variant.id=:variantId order by rule.work.category,rule.work.name",
-            VehicleWorkRule.class)
-        .setParameter("variantId", variantId)
+            "select price from WorkPriceRange price join fetch price.work "
+                + "where price.priceClass=:priceClass "
+                + "order by price.work.catalogCategory,price.work.name",
+            WorkPriceRange.class)
+        .setParameter("priceClass", priceClass)
         .getResultList();
   }
 }

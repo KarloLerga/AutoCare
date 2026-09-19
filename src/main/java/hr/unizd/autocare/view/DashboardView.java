@@ -21,7 +21,7 @@ import org.kordamp.ikonli.swing.FontIcon;
 public final class DashboardView extends JPanel {
   private final JLabel total = Ui.hint("-");
   private final JLabel maintenance = Ui.hint("-");
-  private final JLabel problems = Ui.hint("-");
+  private final JLabel notes = Ui.hint("-");
   private final JLabel mileage = Ui.hint("-");
 
   public DashboardView() {
@@ -32,10 +32,10 @@ public final class DashboardView extends JPanel {
     grid.setOpaque(false);
     addCard(grid, "Ukupni stvarni troškovi", total, FontAwesomeSolid.EURO_SIGN);
     addCard(grid, "Sljedeće održavanje", maintenance, FontAwesomeSolid.WRENCH);
-    addCard(grid, "Otvoreni problemi", problems, FontAwesomeSolid.EXCLAMATION_TRIANGLE);
+    addCard(grid, "Aktivne bilješke", notes, FontAwesomeSolid.EXCLAMATION_TRIANGLE);
     addCard(grid, "Trenutna kilometraža", mileage, FontAwesomeSolid.TACHOMETER_ALT);
     add(grid, BorderLayout.CENTER);
-    add(Ui.hint("Procjene su informativne i nisu račun ni dijagnoza mehaničara."), BorderLayout.SOUTH);
+    add(Ui.hint("Procjene u Katalogu su informativne; stvarni trošak dolazi iz servisne evidencije."), BorderLayout.SOUTH);
   }
 
   private static void addCard(
@@ -80,7 +80,7 @@ public final class DashboardView extends JPanel {
               + remaining
               + "</div></html>");
     }
-    problems.setText(Long.toString(dashboard.getOpenProblems()));
+    notes.setText(Long.toString(dashboard.getActiveNotes()));
     mileage.setText(Ui.km(dashboard.getVehicle().getMileage()));
   }
 

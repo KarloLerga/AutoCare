@@ -195,7 +195,7 @@ public final class VehiclesController {
       Ui.info(frame, "Posljednje vozilo nije moguće obrisati.");
       return;
     }
-    if (!Ui.confirm(frame, "Trajno obrisati vozilo, njegove servise i probleme?")) {
+    if (!Ui.confirm(frame, "Trajno obrisati vozilo, njegove servise i bilješke?")) {
       return;
     }
     try {

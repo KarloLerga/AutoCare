@@ -1,12 +1,13 @@
 package hr.unizd.autocare.repository;
 
+import hr.unizd.autocare.domain.VehiclePriceClass;
 import hr.unizd.autocare.domain.VehicleVariant;
-import hr.unizd.autocare.domain.VehicleWorkRule;
 import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.domain.WorkDefinition;
+import hr.unizd.autocare.domain.WorkPriceRange;
 import java.util.List;
 
-/** Transakcijski repository; sam ne otvara niti zatvara EntityManager. */
+/** Repository za katalog vozila, standardnih zahvata i informativnih cijena. */
 public interface CatalogRepository {
   List<String> makes();
 
@@ -22,7 +23,5 @@ public interface CatalogRepository {
 
   WorkDefinition findWork(long id);
 
-  VehicleWorkRule findRule(long variantId, long workId);
-
-  List<VehicleWorkRule> rules(long variantId);
+  List<WorkPriceRange> priceRanges(VehiclePriceClass priceClass);
 }

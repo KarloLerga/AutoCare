@@ -7,11 +7,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-/** Ručno uneseni problem vozila i konkretna informativna procjena popravka. */
+/** Korisnikova bilješka o onome što primjećuje na vozilu. */
 @Entity
 public class Problem {
   @Id
@@ -24,14 +23,12 @@ public class Problem {
   private String description;
 
   @Enumerated(EnumType.STRING)
+  private ProblemCategory category;
+
+  @Enumerated(EnumType.STRING)
   private ProblemStatus status;
 
   private LocalDateTime createdAt;
-
-  @ManyToOne
-  private WorkDefinition suggestedRepair;
-
-  private BigDecimal estimatedCost;
 
   @ManyToOne
   private ServiceRecord resolvedByService;
@@ -41,26 +38,25 @@ public class Problem {
   public Problem(
       Vehicle vehicle,
       String description,
-      LocalDateTime createdAt,
-      WorkDefinition suggestedRepair,
-      BigDecimal estimatedCost) {
+      ProblemCategory category,
+      LocalDateTime createdAt) {
     this.vehicle = Objects.requireNonNull(vehicle);
-    this.description = Checks.text(description, 2000, "Opis problema");
+    this.description = Checks.text(description, 2000, "Bilješka");
+    this.category = category == null ? ProblemCategory.OTHER : category;
     this.createdAt = Objects.requireNonNull(createdAt);
     this.status = ProblemStatus.OPEN;
-    if (suggestedRepair != null && suggestedRepair.getCategory() != WorkCategory.REPAIR) {
-      throw new IllegalArgumentException("Odabrani rad mora biti popravak.");
+  }
+
+  public void close() {
+    if (status != ProblemStatus.OPEN) {
+      throw new IllegalArgumentException("Bilješka je već zatvorena.");
     }
-    if (suggestedRepair == null && estimatedCost != null) {
-      throw new IllegalArgumentException("Procjena pripada odabranom popravku.");
-    }
-    this.suggestedRepair = suggestedRepair;
-    this.estimatedCost = Checks.money(estimatedCost, true);
+    status = ProblemStatus.RESOLVED;
   }
 
   public void resolve(ServiceRecord serviceRecord) {
     if (status != ProblemStatus.OPEN) {
-      throw new IllegalArgumentException("Problem je već riješen.");
+      throw new IllegalArgumentException("Bilješka je već zatvorena.");
     }
     if (!vehicle.getId().equals(serviceRecord.getVehicle().getId())) {
       throw new IllegalArgumentException("Servis pripada drugom vozilu.");
@@ -81,20 +77,16 @@ public class Problem {
     return description;
   }
 
+  public ProblemCategory getCategory() {
+    return category;
+  }
+
   public ProblemStatus getStatus() {
     return status;
   }
 
   public LocalDateTime getCreatedAt() {
     return createdAt;
-  }
-
-  public WorkDefinition getSuggestedRepair() {
-    return suggestedRepair;
-  }
-
-  public BigDecimal getEstimatedCost() {
-    return estimatedCost;
   }
 
   public ServiceRecord getResolvedByService() {

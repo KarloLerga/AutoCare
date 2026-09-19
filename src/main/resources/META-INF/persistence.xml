@@ -6,7 +6,7 @@
   <class>hr.unizd.autocare.domain.VehicleVariant</class>
   <class>hr.unizd.autocare.domain.Vehicle</class>
   <class>hr.unizd.autocare.domain.WorkDefinition</class>
-  <class>hr.unizd.autocare.domain.VehicleWorkRule</class>
+  <class>hr.unizd.autocare.domain.WorkPriceRange</class>
   <class>hr.unizd.autocare.domain.ServiceRecord</class>
   <class>hr.unizd.autocare.domain.ServiceItem</class>
   <class>hr.unizd.autocare.domain.Problem</class>

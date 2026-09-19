@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/** Servis i njegove stavke cine jednu cjelinu za spremanje. */
+/** Servis i njegove stavke čine jednu cjelinu za spremanje. */
 @Entity
 public class ServiceRecord {
   @Id
@@ -43,7 +43,7 @@ public class ServiceRecord {
     Objects.requireNonNull(work);
     for (ServiceItem serviceItem : items) {
       if (Objects.equals(serviceItem.getWork().getCode(), work.getCode())) {
-        throw new IllegalArgumentException("Rad je vec dodan u servis.");
+        throw new IllegalArgumentException("Rad je već dodan u servis.");
       }
     }
     items.add(new ServiceItem(this, work, actualPrice));

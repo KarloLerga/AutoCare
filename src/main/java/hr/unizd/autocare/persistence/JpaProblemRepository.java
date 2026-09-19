@@ -24,7 +24,7 @@ public final class JpaProblemRepository implements ProblemRepository {
     List<Problem> problems =
         entityManager
             .createQuery(
-                "select problem from Problem problem left join fetch problem.suggestedRepair "
+                "select problem from Problem problem "
                     + "left join fetch problem.resolvedByService where problem.id=:problemId "
                     + "and problem.vehicle.owner.id=:ownerId",
                 Problem.class)
@@ -39,7 +39,7 @@ public final class JpaProblemRepository implements ProblemRepository {
   public List<Problem> list(long ownerId, long vehicleId) {
     return entityManager
         .createQuery(
-            "select problem from Problem problem left join fetch problem.suggestedRepair "
+            "select problem from Problem problem "
                 + "where problem.vehicle.id=:vehicleId "
                 + "and problem.vehicle.owner.id=:ownerId "
                 + "order by case when problem.status=:openStatus then 0 else 1 end, "
