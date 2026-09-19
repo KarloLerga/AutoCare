@@ -2,7 +2,6 @@ package hr.unizd.autocare.controller;
 
 import hr.unizd.autocare.event.AppEvent;
 import hr.unizd.autocare.event.AppEvents;
-import hr.unizd.autocare.model.Data.VehicleInput;
 import hr.unizd.autocare.model.Data.VehicleRow;
 import hr.unizd.autocare.service.CatalogService;
 import hr.unizd.autocare.service.VehicleService;
@@ -101,6 +100,7 @@ public final class VehiclesController {
     root.add(form, BorderLayout.CENTER);
     root.add(Ui.actions(cancel, save), BorderLayout.SOUTH);
     dialog.setContentPane(root);
+    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     dialog.setSize(820, 440);
     dialog.setLocationRelativeTo(frame);
     save.addActionListener(
@@ -146,6 +146,7 @@ public final class VehiclesController {
     root.add(form, BorderLayout.CENTER);
     root.add(Ui.actions(cancel, save), BorderLayout.SOUTH);
     dialog.setContentPane(root);
+    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     dialog.pack();
     dialog.setLocationRelativeTo(frame);
     save.addActionListener(

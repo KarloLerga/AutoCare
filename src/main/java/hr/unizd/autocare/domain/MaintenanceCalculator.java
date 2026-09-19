@@ -6,7 +6,7 @@ import hr.unizd.autocare.strategy.MileageMaintenanceStrategy;
 import hr.unizd.autocare.strategy.TimeMaintenanceStrategy;
 import java.time.LocalDate;
 
-/** Kontekst strategije: odabire izračun prema konkretnom intervalu održavanja. */
+/** Odabire strategiju prema vrsti servisnog intervala. */
 public final class MaintenanceCalculator {
   private final MaintenanceStrategy mileageStrategy = new MileageMaintenanceStrategy();
   private final MaintenanceStrategy timeStrategy = new TimeMaintenanceStrategy();

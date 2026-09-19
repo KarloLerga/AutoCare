@@ -35,7 +35,6 @@ public class AppUser {
 
     boolean sameObject = vehicle.getOwner() == this;
     boolean sameId = id != null && id.equals(vehicle.getOwner().getId());
-
     if (!sameObject && !sameId) {
       throw new IllegalArgumentException("Vozilo nije vaše.");
     }

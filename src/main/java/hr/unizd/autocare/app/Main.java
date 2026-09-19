@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-/** Ulaz normalne GUI aplikacije. */
+/** Pokretanje aplikacije. */
 public final class Main {
   private Main() {}
 

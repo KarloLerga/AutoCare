@@ -53,7 +53,8 @@ class ServiceRecordServiceValidationTest {
             null,
             List.of(new ItemInput(1, BigDecimal.ONE)),
             List.of());
-    assertThrows(AppException.class, () -> ServiceRecordService.validate(future, false));
+    assertThrows(
+        IllegalArgumentException.class, () -> ServiceRecordService.validate(future, false));
   }
 
   @Test
@@ -65,7 +66,8 @@ class ServiceRecordServiceValidationTest {
             null,
             List.of(new ItemInput(1, null)),
             List.of(1L));
-    assertThrows(AppException.class, () -> ServiceRecordService.validate(history, true));
+    assertThrows(
+        IllegalArgumentException.class, () -> ServiceRecordService.validate(history, true));
   }
 
   private ServiceInput input(BigDecimal price) {

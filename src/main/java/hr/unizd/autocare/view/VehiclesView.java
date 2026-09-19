@@ -50,13 +50,18 @@ public final class VehiclesView extends JPanel {
     vehicles = new ArrayList<>(values);
     tableModel.setRowCount(0);
     for (VehicleRow vehicle : vehicles) {
+      String active = "";
+      if (vehicle.getActive()) {
+        active = "Da";
+      }
+
       tableModel.addRow(
           new Object[] {
             vehicle.getVariant().getMake() + " " + vehicle.getVariant().getModel(),
             vehicle.getYear(),
             vehicle.getVariant().getEngine(),
             Ui.km(vehicle.getMileage()),
-            vehicle.getActive() ? "Da" : ""
+            active
           });
     }
   }

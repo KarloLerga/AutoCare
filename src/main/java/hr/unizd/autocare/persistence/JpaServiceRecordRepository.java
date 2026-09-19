@@ -8,7 +8,7 @@ import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.util.List;
 
-/** JPA upiti koriste vezane parametre i postojeći EntityManager. */
+/** JPA pristup servisnoj povijesti. */
 public final class JpaServiceRecordRepository implements ServiceRecordRepository {
   private final EntityManager entityManager;
 
@@ -74,21 +74,17 @@ public final class JpaServiceRecordRepository implements ServiceRecordRepository
 
   @Override
   public CostSummary total(long ownerId, long vehicleId) {
-    Object[] values =
+    List<BigDecimal> prices =
         entityManager
             .createQuery(
-                "select sum(serviceItem.actualPrice),count(serviceItem),"
-                    + "count(serviceItem.actualPrice) from ServiceItem serviceItem where "
+                "select serviceItem.actualPrice from ServiceItem serviceItem where "
                     + "serviceItem.serviceRecord.vehicle.owner.id=:ownerId and "
                     + "serviceItem.serviceRecord.vehicle.id=:vehicleId",
-                Object[].class)
+                BigDecimal.class)
             .setParameter("ownerId", ownerId)
             .setParameter("vehicleId", vehicleId)
-            .getSingleResult();
-    BigDecimal knownAmount = (BigDecimal) values[0];
-    long itemCount = ((Number) values[1]).longValue();
-    long unknownCount = itemCount - ((Number) values[2]).longValue();
-    return new CostSummary(knownAmount, unknownCount);
+            .getResultList();
+    return CostSummary.of(prices);
   }
 
   @Override

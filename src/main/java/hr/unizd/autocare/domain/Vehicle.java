@@ -5,7 +5,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import java.util.Objects;
 
 /** Konkretno vozilo korisnika; trenutna kilometraža ne smije se smanjiti. */
 @Entity
@@ -26,18 +25,20 @@ public class Vehicle {
   protected Vehicle() {}
 
   public Vehicle(AppUser owner, VehicleVariant variant, int productionYear, int currentMileage) {
-    this.owner = Objects.requireNonNull(owner);
-    setIdentity(variant, productionYear);
-    this.currentMileage = Checks.mileage(currentMileage);
-  }
-
-  private void setIdentity(VehicleVariant variant, int productionYear) {
-    Objects.requireNonNull(variant);
+    if (owner == null) {
+      throw new IllegalArgumentException("Korisnik je obavezan.");
+    }
+    if (variant == null) {
+      throw new IllegalArgumentException("Varijanta vozila je obavezna.");
+    }
     if (!variant.covers(productionYear)) {
       throw new IllegalArgumentException("Godina nije u rasponu varijante.");
     }
+
+    this.owner = owner;
     this.variant = variant;
     this.productionYear = productionYear;
+    this.currentMileage = Checks.mileage(currentMileage);
   }
 
   public void updateMileage(int mileage) {

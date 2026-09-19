@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /** Servis i njegove stavke čine jednu cjelinu za spremanje. */
 @Entity
@@ -33,19 +32,30 @@ public class ServiceRecord {
   protected ServiceRecord() {}
 
   public ServiceRecord(Vehicle vehicle, LocalDate serviceDate, int mileage, String note) {
-    this.vehicle = Objects.requireNonNull(vehicle);
-    this.serviceDate = Objects.requireNonNull(serviceDate);
+    if (vehicle == null) {
+      throw new IllegalArgumentException("Vozilo je obavezno.");
+    }
+    if (serviceDate == null) {
+      throw new IllegalArgumentException("Datum servisa je obavezan.");
+    }
+
+    this.vehicle = vehicle;
+    this.serviceDate = serviceDate;
     this.mileage = Checks.mileage(mileage);
     this.note = Checks.optional(note, 2000, "Napomena");
   }
 
   public void addItem(WorkDefinition work, BigDecimal actualPrice) {
-    Objects.requireNonNull(work);
+    if (work == null) {
+      throw new IllegalArgumentException("Rad je obavezan.");
+    }
+
     for (ServiceItem serviceItem : items) {
-      if (Objects.equals(serviceItem.getWork().getCode(), work.getCode())) {
+      if (serviceItem.getWork().getCode().equals(work.getCode())) {
         throw new IllegalArgumentException("Rad je već dodan u servis.");
       }
     }
+
     items.add(new ServiceItem(this, work, actualPrice));
   }
 

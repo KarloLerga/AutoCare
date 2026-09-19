@@ -103,8 +103,7 @@ public final class ServicesController {
 
   private List<WorkRow> loadEditorWorks(long ownerId, long vehicleId) {
     List<WorkRow> works =
-        new ArrayList<>(
-            catalogService.works(ownerId, vehicleId, WorkCategory.MAINTENANCE));
+        new ArrayList<>(catalogService.works(ownerId, vehicleId, WorkCategory.MAINTENANCE));
     works.addAll(catalogService.works(ownerId, vehicleId, WorkCategory.REPAIR));
     return works;
   }

@@ -1,6 +1,7 @@
 package hr.unizd.autocare.service;
 
 import hr.unizd.autocare.domain.MaintenanceStatus;
+import hr.unizd.autocare.domain.Vehicle;
 import hr.unizd.autocare.model.Data.Dashboard;
 import hr.unizd.autocare.model.Data.MaintenanceRow;
 import hr.unizd.autocare.persistence.JpaCatalogRepository;
@@ -25,15 +26,19 @@ public final class DashboardService {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
       VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
-      hr.unizd.autocare.domain.Vehicle vehicle =
-          vehicleRepository.findForOwner(ownerId, vehicleId);
+      JpaCatalogRepository catalogRepository = new JpaCatalogRepository(entityManager);
+      JpaServiceRecordRepository serviceRecordRepository =
+          new JpaServiceRecordRepository(entityManager);
+      JpaProblemRepository problemRepository = new JpaProblemRepository(entityManager);
+
+      Vehicle vehicle = vehicleRepository.findForOwner(ownerId, vehicleId);
       if (vehicle == null) {
-        throw new AppException("Vozilo nije pronađeno.");
+        throw new IllegalArgumentException("Vozilo nije pronađeno.");
       }
       List<MaintenanceRow> maintenance =
           MaintenanceService.calculate(
-              new JpaCatalogRepository(entityManager),
-              new JpaServiceRecordRepository(entityManager),
+              catalogRepository,
+              serviceRecordRepository,
               ownerId,
               vehicle);
       MaintenanceRow next = null;
@@ -44,8 +49,8 @@ public final class DashboardService {
       }
       return new Dashboard(
           Mapping.vehicle(vehicle, vehicleId),
-          new JpaServiceRecordRepository(entityManager).total(ownerId, vehicleId),
-          new JpaProblemRepository(entityManager).openCount(ownerId, vehicleId),
+          serviceRecordRepository.total(ownerId, vehicleId),
+          problemRepository.openCount(ownerId, vehicleId),
           next);
     } finally {
       entityManager.close();

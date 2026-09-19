@@ -3,26 +3,32 @@ package hr.unizd.autocare.domain;
 import java.math.BigDecimal;
 import java.util.Collection;
 
-/** Poznati zbroj i broj nepoznatih cijena. Nepoznato nije nula. */
+/** Poznati zbroj i broj nepoznatih cijena. */
 public final class CostSummary {
   private final BigDecimal knownTotal;
   private final long unknownCount;
 
   public CostSummary(BigDecimal knownTotal, long unknownCount) {
-    this.knownTotal = knownTotal == null ? BigDecimal.ZERO.setScale(2) : knownTotal;
+    if (knownTotal == null) {
+      this.knownTotal = BigDecimal.ZERO.setScale(2);
+    } else {
+      this.knownTotal = knownTotal;
+    }
     this.unknownCount = unknownCount;
   }
 
   public static CostSummary of(Collection<BigDecimal> prices) {
     BigDecimal sum = BigDecimal.ZERO.setScale(2);
     long unknown = 0;
-    for (BigDecimal p : prices) {
-      if (p == null) {
+
+    for (BigDecimal price : prices) {
+      if (price == null) {
         unknown++;
       } else {
-        sum = sum.add(p);
+        sum = sum.add(price);
       }
     }
+
     return new CostSummary(sum, unknown);
   }
 

@@ -42,7 +42,7 @@ public final class AuthService {
       if (user == null
           || user.getPassword() == null
           || !user.getPassword().equals(password)) {
-        throw new AppException("E-mail ili lozinka nisu ispravni.");
+        throw new IllegalArgumentException("E-mail ili lozinka nisu ispravni.");
       }
 
       return Mapping.account(user);
@@ -64,7 +64,7 @@ public final class AuthService {
     if (vehicleInput == null
         || vehicleInput.getYear() < 1886
         || vehicleInput.getYear() > LocalDate.now().getYear()) {
-      throw new AppException("Godina proizvodnje nije valjana.");
+      throw new IllegalArgumentException("Godina proizvodnje nije valjana.");
     }
 
     EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -81,7 +81,7 @@ public final class AuthService {
       ProblemRepository problemRepository = new JpaProblemRepository(entityManager);
 
       if (userRepository.findByEmail(cleanEmail) != null) {
-        throw new AppException("E-mail adresa je već registrirana.");
+        throw new IllegalArgumentException("E-mail adresa je već registrirana.");
       }
 
       AppUser user = new AppUser(cleanName, cleanEmail, cleanPassword);
@@ -90,7 +90,7 @@ public final class AuthService {
       VehicleVariant variant = catalogRepository.findVariant(vehicleInput.getVariantId());
 
       if (variant == null) {
-        throw new AppException("Odaberite postojeću varijantu vozila.");
+        throw new IllegalArgumentException("Odaberite postojeću varijantu vozila.");
       }
 
       Vehicle vehicle =
@@ -100,7 +100,7 @@ public final class AuthService {
 
       for (ServiceInput serviceInput : history) {
         if (serviceInput.getMileage() > vehicleInput.getMileage()) {
-          throw new AppException("Početna povijest ne može imati veću kilometražu od trenutne.");
+          throw new IllegalArgumentException("Početna povijest ne može imati veću kilometražu od trenutne.");
         }
 
         ServiceRecordService.saveInside(
@@ -133,7 +133,7 @@ public final class AuthService {
       AppUser user = userRepository.findById(ownerId);
 
       if (user == null) {
-        throw new AppException("Korisnik nije pronađen.");
+        throw new IllegalArgumentException("Korisnik nije pronađen.");
       }
 
       return Mapping.account(user);
@@ -156,13 +156,13 @@ public final class AuthService {
       AppUser user = userRepository.findById(ownerId);
 
       if (user == null) {
-        throw new AppException("Korisnik nije pronađen.");
+        throw new IllegalArgumentException("Korisnik nije pronađen.");
       }
 
       AppUser otherUser = userRepository.findByEmail(cleanEmail);
 
       if (otherUser != null && !otherUser.getId().equals(ownerId)) {
-        throw new AppException("E-mail adresa je zauzeta.");
+        throw new IllegalArgumentException("E-mail adresa je zauzeta.");
       }
 
       user.changeProfile(cleanName, cleanEmail);

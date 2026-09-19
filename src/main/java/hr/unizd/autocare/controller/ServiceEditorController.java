@@ -1,6 +1,5 @@
 package hr.unizd.autocare.controller;
 
-import hr.unizd.autocare.model.Data.ServiceInput;
 import hr.unizd.autocare.model.Data.WorkRow;
 import hr.unizd.autocare.view.ServiceEditorDialog;
 import hr.unizd.autocare.view.components.Ui;
@@ -9,7 +8,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Povezuje inline izbor vrste rada, rada i stvarno plaćene cijene sa servisnim zapisom. */
+/** Upravlja unosom stavki u novi servis. */
 public final class ServiceEditorController {
   public ServiceEditorController(
       final ServiceEditorDialog view,

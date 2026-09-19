@@ -1,6 +1,7 @@
 package hr.unizd.autocare.view;
 
 import hr.unizd.autocare.domain.CatalogCategory;
+import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.model.Data.CatalogRow;
 import hr.unizd.autocare.view.components.Ui;
 import java.awt.BorderLayout;
@@ -70,7 +71,10 @@ public final class CatalogView extends JPanel {
 
   public CatalogCategory selectedCategory() {
     int index = category.getSelectedIndex();
-    return index <= 0 ? null : CatalogCategory.values()[index - 1];
+    if (index <= 0) {
+      return null;
+    }
+    return CatalogCategory.values()[index - 1];
   }
 
   public void setRows(List<CatalogRow> rows) {
@@ -89,7 +93,7 @@ public final class CatalogView extends JPanel {
   }
 
   private static String interval(CatalogRow row) {
-    if (row.getWorkCategory() == hr.unizd.autocare.domain.WorkCategory.REPAIR) {
+    if (row.getWorkCategory() == WorkCategory.REPAIR) {
       return "-";
     }
     StringBuilder result = new StringBuilder();
@@ -102,6 +106,9 @@ public final class CatalogView extends JPanel {
       }
       result.append(row.getIntervalMonths()).append(" mj.");
     }
-    return result.length() == 0 ? "-" : result.toString();
+    if (result.length() == 0) {
+      return "-";
+    }
+    return result.toString();
   }
 }

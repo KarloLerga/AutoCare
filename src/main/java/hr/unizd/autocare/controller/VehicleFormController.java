@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-/** Kaskadni picker koji pri svakoj promjeni roditelja poništava stare odabire. */
+/** Redom učitava marke, modele, godine i varijante vozila. */
 public final class VehicleFormController {
   private final VehicleForm view;
   private final CatalogService catalogService;
@@ -64,7 +64,11 @@ public final class VehicleFormController {
       view.updating = true;
       view.setMakes(values);
       view.updating = false;
-      view.state.setText(values.isEmpty() ? "Nema kataloga za odabir." : "Odaberite marku.");
+      if (values.isEmpty()) {
+        view.state.setText("Nema kataloga za odabir.");
+      } else {
+        view.state.setText("Odaberite marku.");
+      }
     } catch (RuntimeException exception) {
       view.updating = false;
       Ui.error(view, exception);

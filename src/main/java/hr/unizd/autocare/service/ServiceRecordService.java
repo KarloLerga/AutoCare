@@ -26,7 +26,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Poslovna granica za servis, njegove stavke, kilometražu i riješene bilješke. */
+/** Spremanje i čitanje servisne povijesti. */
 public final class ServiceRecordService {
   private final EntityManagerFactory entityManagerFactory;
 
@@ -49,7 +49,7 @@ public final class ServiceRecordService {
 
       Vehicle vehicle = vehicleRepository.findForOwner(ownerId, vehicleId);
       if (vehicle == null) {
-        throw new AppException("Vozilo nije pronađeno.");
+        throw new IllegalArgumentException("Vozilo nije pronađeno.");
       }
 
       ServiceRecord serviceRecord =
@@ -83,7 +83,7 @@ public final class ServiceRecordService {
     validate(input, historical);
 
     if (input.getDate().getYear() < vehicle.getProductionYear()) {
-      throw new AppException("Servis ne može biti prije godine proizvodnje.");
+      throw new IllegalArgumentException("Servis ne može biti prije godine proizvodnje.");
     }
 
     ServiceRecord serviceRecord =
@@ -92,7 +92,7 @@ public final class ServiceRecordService {
     for (ItemInput itemInput : input.getItems()) {
       WorkDefinition work = catalogRepository.findWork(itemInput.getWorkId());
       if (work == null) {
-        throw new AppException("Odabrani rad nije pronađen.");
+        throw new IllegalArgumentException("Odabrani rad nije pronađen.");
       }
 
       serviceRecord.addItem(work, itemInput.getActualPrice());
@@ -116,7 +116,7 @@ public final class ServiceRecordService {
     for (Long problemId : problemIds) {
       Problem problem = problemRepository.findForOwner(vehicle.getOwner().getId(), problemId);
       if (problem == null) {
-        throw new AppException("Bilješka nije pronađena.");
+        throw new IllegalArgumentException("Bilješka nije pronađena.");
       }
 
       problem.resolve(serviceRecord);
@@ -125,18 +125,18 @@ public final class ServiceRecordService {
 
   public static void validate(ServiceInput input, boolean historical) {
     if (input == null || input.getDate() == null) {
-      throw new AppException("Unesite datum servisa.");
+      throw new IllegalArgumentException("Unesite datum servisa.");
     }
 
     if (input.getDate().isAfter(LocalDate.now())) {
-      throw new AppException("Datum servisa ne može biti u budućnosti.");
+      throw new IllegalArgumentException("Datum servisa ne može biti u budućnosti.");
     }
 
     Checks.mileage(input.getMileage());
     Checks.optional(input.getNote(), 2000, "Napomena");
 
     if (input.getItems().isEmpty()) {
-      throw new AppException("Dodajte barem jednu stavku servisa.");
+      throw new IllegalArgumentException("Dodajte barem jednu stavku servisa.");
     }
 
     for (ItemInput itemInput : input.getItems()) {
@@ -144,7 +144,7 @@ public final class ServiceRecordService {
     }
 
     if (historical && !input.getResolvedProblemIds().isEmpty()) {
-      throw new AppException("Početna povijest ne zatvara postojeće bilješke.");
+      throw new IllegalArgumentException("Početna povijest ne zatvara postojeće bilješke.");
     }
   }
 
@@ -157,7 +157,7 @@ public final class ServiceRecordService {
           new JpaServiceRecordRepository(entityManager);
 
       if (vehicleRepository.findForOwner(ownerId, vehicleId) == null) {
-        throw new AppException("Vozilo nije pronađeno.");
+        throw new IllegalArgumentException("Vozilo nije pronađeno.");
       }
 
       List<ServiceRow> rows = new ArrayList<>();
@@ -180,7 +180,7 @@ public final class ServiceRecordService {
 
       ServiceRecord serviceRecord = serviceRecordRepository.findForOwner(ownerId, serviceId);
       if (serviceRecord == null) {
-        throw new AppException("Servis nije pronađen.");
+        throw new IllegalArgumentException("Servis nije pronađen.");
       }
 
       List<ItemRow> items = new ArrayList<>();

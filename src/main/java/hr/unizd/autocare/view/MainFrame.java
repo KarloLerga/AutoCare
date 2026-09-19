@@ -99,7 +99,10 @@ public final class MainFrame extends JFrame {
 
   private FontIcon icon(FontAwesomeSolid iconCode, int size) {
     Color color = UIManager.getColor("Label.foreground");
-    return FontIcon.of(iconCode, size, color == null ? Color.WHITE : color);
+    if (color == null) {
+      color = Color.WHITE;
+    }
+    return FontIcon.of(iconCode, size, color);
   }
 
   public void auth() {
@@ -121,7 +124,10 @@ public final class MainFrame extends JFrame {
     page = name;
     pages.show(content, name);
     for (Map.Entry<String, JButton> entry : navigation.entrySet()) {
-      int style = entry.getKey().equals(name) ? Font.BOLD : Font.PLAIN;
+      int style = Font.PLAIN;
+      if (entry.getKey().equals(name)) {
+        style = Font.BOLD;
+      }
       entry.getValue().setFont(entry.getValue().getFont().deriveFont(style));
     }
   }

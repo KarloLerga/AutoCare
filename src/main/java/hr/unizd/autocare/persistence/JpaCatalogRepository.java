@@ -10,7 +10,7 @@ import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
+import java.util.Collections;
 
 /** JPA pristup katalogu vozila i zahvata. */
 public final class JpaCatalogRepository implements CatalogRepository {
@@ -52,15 +52,24 @@ public final class JpaCatalogRepository implements CatalogRepository {
             .setParameter("model", model)
             .getResultList();
 
-    TreeSet<Integer> years = new TreeSet<>();
+    List<Integer> years = new ArrayList<>();
     int currentYear = LocalDate.now().getYear();
+
     for (VehicleVariant variant : variants) {
-      int to = variant.getYearTo() == null ? currentYear : Math.min(currentYear, variant.getYearTo());
-      for (int year = variant.getYearFrom(); year <= to; year++) {
-        years.add(year);
+      int lastYear = currentYear;
+      if (variant.getYearTo() != null && variant.getYearTo() < currentYear) {
+        lastYear = variant.getYearTo();
+      }
+
+      for (int year = variant.getYearFrom(); year <= lastYear; year++) {
+        if (!years.contains(year)) {
+          years.add(year);
+        }
       }
     }
-    return new ArrayList<>(years);
+
+    Collections.sort(years);
+    return years;
   }
 
   @Override

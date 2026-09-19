@@ -35,7 +35,10 @@ public final class DashboardView extends JPanel {
     addCard(grid, "Aktivne bilješke", notes, FontAwesomeSolid.EXCLAMATION_TRIANGLE);
     addCard(grid, "Trenutna kilometraža", mileage, FontAwesomeSolid.TACHOMETER_ALT);
     add(grid, BorderLayout.CENTER);
-    add(Ui.hint("Procjene u Katalogu su informativne; stvarni trošak dolazi iz servisne evidencije."), BorderLayout.SOUTH);
+    add(
+        Ui.hint(
+            "Procjene u Katalogu su informativne; stvarni trošak dolazi iz servisne evidencije."),
+        BorderLayout.SOUTH);
   }
 
   private static void addCard(
@@ -60,7 +63,10 @@ public final class DashboardView extends JPanel {
 
   private static FontIcon icon(FontAwesomeSolid iconCode, int size) {
     Color color = UIManager.getColor("Label.foreground");
-    return FontIcon.of(iconCode, size, color == null ? Color.WHITE : color);
+    if (color == null) {
+      color = Color.WHITE;
+    }
+    return FontIcon.of(iconCode, size, color);
   }
 
   public void showDashboard(Dashboard dashboard) {
