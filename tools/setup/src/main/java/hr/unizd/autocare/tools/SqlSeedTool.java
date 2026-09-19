@@ -12,6 +12,8 @@ import java.sql.Statement;
 
 /** Developer-only alat za provjeru veze, završnu migraciju i audit Azure SQL baze. */
 public final class SqlSeedTool {
+  private static final String APPLY_GUARD = "IF @Apply = 0 RETURN;";
+
   private SqlSeedTool() {}
 
   public static void run(String[] args) {
@@ -93,6 +95,8 @@ public final class SqlSeedTool {
       if (command.equals(sql)) {
         throw new IllegalArgumentException("Migracija nema očekivani @Apply guard.");
       }
+    } else {
+      command = readOnlyPart(sql);
     }
 
     try (Connection connection = SetupSqlSettings.environment().connect();
@@ -105,6 +109,14 @@ public final class SqlSeedTool {
     } else {
       System.out.println("DRY RUN: izvršen je samo read-only dio migracije; baza nije mijenjana.");
     }
+  }
+
+  private static String readOnlyPart(String sql) {
+    int guardIndex = sql.indexOf(APPLY_GUARD);
+    if (guardIndex < 0) {
+      throw new IllegalArgumentException("Migracija nema očekivani @Apply guard.");
+    }
+    return sql.substring(0, guardIndex + APPLY_GUARD.length());
   }
 
   private static void finalAudit(String[] args) throws Exception {
