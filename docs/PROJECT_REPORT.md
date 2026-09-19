@@ -1,41 +1,82 @@
-# AutoCare - popratna projektna dokumentacija
-Autor/student: Karlo Lerga. Predmet: Napredno objektno programiranje. Referentna implementacija pripremljena uz AI pomoc; stvarne lokalne integracijske promjene i rezultati zasebno se evidentiraju.
+# AutoCare - trenutačni koncept projekta
 
-## Problem
-Privatni korisnik s vise automobila ima rasprsene podatke o servisima, kilometrazi, problemima i stvarno placenim iznosima. Bez pouzdane povijesti nije moguce znati zadnje odrzavanje. Genericki servisni intervali nisu isto sto i plan za konkretnu varijantu. AutoCare objedinjuje evidenciju i transparentne informativne procjene, bez glumljenja profesionalne dijagnoze.
+## Problem i cilj
 
-## Rjesenje / konceptualni model
-User ima vlastita Vehicle vozila i pamti aktivno. Vehicle koristi shared VehicleVariant katalog. ServiceRecord s datumom/km ima ServiceItem stavke, svaka povezana s WorkDefinition. WorkCategory razlikuje odrzavanje i popravak bez praznih podklasa. VehicleWorkRule veze varijantu/rad i drzi eventualni period i cijenu. Problem pripada vozilu, moze imati predlozen popravak i rijesen je jednim stvarnim servisom. DiagnosticRule mapira frazu/tezinu u kandidat popravka. Ostatak prikaza i draftova nije baza.
+Aplikacija je namijenjena vlasniku vozila koji želi na jednom mjestu pratiti svoja vozila, kilometražu, servisnu povijest, preventivno održavanje i stvarne troškove. Korisnik također može zapisati stvar koju je primijetio na vozilu kako je ne bi zaboravio prije odlaska kod mehaničara.
 
-Slika `architecture.png` pokazuje ovisnosti slojeva. `domain.png` prikazuje samo persistentnu domenu, a `design.png` zasebno prikazuje Service/Repository/Strategy odnose i `Data.DiagnosticResult`. `erd.png` prikazuje fizicke snake_case tablice/FK koje runtime koristi uz Hibernate physical naming strategy; potpuna polja i owning-side odluke su u DATABASE_AND_JPA.md i schema manifestu. DOT/Mermaid izvori su prilozeni za reprodukciju, a ERD nije tvrdnja o novom live introspectionu.
+Aplikacija ne pokušava dijagnosticirati kvar. Informativne cijene odvojene su u pretraživi Katalog, dok stvarni trošak nastaje tek kada korisnik nakon popravka spremi servis.
 
-## Implementacija
-Java25, Swing i FlatLaf; Maven. Jakarta Persistence API preko Hibernate providera. EntityManagerFactory lifecycle je jedan po aplikaciji; svaki write use-case eksplicitno otvara EM i transakciju, a read ga zatvara nakon mapiranja. Pet malih repository sucelja; implementacije primaju isti EM unutar operacije. Constructor injection radi Main, bez DI frameworka. Entiteti ne napustaju Service u GUI; scalar result modeli nastaju dok je EM otvoren.
+## Glavne funkcije
 
-### Jedna slozena operacija
-Unos servisa je lokalni draft. Spremanje validira datum/km/stavke i korisnika, kreira record/items, povecava kilometrazu samo prema gore i rjesava oznacene OPEN probleme istog vozila. Sve se commita ili rollbacka u jednoj operaciji. Nakon commita Observer osvjezava relevantne prikaze. Posljednje odrzavanje pronalazi se po izvrsenom datumu/km/ID, ne redoslijedu insertanja. Finalni studentski flow namjerno nema request-key/idempotency sloj.
+### Korisnik i vozila
 
-### Algoritmi
-Interval dospijeva kad bilo koji definirani km ili kalendarski rok bude dosegnut. Bez potrebnih intervala/povijesti prikazuje se `NO_DATA`; ostali statusi su `OK`, `SOON` i `DUE`. Specificni VehicleWorkRule ima prednost kao cjelina, a WorkDefinition defaulti koriste se samo kada specificno pravilo ne postoji. Ukupni poznati trosak plus broj nepoznatih cijena sprecava zamjenu NULL nulom. Dijagnostika normalizira fraze i rangira pokrivenost aktivnih ponderiranih pravila. Ponavljanje rijeci ne napuhuje bodove; negacije nisu pouzdano shvacene i to je ogranicenje. Rezultat nije vjerojatnost.
+Korisnik se registrira i kod registracije dodaje prvo vozilo. Može imati više vozila, ali jedno je aktivno. Aktivno vozilo mijenja samo na ekranu Vozila.
 
-## GUI
-Svi konceptualni ekrani/tokovi, kontrole, layouti i objasnjenja nalaze se u GUI_AND_WIREFRAMES.md. Izvorni PDF koristi se kao zahtjev funkcionalnosti, ne pixel template. Katalog koristi pretragu/tablicu, ne golemi JComboBox. DB pozivi su namjerno sinkroni i vidljivi u kontrolerima radi studentske citljivosti; manualni GUI smoke je zasebno oznacen BLOCKED u verification dokumentu.
+### Bilješke
 
-## Principi i gradivo
-MVC dijeli UI i poslovne akcije. Strategy izolira zamjenjivi algoritam. Observer spaja promjene stanja i zainteresirane prikaze bez globalne magije. Kompozicija ServiceRecord/ServiceItem ima stvarni zivotni ciklus; enum je dovoljan za kategoriju/status. Repository izolira pristup bazi. SRP/OCP/DIP/ISP i ugovori zamjenjivosti obrazlozeni su u COURSE_ALIGNMENT_AND_DEFENSE.md; ne tvrdi se da sama rijec implements dokazuje LSP. Ne dodajemo Factory/Command/Memento samo za popis bodova.
+Korisnik upisuje slobodan tekst, npr. "Klima slabije hladi nego prije". Može odabrati grubu kategoriju: Motor, Kočnice, Ovjes, Klima, Elektrika ili Ostalo. Bilješka je aktivna dok se ručno ne zatvori ili ne označi riješenom kod stvarnog servisa.
 
-## Podaci i ogranicenja
-Katalog je normaliziran iz korisnikova ZIP-a vehicle-makes-models, uz stabilne kodove, licence i evidentirane prilagodbe. 122 rada su prakticni prosireni katalog, ne iscrpna lista svakog dijela svakog automobila. 1.282.916 cijena su modelirane planske bruto vrijednosti, a ne nacionalni prosjeci ili verificirane ponude. Za dio izvedbi broj se ne daje. 34 izvorno referencirana perioda pokrivaju uzak modelski podskup; 676 kandidata nije automatski odobreno. Nepoznata OEM/VIN informacija ostaje nepoznata.
+### Katalog
 
-Katalog nema fotografije po vozilu ni image-enrichment/import pipeline. UI koristi samo dekorativne FontAwesome6 Ikonli ikone; one ne predstavljaju identitet ili podudaranje vozila.
+Katalog sadrži 120 standardnih održavanja i popravaka. Može se pretraživati po nazivu i filtrirati po kategoriji. Za aktivno vozilo prikazuje informativni min-max raspon cijene prema široj cjenovnoj klasi vozila.
 
-## Sigurnost i trosak infrastrukture
-SQL Server umjesto prvotnog MySQL-a je korisnikova nova odluka zbog free offera. SQL vjerodajnica je u lokalnoj vanjskoj konfiguraciji; TLS provjera identiteta ukljucena. U ovom studentskom modelu aplikacijska lozinka je obican tekstualni `String` u bazi; to je svjesni obrazovni kompromis i nije produkcijska sigurnosna preporuka. Owner-scoped upiti i jedna transakcija cuvaju aplikacijske invarijante. Direktna shared SQL vjerodajnica u desktopu nije produkcijska izolacija korisnika. Serverless potrosnja prati se u portalu, konekcije se zatvaraju, paid overage ne aktivira se automatski.
+### Servisi
 
-## Dokumentacija API-ja i povijest
-Maven Javadoc generira `target/reports/apidocs` ili putanju koju prijavi stvarna verzija plugina; zabiljeziti stvarno mjesto. Opisati javne poslovne ugovore, ne dodavati prazne komentare svakom getteru. Biblioteke i sluzbeni izvori su u DEPENDENCIES_AND_SOURCES.md.
+Servisni zapis sadrži datum, kilometražu, napomenu i jednu ili više maintenance/repair stavki. Korisnik za svaku stavku ručno upisuje stvarno plaćenu cijenu. Servis po potrebi zatvara jednu ili više aktivnih bilješki.
 
-Git povijest mora odrazavati stvarnu implementaciju/integraciju. `scripts/export-git-history.ps1` izvozi aktualni DAG i HEAD u dokumentaciju. Nema backdate, uklanjanja koda pa vracanja radi izgleda ili izmisljanja autora/komitova. Za predaju navesti uporabu AI pomoci prema pravilima kolegija.
+Ako servisna kilometraža prelazi trenutačnu kilometražu vozila, vozilo se ažurira. Povijesni zapis s manjom kilometražom ne smanjuje trenutačnu kilometražu.
 
-## Testiranost
-VERIFICATION.md razlikuje stvarno izvrsene offline provjere od neizvrsenih SQL Server/JDK25/Maven/GUI provjera. ACCEPTANCE.md definira dokaz dovrsenosti. Ovaj izvjestaj ne tvrdi da su neizvrseni dijelovi vec prosli. Za obranu je pripremljen 35-minutni demonstracijski tok te kratka teorijska pitanja uz kod.
+### Održavanje
+
+Održavanje koristi servisnu povijest kao source of truth. Za svaku maintenance stavku koja je već evidentirana računa se posljednje izvršenje, sljedeći km/datum i status.
+
+Interval može biti:
+- kilometarski;
+- vremenski;
+- kombinirani.
+
+Strategy pattern razdvaja ta tri načina računanja.
+
+### Dashboard
+
+Prikazuje:
+- ukupni stvarni trošak;
+- sljedeće praćeno održavanje;
+- broj aktivnih bilješki;
+- trenutnu kilometražu.
+
+## Arhitektura
+
+`Swing View -> Controller -> Service -> Repository -> JPA EntityManager/Hibernate -> Azure SQL`
+
+- View ne sadrži poslovna pravila ni JPA.
+- Controller obrađuje GUI događaje i poziva Service.
+- Service upravlja poslovnim pravilima i transakcijom.
+- Repository s proslijeđenim EntityManagerom sadrži JPQL/dohvat/spremanje.
+- Domain sadrži entitete i njihove jednostavne invarijante.
+
+Kod složene operacije spremanja servisa jedan Service otvara jedan EntityManager i jednu transakciju. Svi Repositoryji u tom use-caseu koriste isti EntityManager.
+
+## Obrasci
+
+### MVC
+
+Osnovna organizacija GUI aplikacije.
+
+### Strategy
+
+`MileageMaintenanceStrategy`, `TimeMaintenanceStrategy` i `CombinedMaintenanceStrategy` računaju status održavanja ovisno o vrsti intervala. Novi način računanja može se dodati bez mijenjanja GUI-a.
+
+### Repository/DAO
+
+JPA upiti odvojeni su od GUI-a i poslovnih pravila.
+
+### Observer/listener
+
+Mali `AppEvents` mehanizam osvježava povezane ekrane nakon promjene aktivnog vozila, spremanja servisa ili bilješke.
+
+## Persistencija
+
+Koristi se JPA API s Hibernate providerom i Azure SQL Database. Runtime koristi `EntityManager`, ne Hibernate Session API. `EntityManagerFactory` se inicijalizira jednom, a `EntityManager` je kratkotrajan po operaciji.
+
+Finalni model nema automatsku dijagnostiku i nema per-variant tablicu s milijunima pravila cijena.

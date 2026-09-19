@@ -1,34 +1,25 @@
 classDiagram
-    MainController --> AuthService
-    ServicesController --> ServiceRecordService
-    ProblemsController --> ProblemService
-    ServiceRecordService --> ServiceRecord
-    ProblemService --> DiagnosticStrategy
-    ProblemService --> Analysis
-    DiagnosticStrategy <|.. KeywordDiagnosticStrategy
-    ServiceRecordService --> ServiceRecordRepository
-    ProblemService --> ProblemRepository
-    ServiceRecordRepository <|.. JpaServiceRecordRepository
-    ProblemRepository <|.. JpaProblemRepository
+    class MaintenanceStrategy {
+      <<interface>>
+      +calculate(...)
+    }
+    class MileageMaintenanceStrategy
+    class TimeMaintenanceStrategy
+    class CombinedMaintenanceStrategy
+    class MaintenanceCalculator
 
-    class DiagnosticStrategy {
-        <<interface>>
-        analyze(description, rules)
+    MaintenanceStrategy <|.. MileageMaintenanceStrategy
+    MaintenanceStrategy <|.. TimeMaintenanceStrategy
+    MaintenanceStrategy <|.. CombinedMaintenanceStrategy
+    MaintenanceCalculator --> MaintenanceStrategy
+
+    class CatalogController
+    class CatalogService
+    class CatalogRepository {
+      <<interface>>
     }
-    class KeywordDiagnosticStrategy {
-        normalize(text)
-        analyze(description, rules)
-    }
-    class Analysis {
-        description
-        List DiagnosticResult results
-    }
-    class ServiceRecordService {
-        create(ownerId, vehicleId, input)
-        list(ownerId, vehicleId)
-        detail(ownerId, serviceId)
-    }
-    class ProblemService {
-        analyze(ownerId, vehicleId, description)
-        save(ownerId, vehicleId, preview)
-    }
+    class JpaCatalogRepository
+
+    CatalogController --> CatalogService
+    CatalogService --> CatalogRepository
+    CatalogRepository <|.. JpaCatalogRepository

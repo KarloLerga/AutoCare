@@ -1,11 +1,9 @@
-# Provenance and licence notices
+# Napomene o izvorima i licencama
 
-The original vehicle-makes-models dataset is attributed to gor3a/vehicle-makes-models and its stated upstream source autoevolution.com. Its data are declared ODbL1.0, separately from the repository's MIT code. Preserve tools/reference-data/ATTRIBUTION.md and licenses/UPSTREAM-LICENSE-DATA.txt. The normalized catalog and modelled-data derivatives are not unmodified originals; transformations, source scope and hashes are retained. Do not label the whole database MIT merely because upstream code uses MIT.
+Vehicle katalog potječe iz korisnički dostavljenog `gor3a/vehicle-makes-models` dataseta. Sačuvati attribution i licence izvornog dataseta ako se referentni podaci distribuiraju izvan studentskog projekta.
 
-Java sources and new helper scripts are prepared for the user's AutoCare project. This notice does not relicense any pre-existing third-party code or remove its notices. Maven dependencies retain their individual upstream licences; resolve the actual dependency tree and keep appropriate notices when distributing runtime jars. Do not distribute JDK/font binaries as project source.
+Java/Maven biblioteke zadržavaju vlastite upstream licence. Projekt ne distribuira JDK ni font datoteke.
 
-Course handouts, original review/concept/wireframes and historical packages are privately included outside project/ because the user supplied them. That is not authorization to publish teaching materials into the Git repo. Keep source-materials/ and history/ out of Git.
+Informativni rasponi cijena nisu kopija jednog komercijalnog cjenika. Javni cjenici korišteni su za kalibraciju reprezentativnih zahvata, a finalni rasponi su vlastiti izvedeni seed podaci. Izvori su dokumentirani u `data_model/catalog_price_sources.md`.
 
-Real vehicle photographs have NOT been included. The fallback is an original simple geometric placeholder. Future Commons images each require their own licence, author, source and modification credit; the image manifest and credits HTML/CSV are packaged with images. An acceptable generic Commons licence label is not generation verification or a substitute for per-file terms.
-
-Price-reference documents were consulted for limited tariff/context observations, not copied as full commercial catalogs. The estimates are modelled assumptions and do not imply manufacturer, workshop or dataset-author endorsement. Sources and constraints are in DEPENDENCIES_AND_SOURCES.md and data source registers.
+Projekt ne sadrži fotografije vozila ni runtime image API.

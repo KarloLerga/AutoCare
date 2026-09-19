@@ -1,58 +1,133 @@
-# AutoCare - Java 25, Swing, JPA/Hibernate, Azure SQL Database
-Projekt za Napredno objektno programiranje. Privatna evidencija vozila, održavanja, stvarnih servisa i problema. MVC + Service + Repository, Strategy za izračun intervala održavanja i mali Observer za osvježavanje. Bez runtime LLM-a i vanjskog vehicle/image API-ja.
+# AutoCare
 
-## Pokretanje
-Potreban je JDK 25 i lokalna konekcijska datoteka IZVAN repozitorija. Maven 3.9.16 bootstrap i sluzbeni wrapper priprema `scripts/Complete-Setup.ps1`. Skript ne stvara Azure bazu i ne mijenja billing; korisnikova postojeca baza mora vec postojati.
-```powershell
-.\scripts\Complete-Setup.ps1 -ConfigPath 'C:\private-autocare\connection.local.json' -ImportCompleteCatalog -ApplyFinalSchema -Launch
-```
-Format privatne datoteke (NE commitati stvarne vrijednosti):
+Studentski projekt za kolegij **Napredno objektno programiranje**. AutoCare je Java Swing aplikacija za vlasnika vozila: vodi njegova vozila, servisnu povijest, stvarno plaćene troškove, preventivno održavanje, osobne bilješke i informativni katalog cijena.
+
+## Završni funkcionalni model
+
+Profesorov zadnji review razdvaja tri stvari koje se u aplikaciji ne smiju miješati:
+
+1. **Bilješke** - korisnik slobodnim tekstom zapisuje što primjećuje. Može odabrati samo grubu kategoriju. Nema automatske dijagnoze, bodovanja ni pogađanja kvara.
+2. **Katalog** - pretraživi informativni cjenik standardnih zahvata. Cijena je raspon prilagođen široj cjenovnoj klasi aktivnog vozila, a ne točna ponuda za VIN.
+3. **Servisi** - nakon odlaska kod mehaničara korisnik sprema ono što je stvarno napravljeno, stvarnu kilometražu i stvarno plaćenu cijenu. Servis može zatvoriti raniju bilješku i postaje izvor istine za sljedeće intervale održavanja.
+
+Navigacija nakon prijave:
+
+`Dashboard | Vozila | Održavanje | Katalog | Servisi | Bilješke | Profil`
+
+## Tehnologije
+
+- Java 25
+- Swing + FlatLaf
+- Maven
+- Jakarta Persistence / JPA
+- Hibernate ORM
+- Azure SQL Database / Microsoft SQL Server
+- Ikonli Font Awesome ikone
+- bez Springa, Lomboka, runtime AI-ja i vanjskog vehicle API-ja
+
+Arhitekturni tok ostaje namjerno jednostavan:
+
+`View -> Controller -> Service -> Repository -> EntityManager/Hibernate -> Azure SQL`
+
+Service sloj određuje transakcijske granice. Repository klase dobivaju postojeći `EntityManager` i ne otvaraju vlastite transakcije.
+
+## Katalog i cijene
+
+Finalni katalog sadrži:
+
+- **30.366** varijanti vozila
+- **120** standardnih zahvata
+- **30** maintenance zahvata
+- **90** repair zahvata
+- **5** širokih cjenovnih klasa vozila: `ECONOMY`, `STANDARD`, `PREMIUM`, `PERFORMANCE`, `EXOTIC`
+- **600** unaprijed spremljenih raspona cijena (`120 x 5`)
+
+Stari model s milijunima `VehicleWorkRule` kombinacija više nije dio finalne aplikacije. `VehicleVariant` samo pamti svoju cjenovnu klasu, a `WorkPriceRange` sadrži informativni `minPrice` i `maxPrice` za standardni zahvat i klasu vozila.
+
+Maintenance interval (`intervalKm` i/ili `intervalMonths`) pripada `WorkDefinition` zapisu. Strategy pattern koristi kilometarski, vremenski ili kombinirani način izračuna. Servisna povijest je source of truth; `Zadnje`, `Sljedeće` i `Status` se ne spremaju kao duplicirano stanje.
+
+Metodologija raspona i korišteni javni hrvatski izvori nalaze se u `data_model/catalog_price_sources.md`.
+
+## Bilješke
+
+`Problem` ostaje tehničko ime domenskog entiteta, ali u GUI-u predstavlja **Bilješku** vlasnika vozila. Sprema:
+
+- vozilo
+- slobodni opis
+- grubu `ProblemCategory`
+- status `OPEN` / `RESOLVED`
+- vrijeme kreiranja
+- opcionalni servis kojim je bilješka riješena
+
+Bilješka se može ručno zatvoriti ili označiti riješenom kod spremanja stvarnog servisa. Ne sadrži suggested repair, estimated cost, match score ni diagnostic rule.
+
+## Azure SQL migracija postojećeg projekta
+
+Konekcijska datoteka ostaje izvan repozitorija, npr.:
+
 ```json
-{"host":"auto-care.database.windows.net","port":1433,"database":"","user":"karlolerga","password":"LOCAL_ONLY"}
+{"host":"auto-care.database.windows.net","port":1433,"database":"NAZIV_BAZE","user":"KORISNIK","password":"LOKALNO"}
 ```
-Prazan database pokrece read-only pokusaj `db-list`. Vise dostupnih baza zahtijeva odabir. `-DatabaseName 'stvarni-naziv'` nadjacava izbor; provjeren naziv sprema se samo u tu privatnu datoteku. SQL login nije login u AutoCare aplikaciju; prvo se registrira aplikacijski korisnik. Kompletni katalog i schema cleanup izvrsavaju se samo uz eksplicitne switch-e iz gornje naredbe.
 
-Skripta bez `-ImportCompleteCatalog` samo validira kompletni katalog read-only; bez `-ApplyFinalSchema` samo prikazuje migraciju read-only. Za svakodnevno pokretanje nakon inicijalnog setupa:
+Na računalu s JDK 25 pokrenuti:
+
 ```powershell
-.\scripts\Run-App.ps1 -ConfigPath 'C:\private-autocare\connection.local.json'
+powershell -ExecutionPolicy Bypass -File .\scripts\Complete-Setup.ps1 `
+  -ConfigPath 'C:\private-autocare\connection.local.json' `
+  -ApplyProfessorModel `
+  -Launch
 ```
 
-## Rucne naredbe
+Skripta:
+
+1. radi `mvnw clean verify`;
+2. gradi mali setup alat;
+3. provjerava Azure SQL vezu;
+4. primjenjuje `schema/11_professor_model.sql` samo uz `-ApplyProfessorModel`;
+5. pokreće read-only `schema/12_professor_model_audit.sql`;
+6. opcionalno pokreće GUI.
+
+Bez `-ApplyProfessorModel` migracija se izvršava samo u read-only modu (`@Apply = 0`).
+
+Očekivano stanje nakon migracije:
+
+- `vehicle_variant = 30366`
+- `work_definition = 120`
+- `work_price_range = 600`
+- stara `vehicle_work_rule` tablica ne postoji
+- `diagnostic_rule` ne postoji
+- `problem.suggested_repair_id` i `problem.estimated_cost` ne postoje
+- svi maintenance radovi imaju km i/ili mjesečni interval
+- repair radovi nemaju preventivni interval
+
+Za svakodnevno pokretanje:
+
 ```powershell
-.\mvnw.cmd clean verify
-. .\scripts\Load-Connection.ps1 -ConfigPath 'C:\private-autocare\connection.local.json'
-java -jar tools/setup/target/autocare-setup-1.0.0.jar sql-check
-# Normalni runtime koristi postojece snake_case SQL nazive; ne pokretati rename predloske.
-# schema/08_plain_password_and_remove_images.sql prvo pokrenuti read-only s @Apply = 0.
-# Nakon provjere tocne baze, backupa i ovisnosti promjenu primijeniti samo na tu bazu.
-java -Xmx768m -jar tools/setup/target/autocare-setup-1.0.0.jar import-complete-catalog tools/reference-data/data/vehicle_work_rules_complete.csv.gz
-java -Xmx768m -jar tools/setup/target/autocare-setup-1.0.0.jar apply-final-schema schema/09_complete_catalog_and_runtime_cleanup.sql
-java -Xmx768m -jar tools/setup/target/autocare-setup-1.0.0.jar apply-final-schema schema/10_croatian_work_names.sql
-java -Xmx768m -jar tools/setup/target/autocare-setup-1.0.0.jar final-audit schema/final_catalog_audit.sql
-.\mvnw.cmd javadoc:javadoc
+powershell -ExecutionPolicy Bypass -File .\scripts\Run-App.ps1 `
+  -ConfigPath 'C:\private-autocare\connection.local.json'
 ```
-Runtime distribucija je `target/autocare-1.0.0.jar` s `target/lib/`; setup distribucija je odvojeni `tools/setup/target/autocare-setup-1.0.0.jar` s vlastitim `lib/`. Samo kopiranje JAR-a bez pripadajucih ovisnosti ne radi. Runtime JAR pokrece samo GUI; `sql-check`, `schema-update`, seed i import naredbe pripadaju setup JAR-u. Runtime ne upravlja DDL-om (`hbm2ddl=none`); `schema-update` je iskljucivo eksplicitna developerska naredba setup artefakta. Ne izvrsavati stare MySQL ili rename skripte.
 
-## Podaci i istinitost
-Katalog sadrži 30.366 varijanti, 120 konkretnih radova i 2.908.857 materijaliziranih pravila. Svako pravilo ima pozitivnu modeliranu cijenu; održavanje ima eksplicitni kilometarski ili mjesečni interval, a popravci nemaju izmišljeni interval. Jedna planska cijena sadrži dijelove/rad i modelirana je po pravilima kataloga; to nije statistički hrvatski prosjek ni servisna ponuda. Stvarno plaćeno čuva cente i nikad se ne preuzima iz procjene.
+## Lokalna validacija seed podataka
 
-Intervali su rezultat pregledanih pravila i determinističkog modela; procjena ne tvrdi da zamjenjuje servisni priručnik. Praćeno održavanje prikazuje se samo kada postoji u povijesti servisa, dok estimator nudi svako primjenjivo održavanje za aktivno vozilo. Statusi su `OK`, `SOON` i `DUE`. Problemi se unose ručno i povezuju s konkretnim radom iz kataloga. `OTHER_*` radovi nisu dio konačne sheme.
+```powershell
+python .\scripts\validate_professor_catalog.py
+```
+
+Validator očekuje 30.366 vozila, 120 radova i 600 raspona te provjerava intervale, duplikate, klase i raspon cijena.
 
 ## Dokumentacija
-- `docs/ARCHITECTURE_FREEZE_AF3.md`: odluke A-O, transakcije, GUI, validacija.
-- `docs/DATABASE_AND_JPA.md`, `schema/`, `docs/TYPE_CATALOG.md`, dijagrami DOT/Mermaid/PNG/SVG.
-- `docs/architecture.*`: dependency prikaz; `docs/domain.*`: persistentni UML; `docs/design.*`: aplikacijski UML; `docs/erd.*`: fizicki target ERD.
-- `docs/AZURE_SETUP.md`, `docs/ACCEPTANCE.md`, `docs/VERIFICATION.md`.
-- `docs/DIAGRAM_SCOPES.md`, `docs/TRANSACTION_REVIEW.md`, `docs/AUDIT_AND_DECISIONS.md`.
-- `docs/PROJECT_REPORT.md`, `docs/GUI_AND_WIREFRAMES.md`, `docs/COURSE_ALIGNMENT_AND_DEFENSE.md`.
-- `docs/DEPENDENCIES_AND_SOURCES.md`, `tools/reference-data/README_HR.md`, `schema/08_plain_password_and_remove_images.sql`.
-- `docs/MASTER_CODEX_PROMPT.md`: lokalna fazna integracija i provjere.
-- `docs/ACCEPTANCE_CHECKLIST.md`, `docs/DATA_EXPLANATION_FOR_DEFENSE.md`: završni kriteriji i obrana modela podataka.
-- `data_model/`, `scripts/complete_catalog_rules.py`, `scripts/validate_complete_catalog.py`: reproducibilni generator i validacija kompletnog kataloga.
-- `schema/09_complete_catalog_and_runtime_cleanup.sql`, `schema/10_croatian_work_names.sql`, `schema/final_catalog_audit.sql`: guarded cleanup, hrvatski nazivi i read-only završni audit.
 
-## Sigurnost / besplatna ponuda
-Ne commitati local JSON, lozinke, tokene ni cijeli isporuceni ZIP. Provjera certifikata ostaje ukljucena. SQL Server Object Explorer i aplikaciju zatvoriti kada nisu potrebni da konekcije ne ometaju serverless mirovanje. Ne ukljucivati placeni nastavak koristenja radi prolaza testa. Detalji i izvori su u Azure vodicu (AZURE_SETUP.md).
+- `docs/PROFESSOR_MODEL_HANDOFF.md` - točan handoff za Codex i redoslijed završetka
+- `docs/PROJECT_REPORT.md` - trenutačni koncept aplikacije
+- `docs/DATABASE_AND_JPA.md` - finalni entiteti i tablice
+- `docs/GUI_AND_WIREFRAMES.md` - finalni GUI tok bez stare dijagnostike
+- `docs/COURSE_ALIGNMENT_AND_DEFENSE.md` - što pokazati na obrani
+- `docs/IMPLEMENTATION_STATUS.md` - što je napravljeno i što mora biti provjereno na lokalnom računalu
+- `docs/VERIFICATION.md` - provjere i ograničenja ovog paketa
+- `data_model/` - finalni CSV seedovi i metodologija cijena
+- `schema/11_professor_model.sql` - guarded migracija postojeće Azure baze
+- `schema/12_professor_model_audit.sql` - read-only završni audit
 
-## Test status
-Runtime Java koristi camelCase logicka imena, a Hibernate `CamelCaseToUnderscoresNamingStrategy` ih mapira na snake_case Azure SQL ugovor. Konacna shema ne sadrzi image pipeline, dijagnosticku tablicu ni `OTHER_*` radove. Runtime ne upravlja DDL-om (`hbm2ddl=none`); schema migracija je iskljucivo eksplicitna naredba setup artefakta. Offline Java/Python provjere nisu dokaz performansi importa ni GUI rada. Tocne izvrsene i neizvrsene provjere nalaze se u `docs/VERIFICATION.md` i `docs/IMPLEMENTATION_STATUS.md`; ne oznacavaj izolirani SQL/GUI scenarij kao PASS bez stvarnog prolaza.
+## Važno
+
+Procjene iz Kataloga su informativne. One se nikada automatski ne kopiraju u `actualPrice`. Stvarni trošak postoji tek kada korisnik nakon odlaska kod mehaničara spremi servisni zapis.

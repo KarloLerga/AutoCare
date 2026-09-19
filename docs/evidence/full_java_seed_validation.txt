@@ -1,2 +1,0 @@
-Offline seed: 30366 varijanti, 122 radova, 1650435 pravila, 34 referenciranih intervala, 87 tekstualnih pravila.
-DRY RUN zavrsen. Baza nije kontaktirana.

@@ -1,8 +1,0 @@
-{
-  "host": "auto-care.database.windows.net",
-  "database_name": "NOT_PROVIDED",
-  "authentication_attempted": false,
-  "schema_modified": false,
-  "tcp": "unavailable",
-  "error": "[Errno -3] Temporary failure in name resolution"
-}

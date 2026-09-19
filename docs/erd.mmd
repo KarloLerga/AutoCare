@@ -1,94 +1,45 @@
 erDiagram
-    app_user ||--o{ vehicle : owns
-    app_user }o--o| vehicle : active_vehicle_id
-    vehicle_variant ||--o{ vehicle : identifies
-    vehicle ||--o{ service_record : history
-    service_record ||--|{ service_item : contains
-    work_definition ||--o{ service_item : describes
-    vehicle_variant ||--o{ vehicle_work_rule : covers
-    work_definition ||--o{ vehicle_work_rule : applies
-    vehicle ||--o{ problem : reports
-    service_record o|--o{ problem : resolves
-    work_definition o|--o{ problem : suggested_repair
-    work_definition ||--o{ diagnostic_rule : candidate
-    app_user {
-        bigint id PK
-        string name
-        string email UK
-        string password
-        bigint active_vehicle_id FK
-    }
-    vehicle_variant {
-        bigint id PK
-        string code UK
-        string make
-        string model
-        string generation
-        string engine_label
-        string body_type
-        string fuel_type
-        int power_hp
-        string transmission
-        int year_from
-        int year_to
-    }
-    vehicle {
-        bigint id PK
-        bigint owner_id FK
-        bigint variant_id FK
-        int production_year
-        int current_mileage
-    }
-    work_definition {
-        bigint id PK
-        string code UK
-        string name
-        string category
-        int default_interval_km
-        int default_interval_months
-        decimal default_estimated_price
-        string estimate_note
-    }
-    vehicle_work_rule {
-        bigint id PK
-        bigint variant_id FK
-        bigint work_id FK
-        int interval_km
-        int interval_months
-        decimal estimated_price
-        string interval_source
-        string estimate_note
-    }
-    service_record {
-        bigint id PK
-        bigint vehicle_id FK
-        date service_date
-        int mileage
-        string note
-    }
-    service_item {
-        bigint id PK
-        bigint service_record_id FK
-        bigint work_id FK
-        decimal actual_price
-    }
-    problem {
-        bigint id PK
-        bigint vehicle_id FK
-        string description
-        string status
-        datetime created_at
-        bigint suggested_repair_id FK
-        decimal match_percent
-        decimal estimated_cost
-        string estimate_note
-        bigint resolved_by_service_id FK
-    }
-    diagnostic_rule {
-        bigint id PK
-        string code UK
-        bigint candidate_id FK
-        string phrase
-        int weight
-        boolean active
-    }
+  APP_USER ||--o{ VEHICLE : owns
+  APP_USER o|--o| VEHICLE : active_vehicle
+  VEHICLE_VARIANT ||--o{ VEHICLE : identifies
+  VEHICLE ||--o{ SERVICE_RECORD : history
+  SERVICE_RECORD ||--|{ SERVICE_ITEM : contains
+  WORK_DEFINITION ||--o{ SERVICE_ITEM : performed_work
+  WORK_DEFINITION ||--|{ WORK_PRICE_RANGE : price_ranges
+  VEHICLE ||--o{ PROBLEM : notes
+  SERVICE_RECORD o|--o{ PROBLEM : resolves
+
+  VEHICLE_VARIANT {
+    bigint id PK
+    string code
+    string make
+    string model
+    string generation
+    string engine_label
+    string price_class
+  }
+  WORK_DEFINITION {
+    bigint id PK
+    string code
+    string name
+    string category
+    string catalog_category
+    int interval_km
+    int interval_months
+  }
+  WORK_PRICE_RANGE {
+    bigint id PK
+    bigint work_id FK
+    string price_class
+    decimal min_price
+    decimal max_price
+  }
+  PROBLEM {
+    bigint id PK
+    bigint vehicle_id FK
+    string description
+    string category
+    string status
+    datetime created_at
+    bigint resolved_by_service_id FK
+  }

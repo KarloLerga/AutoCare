@@ -1,10 +1,15 @@
 flowchart TD
-    V[View<br/>Swing forms dialogs tables<br/>FlatLaf styles] --> C[Controller<br/>classic ActionListener<br/>coordinates UI]
-    C --> S[Service<br/>use-case and validation<br/>business transaction boundary]
-    S --> D[Domain<br/>9 entities enums calculators]
-    S --> R[Repository interfaces<br/>query and persist contracts]
-    S --> STR[DiagnosticStrategy<br/>analysis policy]
-    R -. implements .-> P[JPA repositories<br/>JPQL persist remove]
-    P --> D
-    P --> I[JPA Hibernate JDBC]
-    I --> DB[(Azure SQL<br/>dbo snake_case)]
+    V[View - Swing forme i paneli]
+    C[Controller - GUI događaji]
+    S[Service - poslovna pravila i transakcije]
+    D[Domain - entiteti i Strategy]
+    R[Repository DAO - JPA upiti]
+    J[EntityManager / Hibernate]
+    DB[(Azure SQL Database)]
+
+    V --> C
+    C --> S
+    S --> D
+    S --> R
+    R --> J
+    J --> DB

@@ -1,86 +1,69 @@
-# AutoCare — aktualni katalog tipova
+# Katalog tipova - finalni profesorov model
 
-Katalog je usklađen sa završnim runtime sourceom. Javadoc je izvršen naredbom
-`.\mvnw.cmd -q javadoc:javadoc`; trivijalni getteri nisu ponavljani ovdje.
+## Domain / persistentni entiteti
 
-## app
+- `AppUser` - korisnički račun i aktivno vozilo.
+- `VehicleVariant` - referentna kataloška varijanta vozila i `VehiclePriceClass`.
+- `Vehicle` - konkretno korisnikovo vozilo, owner, varijanta, godina i kilometraža.
+- `WorkDefinition` - standardni zahvat, WorkCategory, CatalogCategory i eventualni maintenance interval.
+- `WorkPriceRange` - min/max informativni raspon cijene jednog zahvata za jednu cjenovnu klasu.
+- `ServiceRecord` - stvarni servis: datum, kilometraža, napomena i stavke.
+- `ServiceItem` - jedan stvarno odrađeni zahvat i `actualPrice`.
+- `Problem` - korisnikova bilješka: opis, gruba kategorija, OPEN/RESOLVED, datum i opcionalni servis koji ju je riješio.
 
-- `DatabaseConfig` — čita `AUTOCARE_DB_*`, gradi TLS SQL Server URL i otvara `EntityManagerFactory`.
-- `Main` — FlatLaf setup, wiring servisa/kontrolera i zatvaranje tvornice.
-- `Session` — owner ID, aktivno vozilo i logout stanje.
+## Domain helperi i enumi
 
-## domain
+- `VehiclePriceClass` - ECONOMY, STANDARD, PREMIUM, PERFORMANCE, EXOTIC.
+- `CatalogCategory` - grupe za pregled/pretragu zahvata.
+- `WorkCategory` - MAINTENANCE / REPAIR.
+- `ProblemCategory` - Motor, Kočnice, Ovjes, Klima, Elektrika, Ostalo.
+- `ProblemStatus` - OPEN / RESOLVED.
+- `MaintenanceStatus` - OK / SOON / DUE.
+- `MaintenanceCalculator` - bira Strategy prema dostupnom intervalu.
+- `Checks` - osnovna validacija unosa.
+- `CostSummary` - zbroj poznatih stvarnih cijena i broj nepoznatih povijesnih cijena.
 
-- `AppUser` — račun, profil, tekstualna lozinka i aktivno vozilo.
-- `VehicleVariant` — kataloška varijanta, godine i tehnički podaci; nema fotografije po vozilu.
-- `Vehicle` — owner, varijanta, proizvodna godina i kilometraža; kilometraža samo raste.
-- `WorkDefinition` — opća definicija održavanja/popravka i opcionalni default interval/procjena.
-- `VehicleWorkRule` — primjenjivost rada na varijantu i opcionalni interval/procjena.
-- `ServiceRecord` — datum, kilometraža, napomena i kolekcija stavki.
-- `ServiceItem` — jedan rad i stvarno plaćena cijena.
-- `Problem` — opis, status, snapshot informativne analize i opcionalni servis rješenja.
-- `DiagnosticRule` — aktivna fraza, težina i kandidat popravka.
-- `MaintenanceCalculator` — status po km i/ili mjesecima.
-- `Checks` — osnovna validacija teksta, e-maila, lozinke, kilometraže i novca.
-- `CostSummary` — poznati zbroj i broj nepoznatih iznosa.
-- `MaintenanceStatus`, `ProblemStatus`, `WorkCategory` — mali enumi domene.
+## Strategy
 
-## model.Data
+- `MaintenanceStrategy`
+- `MileageMaintenanceStrategy`
+- `TimeMaintenanceStrategy`
+- `CombinedMaintenanceStrategy`
 
-`Data` je jedna obična klasa s nested immutable-style modelima za granicu slojeva:
+Nema dijagnostičkog Strategyja.
 
-- `Account`, `VariantRow`, `VehicleInput`, `VehicleRow`
-- `WorkRow`, `ItemInput`, `ServiceInput`, `ItemRow`
-- `ServiceRow`, `ServiceDetail`, `MaintenanceRow`
-- `Analysis`, `RuleData`, `DiagnosticResult`, `ProblemRow`, `Dashboard`
+## Repository
 
-Modeli su konstruktori + getteri; nema Java recorda ni persistence verzijskih polja.
+- `UserRepository`
+- `VehicleRepository`
+- `CatalogRepository`
+- `ServiceRecordRepository`
+- `ProblemRepository`
 
-## repository i persistence
+JPA implementacije su `Jpa...Repository` i koriste proslijeđeni EntityManager.
 
-Pet sučelja: `UserRepository`, `VehicleRepository`, `CatalogRepository`, `ServiceRecordRepository`,
-`ProblemRepository`. Pet JPA implementacija (`JpaUserRepository`, `JpaVehicleRepository`,
-`JpaCatalogRepository`, `JpaServiceRecordRepository`, `JpaProblemRepository`) rade samo JPQL/JPA nad
-proslijeđenim `EntityManagerom`; nestali objekti vraćaju `null`.
+## Service
 
-## service
+- `AuthService`
+- `VehicleService`
+- `CatalogService`
+- `ServiceRecordService`
+- `MaintenanceService`
+- `ProblemService`
+- `DashboardService`
 
-- `AuthService` — login, registracija s početnom poviješću i profil.
-- `VehicleService` — list/add/update/activate/delete uz owner provjeru.
-- `CatalogService` — marke, modeli, varijante i radovi.
-- `ServiceRecordService` — servis, stavke, kilometraža i rješavanje problema u jednoj transakciji.
-- `MaintenanceService` — history + rule/default podaci + kalkulator.
-- `ProblemService` — analiza i jednostavno spremanje već prikazanog previewa.
-- `DashboardService` — pregled troška, otvorenih problema i maintenance statusa.
-- `Mapping` — pretvara managed entitete u modele za View.
-- `AppException` — jednostavna runtime poslovna iznimka.
+## Controller / View
 
-## strategy i event
+Controlleri i Viewovi postoje za login/onboarding, vozila, dashboard, održavanje, katalog, servise, bilješke i profil.
 
-- `DiagnosticStrategy` — sučelje analize teksta.
-- `KeywordDiagnosticStrategy` — postojeće ponderirano grupiranje, score i sortiranje.
-- `AppEvent`, `AppListener`, `AppEvents` — mali Observer za osvježavanje GUI-ja.
+## Namjerno uklonjeni tipovi
 
-## controller
+Finalni runtime nema:
 
-`AuthController`, `MainController`, `VehiclesController`, `VehicleFormController`,
-`MaintenanceController`, `ServicesController`, `ServiceEditorController`, `ProblemsController` i
-`ProfileController` koordiniraju View i Service slojeve klasičnim Swing listenerima.
-`ServiceEditorListener` je mali konkretni listener za onboarding ili stvarni servis.
-
-## view
-
-`MainFrame`, `LoginView`, `OnboardingDialog`, `AnalysisDialog`, `ServiceEditorDialog`,
-`DashboardView`, `VehiclesView`, `MaintenanceView`, `ServicesView`, `ProblemsView` i `ProfileView`
-grade Swing prikaz. Glavne tablice koriste `JTable` + `DefaultTableModel`; pogledi posjeduju prikaz
-detalja. Komponente su `ServiceItemsModel`, `Ui` i `VehicleForm`; navigacija koristi Ikonli ikone.
-
-## setup alat
-
-`tools/setup` je odvojeni developerski Maven projekt s `DatabaseTool`, `SqlSeedTool`,
-`ReviewedIntervalTool`, CSV/manifest pomoćnicima i `DevelopmentSeed`. Nije dio
-runtime JAR-a. Setup koristi postojeće fizičke `snake_case` SQL objekte, TLS i eksplicitne target
-consent provjere.
-
-Lozinka se u ovom studentskom modelu čuva kao običan `String` u `AppUser.password` i stupcu
-`dbo.app_user.password`; to je namjerna demonstracijska odluka, nije preporuka za produkciju.
+- `VehicleWorkRule`
+- `DiagnosticRule`
+- `DiagnosticResult`
+- `DiagnosticStrategy`
+- `KeywordDiagnosticStrategy`
+- `AnalysisDialog`
+- transient score/match modele.
