@@ -29,8 +29,8 @@ BEGIN TRY
     THROW 51202, 'Očekuje se 120 finalnih standardnih zahvata.', 1;
 
   IF COL_LENGTH(N'dbo.vehicle_variant',N'price_class') IS NULL
-    ALTER TABLE dbo.vehicle_variant ADD price_class nvarchar(32) NULL;
-  UPDATE dbo.vehicle_variant SET price_class=N'STANDARD';
+    EXEC sys.sp_executesql N'ALTER TABLE dbo.vehicle_variant ADD price_class nvarchar(32) NULL;';
+  EXEC sys.sp_executesql N'UPDATE dbo.vehicle_variant SET price_class=N''STANDARD'';';
 
   CREATE TABLE #VariantClass(code nvarchar(80) NOT NULL PRIMARY KEY, price_class nvarchar(32) NOT NULL);
   INSERT INTO #VariantClass(code,price_class) VALUES
@@ -11646,26 +11646,31 @@ BEGIN TRY
     (N'vmm-ffee64a4745ec7b6c292a1b2a59c2ffbd032425577d29ce662fc04c40d79295f',N'PREMIUM'),
     (N'vmm-ffef31b6e59d44290e0d40694eb0717021cce9f1c91e91218224c312d72d4d1a',N'PREMIUM'),
     (N'vmm-fff00c806739ace7b9b1b3762bc66633d6657f9337d8b800c20f28eec9ab3861',N'PREMIUM');
-  UPDATE variant SET price_class=classes.price_class
-  FROM dbo.vehicle_variant variant JOIN #VariantClass classes ON classes.code=variant.code;
-  IF (SELECT COUNT(*) FROM dbo.vehicle_variant WHERE price_class=N'ECONOMY') <> 460
-    THROW 51203, 'Ne odgovara broj ECONOMY vozila.', 1;
-  IF (SELECT COUNT(*) FROM dbo.vehicle_variant WHERE price_class=N'STANDARD') <> 18777
-    THROW 51204, 'Ne odgovara broj STANDARD vozila.', 1;
-  IF (SELECT COUNT(*) FROM dbo.vehicle_variant WHERE price_class=N'PREMIUM') <> 9645
-    THROW 51205, 'Ne odgovara broj PREMIUM vozila.', 1;
-  IF (SELECT COUNT(*) FROM dbo.vehicle_variant WHERE price_class=N'PERFORMANCE') <> 783
-    THROW 51206, 'Ne odgovara broj PERFORMANCE vozila.', 1;
-  IF (SELECT COUNT(*) FROM dbo.vehicle_variant WHERE price_class=N'EXOTIC') <> 701
-    THROW 51207, 'Ne odgovara broj EXOTIC vozila.', 1;
-  ALTER TABLE dbo.vehicle_variant ALTER COLUMN price_class nvarchar(32) NOT NULL;
+  EXEC sys.sp_executesql N'UPDATE variant SET price_class=classes.price_class FROM dbo.vehicle_variant variant JOIN #VariantClass classes ON classes.code=variant.code;';
+  DECLARE @PriceClassCount bigint=0;
+  EXEC sys.sp_executesql N'SELECT @Count=COUNT_BIG(*) FROM dbo.vehicle_variant WHERE price_class=@PriceClass;', N'@PriceClass nvarchar(32), @Count bigint OUTPUT', @PriceClass=N'ECONOMY', @Count=@PriceClassCount OUTPUT;
+  IF @PriceClassCount <> 460
+    THROW 51203, N'Ne odgovara broj ECONOMY vozila.', 1;
+  EXEC sys.sp_executesql N'SELECT @Count=COUNT_BIG(*) FROM dbo.vehicle_variant WHERE price_class=@PriceClass;', N'@PriceClass nvarchar(32), @Count bigint OUTPUT', @PriceClass=N'STANDARD', @Count=@PriceClassCount OUTPUT;
+  IF @PriceClassCount <> 18777
+    THROW 51204, N'Ne odgovara broj STANDARD vozila.', 1;
+  EXEC sys.sp_executesql N'SELECT @Count=COUNT_BIG(*) FROM dbo.vehicle_variant WHERE price_class=@PriceClass;', N'@PriceClass nvarchar(32), @Count bigint OUTPUT', @PriceClass=N'PREMIUM', @Count=@PriceClassCount OUTPUT;
+  IF @PriceClassCount <> 9645
+    THROW 51205, N'Ne odgovara broj PREMIUM vozila.', 1;
+  EXEC sys.sp_executesql N'SELECT @Count=COUNT_BIG(*) FROM dbo.vehicle_variant WHERE price_class=@PriceClass;', N'@PriceClass nvarchar(32), @Count bigint OUTPUT', @PriceClass=N'PERFORMANCE', @Count=@PriceClassCount OUTPUT;
+  IF @PriceClassCount <> 783
+    THROW 51206, N'Ne odgovara broj PERFORMANCE vozila.', 1;
+  EXEC sys.sp_executesql N'SELECT @Count=COUNT_BIG(*) FROM dbo.vehicle_variant WHERE price_class=@PriceClass;', N'@PriceClass nvarchar(32), @Count bigint OUTPUT', @PriceClass=N'EXOTIC', @Count=@PriceClassCount OUTPUT;
+  IF @PriceClassCount <> 701
+    THROW 51207, N'Ne odgovara broj EXOTIC vozila.', 1;
+  EXEC sys.sp_executesql N'ALTER TABLE dbo.vehicle_variant ALTER COLUMN price_class nvarchar(32) NOT NULL;';
 
   IF COL_LENGTH(N'dbo.work_definition',N'catalog_category') IS NULL
-    ALTER TABLE dbo.work_definition ADD catalog_category nvarchar(40) NULL;
+    EXEC sys.sp_executesql N'ALTER TABLE dbo.work_definition ADD catalog_category nvarchar(40) NULL;';
   IF COL_LENGTH(N'dbo.work_definition',N'interval_km') IS NULL
-    ALTER TABLE dbo.work_definition ADD interval_km int NULL;
+    EXEC sys.sp_executesql N'ALTER TABLE dbo.work_definition ADD interval_km int NULL;';
   IF COL_LENGTH(N'dbo.work_definition',N'interval_months') IS NULL
-    ALTER TABLE dbo.work_definition ADD interval_months int NULL;
+    EXEC sys.sp_executesql N'ALTER TABLE dbo.work_definition ADD interval_months int NULL;';
 
   CREATE TABLE #WorkCatalog(code nvarchar(80) NOT NULL PRIMARY KEY, display_name nvarchar(160) NOT NULL, work_category nvarchar(32) NOT NULL, catalog_category nvarchar(40) NOT NULL, interval_km int NULL, interval_months int NULL);
   INSERT INTO #WorkCatalog(code,display_name,work_category,catalog_category,interval_km,interval_months) VALUES
@@ -11792,14 +11797,13 @@ BEGIN TRY
   IF (SELECT COUNT(*) FROM #WorkCatalog) <> 120 THROW 51208, 'Nevaljan broj radova u seedu.', 1;
   IF (SELECT COUNT(*) FROM dbo.work_definition work JOIN #WorkCatalog seed ON seed.code=work.code) <> 120
     THROW 51209, 'Kodovi radova u bazi ne odgovaraju finalnom katalogu.', 1;
-  UPDATE work SET name=seed.display_name, category=seed.work_category, catalog_category=seed.catalog_category, interval_km=seed.interval_km, interval_months=seed.interval_months
-  FROM dbo.work_definition work JOIN #WorkCatalog seed ON seed.code=work.code;
-  ALTER TABLE dbo.work_definition ALTER COLUMN catalog_category nvarchar(40) NOT NULL;
+  EXEC sys.sp_executesql N'UPDATE work SET name=seed.display_name, category=seed.work_category, catalog_category=seed.catalog_category, interval_km=seed.interval_km, interval_months=seed.interval_months FROM dbo.work_definition work JOIN #WorkCatalog seed ON seed.code=work.code;';
+  EXEC sys.sp_executesql N'ALTER TABLE dbo.work_definition ALTER COLUMN catalog_category nvarchar(40) NOT NULL;';
 
   IF COL_LENGTH(N'dbo.problem',N'category') IS NULL
-    ALTER TABLE dbo.problem ADD category nvarchar(32) NULL;
-  UPDATE dbo.problem SET category=N'OTHER' WHERE category IS NULL;
-  ALTER TABLE dbo.problem ALTER COLUMN category nvarchar(32) NOT NULL;
+    EXEC sys.sp_executesql N'ALTER TABLE dbo.problem ADD category nvarchar(32) NULL;';
+  EXEC sys.sp_executesql N'UPDATE dbo.problem SET category=N''OTHER'' WHERE category IS NULL;';
+  EXEC sys.sp_executesql N'ALTER TABLE dbo.problem ALTER COLUMN category nvarchar(32) NOT NULL;';
 
   DECLARE @Sql nvarchar(max)=N'';
   IF COL_LENGTH(N'dbo.problem',N'suggested_repair_id') IS NOT NULL
@@ -11810,10 +11814,10 @@ BEGIN TRY
     WHERE fk.parent_object_id=OBJECT_ID(N'dbo.problem')
       AND fkc.parent_column_id=COLUMNPROPERTY(OBJECT_ID(N'dbo.problem'),N'suggested_repair_id','ColumnId');
     IF @Sql<>N'' EXEC sys.sp_executesql @Sql;
-    ALTER TABLE dbo.problem DROP COLUMN suggested_repair_id;
+    EXEC sys.sp_executesql N'ALTER TABLE dbo.problem DROP COLUMN suggested_repair_id;';
   END;
   IF COL_LENGTH(N'dbo.problem',N'estimated_cost') IS NOT NULL
-    ALTER TABLE dbo.problem DROP COLUMN estimated_cost;
+    EXEC sys.sp_executesql N'ALTER TABLE dbo.problem DROP COLUMN estimated_cost;';
 
   IF OBJECT_ID(N'dbo.work_price_range',N'U') IS NOT NULL DROP TABLE dbo.work_price_range;
   CREATE TABLE dbo.work_price_range(
@@ -12442,9 +12446,13 @@ BEGIN TRY
   END;
   IF OBJECT_ID(N'dbo.diagnostic_rule',N'U') IS NOT NULL DROP TABLE dbo.diagnostic_rule;
 
-  IF EXISTS (SELECT 1 FROM dbo.work_definition WHERE category=N'MAINTENANCE' AND interval_km IS NULL AND interval_months IS NULL)
+  DECLARE @InvalidMaintenanceIntervals bigint=0;
+  EXEC sys.sp_executesql N'SELECT @Count=COUNT_BIG(*) FROM dbo.work_definition WHERE category=N''MAINTENANCE'' AND interval_km IS NULL AND interval_months IS NULL;', N'@Count bigint OUTPUT', @Count=@InvalidMaintenanceIntervals OUTPUT;
+  IF @InvalidMaintenanceIntervals > 0
     THROW 51212, 'Maintenance rad bez intervala.', 1;
-  IF EXISTS (SELECT 1 FROM dbo.work_definition WHERE category=N'REPAIR' AND (interval_km IS NOT NULL OR interval_months IS NOT NULL))
+  DECLARE @InvalidRepairIntervals bigint=0;
+  EXEC sys.sp_executesql N'SELECT @Count=COUNT_BIG(*) FROM dbo.work_definition WHERE category=N''REPAIR'' AND (interval_km IS NOT NULL OR interval_months IS NOT NULL);', N'@Count bigint OUTPUT', @Count=@InvalidRepairIntervals OUTPUT;
+  IF @InvalidRepairIntervals > 0
     THROW 51213, 'Repair rad ne smije imati preventivni interval.', 1;
   IF EXISTS (SELECT 1 FROM dbo.work_price_range WHERE min_price<=0 OR max_price<min_price)
     THROW 51214, 'Nevaljan raspon cijene.', 1;
@@ -12456,10 +12464,10 @@ BEGIN CATCH
   THROW;
 END CATCH;
 
-SELECT
+EXEC sys.sp_executesql N'SELECT
   (SELECT COUNT_BIG(*) FROM dbo.vehicle_variant) AS vehicle_variants,
   (SELECT COUNT_BIG(*) FROM dbo.work_definition) AS work_definitions,
   (SELECT COUNT_BIG(*) FROM dbo.work_price_range) AS price_ranges,
-  CASE WHEN OBJECT_ID(N'dbo.vehicle_work_rule',N'U') IS NULL THEN 0 ELSE 1 END AS old_variant_rule_table_exists,
-  CASE WHEN OBJECT_ID(N'dbo.diagnostic_rule',N'U') IS NULL THEN 0 ELSE 1 END AS diagnostic_rule_table_exists,
-  (SELECT COUNT_BIG(*) FROM dbo.problem WHERE category IS NULL) AS notes_without_category;
+  CASE WHEN OBJECT_ID(N''dbo.vehicle_work_rule'',N''U'') IS NULL THEN 0 ELSE 1 END AS old_variant_rule_table_exists,
+  CASE WHEN OBJECT_ID(N''dbo.diagnostic_rule'',N''U'') IS NULL THEN 0 ELSE 1 END AS diagnostic_rule_table_exists,
+  (SELECT COUNT_BIG(*) FROM dbo.problem WHERE category IS NULL) AS notes_without_category;';
