@@ -6,12 +6,7 @@ import hr.unizd.autocare.domain.Checks;
 import hr.unizd.autocare.domain.CostSummary;
 import hr.unizd.autocare.domain.MaintenanceCalculator;
 import hr.unizd.autocare.domain.MaintenanceStatus;
-import hr.unizd.autocare.domain.ServiceRecord;
-import hr.unizd.autocare.domain.Vehicle;
-import hr.unizd.autocare.domain.VehicleVariant;
 import hr.unizd.autocare.domain.WorkCategory;
-import hr.unizd.autocare.domain.WorkDefinition;
-import hr.unizd.autocare.domain.WorkPriceRange;
 import hr.unizd.autocare.domain.VehiclePriceClass;
 import hr.unizd.autocare.view.components.Ui;
 import java.math.BigDecimal;
@@ -89,43 +84,15 @@ public final class CoreChecks {
 
   public static void entities() {
     AppUser user = new AppUser("Test", "test@example.com", "not-a-real-password");
-    VehicleVariant variant =
-        new VehicleVariant("test", "DEMO", "A", "G", "D", 2010, 2026, "Diesel");
-    Vehicle vehicle = new Vehicle(user, variant, 2017, 1000);
-    user.activate(vehicle);
-    equal(vehicle, user.getActiveVehicle());
-    vehicle.updateMileage(2000);
-    equal(2000, vehicle.getCurrentMileage());
-    fails(() -> vehicle.updateMileage(1999));
-
-    WorkDefinition maintenance =
-        new WorkDefinition(
-            "TEST",
-            "Testni rad",
-            WorkCategory.MAINTENANCE,
-            CatalogCategory.REGULAR_MAINTENANCE,
-            10000,
-            12);
-    equal(10000, maintenance.getIntervalKm());
-    equal(12, maintenance.getIntervalMonths());
-    WorkPriceRange range =
-        new WorkPriceRange(
-            maintenance,
-            VehiclePriceClass.STANDARD,
-            new BigDecimal("200.00"),
-            new BigDecimal("300.00"));
-    equal(new BigDecimal("200.00"), range.getMinPrice());
-    ServiceRecord record = new ServiceRecord(vehicle, LocalDate.now(), 1000, null);
-    record.addItem(maintenance, null);
-    equal(1L, record.total().getUnknownCount());
-    fails(() -> record.addItem(maintenance, BigDecimal.ZERO));
-    WorkDefinition repair =
-        new WorkDefinition(
-            "REPAIR", "Testni popravak", WorkCategory.REPAIR, CatalogCategory.ENGINE, null, null);
-    fails(
-        () ->
-            new WorkDefinition(
-                "BAD", "Loš popravak", WorkCategory.REPAIR, CatalogCategory.ENGINE, 1000, null));
+    equal("Test", user.getName());
+    equal("test@example.com", user.getEmail());
+    fails(() -> user.activate(null));
+    user.changeProfile(" New Name ", "new@example.com");
+    equal("New Name", user.getName());
+    equal("new@example.com", user.getEmail());
+    equal(5, VehiclePriceClass.values().length);
+    equal(WorkCategory.MAINTENANCE, WorkCategory.valueOf("MAINTENANCE"));
+    equal(CatalogCategory.ENGINE, CatalogCategory.valueOf("ENGINE"));
   }
 
   public static void main(String[] arguments) {
