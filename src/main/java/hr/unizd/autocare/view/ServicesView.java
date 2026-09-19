@@ -89,7 +89,7 @@ public final class ServicesView extends JPanel {
     text.append(Ui.total(detail.getHeader().getTotal()));
     text.append("\nNapomena: ");
     text.append(Objects.toString(detail.getHeader().getNote(), "-"));
-    text.append("\n\nRiješeni problemi:\n");
+    text.append("\n\nRiješene bilješke:\n");
     for (String problem : detail.getResolvedProblems()) {
       text.append(problem);
       text.append("\n");

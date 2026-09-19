@@ -71,7 +71,7 @@ public final class ServiceEditorDialog extends JDialog {
 
     problemsTableModel =
         new DefaultTableModel(
-            new Object[][] {}, new String[] {"Riješen", "Problem riješen ovim servisom"}) {
+            new Object[][] {}, new String[] {"Riješen", "Bilješka riješena ovim servisom"}) {
           @Override
           public Class<?> getColumnClass(int column) {
             return column == 0 ? Boolean.class : String.class;

@@ -1,11 +1,13 @@
 package hr.unizd.autocare.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-/** Identitet kataloske varijante vozila, bez podataka o korisnikovim servisima. */
+/** Identitet kataloške varijante vozila, bez podataka o korisnikovim servisima. */
 @Entity
 public class VehicleVariant {
   @Id
@@ -23,6 +25,9 @@ public class VehicleVariant {
   private String transmission;
   private int yearFrom;
   private Integer yearTo;
+
+  @Enumerated(EnumType.STRING)
+  private VehiclePriceClass priceClass;
 
   protected VehicleVariant() {}
 
@@ -48,6 +53,7 @@ public class VehicleVariant {
     this.yearFrom = yearFrom;
     this.yearTo = yearTo;
     this.fuelType = Checks.optional(fuelType, 80, "Gorivo");
+    this.priceClass = VehiclePriceClass.STANDARD;
   }
 
   public VehicleVariant(
@@ -123,5 +129,9 @@ public class VehicleVariant {
 
   public Integer getYearTo() {
     return yearTo;
+  }
+
+  public VehiclePriceClass getPriceClass() {
+    return priceClass;
   }
 }

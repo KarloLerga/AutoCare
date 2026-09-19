@@ -29,6 +29,7 @@ public final class MainFrame extends JFrame {
   public final DashboardView dashboard = new DashboardView();
   public final VehiclesView vehicles = new VehiclesView();
   public final MaintenanceView maintenance = new MaintenanceView();
+  public final CatalogView catalog = new CatalogView();
   public final ServicesView services = new ServicesView();
   public final ProblemsView problems = new ProblemsView();
   public final ProfileView profile = new ProfileView();
@@ -70,8 +71,9 @@ public final class MainFrame extends JFrame {
     addNavigation(sidebar, "Dashboard", dashboard, FontAwesomeSolid.TACHOMETER_ALT);
     addNavigation(sidebar, "Vozila", vehicles, FontAwesomeSolid.CAR);
     addNavigation(sidebar, "Održavanje", maintenance, FontAwesomeSolid.WRENCH);
+    addNavigation(sidebar, "Katalog", catalog, FontAwesomeSolid.EURO_SIGN);
     addNavigation(sidebar, "Servisi", services, FontAwesomeSolid.CLIPBOARD);
-    addNavigation(sidebar, "Problemi", problems, FontAwesomeSolid.EXCLAMATION_TRIANGLE);
+    addNavigation(sidebar, "Bilješke", problems, FontAwesomeSolid.EXCLAMATION_TRIANGLE);
     addNavigation(sidebar, "Profil", profile, FontAwesomeSolid.USER);
 
     sidebar.add(Box.createVerticalGlue());

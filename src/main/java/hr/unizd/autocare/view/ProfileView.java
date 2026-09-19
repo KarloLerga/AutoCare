@@ -6,7 +6,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-/** Osnovni podaci korisnickog profila. */
+/** Osnovni podaci korisničkog profila. */
 public final class ProfileView extends JPanel {
   public final JTextField name = new JTextField(25);
   public final JTextField email = new JTextField(25);

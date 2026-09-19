@@ -1,6 +1,7 @@
 package hr.unizd.autocare;
 
 import hr.unizd.autocare.domain.AppUser;
+import hr.unizd.autocare.domain.CatalogCategory;
 import hr.unizd.autocare.domain.Checks;
 import hr.unizd.autocare.domain.CostSummary;
 import hr.unizd.autocare.domain.MaintenanceCalculator;
@@ -8,9 +9,10 @@ import hr.unizd.autocare.domain.MaintenanceStatus;
 import hr.unizd.autocare.domain.ServiceRecord;
 import hr.unizd.autocare.domain.Vehicle;
 import hr.unizd.autocare.domain.VehicleVariant;
-import hr.unizd.autocare.domain.VehicleWorkRule;
 import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.domain.WorkDefinition;
+import hr.unizd.autocare.domain.WorkPriceRange;
+import hr.unizd.autocare.domain.VehiclePriceClass;
 import hr.unizd.autocare.view.components.Ui;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -97,17 +99,33 @@ public final class CoreChecks {
     fails(() -> vehicle.updateMileage(1999));
 
     WorkDefinition maintenance =
-        new WorkDefinition("TEST", "Testni rad", WorkCategory.MAINTENANCE);
-    VehicleWorkRule rule =
-        new VehicleWorkRule(variant, maintenance, 10000, 12, new BigDecimal("250.00"));
-    equal(10000, rule.getIntervalKm());
-    equal(12, rule.getIntervalMonths());
+        new WorkDefinition(
+            "TEST",
+            "Testni rad",
+            WorkCategory.MAINTENANCE,
+            CatalogCategory.REGULAR_MAINTENANCE,
+            10000,
+            12);
+    equal(10000, maintenance.getIntervalKm());
+    equal(12, maintenance.getIntervalMonths());
+    WorkPriceRange range =
+        new WorkPriceRange(
+            maintenance,
+            VehiclePriceClass.STANDARD,
+            new BigDecimal("200.00"),
+            new BigDecimal("300.00"));
+    equal(new BigDecimal("200.00"), range.getMinPrice());
     ServiceRecord record = new ServiceRecord(vehicle, LocalDate.now(), 1000, null);
     record.addItem(maintenance, null);
     equal(1L, record.total().getUnknownCount());
     fails(() -> record.addItem(maintenance, BigDecimal.ZERO));
-    WorkDefinition repair = new WorkDefinition("REPAIR", "Testni popravak", WorkCategory.REPAIR);
-    fails(() -> new VehicleWorkRule(variant, repair, 1000, null, BigDecimal.ONE));
+    WorkDefinition repair =
+        new WorkDefinition(
+            "REPAIR", "Testni popravak", WorkCategory.REPAIR, CatalogCategory.ENGINE, null, null);
+    fails(
+        () ->
+            new WorkDefinition(
+                "BAD", "Loš popravak", WorkCategory.REPAIR, CatalogCategory.ENGINE, 1000, null));
   }
 
   public static void main(String[] arguments) {

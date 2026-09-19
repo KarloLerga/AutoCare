@@ -60,16 +60,11 @@ final class Mapping {
   }
 
   static ProblemRow problem(Problem problem) {
-    String suggestedRepair = null;
-    if (problem.getSuggestedRepair() != null) {
-      suggestedRepair = problem.getSuggestedRepair().getName();
-    }
     return new ProblemRow(
         problem.getId(),
         problem.getDescription(),
+        problem.getCategory(),
         problem.getStatus(),
-        problem.getCreatedAt(),
-        suggestedRepair,
-        problem.getEstimatedCost());
+        problem.getCreatedAt());
   }
 }

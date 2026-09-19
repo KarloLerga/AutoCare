@@ -21,9 +21,7 @@ public final class SqlOfflineChecks {
   }
 
   public static void run() {
-    check(Ui.roundedEstimate(new BigDecimal("284")).equals(new BigDecimal("280")));
-    check(Ui.roundedEstimate(new BigDecimal("285")).equals(new BigDecimal("290")));
-    check(Ui.estimate(null).equals("Nema procjene"));
+    check(Ui.priceRange(new BigDecimal("90"), new BigDecimal("130")).equals("90 - 130 EUR"));
     check(Checks.money(new BigDecimal("53.47"), false).equals(new BigDecimal("53.47")));
     MaintenanceCalculator calculator = new MaintenanceCalculator();
     LocalDate today = LocalDate.of(2026, 9, 16);

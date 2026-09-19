@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Locale;
 
-/** Osnovne provjere korisnickog unosa. */
+/** Osnovne provjere korisničkog unosa. */
 public final class Checks {
   private Checks() {}
 
@@ -16,7 +16,7 @@ public final class Checks {
     String cleanValue = value.strip();
 
     if (cleanValue.length() > max) {
-      throw new IllegalArgumentException(label + " je predugacak.");
+      throw new IllegalArgumentException(label + " je predugačak.");
     }
 
     return cleanValue;
@@ -56,7 +56,7 @@ public final class Checks {
         return null;
       }
 
-      throw new IllegalArgumentException("Unesite stvarno placenu cijenu.");
+      throw new IllegalArgumentException("Unesite stvarno plaćenu cijenu.");
     }
 
     if (value.signum() < 0) {

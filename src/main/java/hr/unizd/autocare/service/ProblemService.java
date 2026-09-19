@@ -2,16 +2,11 @@ package hr.unizd.autocare.service;
 
 import hr.unizd.autocare.domain.Checks;
 import hr.unizd.autocare.domain.Problem;
+import hr.unizd.autocare.domain.ProblemCategory;
 import hr.unizd.autocare.domain.Vehicle;
-import hr.unizd.autocare.domain.VehicleWorkRule;
-import hr.unizd.autocare.domain.WorkCategory;
-import hr.unizd.autocare.model.Data.ProblemEstimate;
 import hr.unizd.autocare.model.Data.ProblemRow;
-import hr.unizd.autocare.persistence.JpaCatalogRepository;
 import hr.unizd.autocare.persistence.JpaProblemRepository;
 import hr.unizd.autocare.persistence.JpaVehicleRepository;
-import hr.unizd.autocare.repository.CatalogRepository;
-import hr.unizd.autocare.repository.ProblemRepository;
 import hr.unizd.autocare.repository.VehicleRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -20,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Ručni unos problema i procjena odabranog konkretnog popravka. */
+/** Bilješke vlasnika vozila bez automatske dijagnostike ili pogađanja kvara. */
 public final class ProblemService {
   private final EntityManagerFactory entityManagerFactory;
 
@@ -36,8 +31,7 @@ public final class ProblemService {
         throw new AppException("Vozilo nije pronađeno.");
       }
       List<ProblemRow> rows = new ArrayList<>();
-      for (Problem problem :
-          new JpaProblemRepository(entityManager).list(ownerId, vehicleId)) {
+      for (Problem problem : new JpaProblemRepository(entityManager).list(ownerId, vehicleId)) {
         rows.add(Mapping.problem(problem));
       }
       return rows;
@@ -46,26 +40,12 @@ public final class ProblemService {
     }
   }
 
-  public ProblemEstimate estimate(long ownerId, long vehicleId, long repairWorkId) {
-    EntityManager entityManager = entityManagerFactory.createEntityManager();
-    try {
-      Vehicle vehicle = new JpaVehicleRepository(entityManager).findForOwner(ownerId, vehicleId);
-      if (vehicle == null) {
-        throw new AppException("Vozilo nije pronađeno.");
-      }
-      VehicleWorkRule rule =
-          new JpaCatalogRepository(entityManager)
-              .findRule(vehicle.getVariant().getId(), repairWorkId);
-      requireRepair(rule);
-      return new ProblemEstimate(
-          rule.getWork().getId(), rule.getWork().getName(), rule.getEstimatedPrice());
-    } finally {
-      entityManager.close();
-    }
-  }
-
-  public long create(long ownerId, long vehicleId, String description, long repairWorkId) {
-    String cleanDescription = Checks.text(description, 2000, "Opis problema");
+  public long create(
+      long ownerId,
+      long vehicleId,
+      String description,
+      ProblemCategory category) {
+    String cleanDescription = Checks.text(description, 2000, "Bilješka");
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();
     try {
@@ -74,17 +54,7 @@ public final class ProblemService {
       if (vehicle == null) {
         throw new AppException("Vozilo nije pronađeno.");
       }
-      CatalogRepository catalogRepository = new JpaCatalogRepository(entityManager);
-      VehicleWorkRule rule =
-          catalogRepository.findRule(vehicle.getVariant().getId(), repairWorkId);
-      requireRepair(rule);
-      Problem problem =
-          new Problem(
-              vehicle,
-              cleanDescription,
-              LocalDateTime.now(),
-              rule.getWork(),
-              rule.getEstimatedPrice());
+      Problem problem = new Problem(vehicle, cleanDescription, category, LocalDateTime.now());
       new JpaProblemRepository(entityManager).add(problem);
       transaction.commit();
       return problem.getId();
@@ -97,10 +67,25 @@ public final class ProblemService {
       entityManager.close();
     }
   }
-
-  private static void requireRepair(VehicleWorkRule rule) {
-    if (rule == null || rule.getWork().getCategory() != WorkCategory.REPAIR) {
-      throw new AppException("Odabrani popravak nije dostupan za ovo vozilo.");
+  public void close(long ownerId, long problemId) {
+    EntityManager entityManager = entityManagerFactory.createEntityManager();
+    EntityTransaction transaction = entityManager.getTransaction();
+    try {
+      transaction.begin();
+      Problem problem = new JpaProblemRepository(entityManager).findForOwner(ownerId, problemId);
+      if (problem == null) {
+        throw new AppException("Bilješka nije pronađena.");
+      }
+      problem.close();
+      transaction.commit();
+    } catch (RuntimeException exception) {
+      if (transaction.isActive()) {
+        transaction.rollback();
+      }
+      throw exception;
+    } finally {
+      entityManager.close();
     }
   }
+
 }

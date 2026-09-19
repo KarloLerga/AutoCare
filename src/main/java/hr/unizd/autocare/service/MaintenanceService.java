@@ -4,9 +4,8 @@ import hr.unizd.autocare.domain.MaintenanceCalculator;
 import hr.unizd.autocare.domain.MaintenanceStatus;
 import hr.unizd.autocare.domain.ServiceItem;
 import hr.unizd.autocare.domain.Vehicle;
-import hr.unizd.autocare.domain.VehicleWorkRule;
 import hr.unizd.autocare.domain.WorkCategory;
-import hr.unizd.autocare.model.Data.MaintenanceEstimate;
+import hr.unizd.autocare.domain.WorkDefinition;
 import hr.unizd.autocare.model.Data.MaintenanceRow;
 import hr.unizd.autocare.persistence.JpaCatalogRepository;
 import hr.unizd.autocare.persistence.JpaServiceRecordRepository;
@@ -22,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Praćeno održavanje računa se iz servisne povijesti i konkretnog pravila vozila. */
+/** Servisna povijest je izvor istine za praćene intervale održavanja. */
 public final class MaintenanceService {
   private final EntityManagerFactory entityManagerFactory;
 
@@ -48,30 +47,6 @@ public final class MaintenanceService {
     }
   }
 
-  public MaintenanceEstimate estimate(long ownerId, long vehicleId, long workId) {
-    EntityManager entityManager = entityManagerFactory.createEntityManager();
-    try {
-      Vehicle vehicle = new JpaVehicleRepository(entityManager).findForOwner(ownerId, vehicleId);
-      if (vehicle == null) {
-        throw new AppException("Vozilo nije pronađeno.");
-      }
-      VehicleWorkRule rule =
-          new JpaCatalogRepository(entityManager)
-              .findRule(vehicle.getVariant().getId(), workId);
-      if (rule == null || rule.getWork().getCategory() != WorkCategory.MAINTENANCE) {
-        throw new AppException("Odabrano održavanje nije dostupno za ovo vozilo.");
-      }
-      return new MaintenanceEstimate(
-          rule.getWork().getId(),
-          rule.getWork().getName(),
-          rule.getEstimatedPrice(),
-          rule.getIntervalKm(),
-          rule.getIntervalMonths());
-    } finally {
-      entityManager.close();
-    }
-  }
-
   static List<MaintenanceRow> calculate(
       CatalogRepository catalogRepository,
       ServiceRecordRepository serviceRecordRepository,
@@ -83,30 +58,29 @@ public final class MaintenanceService {
     LocalDate today = LocalDate.now();
     List<MaintenanceRow> rows = new ArrayList<>();
 
-    for (VehicleWorkRule rule : catalogRepository.rules(vehicle.getVariant().getId())) {
-      if (rule.getWork().getCategory() != WorkCategory.MAINTENANCE) {
-        continue;
-      }
-      ServiceItem last = latestItems.get(rule.getWork().getId());
+    for (WorkDefinition work : catalogRepository.works(WorkCategory.MAINTENANCE)) {
+      ServiceItem last = latestItems.get(work.getId());
       if (last == null) {
         continue;
       }
+
       LocalDate lastDate = last.getServiceRecord().getServiceDate();
       Integer lastMileage = last.getServiceRecord().getMileage();
-      LocalDate nextDate = nextDate(lastDate, rule.getIntervalMonths());
-      Integer nextMileage = nextMileage(lastMileage, rule.getIntervalKm());
+      LocalDate nextDate = nextDate(lastDate, work.getIntervalMonths());
+      Integer nextMileage = nextMileage(lastMileage, work.getIntervalKm());
       MaintenanceStatus status =
           calculator.calculate(
-              rule.getIntervalKm(),
-              rule.getIntervalMonths(),
+              work.getIntervalKm(),
+              work.getIntervalMonths(),
               lastDate,
               lastMileage,
               vehicle.getCurrentMileage(),
               today);
+
       rows.add(
           new MaintenanceRow(
-              rule.getWork().getId(),
-              rule.getWork().getName(),
+              work.getId(),
+              work.getName(),
               lastDate,
               lastMileage,
               nextDate,

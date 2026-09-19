@@ -1,6 +1,6 @@
 package hr.unizd.autocare.service;
 
-/** Ocekivana korisnicka pogreska poslovnog sloja. */
+/** Očekivana korisnička pogreška poslovnog sloja. */
 public class AppException extends RuntimeException {
 
   public AppException(String message) {

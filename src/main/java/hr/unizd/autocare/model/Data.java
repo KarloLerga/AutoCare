@@ -1,7 +1,9 @@
 package hr.unizd.autocare.model;
 
+import hr.unizd.autocare.domain.CatalogCategory;
 import hr.unizd.autocare.domain.CostSummary;
 import hr.unizd.autocare.domain.MaintenanceStatus;
+import hr.unizd.autocare.domain.ProblemCategory;
 import hr.unizd.autocare.domain.ProblemStatus;
 import hr.unizd.autocare.domain.WorkCategory;
 import java.math.BigDecimal;
@@ -343,24 +345,21 @@ public final class Data {
   public static final class ProblemRow {
     private final long id;
     private final String description;
+    private final ProblemCategory category;
     private final ProblemStatus status;
     private final LocalDateTime createdAt;
-    private final String suggestedRepair;
-    private final BigDecimal estimatedCost;
 
     public ProblemRow(
         long id,
         String description,
+        ProblemCategory category,
         ProblemStatus status,
-        LocalDateTime createdAt,
-        String suggestedRepair,
-        BigDecimal estimatedCost) {
+        LocalDateTime createdAt) {
       this.id = id;
       this.description = description;
+      this.category = category;
       this.status = status;
       this.createdAt = createdAt;
-      this.suggestedRepair = suggestedRepair;
-      this.estimatedCost = estimatedCost;
     }
 
     public long getId() {
@@ -371,45 +370,16 @@ public final class Data {
       return description;
     }
 
+    public ProblemCategory getCategory() {
+      return category;
+    }
+
     public ProblemStatus getStatus() {
       return status;
     }
 
     public LocalDateTime getCreatedAt() {
       return createdAt;
-    }
-
-    public String getSuggestedRepair() {
-      return suggestedRepair;
-    }
-
-    public BigDecimal getEstimatedCost() {
-      return estimatedCost;
-    }
-
-  }
-
-  public static final class ProblemEstimate {
-    private final long workId;
-    private final String workName;
-    private final BigDecimal estimatedCost;
-
-    public ProblemEstimate(long workId, String workName, BigDecimal estimatedCost) {
-      this.workId = workId;
-      this.workName = workName;
-      this.estimatedCost = estimatedCost;
-    }
-
-    public long getWorkId() {
-      return workId;
-    }
-
-    public String getWorkName() {
-      return workName;
-    }
-
-    public BigDecimal getEstimatedCost() {
-      return estimatedCost;
     }
   }
 
@@ -469,36 +439,51 @@ public final class Data {
 
   }
 
-  public static final class MaintenanceEstimate {
-    private final long workId;
-    private final String workName;
-    private final BigDecimal estimatedPrice;
+
+  public static final class CatalogRow {
+    private final String name;
+    private final CatalogCategory catalogCategory;
+    private final WorkCategory workCategory;
+    private final BigDecimal minPrice;
+    private final BigDecimal maxPrice;
     private final Integer intervalKm;
     private final Integer intervalMonths;
 
-    public MaintenanceEstimate(
-        long workId,
-        String workName,
-        BigDecimal estimatedPrice,
+    public CatalogRow(
+        String name,
+        CatalogCategory catalogCategory,
+        WorkCategory workCategory,
+        BigDecimal minPrice,
+        BigDecimal maxPrice,
         Integer intervalKm,
         Integer intervalMonths) {
-      this.workId = workId;
-      this.workName = workName;
-      this.estimatedPrice = estimatedPrice;
+      this.name = name;
+      this.catalogCategory = catalogCategory;
+      this.workCategory = workCategory;
+      this.minPrice = minPrice;
+      this.maxPrice = maxPrice;
       this.intervalKm = intervalKm;
       this.intervalMonths = intervalMonths;
     }
 
-    public long getWorkId() {
-      return workId;
+    public String getName() {
+      return name;
     }
 
-    public String getWorkName() {
-      return workName;
+    public CatalogCategory getCatalogCategory() {
+      return catalogCategory;
     }
 
-    public BigDecimal getEstimatedPrice() {
-      return estimatedPrice;
+    public WorkCategory getWorkCategory() {
+      return workCategory;
+    }
+
+    public BigDecimal getMinPrice() {
+      return minPrice;
+    }
+
+    public BigDecimal getMaxPrice() {
+      return maxPrice;
     }
 
     public Integer getIntervalKm() {
@@ -508,23 +493,22 @@ public final class Data {
     public Integer getIntervalMonths() {
       return intervalMonths;
     }
-
   }
 
   public static final class Dashboard {
     private final VehicleRow vehicle;
     private final CostSummary total;
-    private final long openProblems;
+    private final long activeNotes;
     private final MaintenanceRow nextMaintenance;
 
     public Dashboard(
         VehicleRow vehicle,
         CostSummary total,
-        long openProblems,
+        long activeNotes,
         MaintenanceRow nextMaintenance) {
       this.vehicle = vehicle;
       this.total = total;
-      this.openProblems = openProblems;
+      this.activeNotes = activeNotes;
       this.nextMaintenance = nextMaintenance;
     }
 
@@ -536,8 +520,8 @@ public final class Data {
       return total;
     }
 
-    public long getOpenProblems() {
-      return openProblems;
+    public long getActiveNotes() {
+      return activeNotes;
     }
 
     public MaintenanceRow getNextMaintenance() {

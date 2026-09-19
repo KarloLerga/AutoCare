@@ -26,7 +26,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Poslovna granica za servis, njegove stavke, kilometražu i riješene probleme. */
+/** Poslovna granica za servis, njegove stavke, kilometražu i riješene bilješke. */
 public final class ServiceRecordService {
   private final EntityManagerFactory entityManagerFactory;
 
@@ -95,10 +95,6 @@ public final class ServiceRecordService {
         throw new AppException("Odabrani rad nije pronađen.");
       }
 
-      if (catalogRepository.findRule(vehicle.getVariant().getId(), work.getId()) == null) {
-        throw new AppException("Odabrani rad nije dostupan za ovo vozilo.");
-      }
-
       serviceRecord.addItem(work, itemInput.getActualPrice());
     }
 
@@ -120,7 +116,7 @@ public final class ServiceRecordService {
     for (Long problemId : problemIds) {
       Problem problem = problemRepository.findForOwner(vehicle.getOwner().getId(), problemId);
       if (problem == null) {
-        throw new AppException("Problem nije pronađen.");
+        throw new AppException("Bilješka nije pronađena.");
       }
 
       problem.resolve(serviceRecord);
@@ -148,7 +144,7 @@ public final class ServiceRecordService {
     }
 
     if (historical && !input.getResolvedProblemIds().isEmpty()) {
-      throw new AppException("Početna povijest ne rješava postojeće probleme.");
+      throw new AppException("Početna povijest ne zatvara postojeće bilješke.");
     }
   }
 

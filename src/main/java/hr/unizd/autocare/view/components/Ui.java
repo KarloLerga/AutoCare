@@ -3,6 +3,7 @@ package hr.unizd.autocare.view.components;
 import hr.unizd.autocare.domain.Checks;
 import hr.unizd.autocare.domain.CostSummary;
 import hr.unizd.autocare.domain.MaintenanceStatus;
+import hr.unizd.autocare.domain.WorkCategory;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -11,7 +12,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -157,16 +157,19 @@ public final class Ui {
     return String.format(Locale.forLanguageTag("hr-HR"), "%,.2f EUR", value);
   }
 
-  public static BigDecimal roundedEstimate(BigDecimal amount) {
-    if (amount == null) {
-      return null;
+  public static String priceRange(BigDecimal minPrice, BigDecimal maxPrice) {
+    if (minPrice == null || maxPrice == null) {
+      return "Nema procjene";
     }
-    return amount.divide(BigDecimal.TEN, 0, RoundingMode.HALF_UP).multiply(BigDecimal.TEN);
+    return plainMoney(minPrice) + " - " + plainMoney(maxPrice) + " EUR";
   }
 
-  public static String estimate(BigDecimal amount) {
-    BigDecimal rounded = roundedEstimate(amount);
-    return rounded == null ? "Nema procjene" : "≈ " + rounded.toPlainString() + " EUR";
+  private static String plainMoney(BigDecimal value) {
+    return value.stripTrailingZeros().toPlainString();
+  }
+
+  public static String workCategory(WorkCategory category) {
+    return category == WorkCategory.MAINTENANCE ? "Održavanje" : "Popravak";
   }
 
   public static String total(CostSummary summary) {
@@ -198,7 +201,7 @@ public final class Ui {
   }
 
   public static String problemStatus(hr.unizd.autocare.domain.ProblemStatus status) {
-    return status == hr.unizd.autocare.domain.ProblemStatus.OPEN ? "Otvoren" : "Riješen";
+    return status == hr.unizd.autocare.domain.ProblemStatus.OPEN ? "Aktivna" : "Riješena";
   }
 
   public static boolean confirm(Component parent, String text) {

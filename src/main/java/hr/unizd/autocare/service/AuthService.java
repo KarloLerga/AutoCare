@@ -81,7 +81,7 @@ public final class AuthService {
       ProblemRepository problemRepository = new JpaProblemRepository(entityManager);
 
       if (userRepository.findByEmail(cleanEmail) != null) {
-        throw new AppException("E-mail adresa je vec registrirana.");
+        throw new AppException("E-mail adresa je već registrirana.");
       }
 
       AppUser user = new AppUser(cleanName, cleanEmail, cleanPassword);
