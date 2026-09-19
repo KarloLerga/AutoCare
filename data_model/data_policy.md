@@ -1,53 +1,34 @@
-# Konačna politika cijena, intervala i primjenjivosti
+# Finalna politika kataloga, cijena i intervala
 
-Ovo je namjerno modelirani studentski katalog. Procjene nisu ponude servisa niti VIN/OEM potvrda.
+## Katalog
 
-## Glavno pravilo
+Finalni runtime nema per-variant matricu radova. Postoji:
 
-U runtime bazi nema fallbacka.
-
-Za svaki **primjenjivi** par `VehicleVariant × WorkDefinition` postoji točno jedan `VehicleWorkRule`.
-Taj red uvijek ima konkretnu `estimated_price > 0`.
-Ako je rad `MAINTENANCE`, red uvijek ima `interval_km`, `interval_months` ili oba.
-Ako je rad `REPAIR`, intervali su NULL.
-
-Za očito neprimjenjive parove red se uopće ne sprema. Primjer: Tesla BEV nema OIL_SERVICE, SPARK_PLUGS, TIMING_BELT_PUMP, DPF itd.
-
-## Postojeći podaci
-
-Postojeća pozitivna cijena se zadržava ako je razumna. Skripta je mijenja samo ako je tehnički očiti outlier ili ako fixed-work cijena ignorira veliki premium/performance/exotic troškovni faktor.
-Postojeći konkretni interval se uvijek zadržava.
-Nove vrijednosti popunjavaju samo rupe ili korigiraju očiti outlier uz audit zapis.
+- 30.366 `VehicleVariant` zapisa;
+- 120 `WorkDefinition` zapisa;
+- 5 `VehiclePriceClass` vrijednosti;
+- 600 `WorkPriceRange` zapisa.
 
 ## Cijene
 
-1. postojeći kvalitetan pozitivan iznos -> KEPT_EXISTING
-2. inače postojeći AutoCare model (`base_parts`, `base_hours`, `consumables`, vehicle traits, tier, snaga, masa, cilindri...)
-3. za 0/0/0 i stare quote-only radove koristi `price_overrides.csv`
-4. ako se pojavi novi 0/0/0 kod koji nema eksplicitnu osnovicu, generator NE SMIJE tiho napraviti nulu; mora FAIL-ati i ispisati nedostajući work code. Time nema skrivenog fallbacka.
+Svaki standardni zahvat ima unaprijed spremljen min-max raspon za svaku cjenovnu klasu vozila. Runtime ne poziva AI i ne računa fallback cijenu.
 
-## Tier logika
+Raspon je informativan i ne predstavlja ponudu servisa, VIN specifičnu cijenu ili dijagnozu. Stvarna cijena postoji samo u `ServiceItem.actualPrice` nakon što korisnik evidentira servis.
 
-Postojeći model već skuplje marke čini skupljima kroz parts/labour tier.
-Za fixed i ručno modelirane radove dodatno se koristi:
-
-- ECONOMY 0.90
-- MAINSTREAM 1.00
-- PREMIUM 1.25
-- PERFORMANCE 1.65
-- EXOTIC 2.80
-
-Zato npr. Bugatti, Ferrari i Lamborghini ne završavaju s mainstream cijenom za radove koji su prije bili fixed/quote-only.
+Metodologija i izvori: `catalog_price_sources.md`.
 
 ## Intervali
 
-`maintenance_intervals.csv` je eksplicitna politika za svaki maintenance work koji ostaje u katalogu.
-Prije generiranja skripta provjerava da nema maintenance koda bez unosa. Ako ga ima, FAIL.
+Maintenance interval pripada `WorkDefinition` zapisu:
 
-Bolji postojeći vehicle/model interval ima prioritet i ostaje sačuvan.
-Ako ga nema, eksplicitni interval iz CSV-a se materijalizira u konkretni `VehicleWorkRule`.
-Za PERFORMANCE i EXOTIC te izrazito snažne varijante kilometarski interval se može konzervativno skratiti prilikom materijalizacije, ali konačna vrijednost je fizički zapisana u retku i runtime ne računa fallback.
+- samo kilometri;
+- samo vrijeme;
+- kilometri + vrijeme.
 
-## OTHER radovi
+Ako postoje oba kriterija, maintenance Strategy smatra stavku dospjelom kada prvi kriterij dospije.
 
-`OTHER_MAINTENANCE` i `OTHER_REPAIR` se uklanjaju iz finalnog user kataloga. Aplikacija već ima 120 konkretnih radova i posebni generički red samo uvodi posebne slučajeve.
+Repair radovi nemaju preventivni interval.
+
+## Bilješke
+
+Bilješka nema suggested repair, estimated cost, match score ni dijagnostička pravila. Sprema samo slobodan opis, grubu kategoriju, status i eventualni servis kojim je riješena.
