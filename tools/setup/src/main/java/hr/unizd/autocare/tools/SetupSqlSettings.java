@@ -6,11 +6,9 @@ import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
-/** Konfiguracija developerskih SQL naredbi; normalni runtime je ne moze koristiti. */
+/** Konfiguracija developerskih SQL naredbi. */
 final class SetupSqlSettings {
-
   private final String host;
   private final int port;
   private final String database;
@@ -26,70 +24,59 @@ final class SetupSqlSettings {
     this.password = password;
   }
 
-  static SetupSqlSettings environment(boolean test) {
-    return from(System.getenv(), test, false);
+  static SetupSqlSettings environment() {
+    return from(System.getenv(), false);
   }
 
   static SetupSqlSettings discovery() {
-    return from(System.getenv(), false, true);
+    return from(System.getenv(), true);
   }
 
-  private static SetupSqlSettings from(
-      Map<String, String> environment, boolean test, boolean discovery) {
-    String prefix = test ? "AUTOCARE_TEST_" : "AUTOCARE_DB_";
-    String host = required(environment, prefix + "HOST").strip();
-
+  private static SetupSqlSettings from(Map<String, String> environment, boolean discovery) {
+    String host = required(environment, "AUTOCARE_DB_HOST").strip();
     if (!host.matches("[a-zA-Z0-9][a-zA-Z0-9.-]{0,252}")) {
       throw new IllegalArgumentException("Nevaljan naziv SQL servera.");
     }
 
     int port;
-
     try {
-      port = Integer.parseInt(environment.getOrDefault(prefix + "PORT", "1433").strip());
+      port = Integer.parseInt(environment.getOrDefault("AUTOCARE_DB_PORT", "1433").strip());
     } catch (NumberFormatException exception) {
       throw new IllegalArgumentException("SQL port mora biti broj.");
     }
-
     if (port < 1 || port > 65535) {
-      throw new IllegalArgumentException("SQL port je izvan dopustenog raspona.");
+      throw new IllegalArgumentException("SQL port je izvan dopuštenog raspona.");
     }
 
-    String database = discovery ? "master" : required(environment, prefix + "NAME").strip();
-
+    String database = discovery ? "master" : required(environment, "AUTOCARE_DB_NAME").strip();
     if (!database.matches("[a-zA-Z0-9_][a-zA-Z0-9_. -]{0,127}")) {
       throw new IllegalArgumentException("Nevaljan naziv baze.");
     }
-
-    Set<String> systemDatabases = Set.of("master", "tempdb", "model", "msdb");
-
-    if (!discovery && systemDatabases.contains(database.toLowerCase(Locale.ROOT))) {
+    String lowerName = database.toLowerCase(Locale.ROOT);
+    if (!discovery
+        && (lowerName.equals("master")
+            || lowerName.equals("tempdb")
+            || lowerName.equals("model")
+            || lowerName.equals("msdb"))) {
       throw new IllegalArgumentException("Aplikacija ne smije koristiti sistemsku bazu.");
-    }
-
-    if (test) {
-      if (!database.endsWith("_test")) {
-        throw new IllegalArgumentException("Test zahtijeva zasebnu bazu s nastavkom _test.");
-      }
-
-      if (database.equalsIgnoreCase(environment.get("AUTOCARE_DB_NAME"))) {
-        throw new IllegalArgumentException("Testna i aplikacijska baza moraju biti odvojene.");
-      }
     }
 
     return new SetupSqlSettings(
         host,
         port,
         database,
-        required(environment, prefix + "USER").strip(),
-        required(environment, prefix + "PASSWORD"));
+        required(environment, "AUTOCARE_DB_USER").strip(),
+        required(environment, "AUTOCARE_DB_PASSWORD"));
   }
 
-  String database() {
-    return database;
+  Connection connect() throws SQLException {
+    Properties properties = new Properties();
+    properties.setProperty("user", username);
+    properties.setProperty("password", password);
+    return DriverManager.getConnection(url(), properties);
   }
 
-  String url() {
+  private String url() {
     return "jdbc:sqlserver://"
         + host
         + ":"
@@ -100,33 +87,11 @@ final class SetupSqlSettings {
         + ";loginTimeout=60;socketTimeout=900000;applicationName=AutoCare-Setup;";
   }
 
-  Connection connect(boolean bulkCopy) throws SQLException {
-    Properties properties = new Properties();
-    properties.setProperty("user", username);
-    properties.setProperty("password", password);
-
-    if (bulkCopy) {
-      properties.setProperty("useBulkCopyForBatchInsert", "true");
-      properties.setProperty("bulkCopyForBatchInsertBatchSize", "1000");
-    }
-
-    return DriverManager.getConnection(url(), properties);
-  }
-
-  void requireSchemaConsent(Map<String, String> environment) {
-    if (!database.equals(environment.get("AUTOCARE_SCHEMA_TARGET"))) {
-      throw new IllegalArgumentException(
-          "Za schema-update postavite AUTOCARE_SCHEMA_TARGET na tocno ime odabrane razvojne baze.");
-    }
-  }
-
   private static String required(Map<String, String> environment, String name) {
     String value = environment.get(name);
-
     if (value == null || value.isBlank()) {
       throw new IllegalArgumentException("Nedostaje " + name + ".");
     }
-
     return value;
   }
 }
