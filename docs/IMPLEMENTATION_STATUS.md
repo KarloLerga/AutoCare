@@ -27,13 +27,13 @@ Datum provjere: 2026-09-19
 
 ## Azure / GUI status
 
-- Azure SQL dry-run: BLOCKED; server je dosegnut, ali firewall odbija trenutnu javnu IP adresu klijenta.
-- `schema/11_professor_model.sql`: nije primijenjen dok firewall ne dopusti vezu.
-- `schema/12_professor_model_audit.sql`: nije izvršen; `final_error_count` zato nije PASS.
-- Ručni GUI smoke: NOT_RUN za novi model dok se migracija ne primijeni.
+- Azure SQL dry-run: PASS; firewall sada dopušta vezu i preflight je read-only.
+- `schema/11_professor_model.sql`: PASS; migracija je primijenjena u transakciji.
+- `schema/12_professor_model_audit.sql`: PASS; `final_error_count = 0`.
+- Ručni GUI smoke: NOT_RUN; migracija je primijenjena, ali prozor još treba ručno pregledati.
 - Privatni connection config i lozinka ostaju izvan repozitorija.
 
-## Očekivano nakon Azure migracije
+## Potvrđeno nakon Azure migracije
 
 - `vehicle_variant = 30366`
 - `work_definition = 120`
@@ -50,3 +50,5 @@ Prethodni HEAD prije ove integracije: `de14d5d`.
 | Runtime i katalog workflow | `b91cca8` — `refactor: align notes and catalog with approved workflow` |
 | Katalog podaci i rasponi cijena | `e74c250` — `data: add catalog price ranges and vehicle classes` |
 | SQL migracija i čišćenje starih importera | `c6f928e` — `database: migrate to catalog price range model` |
+| Sigurni dry-run setup alata | `5dc2433` — `fix: make final migration dry-run safe` |
+| SQL kompatibilnost postojeće baze | `ab1f858` — `fix: make professor migration compatible with existing schema` |

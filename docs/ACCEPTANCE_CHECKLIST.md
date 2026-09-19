@@ -2,9 +2,9 @@
 
 ## Build
 
-- [ ] Java 25 aktivna na korisnikovom računalu
-- [ ] `mvnw.cmd clean verify` PASS
-- [ ] `mvnw.cmd javadoc:javadoc` PASS
+- [x] Java 25 aktivna na korisnikovom računalu
+- [x] `mvnw.cmd clean verify` PASS
+- [x] `mvnw.cmd javadoc:javadoc` PASS
 - [x] Java main source interni compile sanity PASS u ChatGPT okruženju (API stubovi; nije zamjena za Maven)
 - [x] `scripts/validate_professor_catalog.py` PASS
 - [x] runtime static style scan PASS
@@ -51,13 +51,13 @@
 
 ## Azure SQL
 
-- [ ] dry-run `Complete-Setup.ps1` PASS na stvarnoj bazi
-- [ ] `-ApplyProfessorModel` PASS
-- [ ] `final_error_count = 0`
-- [ ] `vehicle_work_rule` ne postoji
-- [ ] `diagnostic_rule` ne postoji
-- [ ] `problem.suggested_repair_id` ne postoji
-- [ ] `problem.estimated_cost` ne postoji
+- [x] dry-run `Complete-Setup.ps1` PASS na stvarnoj bazi
+- [x] `-ApplyProfessorModel` PASS
+- [x] `final_error_count = 0`
+- [x] `vehicle_work_rule` ne postoji
+- [x] `diagnostic_rule` ne postoji
+- [x] `problem.suggested_repair_id` ne postoji
+- [x] `problem.estimated_cost` ne postoji
 
 ## Ručni GUI
 

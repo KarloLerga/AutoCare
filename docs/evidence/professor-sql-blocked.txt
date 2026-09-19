@@ -1,9 +1,9 @@
-Professor model Azure evidence
-Executed: 2026-09-19
+Historical professor model Azure evidence
+Initial attempt: 2026-09-19, before the firewall rule was effective.
 
-Command: Complete-Setup.ps1 with the external private connection config.
 Local build and setup package: PASS.
-Azure SQL connection: BLOCKED by server firewall for the current client IP.
-Migration 11: NOT_RUN.
-Audit 12 / final_error_count: NOT_RUN.
-Credentials and the public IP are intentionally omitted.
+Azure SQL connection: BLOCKED by the server firewall for the client IP at that time.
+Migration 11 and audit 12: NOT_RUN in that initial attempt.
+
+The follow-up successful run is recorded in `professor-sql-validation.txt`.
+Credentials and public IP addresses are intentionally omitted.
