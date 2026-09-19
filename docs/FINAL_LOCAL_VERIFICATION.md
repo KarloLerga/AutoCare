@@ -4,7 +4,7 @@ Datum: 19.09.2026.
 
 ## PASS
 
-- Java 25 / Maven Wrapper: `mvnw.cmd clean verify` — 71 Java klasa, 12 testova, 0 grešaka.
+- Java 25 / Maven Wrapper: `mvnw.cmd clean verify` — 70 Java klasa, 12 testova, 0 grešaka.
 - Setup alat: `mvnw.cmd -f tools/setup/pom.xml clean package` — 3 Java klase, build PASS.
 - Javadoc: `mvnw.cmd javadoc:javadoc` — PASS.
 - Katalog validator: 30.366 varijanti, 120 radova, 30 maintenance, 90 repair, 600 raspona, 0 grešaka.

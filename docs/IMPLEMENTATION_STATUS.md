@@ -6,6 +6,7 @@ Datum provjere: 2026-09-19
 
 - Profesorov finalni domain/JPA model: `VehiclePriceClass`, `WorkPriceRange`, `CatalogCategory` i `ProblemCategory`.
 - Katalog: 30.366 varijanti, 120 radova, 30 maintenance + 90 repair i 600 min-max raspona.
+- Runtime source iz `AutoCare_FINAL_MINIMAL_STUDENT_CODE_2026-09-19.zip` integriran je uz zadržane provjere vlasništva, validacije ulaza, konzistentnost početne povijesti i postojeće testove.
 - Bilješke bez dijagnostike, scoringa, suggested repaira i procijenjenog troška.
 - Servisi sa stvarnom cijenom; održavanje se računa iz stvarne servisne povijesti kroz Strategy obrazac.
 - Uklonjen runtime `VehicleWorkRule` model i stari complete-catalog/reference-data importer.
@@ -16,12 +17,12 @@ Datum provjere: 2026-09-19
 
 | Provjera | Rezultat |
 |---|---|
-| `mvnw.cmd clean verify` | PASS; 71 Java klasa, 12 testova, 0 grešaka |
+| `mvnw.cmd clean verify` | PASS; 70 Java klasa, 12 testova, 0 grešaka |
 | setup `clean package` | PASS; 3 setup Java klase, bez setup testova u profesorovom paketu |
 | `mvnw.cmd javadoc:javadoc` | PASS |
 | `scripts/validate_professor_catalog.py` | PASS; 30.366 / 120 / 600, 0 errors |
 | `scripts/build_professor_migration.py` | PASS; determinističan LF izlaz, hash odgovara `FINAL_DATA_SHA256.txt` |
-| `check-runtime-style.ps1` | PASS; 71 Java datoteka |
+| `check-runtime-style.ps1` | PASS; 70 Java datoteka |
 | `check-secrets.ps1` | PASS; nema commitanih vjerodajnica |
 | Python `py_compile` | PASS za finalne Python skripte |
 
@@ -44,7 +45,7 @@ Datum provjere: 2026-09-19
 
 ## Git
 
-Prethodni HEAD prije ove integracije: `de14d5d`.
+Prethodni HEAD prije ove integracije: `172a503`.
 
 | Faza | Commit |
 |---|---|
@@ -55,3 +56,4 @@ Prethodni HEAD prije ove integracije: `de14d5d`.
 | SQL kompatibilnost postojeće baze | `ab1f858` — `fix: make professor migration compatible with existing schema` |
 | Runtime code-clean integracija | `8513faa` — `refactor: align runtime with final catalog model` |
 | Testovi za read-only katalog | `2a72ae3` — `test: align checks with read-only catalog entities` |
+| Runtime integracija minimalnog studentskog paketa | `cbecf7e` — `refactor: align runtime code with course conventions` |

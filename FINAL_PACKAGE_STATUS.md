@@ -9,6 +9,7 @@ Profesorov finalni model je integriran u stvarni Git repo i pushan na `main`.
 - Searchable Katalog s 120 zahvata i 600 min-max rangeova.
 - 30.366 varijanti mapirano na 5 cjenovnih klasa.
 - Maintenance Strategy za km / vrijeme / kombinaciju.
+- Runtime je usklađen s minimalnim studentskim paketom uz očuvane poslovne provjere i regresijske testove.
 - Guarded Azure SQL migracija i read-only audit.
 - Ažurirana finalna dokumentacija i dijagrami.
 - Codex start prompt u `00_CODEX_START_HERE.md`.
