@@ -30,7 +30,8 @@ Datum provjere: 2026-09-19
 - Azure SQL dry-run: PASS; firewall sada dopušta vezu i preflight je read-only.
 - `schema/11_professor_model.sql`: PASS; migracija je primijenjena u transakciji.
 - `schema/12_professor_model_audit.sql`: PASS; `final_error_count = 0`.
-- Ručni GUI smoke: NOT_RUN; migracija je primijenjena, ali prozor još treba ručno pregledati.
+- GUI launch: PASS; završni Java proces ima prozor `AutoCare`.
+- Interaktivni GUI klik-smoke: NOT_RUN jer Windows Computer Use kanal nije dostupan.
 - Privatni connection config i lozinka ostaju izvan repozitorija.
 
 ## Potvrđeno nakon Azure migracije
@@ -52,3 +53,5 @@ Prethodni HEAD prije ove integracije: `de14d5d`.
 | SQL migracija i čišćenje starih importera | `c6f928e` — `database: migrate to catalog price range model` |
 | Sigurni dry-run setup alata | `5dc2433` — `fix: make final migration dry-run safe` |
 | SQL kompatibilnost postojeće baze | `ab1f858` — `fix: make professor migration compatible with existing schema` |
+| Runtime code-clean integracija | `8513faa` — `refactor: align runtime with final catalog model` |
+| Testovi za read-only katalog | `2a72ae3` — `test: align checks with read-only catalog entities` |
