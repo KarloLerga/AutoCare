@@ -79,7 +79,6 @@ public final class MaintenanceService {
 
       rows.add(
           new MaintenanceRow(
-              work.getId(),
               work.getName(),
               lastDate,
               lastMileage,

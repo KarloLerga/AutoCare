@@ -383,7 +383,6 @@ public final class Data {
   }
 
   public static final class MaintenanceRow {
-    private final long workId;
     private final String name;
     private final LocalDate lastDate;
     private final Integer lastMileage;
@@ -392,24 +391,18 @@ public final class Data {
     private final MaintenanceStatus status;
 
     public MaintenanceRow(
-        long workId,
         String name,
         LocalDate lastDate,
         Integer lastMileage,
         LocalDate nextDate,
         Integer nextMileage,
         MaintenanceStatus status) {
-      this.workId = workId;
       this.name = name;
       this.lastDate = lastDate;
       this.lastMileage = lastMileage;
       this.nextDate = nextDate;
       this.nextMileage = nextMileage;
       this.status = status;
-    }
-
-    public long getWorkId() {
-      return workId;
     }
 
     public String getName() {
