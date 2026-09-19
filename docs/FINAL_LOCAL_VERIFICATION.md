@@ -10,6 +10,7 @@ Datum: 19.09.2026.
 - Katalog validator: 30.366 varijanti, 120 radova, 30 maintenance, 90 repair, 600 raspona, 0 grešaka.
 - Generator migracije i `FINAL_DATA_SHA256.txt` — deterministički izlaz i podudarni hash.
 - Runtime style scan, secret check i Python `py_compile` — PASS.
+- Najnoviji minimal clean source paket — pregledan i integriran bez uklanjanja zaključanih modelskih i sigurnosnih pravila.
 
 ## Azure SQL PASS
 

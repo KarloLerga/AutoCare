@@ -7,6 +7,7 @@ Datum provjere: 2026-09-19
 - Profesorov finalni domain/JPA model: `VehiclePriceClass`, `WorkPriceRange`, `CatalogCategory` i `ProblemCategory`.
 - Katalog: 30.366 varijanti, 120 radova, 30 maintenance + 90 repair i 600 min-max raspona.
 - Runtime source iz `AutoCare_FINAL_MINIMAL_STUDENT_CODE_2026-09-19.zip` integriran je uz zadržane provjere vlasništva, validacije ulaza, konzistentnost početne povijesti i postojeće testove.
+- `AutoCare_FINAL_MINIMAL_CLEAN_2026-09-19.zip` je pregledan; primijenjen je samo kompatibilni cleanup nekorištenih runtime izlaza, dok su zaključana polja modela i sigurnosne provjere zadržane.
 - Bilješke bez dijagnostike, scoringa, suggested repaira i procijenjenog troška.
 - Servisi sa stvarnom cijenom; održavanje se računa iz stvarne servisne povijesti kroz Strategy obrazac.
 - Uklonjen runtime `VehicleWorkRule` model i stari complete-catalog/reference-data importer.
@@ -57,3 +58,4 @@ Prethodni HEAD prije ove integracije: `172a503`.
 | Runtime code-clean integracija | `8513faa` — `refactor: align runtime with final catalog model` |
 | Testovi za read-only katalog | `2a72ae3` — `test: align checks with read-only catalog entities` |
 | Runtime integracija minimalnog studentskog paketa | `cbecf7e` — `refactor: align runtime code with course conventions` |
+| Kompatibilni cleanup runtime izlaza | `47599a6` — `refactor: align service boundaries with runtime usage` |
