@@ -1,6 +1,6 @@
 # Finalna verifikacija
 
-Datum: 19.09.2026.
+Datum: 20.09.2026.
 
 ## PASS
 
@@ -11,6 +11,8 @@ Datum: 19.09.2026.
 - Generator migracije i `FINAL_DATA_SHA256.txt` — deterministički izlaz i podudarni hash.
 - Runtime style scan, secret check i Python `py_compile` — PASS.
 - Najnoviji minimal clean source paket — pregledan i integriran bez uklanjanja zaključanih modelskih i sigurnosnih pravila.
+- Ultra clean source paket od 20.09.2026. — pregledan; nije prebrisan preko repozitorija jer bi uklonio obavezne validacije, testni setup i katalog modele.
+- `AutoCare_FINAL_ULTRA_CLEAN_2026-09-20.zip` nije sadržavao `docs`, `data`, `schema`, `scripts`, `style`, `tools` ni testove; ti dijelovi ostaju u projektu radi stvarne reprodukcije i provjere.
 
 ## Azure SQL PASS
 

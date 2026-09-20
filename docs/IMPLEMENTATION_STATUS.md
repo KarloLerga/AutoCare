@@ -1,6 +1,6 @@
 # Implementation status - profesorov finalni model
 
-Datum provjere: 2026-09-19
+Datum provjere: 2026-09-20
 
 ## Implementirano
 
@@ -8,6 +8,8 @@ Datum provjere: 2026-09-19
 - Katalog: 30.366 varijanti, 120 radova, 30 maintenance + 90 repair i 600 min-max raspona.
 - Runtime source iz `AutoCare_FINAL_MINIMAL_STUDENT_CODE_2026-09-19.zip` integriran je uz zadržane provjere vlasništva, validacije ulaza, konzistentnost početne povijesti i postojeće testove.
 - `AutoCare_FINAL_MINIMAL_CLEAN_2026-09-19.zip` je pregledan; primijenjen je samo kompatibilni cleanup nekorištenih runtime izlaza, dok su zaključana polja modela i sigurnosne provjere zadržane.
+- `AutoCare_FINAL_ULTRA_CLEAN_2026-09-20.zip` je pregledan izvan repozitorija. Paket je source-only i uklanja testni Maven setup, Escape ponašanje dijaloga, provjere vlasništva, strogi datum, provjeru kilometraže, zaštitu od duplikata radova te kodove kataloga; zato nije prebrisan preko potpunijeg i sigurnijeg repozitorija.
+- Iz ultra-clean paketa nisu preuzeti ni uklonjeni `docs`, `data`, `schema`, `scripts`, `style`, `tools` i testovi jer su potrebni za reprodukciju, Azure SQL migraciju, provjeru kataloga i stvarni runtime.
 - Bilješke bez dijagnostike, scoringa, suggested repaira i procijenjenog troška.
 - Servisi sa stvarnom cijenom; održavanje se računa iz stvarne servisne povijesti kroz Strategy obrazac.
 - Uklonjen runtime `VehicleWorkRule` model i stari complete-catalog/reference-data importer.
@@ -26,6 +28,8 @@ Datum provjere: 2026-09-19
 | `check-runtime-style.ps1` | PASS; 70 Java datoteka |
 | `check-secrets.ps1` | PASS; nema commitanih vjerodajnica |
 | Python `py_compile` | PASS za finalne Python skripte |
+
+Prvi `clean` pokušaj bio je blokiran jer je pokrenuti AutoCare držao JAR u `target/lib`; nakon gašenja točno identificiranog AutoCare procesa ponovljeni `mvnw.cmd clean verify` završio je s PASS.
 
 ## Azure / GUI status
 
