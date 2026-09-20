@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Bilješke vlasnika vozila bez automatske dijagnostike ili pogađanja kvara. */
+/** Problemi koje vlasnik zapisuje bez automatske dijagnostike ili pogađanja kvara. */
 public final class ProblemService {
   private final EntityManagerFactory entityManagerFactory;
 
@@ -72,7 +72,7 @@ public final class ProblemService {
       transaction.begin();
       Problem problem = new JpaProblemRepository(entityManager).findForOwner(ownerId, problemId);
       if (problem == null) {
-        throw new IllegalArgumentException("Bilješka nije pronađena.");
+      throw new IllegalArgumentException("Problem nije pronađen.");
       }
       problem.close();
       transaction.commit();

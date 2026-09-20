@@ -3,7 +3,7 @@ package hr.unizd.autocare.repository;
 import hr.unizd.autocare.domain.Problem;
 import java.util.List;
 
-/** Dohvat i spremanje bilješki vozila. */
+/** Dohvat i spremanje problema vozila. */
 public interface ProblemRepository {
   void add(Problem problem);
 

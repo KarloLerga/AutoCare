@@ -42,7 +42,7 @@ public final class VehiclesView extends JPanel {
     add(top, BorderLayout.NORTH);
     add(new JScrollPane(table), BorderLayout.CENTER);
     add(
-        Ui.hint("Brisanje uklanja i servisnu povijest i bilješke odabranog vozila."),
+        Ui.hint("Brisanje uklanja i servisnu povijest i probleme odabranog vozila."),
         BorderLayout.SOUTH);
   }
 

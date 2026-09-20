@@ -16,12 +16,12 @@ import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
-/** Bilješke vlasnika o stvarima koje želi zapamtiti za mehaničara. */
+/** Problemi koje vlasnik želi zapamtiti za mehaničara. */
 public final class ProblemsView extends JPanel {
   public final JComboBox<ProblemCategory> category =
       new JComboBox<>(ProblemCategory.values());
   public final JTextArea description = new JTextArea(3, 36);
-  public final JButton add = Ui.button("Spremi bilješku");
+  public final JButton add = Ui.button("Spremi problem");
   public final JButton close = Ui.button("Zatvori odabranu");
   public final JTable table;
 
@@ -33,7 +33,7 @@ public final class ProblemsView extends JPanel {
     setOpaque(false);
     tableModel =
         new DefaultTableModel(
-            new Object[][] {}, new String[] {"Kategorija", "Bilješka", "Status", "Datum"}) {
+            new Object[][] {}, new String[] {"Kategorija", "Problem", "Status", "Datum"}) {
           @Override
           public boolean isCellEditable(int row, int column) {
             return false;
@@ -47,18 +47,18 @@ public final class ProblemsView extends JPanel {
     table.getTableHeader().setReorderingAllowed(false);
 
     JPanel editor = Ui.card();
-    editor.add(Ui.heading("Nova bilješka"), BorderLayout.NORTH);
+    editor.add(Ui.heading("Novi problem"), BorderLayout.NORTH);
     description.setLineWrap(true);
     description.setWrapStyleWord(true);
     category.setSelectedItem(ProblemCategory.OTHER);
     JPanel fields = Ui.form();
-    Ui.field(fields, 0, "Kategorija", category);
+    Ui.field(fields, 0, "Kategorija (opcionalno)", category);
     Ui.field(fields, 1, "Što primjećujete", new JScrollPane(description));
     editor.add(fields, BorderLayout.CENTER);
     editor.add(Ui.actions(add), BorderLayout.SOUTH);
 
     JPanel top = Ui.column();
-    top.add(Ui.heading("Bilješke"));
+    top.add(Ui.heading("Problemi"));
     top.add(Ui.hint("Zapišite što primjećujete bez pokušaja dijagnosticiranja kvara."));
     top.add(editor);
     add(top, BorderLayout.NORTH);
@@ -67,7 +67,7 @@ public final class ProblemsView extends JPanel {
         Ui.row(
             close,
             Ui.hint(
-                "Bilješku možete zatvoriti ovdje ili je označiti riješenom prilikom spremanja servisa.")),
+                "Problem možete zatvoriti ovdje ili ga označiti riješenim prilikom spremanja servisa.")),
         BorderLayout.SOUTH);
   }
 

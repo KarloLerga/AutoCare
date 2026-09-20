@@ -142,7 +142,7 @@ public final class ServiceRecordService {
     }
 
     if (historical && !input.getResolvedProblemIds().isEmpty()) {
-      throw new IllegalArgumentException("Početna povijest ne zatvara postojeće bilješke.");
+      throw new IllegalArgumentException("Početna povijest ne zatvara postojeće probleme.");
     }
   }
 

@@ -93,7 +93,7 @@ public final class ServicesView extends JPanel {
     } else {
       text.append(note);
     }
-    text.append("\n\nRiješene bilješke:\n");
+    text.append("\n\nRiješeni problemi:\n");
     for (String problem : detail.getResolvedProblems()) {
       text.append(problem);
       text.append("\n");

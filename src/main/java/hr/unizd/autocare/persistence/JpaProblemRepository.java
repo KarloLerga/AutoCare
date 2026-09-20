@@ -6,7 +6,7 @@ import hr.unizd.autocare.repository.ProblemRepository;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 
-/** JPA pristup bilješkama vozila. */
+/** JPA pristup problemima vozila. */
 public final class JpaProblemRepository implements ProblemRepository {
   private final EntityManager entityManager;
 

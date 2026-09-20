@@ -10,6 +10,8 @@ Datum provjere: 2026-09-20
 - `AutoCare_FINAL_MINIMAL_CLEAN_2026-09-19.zip` je pregledan; primijenjen je samo kompatibilni cleanup nekorištenih runtime izlaza, dok su zaključana polja modela i sigurnosne provjere zadržane.
 - `AutoCare_FINAL_ULTRA_CLEAN_2026-09-20.zip` je pregledan izvan repozitorija. Paket je source-only i uklanja testni Maven setup, Escape ponašanje dijaloga, provjere vlasništva, strogi datum, provjeru kilometraže, zaštitu od duplikata radova te kodove kataloga; zato nije prebrisan preko potpunijeg i sigurnijeg repozitorija.
 - Iz ultra-clean paketa nisu preuzeti ni uklonjeni `docs`, `data`, `schema`, `scripts`, `style`, `tools` i testovi jer su potrebni za reprodukciju, Azure SQL migraciju, provjeru kataloga i stvarni runtime.
+- `AutoCare_FINAL_STUDENT_CLEAN_2026-09-20(1) (1).zip` je pregledan izvan repozitorija. Primijenjene su kompatibilne funkcionalne izmjene: naziv `Problemi`, automatski prvi odabir rada u novom servisu, uklonjen status održavanja iz UI-ja uz zadržan Strategy izračun intervala, uklonjen brojač rezultata kataloga te direktno čitanje lokalne konfiguracije baze bez environment varijabli u runtime aplikaciji.
+- Sigurnosne i domenske provjere iz postojećeg projekta nisu uklonjene. `connection.local.properties` je podržan kao lokalni ignored file u rootu; stvarne vjerodajnice ostaju u privatnoj datoteci izvan repozitorija.
 - Bilješke bez dijagnostike, scoringa, suggested repaira i procijenjenog troška.
 - Servisi sa stvarnom cijenom; održavanje se računa iz stvarne servisne povijesti kroz Strategy obrazac.
 - Uklonjen runtime `VehicleWorkRule` model i stari complete-catalog/reference-data importer.
@@ -20,12 +22,12 @@ Datum provjere: 2026-09-20
 
 | Provjera | Rezultat |
 |---|---|
-| `mvnw.cmd clean verify` | PASS; 70 Java klasa, 12 testova, 0 grešaka |
+| `mvnw.cmd clean verify` | PASS; 69 Java klasa, 12 testova, 0 grešaka |
 | setup `clean package` | PASS; 3 setup Java klase, bez setup testova u profesorovom paketu |
 | `mvnw.cmd javadoc:javadoc` | PASS |
 | `scripts/validate_professor_catalog.py` | PASS; 30.366 / 120 / 600, 0 errors |
 | `scripts/build_professor_migration.py` | PASS; determinističan LF izlaz, hash odgovara `FINAL_DATA_SHA256.txt` |
-| `check-runtime-style.ps1` | PASS; 70 Java datoteka |
+| `check-runtime-style.ps1` | PASS; 69 Java datoteka |
 | `check-secrets.ps1` | PASS; nema commitanih vjerodajnica |
 | Python `py_compile` | PASS za finalne Python skripte |
 
@@ -38,6 +40,7 @@ Prvi `clean` pokušaj bio je blokiran jer je pokrenuti AutoCare držao JAR u `ta
 - `schema/12_professor_model_audit.sql`: PASS; `final_error_count = 0`.
 - GUI launch: PASS; završni Java proces ima prozor `AutoCare`.
 - Interaktivni GUI klik-smoke: NOT_RUN jer Windows Computer Use kanal nije dostupan.
+- Runtime sada čita config iz `-Dautocare.config` ili root `connection.local.properties`; ako root file ne postoji, koristi privatni `C:\private-autocare\connection.local.json`.
 - Privatni connection config i lozinka ostaju izvan repozitorija.
 
 ## Potvrđeno nakon Azure migracije

@@ -1,6 +1,5 @@
 package hr.unizd.autocare.view;
 
-import hr.unizd.autocare.domain.MaintenanceStatus;
 import hr.unizd.autocare.model.Data.Dashboard;
 import hr.unizd.autocare.model.Data.MaintenanceRow;
 import hr.unizd.autocare.view.components.Ui;
@@ -21,7 +20,7 @@ import org.kordamp.ikonli.swing.FontIcon;
 public final class DashboardView extends JPanel {
   private final JLabel total = Ui.hint("-");
   private final JLabel maintenance = Ui.hint("-");
-  private final JLabel notes = Ui.hint("-");
+  private final JLabel problems = Ui.hint("-");
   private final JLabel mileage = Ui.hint("-");
 
   public DashboardView() {
@@ -32,7 +31,7 @@ public final class DashboardView extends JPanel {
     grid.setOpaque(false);
     addCard(grid, "Ukupni stvarni troškovi", total, FontAwesomeSolid.EURO_SIGN);
     addCard(grid, "Sljedeće održavanje", maintenance, FontAwesomeSolid.WRENCH);
-    addCard(grid, "Aktivne bilješke", notes, FontAwesomeSolid.EXCLAMATION_TRIANGLE);
+    addCard(grid, "Otvoreni problemi", problems, FontAwesomeSolid.EXCLAMATION_TRIANGLE);
     addCard(grid, "Trenutna kilometraža", mileage, FontAwesomeSolid.TACHOMETER_ALT);
     add(grid, BorderLayout.CENTER);
     add(
@@ -74,7 +73,7 @@ public final class DashboardView extends JPanel {
     MaintenanceRow next = dashboard.getNextMaintenance();
     if (next == null) {
       maintenance.setText("Nema praćenog održavanja");
-    } else if (next.getStatus() == MaintenanceStatus.DUE) {
+    } else if (next.getRemainingRatio() <= 0) {
       maintenance.setText(
           "<html><div style='text-align:center;'>" + next.getName() + "<br>Dospjelo</div></html>");
     } else {
@@ -86,7 +85,7 @@ public final class DashboardView extends JPanel {
               + remaining
               + "</div></html>");
     }
-    notes.setText(Long.toString(dashboard.getActiveNotes()));
+    problems.setText(Long.toString(dashboard.getOpenProblems()));
     mileage.setText(Ui.km(dashboard.getVehicle().getMileage()));
   }
 
@@ -109,7 +108,7 @@ public final class DashboardView extends JPanel {
       }
     }
     if (result.length() == 0) {
-      return Ui.status(row.getStatus());
+      return "-";
     }
     return result.toString();
   }

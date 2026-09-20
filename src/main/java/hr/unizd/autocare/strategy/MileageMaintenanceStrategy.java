@@ -1,12 +1,11 @@
 package hr.unizd.autocare.strategy;
 
-import hr.unizd.autocare.domain.MaintenanceStatus;
 import java.time.LocalDate;
 
-/** Status prema preostaloj kilometraži. */
+/** Računanje intervala koji ovisi o kilometraži. */
 public final class MileageMaintenanceStrategy implements MaintenanceStrategy {
   @Override
-  public MaintenanceStatus calculate(
+  public double calculate(
       Integer intervalKm,
       Integer intervalMonths,
       LocalDate lastDate,
@@ -17,16 +16,6 @@ public final class MileageMaintenanceStrategy implements MaintenanceStrategy {
       throw new IllegalArgumentException("Kilometarski interval zahtijeva zadnju kilometražu.");
     }
     int remaining = lastMileage + intervalKm - currentMileage;
-    return status(remaining);
-  }
-
-  static MaintenanceStatus status(int remaining) {
-    if (remaining <= 0) {
-      return MaintenanceStatus.DUE;
-    }
-    if (remaining <= 3000) {
-      return MaintenanceStatus.SOON;
-    }
-    return MaintenanceStatus.OK;
+    return (double) remaining / intervalKm;
   }
 }

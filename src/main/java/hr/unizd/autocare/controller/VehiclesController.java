@@ -192,7 +192,7 @@ public final class VehiclesController {
     if (vehicle == null) {
       return;
     }
-    if (!Ui.confirm(frame, "Trajno obrisati vozilo, njegove servise i bilješke?")) {
+    if (!Ui.confirm(frame, "Trajno obrisati vozilo, njegove servise i probleme?")) {
       return;
     }
     try {

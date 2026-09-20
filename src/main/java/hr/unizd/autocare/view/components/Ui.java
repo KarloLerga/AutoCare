@@ -2,7 +2,6 @@ package hr.unizd.autocare.view.components;
 
 import hr.unizd.autocare.domain.Checks;
 import hr.unizd.autocare.domain.CostSummary;
-import hr.unizd.autocare.domain.MaintenanceStatus;
 import hr.unizd.autocare.domain.ProblemStatus;
 import hr.unizd.autocare.domain.WorkCategory;
 import java.awt.BorderLayout;
@@ -196,16 +195,6 @@ public final class Ui {
       return "-";
     }
     return String.format(Locale.forLanguageTag("hr-HR"), "%,d km", mileage);
-  }
-
-  public static String status(MaintenanceStatus status) {
-    if (status == MaintenanceStatus.OK) {
-      return "U redu";
-    }
-    if (status == MaintenanceStatus.SOON) {
-      return "Uskoro";
-    }
-    return "Dospjelo";
   }
 
   public static String problemStatus(ProblemStatus status) {
