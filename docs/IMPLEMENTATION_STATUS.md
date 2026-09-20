@@ -1,70 +1,37 @@
-# Implementation status - profesorov finalni model
+# Implementation status
 
 Datum provjere: 2026-09-20
 
-## Implementirano
+## Finalni runtime
 
-- Profesorov finalni domain/JPA model: `VehiclePriceClass`, `WorkPriceRange`, `CatalogCategory` i `ProblemCategory`.
-- Katalog: 30.366 varijanti, 120 radova, 30 maintenance + 90 repair i 600 min-max raspona.
-- Runtime source iz `AutoCare_FINAL_MINIMAL_STUDENT_CODE_2026-09-19.zip` integriran je uz zadržane provjere vlasništva, validacije ulaza, konzistentnost početne povijesti i postojeće testove.
-- `AutoCare_FINAL_MINIMAL_CLEAN_2026-09-19.zip` je pregledan; primijenjen je samo kompatibilni cleanup nekorištenih runtime izlaza, dok su zaključana polja modela i sigurnosne provjere zadržane.
-- `AutoCare_FINAL_ULTRA_CLEAN_2026-09-20.zip` je pregledan izvan repozitorija. Paket je source-only i uklanja testni Maven setup, Escape ponašanje dijaloga, provjere vlasništva, strogi datum, provjeru kilometraže, zaštitu od duplikata radova te kodove kataloga; zato nije prebrisan preko potpunijeg i sigurnijeg repozitorija.
-- Iz ultra-clean paketa nisu preuzeti ni uklonjeni `docs`, `data`, `schema`, `scripts`, `style`, `tools` i testovi jer su potrebni za reprodukciju, Azure SQL migraciju, provjeru kataloga i stvarni runtime.
-- `AutoCare_FINAL_STUDENT_CLEAN_2026-09-20(1) (1).zip` je pregledan izvan repozitorija. Primijenjene su kompatibilne funkcionalne izmjene: naziv `Problemi`, automatski prvi odabir rada u novom servisu, uklonjen status održavanja iz UI-ja uz zadržan Strategy izračun intervala, uklonjen brojač rezultata kataloga te direktno čitanje lokalne konfiguracije baze bez environment varijabli u runtime aplikaciji.
-- Sigurnosne i domenske provjere iz postojećeg projekta nisu uklonjene. `connection.local.properties` je podržan kao lokalni ignored file u rootu; stvarne vjerodajnice ostaju u privatnoj datoteci izvan repozitorija.
-- Bilješke bez dijagnostike, scoringa, suggested repaira i procijenjenog troška.
-- Servisi sa stvarnom cijenom; održavanje se računa iz stvarne servisne povijesti kroz Strategy obrazac.
-- Uklonjen runtime `VehicleWorkRule` model i stari complete-catalog/reference-data importer.
-- Novi `CatalogView` / `CatalogController` tok.
-- Guarded migracija `schema/11_professor_model.sql` i read-only audit `schema/12_professor_model_audit.sql`.
+- Java 25 Swing aplikacija koristi View -> Controller -> Service -> Repository -> JPA/Hibernate -> Azure SQL.
+- Runtime model sadrzi biljeske/probleme, katalog informativnih min-max raspona i stvarne servisne zapise.
+- Nema runtime AI dijagnostike, `DiagnosticRule` ili `VehicleWorkRule` modela.
+- Baza je provjerena s 30.366 varijanti, 120 radova i 600 raspona cijena.
+- `DatabaseConfig` cita ignored `connection.local.properties` iz roota ili privatni fallback izvan repozitorija.
 
-## Stvarne lokalne provjere
+## Provjere prije source-only cleanupa
 
 | Provjera | Rezultat |
 |---|---|
-| `mvnw.cmd clean verify` | PASS; 69 Java klasa, 12 testova, 0 grešaka |
-| setup `clean package` | PASS; 3 setup Java klase, bez setup testova u profesorovom paketu |
+| `mvnw.cmd --no-transfer-progress clean verify` | PASS; 69 source klasa, 12 testova, 0 gresaka |
 | `mvnw.cmd javadoc:javadoc` | PASS |
-| `scripts/validate_professor_catalog.py` | PASS; 30.366 / 120 / 600, 0 errors |
-| `scripts/build_professor_migration.py` | PASS; determinističan LF izlaz, hash odgovara `FINAL_DATA_SHA256.txt` |
-| `check-runtime-style.ps1` | PASS; 69 Java datoteka |
-| `check-secrets.ps1` | PASS; nema commitanih vjerodajnica |
-| Python `py_compile` | PASS za finalne Python skripte |
+| katalog validator | PASS; 30.366 / 120 / 600, 0 errors |
+| runtime style i secrets checks | PASS |
+| Azure SQL read-only preflight/audit | PASS; `final_error_count = 0` |
+| GUI launch | PASS; prozor `AutoCare` otvoren |
+| interaktivni GUI click-smoke | NOT_RUN; Windows Computer Use kanal nije bio dostupan |
 
-Prvi `clean` pokušaj bio je blokiran jer je pokrenuti AutoCare držao JAR u `target/lib`; nakon gašenja točno identificiranog AutoCare procesa ponovljeni `mvnw.cmd clean verify` završio je s PASS.
+Prvi Maven clean bio je blokiran jer je AutoCare proces drzao JAR zakljucanim. Nakon zatvaranja tocno identificiranog AutoCare procesa ponovljeni `clean verify` je prosao.
 
-## Azure / GUI status
+## Source-only cleanup
 
-- Azure SQL dry-run: PASS; firewall sada dopušta vezu i preflight je read-only.
-- `schema/11_professor_model.sql`: PASS; migracija je primijenjena u transakciji.
-- `schema/12_professor_model_audit.sql`: PASS; `final_error_count = 0`.
-- GUI launch: PASS; završni Java proces ima prozor `AutoCare`.
-- Interaktivni GUI klik-smoke: NOT_RUN jer Windows Computer Use kanal nije dostupan.
-- Runtime sada čita config iz `-Dautocare.config` ili root `connection.local.properties`; ako root file ne postoji, koristi privatni `C:\private-autocare\connection.local.json`.
-- Privatni connection config i lozinka ostaju izvan repozitorija.
+Uklonjeni su razvojni i migracijski artefakti: `src/test`, `data`, `data_model`, `schema`, `scripts`, `style`, `tools`, `.vscode`, `.tools`, `target`, stari README/status/hash/paketni dokumenti i svi ostali dokumenti osim ovog zapisa.
 
-## Potvrđeno nakon Azure migracije
-
-- `vehicle_variant = 30366`
-- `work_definition = 120`
-- `work_price_range = 600`
-- `vehicle_work_rule`, `diagnostic_rule`, `suggested_repair_id` i `estimated_cost` ne postoje
-- `final_error_count = 0`
+Ovaj zapis ostaje samo radi stvarnog evidence zahtjeva projekta; nije runtime ovisnost.
 
 ## Git
 
-Prethodni HEAD prije ove integracije: `172a503`.
+Prethodni integracijski HEAD: `002a9f6`.
 
-| Faza | Commit |
-|---|---|
-| Runtime i katalog workflow | `b91cca8` — `refactor: align notes and catalog with approved workflow` |
-| Katalog podaci i rasponi cijena | `e74c250` — `data: add catalog price ranges and vehicle classes` |
-| SQL migracija i čišćenje starih importera | `c6f928e` — `database: migrate to catalog price range model` |
-| Sigurni dry-run setup alata | `5dc2433` — `fix: make final migration dry-run safe` |
-| SQL kompatibilnost postojeće baze | `ab1f858` — `fix: make professor migration compatible with existing schema` |
-| Runtime code-clean integracija | `8513faa` — `refactor: align runtime with final catalog model` |
-| Testovi za read-only katalog | `2a72ae3` — `test: align checks with read-only catalog entities` |
-| Runtime integracija minimalnog studentskog paketa | `cbecf7e` — `refactor: align runtime code with course conventions` |
-| Kompatibilni cleanup runtime izlaza | `47599a6` — `refactor: align service boundaries with runtime usage` |
-| Pregled ultra-clean source paketa | `54548c7` — `docs: record ultra-clean source review` |
-| Student runtime i direktna lokalna konfiguracija | `d30cd74` — `refactor: finalize student application runtime` |
+Cleanup commit i tocne SHA vrijednosti provjeravaju se s `git log` nakon commitiranja.
