@@ -69,7 +69,7 @@ public final class ServiceEditorDialog extends JDialog {
 
     problemsTableModel =
         new DefaultTableModel(
-            new Object[][] {}, new String[] {"Riješen", "Bilješka riješena ovim servisom"}) {
+            new Object[][] {}, new String[] {"Riješen", "Problem riješen ovim servisom"}) {
           @Override
           public Class<?> getColumnClass(int column) {
             if (column == 0) {
@@ -165,7 +165,9 @@ public final class ServiceEditorDialog extends JDialog {
       }
     }
     work.setModel(new DefaultComboBoxModel<>(filtered.toArray(new WorkRow[0])));
-    work.setSelectedIndex(-1);
+    if (work.getItemCount() > 0) {
+      work.setSelectedIndex(0);
+    }
   }
 
   public WorkRow selectedWork() {
@@ -180,7 +182,9 @@ public final class ServiceEditorDialog extends JDialog {
     }
     items.add(new AddedItem(selected, Ui.parseMoney(actualPrice.getText(), historical)));
     actualPrice.setText("");
-    work.setSelectedIndex(-1);
+    if (work.getItemCount() > 0) {
+      work.setSelectedIndex(0);
+    }
     refreshItems();
   }
 

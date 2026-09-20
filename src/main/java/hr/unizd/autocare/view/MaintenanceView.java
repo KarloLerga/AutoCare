@@ -13,7 +13,6 @@ import javax.swing.table.DefaultTableModel;
 
 /** Pregled održavanja koje se već prati iz stvarne servisne povijesti. */
 public final class MaintenanceView extends JPanel {
-  public final JLabel coverage = Ui.hint("Učitavanje održavanja...");
   public final JTable table;
 
   private final DefaultTableModel tableModel;
@@ -24,9 +23,7 @@ public final class MaintenanceView extends JPanel {
     tableModel =
         new DefaultTableModel(
             new Object[][] {},
-            new String[] {
-              "Rad", "Zadnji datum", "Zadnji km", "Sljedeći datum", "Sljedeći km", "Status"
-            }) {
+            new String[] {"Rad", "Zadnji datum", "Zadnji km", "Sljedeći datum", "Sljedeći km"}) {
           @Override
           public boolean isCellEditable(int row, int column) {
             return false;
@@ -41,7 +38,7 @@ public final class MaintenanceView extends JPanel {
 
     JPanel top = Ui.column();
     top.add(Ui.heading("Održavanje"));
-    top.add(coverage);
+    top.add(Ui.hint("Prikazuju se održavanja koja su evidentirana kroz servisnu povijest."));
     add(top, BorderLayout.NORTH);
     add(new JScrollPane(table), BorderLayout.CENTER);
     add(Ui.hint("Informativne cijene i svi standardni zahvati nalaze se u Katalogu."), BorderLayout.SOUTH);
@@ -56,8 +53,7 @@ public final class MaintenanceView extends JPanel {
             Ui.date(row.getLastDate()),
             Ui.km(row.getLastMileage()),
             Ui.date(row.getNextDate()),
-            Ui.km(row.getNextMileage()),
-            Ui.status(row.getStatus())
+            Ui.km(row.getNextMileage())
           });
     }
   }

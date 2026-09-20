@@ -1,31 +1,24 @@
 package hr.unizd.autocare.strategy;
 
-import hr.unizd.autocare.domain.MaintenanceStatus;
 import java.time.LocalDate;
 
-/** Kombinirani interval dospijeva čim je dospio bilo kilometarski ili vremenski kriterij. */
+/** Kod kombiniranog intervala uzima se kriterij koji dolazi prije. */
 public final class CombinedMaintenanceStrategy implements MaintenanceStrategy {
-  private final MileageMaintenanceStrategy mileage = new MileageMaintenanceStrategy();
-  private final TimeMaintenanceStrategy time = new TimeMaintenanceStrategy();
+  private final MileageMaintenanceStrategy mileageStrategy = new MileageMaintenanceStrategy();
+  private final TimeMaintenanceStrategy timeStrategy = new TimeMaintenanceStrategy();
 
   @Override
-  public MaintenanceStatus calculate(
+  public double calculate(
       Integer intervalKm,
       Integer intervalMonths,
       LocalDate lastDate,
       Integer lastMileage,
       int currentMileage,
       LocalDate today) {
-    MaintenanceStatus mileageStatus =
-        mileage.calculate(intervalKm, null, lastDate, lastMileage, currentMileage, today);
-    MaintenanceStatus timeStatus =
-        time.calculate(null, intervalMonths, lastDate, lastMileage, currentMileage, today);
-    if (mileageStatus == MaintenanceStatus.DUE || timeStatus == MaintenanceStatus.DUE) {
-      return MaintenanceStatus.DUE;
-    }
-    if (mileageStatus == MaintenanceStatus.SOON || timeStatus == MaintenanceStatus.SOON) {
-      return MaintenanceStatus.SOON;
-    }
-    return MaintenanceStatus.OK;
+    double mileageRemaining =
+        mileageStrategy.calculate(intervalKm, null, lastDate, lastMileage, currentMileage, today);
+    double timeRemaining =
+        timeStrategy.calculate(null, intervalMonths, lastDate, lastMileage, currentMileage, today);
+    return Math.min(mileageRemaining, timeRemaining);
   }
 }

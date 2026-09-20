@@ -1,6 +1,6 @@
 package hr.unizd.autocare.domain;
 
-/** Gruba kategorija korisnikove bilješke, bez pokušaja dijagnostike kvara. */
+/** Gruba kategorija korisnikovog problema, bez pokušaja dijagnostike kvara. */
 public enum ProblemCategory {
   ENGINE("Motor"),
   BRAKES("Kočnice"),

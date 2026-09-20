@@ -2,7 +2,6 @@ package hr.unizd.autocare.model;
 
 import hr.unizd.autocare.domain.CatalogCategory;
 import hr.unizd.autocare.domain.CostSummary;
-import hr.unizd.autocare.domain.MaintenanceStatus;
 import hr.unizd.autocare.domain.ProblemCategory;
 import hr.unizd.autocare.domain.ProblemStatus;
 import hr.unizd.autocare.domain.WorkCategory;
@@ -388,7 +387,7 @@ public final class Data {
     private final Integer lastMileage;
     private final LocalDate nextDate;
     private final Integer nextMileage;
-    private final MaintenanceStatus status;
+    private final double remainingRatio;
 
     public MaintenanceRow(
         String name,
@@ -396,13 +395,13 @@ public final class Data {
         Integer lastMileage,
         LocalDate nextDate,
         Integer nextMileage,
-        MaintenanceStatus status) {
+        double remainingRatio) {
       this.name = name;
       this.lastDate = lastDate;
       this.lastMileage = lastMileage;
       this.nextDate = nextDate;
       this.nextMileage = nextMileage;
-      this.status = status;
+      this.remainingRatio = remainingRatio;
     }
 
     public String getName() {
@@ -425,8 +424,8 @@ public final class Data {
       return nextMileage;
     }
 
-    public MaintenanceStatus getStatus() {
-      return status;
+    public double getRemainingRatio() {
+      return remainingRatio;
     }
   }
 
@@ -488,17 +487,17 @@ public final class Data {
   public static final class Dashboard {
     private final VehicleRow vehicle;
     private final CostSummary total;
-    private final long activeNotes;
+    private final long openProblems;
     private final MaintenanceRow nextMaintenance;
 
     public Dashboard(
         VehicleRow vehicle,
         CostSummary total,
-        long activeNotes,
+        long openProblems,
         MaintenanceRow nextMaintenance) {
       this.vehicle = vehicle;
       this.total = total;
-      this.activeNotes = activeNotes;
+      this.openProblems = openProblems;
       this.nextMaintenance = nextMaintenance;
     }
 
@@ -510,8 +509,8 @@ public final class Data {
       return total;
     }
 
-    public long getActiveNotes() {
-      return activeNotes;
+    public long getOpenProblems() {
+      return openProblems;
     }
 
     public MaintenanceRow getNextMaintenance() {

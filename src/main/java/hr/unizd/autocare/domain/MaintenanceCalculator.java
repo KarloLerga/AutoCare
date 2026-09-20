@@ -12,7 +12,7 @@ public final class MaintenanceCalculator {
   private final MaintenanceStrategy timeStrategy = new TimeMaintenanceStrategy();
   private final MaintenanceStrategy combinedStrategy = new CombinedMaintenanceStrategy();
 
-  public MaintenanceStatus calculate(
+  public double calculate(
       Integer intervalKm,
       Integer intervalMonths,
       LocalDate lastDate,

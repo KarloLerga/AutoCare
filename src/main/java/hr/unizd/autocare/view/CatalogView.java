@@ -20,7 +20,6 @@ public final class CatalogView extends JPanel {
   public final JTextField search = new JTextField(24);
   public final JComboBox<String> category = new JComboBox<>();
   public final JButton searchButton = Ui.button("Pretraži");
-  public final JLabel resultInfo = Ui.hint(" ");
   public final JTable table;
 
   private final DefaultTableModel tableModel;
@@ -61,7 +60,6 @@ public final class CatalogView extends JPanel {
             new JLabel("Kategorija:"),
             category,
             searchButton));
-    top.add(resultInfo);
     add(top, BorderLayout.NORTH);
     add(new JScrollPane(table), BorderLayout.CENTER);
     add(
@@ -89,7 +87,6 @@ public final class CatalogView extends JPanel {
             interval(row)
           });
     }
-    resultInfo.setText("Prikazano zahvata: " + rows.size());
   }
 
   private static String interval(CatalogRow row) {

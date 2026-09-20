@@ -73,7 +73,7 @@ public final class MainFrame extends JFrame {
     addNavigation(sidebar, "Održavanje", maintenance, FontAwesomeSolid.WRENCH);
     addNavigation(sidebar, "Katalog", catalog, FontAwesomeSolid.EURO_SIGN);
     addNavigation(sidebar, "Servisi", services, FontAwesomeSolid.CLIPBOARD);
-    addNavigation(sidebar, "Bilješke", problems, FontAwesomeSolid.EXCLAMATION_TRIANGLE);
+    addNavigation(sidebar, "Problemi", problems, FontAwesomeSolid.EXCLAMATION_TRIANGLE);
     addNavigation(sidebar, "Profil", profile, FontAwesomeSolid.USER);
 
     sidebar.add(Box.createVerticalGlue());

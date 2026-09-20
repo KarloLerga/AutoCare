@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
-/** Korisnikova bilješka o onome što primjećuje na vozilu. */
+/** Problem koji korisnik primjećuje na vozilu, bez dijagnostike. */
 @Entity
 public class Problem {
   @Id
@@ -43,11 +43,11 @@ public class Problem {
       throw new IllegalArgumentException("Vozilo je obavezno.");
     }
     if (createdAt == null) {
-      throw new IllegalArgumentException("Datum bilješke je obavezan.");
+      throw new IllegalArgumentException("Datum problema je obavezan.");
     }
 
     this.vehicle = vehicle;
-    this.description = Checks.text(description, 2000, "Bilješka");
+    this.description = Checks.text(description, 2000, "Opis problema");
     if (category == null) {
       this.category = ProblemCategory.OTHER;
     } else {
@@ -59,14 +59,14 @@ public class Problem {
 
   public void close() {
     if (status != ProblemStatus.OPEN) {
-      throw new IllegalArgumentException("Bilješka je već zatvorena.");
+      throw new IllegalArgumentException("Problem je već zatvoren.");
     }
     status = ProblemStatus.RESOLVED;
   }
 
   public void resolve(ServiceRecord serviceRecord) {
     if (status != ProblemStatus.OPEN) {
-      throw new IllegalArgumentException("Bilješka je već zatvorena.");
+      throw new IllegalArgumentException("Problem je već zatvoren.");
     }
     if (serviceRecord == null) {
       throw new IllegalArgumentException("Servis je obavezan.");

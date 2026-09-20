@@ -5,7 +5,6 @@ import hr.unizd.autocare.domain.CatalogCategory;
 import hr.unizd.autocare.domain.Checks;
 import hr.unizd.autocare.domain.CostSummary;
 import hr.unizd.autocare.domain.MaintenanceCalculator;
-import hr.unizd.autocare.domain.MaintenanceStatus;
 import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.domain.VehiclePriceClass;
 import hr.unizd.autocare.view.components.Ui;
@@ -42,13 +41,17 @@ public final class CoreChecks {
     MaintenanceCalculator calculator = new MaintenanceCalculator();
     LocalDate lastDate = LocalDate.of(2025, 9, 15);
     LocalDate today = LocalDate.of(2026, 9, 15);
-    equal(MaintenanceStatus.DUE, calculator.calculate(10000, 12, lastDate, 1000, 1000, today));
-    equal(MaintenanceStatus.DUE, calculator.calculate(10000, 12, today, 1000, 11000, today));
-    equal(MaintenanceStatus.SOON, calculator.calculate(10000, 12, today, 1000, 8000, today));
-    equal(MaintenanceStatus.OK, calculator.calculate(10000, 12, today, 1000, 1000, today));
-    equal(MaintenanceStatus.DUE, calculator.calculate(null, 1, lastDate, 1000, 1000, today));
-    equal(MaintenanceStatus.SOON, calculator.calculate(null, 1, today, 1000, 1000, today));
-    equal(MaintenanceStatus.OK, calculator.calculate(10000, null, today, 1000, 1000, today));
+    equal(0.0, calculator.calculate(10000, 12, lastDate, 1000, 1000, today));
+    equal(0.0, calculator.calculate(10000, 12, today, 1000, 11000, today));
+    equal(0.3, calculator.calculate(10000, 12, today, 1000, 8000, today));
+    equal(1.0, calculator.calculate(10000, 12, today, 1000, 1000, today));
+    if (calculator.calculate(null, 1, lastDate, 1000, 1000, today) >= 0) {
+      throw new AssertionError("Očekivan je istek vremenskog intervala.");
+    }
+    if (calculator.calculate(null, 1, today, 1000, 1000, today) <= 0) {
+      throw new AssertionError("Očekivan je aktivan vremenski interval.");
+    }
+    equal(1.0, calculator.calculate(10000, null, today, 1000, 1000, today));
     fails(() -> calculator.calculate(null, null, null, null, 0, today));
     fails(() -> calculator.calculate(10000, null, null, null, 0, today));
   }

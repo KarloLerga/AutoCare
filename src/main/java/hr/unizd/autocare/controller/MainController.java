@@ -136,7 +136,7 @@ public final class MainController implements AppListener {
       maintenance.load();
     } else if (page.equals("Katalog")) {
       catalog.load();
-    } else if (page.equals("Bilješke")) {
+    } else if (page.equals("Problemi")) {
       problems.load();
     } else if (page.equals("Profil")) {
       profile.load();

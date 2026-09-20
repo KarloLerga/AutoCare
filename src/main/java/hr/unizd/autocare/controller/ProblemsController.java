@@ -8,7 +8,7 @@ import hr.unizd.autocare.view.components.Ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/** Spremanje, prikaz i zatvaranje korisnikovih bilješki za aktivno vozilo. */
+/** Spremanje, prikaz i zatvaranje korisnikovih problema za aktivno vozilo. */
 public final class ProblemsController {
   private final MainFrame frame;
   private final ProblemService problemService;
@@ -63,11 +63,11 @@ public final class ProblemsController {
   private void closeSelected() {
     ProblemRow selected = frame.problems.selectedRow();
     if (selected == null) {
-      Ui.info(frame.problems, "Odaberite bilješku.");
+      Ui.info(frame.problems, "Odaberite problem.");
       return;
     }
     if (!frame.problems.selectedIsOpen()) {
-      Ui.info(frame.problems, "Odabrana bilješka je već zatvorena.");
+      Ui.info(frame.problems, "Odabrani problem je već zatvoren.");
       return;
     }
     try {

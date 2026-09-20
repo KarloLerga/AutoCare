@@ -1,7 +1,6 @@
 package hr.unizd.autocare.service;
 
 import hr.unizd.autocare.domain.MaintenanceCalculator;
-import hr.unizd.autocare.domain.MaintenanceStatus;
 import hr.unizd.autocare.domain.ServiceItem;
 import hr.unizd.autocare.domain.Vehicle;
 import hr.unizd.autocare.domain.WorkCategory;
@@ -68,7 +67,7 @@ public final class MaintenanceService {
       Integer lastMileage = last.getServiceRecord().getMileage();
       LocalDate nextDate = nextDate(lastDate, work.getIntervalMonths());
       Integer nextMileage = nextMileage(lastMileage, work.getIntervalKm());
-      MaintenanceStatus status =
+      double remainingRatio =
           calculator.calculate(
               work.getIntervalKm(),
               work.getIntervalMonths(),
@@ -84,7 +83,7 @@ public final class MaintenanceService {
               lastMileage,
               nextDate,
               nextMileage,
-              status));
+              remainingRatio));
     }
     return rows;
   }

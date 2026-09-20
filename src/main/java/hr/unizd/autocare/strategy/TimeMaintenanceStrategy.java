@@ -1,13 +1,12 @@
 package hr.unizd.autocare.strategy;
 
-import hr.unizd.autocare.domain.MaintenanceStatus;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-/** Status prema preostalom vremenu. */
+/** Računanje intervala koji ovisi o vremenu. */
 public final class TimeMaintenanceStrategy implements MaintenanceStrategy {
   @Override
-  public MaintenanceStatus calculate(
+  public double calculate(
       Integer intervalKm,
       Integer intervalMonths,
       LocalDate lastDate,
@@ -17,13 +16,9 @@ public final class TimeMaintenanceStrategy implements MaintenanceStrategy {
     if (intervalMonths == null || lastDate == null) {
       throw new IllegalArgumentException("Vremenski interval zahtijeva datum zadnjeg servisa.");
     }
-    long remaining = ChronoUnit.DAYS.between(today, lastDate.plusMonths(intervalMonths));
-    if (remaining <= 0) {
-      return MaintenanceStatus.DUE;
-    }
-    if (remaining <= 30) {
-      return MaintenanceStatus.SOON;
-    }
-    return MaintenanceStatus.OK;
+    LocalDate nextDate = lastDate.plusMonths(intervalMonths);
+    long intervalDays = ChronoUnit.DAYS.between(lastDate, nextDate);
+    long remainingDays = ChronoUnit.DAYS.between(today, nextDate);
+    return (double) remainingDays / intervalDays;
   }
 }

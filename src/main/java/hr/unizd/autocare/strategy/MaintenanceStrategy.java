@@ -1,11 +1,10 @@
 package hr.unizd.autocare.strategy;
 
-import hr.unizd.autocare.domain.MaintenanceStatus;
 import java.time.LocalDate;
 
-/** Strategija za izračun statusa jednog konkretnog intervala održavanja. */
+/** Način računanja koliko je servisnog intervala još preostalo. */
 public interface MaintenanceStrategy {
-  MaintenanceStatus calculate(
+  double calculate(
       Integer intervalKm,
       Integer intervalMonths,
       LocalDate lastDate,
