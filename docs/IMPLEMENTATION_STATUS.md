@@ -63,3 +63,4 @@ Prethodni HEAD prije ove integracije: `172a503`.
 | Testovi za read-only katalog | `2a72ae3` — `test: align checks with read-only catalog entities` |
 | Runtime integracija minimalnog studentskog paketa | `cbecf7e` — `refactor: align runtime code with course conventions` |
 | Kompatibilni cleanup runtime izlaza | `47599a6` — `refactor: align service boundaries with runtime usage` |
+| Pregled ultra-clean source paketa | `54548c7` — `docs: record ultra-clean source review` |
