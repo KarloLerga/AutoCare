@@ -67,3 +67,4 @@ Prethodni HEAD prije ove integracije: `172a503`.
 | Runtime integracija minimalnog studentskog paketa | `cbecf7e` — `refactor: align runtime code with course conventions` |
 | Kompatibilni cleanup runtime izlaza | `47599a6` — `refactor: align service boundaries with runtime usage` |
 | Pregled ultra-clean source paketa | `54548c7` — `docs: record ultra-clean source review` |
+| Student runtime i direktna lokalna konfiguracija | `d30cd74` — `refactor: finalize student application runtime` |
