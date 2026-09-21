@@ -6,9 +6,6 @@ import hr.unizd.autocare.domain.Vehicle;
 import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.domain.WorkDefinition;
 import hr.unizd.autocare.model.Data.MaintenanceRow;
-import hr.unizd.autocare.persistence.JpaCatalogRepository;
-import hr.unizd.autocare.persistence.JpaServiceRecordRepository;
-import hr.unizd.autocare.persistence.JpaVehicleRepository;
 import hr.unizd.autocare.repository.CatalogRepository;
 import hr.unizd.autocare.repository.ServiceRecordRepository;
 import hr.unizd.autocare.repository.VehicleRepository;
@@ -32,14 +29,14 @@ public final class MaintenanceService {
   public List<MaintenanceRow> list(long ownerId, long vehicleId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
-      VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
+      VehicleRepository vehicleRepository = new VehicleRepository(entityManager);
       Vehicle vehicle = vehicleRepository.findForOwner(ownerId, vehicleId);
       if (vehicle == null) {
         throw new IllegalArgumentException("Vozilo nije pronađeno.");
       }
       return calculate(
-          new JpaCatalogRepository(entityManager),
-          new JpaServiceRecordRepository(entityManager),
+          new CatalogRepository(entityManager),
+          new ServiceRecordRepository(entityManager),
           ownerId,
           vehicle);
     } finally {

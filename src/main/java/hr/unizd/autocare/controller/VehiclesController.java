@@ -59,13 +59,6 @@ public final class VehiclesController {
           }
         });
 
-    frame.vehicles.delete.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            delete();
-          }
-        });
   }
 
   public void load() {
@@ -162,21 +155,4 @@ public final class VehiclesController {
     }
   }
 
-  private void delete() {
-    VehicleRow vehicle = selected();
-    if (vehicle == null) {
-      return;
-    }
-
-    if (!Ui.confirm(frame, "Trajno obrisati vozilo, njegove servise i probleme?")) {
-      return;
-    }
-
-    try {
-      vehicleService.delete(session.getOwnerId(), vehicle.getId());
-      subject.notifyObservers(AppEvent.VEHICLE_CHANGED);
-    } catch (RuntimeException exception) {
-      Ui.error(frame, exception);
-    }
-  }
 }

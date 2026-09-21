@@ -44,12 +44,9 @@ public final class ServiceEditorDialog extends JDialog {
   private final DefaultTableModel problemsTableModel;
   private final List<AddedItem> items = new ArrayList<>();
   private final List<WorkDefinition> availableWorks = new ArrayList<>();
-  private final boolean historical;
 
-  public ServiceEditorDialog(
-      Window owner, int mileageValue, boolean historical, List<Problem> problems) {
-    super(owner, dialogTitle(historical), ModalityType.APPLICATION_MODAL);
-    this.historical = historical;
+  public ServiceEditorDialog(Window owner, int mileageValue, List<Problem> problems) {
+    super(owner, "Novi servis", ModalityType.APPLICATION_MODAL);
     this.problems = new ArrayList<>(problems);
     mileage = new JTextField(Integer.toString(mileageValue), 12);
 
@@ -117,11 +114,7 @@ public final class ServiceEditorDialog extends JDialog {
     note.setWrapStyleWord(true);
     lower.add(new JLabel("Napomena"));
     lower.add(new JScrollPane(note));
-    String priceHint = "Unesite stvarno plaćeni iznos za svaku stavku.";
-    if (historical) {
-      priceHint = "Nepoznatu cijenu starog servisa možete ostaviti praznom.";
-    }
-    lower.add(Ui.hint(priceHint));
+    lower.add(Ui.hint("Unesite stvarno plaćeni iznos za svaku stavku."));
     if (!this.problems.isEmpty()) {
       JTable problemTable = new JTable(problemsTableModel);
       problemTable.setRowHeight(28);
@@ -137,12 +130,6 @@ public final class ServiceEditorDialog extends JDialog {
     getRootPane().setDefaultButton(save);
   }
 
-  private static String dialogTitle(boolean historical) {
-    if (historical) {
-      return "Početna povijest — novi zapis";
-    }
-    return "Novi servis";
-  }
 
   public void setWorks(List<WorkDefinition> works) {
     availableWorks.clear();
@@ -180,7 +167,7 @@ public final class ServiceEditorDialog extends JDialog {
       }
     }
 
-    items.add(new AddedItem(selected, Ui.parseMoney(actualPrice.getText(), historical)));
+    items.add(new AddedItem(selected, Ui.parseMoney(actualPrice.getText())));
     actualPrice.setText("");
     if (work.getItemCount() > 0) {
       work.setSelectedIndex(0);

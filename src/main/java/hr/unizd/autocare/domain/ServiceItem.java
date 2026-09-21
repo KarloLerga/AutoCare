@@ -27,7 +27,7 @@ public class ServiceItem {
   ServiceItem(ServiceRecord serviceRecord, WorkDefinition work, BigDecimal actualPrice) {
     this.serviceRecord = serviceRecord;
     this.work = work;
-    this.actualPrice = Checks.money(actualPrice, true);
+    this.actualPrice = Checks.money(actualPrice);
   }
 
   public ServiceRecord getServiceRecord() {

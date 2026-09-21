@@ -17,7 +17,6 @@ public final class VehiclesView extends JPanel {
   public final JButton add = Ui.button("Dodaj vozilo");
   public final JButton edit = Ui.button("Promijeni kilometražu");
   public final JButton activate = Ui.button("Aktiviraj");
-  public final JButton delete = Ui.button("Obriši");
   public final JTable table;
   private final DefaultTableModel tableModel;
   private List<VehicleRow> vehicles = new ArrayList<>();
@@ -38,12 +37,9 @@ public final class VehiclesView extends JPanel {
     configureTable(table);
     JPanel top = Ui.column();
     top.add(Ui.heading("Vozila"));
-    top.add(Ui.row(add, edit, activate, delete));
+    top.add(Ui.row(add, edit, activate));
     add(top, BorderLayout.NORTH);
     add(new JScrollPane(table), BorderLayout.CENTER);
-    add(
-        Ui.hint("Brisanje uklanja i servisnu povijest i probleme odabranog vozila."),
-        BorderLayout.SOUTH);
   }
 
   public void setRows(List<VehicleRow> values) {

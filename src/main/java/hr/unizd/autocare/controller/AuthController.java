@@ -1,7 +1,6 @@
 package hr.unizd.autocare.controller;
 
 import hr.unizd.autocare.domain.Checks;
-import hr.unizd.autocare.model.Data.Account;
 import hr.unizd.autocare.service.AuthService;
 import hr.unizd.autocare.view.MainFrame;
 import hr.unizd.autocare.view.OnboardingView;
@@ -62,11 +61,11 @@ public final class AuthController {
 
   private void login() {
     try {
-      Account account =
+      long ownerId =
           authService.login(
               frame.login.email.getText(), new String(frame.login.password.getPassword()));
       frame.login.password.setText("");
-      loginListener.loggedIn(account.getId());
+      loginListener.loggedIn(ownerId);
     } catch (RuntimeException exception) {
       Ui.error(frame, exception);
     }

@@ -28,7 +28,6 @@ public final class MainController implements Observer {
   private final ServicesController services;
   private final MaintenanceController maintenance;
   private final ProblemsController problems;
-  private final ProfileController profile;
 
   public MainController(
       MainFrame frame,
@@ -53,7 +52,6 @@ public final class MainController implements Observer {
     maintenance = new MaintenanceController(frame, maintenanceService, session);
     catalog = new CatalogController(frame, catalogService, session);
     problems = new ProblemsController(frame, problemService, session);
-    profile = new ProfileController(frame, authService, session);
 
     new AuthController(
         frame,
@@ -119,15 +117,7 @@ public final class MainController implements Observer {
           }
         });
 
-    frame.profileButton.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            navigate("Profil");
-          }
-        });
-
-    frame.profile.logout.addActionListener(
+    frame.logoutButton.addActionListener(
         new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent event) {
@@ -175,11 +165,6 @@ public final class MainController implements Observer {
       vehicles.load();
       return;
     }
-    if (page.equals("Profil")) {
-      profile.load();
-      return;
-    }
-
     if (session.getActiveVehicle() == null) {
       return;
     }
@@ -217,7 +202,6 @@ public final class MainController implements Observer {
 
   private void logout() {
     session.logout();
-    profile.clear();
     frame.login.password.setText("");
     frame.vehicles.setRows(new ArrayList<>());
     frame.services.setRows(new ArrayList<>());

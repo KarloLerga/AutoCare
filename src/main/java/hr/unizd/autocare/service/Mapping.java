@@ -1,10 +1,8 @@
 package hr.unizd.autocare.service;
 
-import hr.unizd.autocare.domain.AppUser;
 import hr.unizd.autocare.domain.ServiceItem;
 import hr.unizd.autocare.domain.ServiceRecord;
 import hr.unizd.autocare.domain.Vehicle;
-import hr.unizd.autocare.model.Data.Account;
 import hr.unizd.autocare.model.Data.ServiceRow;
 import hr.unizd.autocare.model.Data.VehicleRow;
 
@@ -12,9 +10,6 @@ import hr.unizd.autocare.model.Data.VehicleRow;
 final class Mapping {
   private Mapping() {}
 
-  static Account account(AppUser user) {
-    return new Account(user.getId(), user.getName(), user.getEmail());
-  }
 
   static VehicleRow vehicle(Vehicle vehicle, Long activeVehicleId) {
     boolean active = false;

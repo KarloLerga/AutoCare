@@ -6,7 +6,6 @@ import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.domain.WorkDefinition;
 import hr.unizd.autocare.domain.WorkPriceRange;
 import hr.unizd.autocare.model.Data.CatalogRow;
-import hr.unizd.autocare.persistence.JpaCatalogRepository;
 import hr.unizd.autocare.repository.CatalogRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -24,7 +23,7 @@ public final class CatalogService {
   public List<String> makes() {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
-      return new JpaCatalogRepository(entityManager).makes();
+      return new CatalogRepository(entityManager).makes();
     } finally {
       entityManager.close();
     }
@@ -33,7 +32,7 @@ public final class CatalogService {
   public List<String> models(String make) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
-      return new JpaCatalogRepository(entityManager).models(make);
+      return new CatalogRepository(entityManager).models(make);
     } finally {
       entityManager.close();
     }
@@ -42,7 +41,7 @@ public final class CatalogService {
   public List<Integer> years(String make, String model) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
-      return new JpaCatalogRepository(entityManager).years(make, model);
+      return new CatalogRepository(entityManager).years(make, model);
     } finally {
       entityManager.close();
     }
@@ -51,7 +50,7 @@ public final class CatalogService {
   public List<VehicleVariant> variants(String make, String model, int year) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
-      return new JpaCatalogRepository(entityManager).variants(make, model, year);
+      return new CatalogRepository(entityManager).variants(make, model, year);
     } finally {
       entityManager.close();
     }
@@ -60,7 +59,7 @@ public final class CatalogService {
   public List<WorkDefinition> works(WorkCategory category) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
-      return new JpaCatalogRepository(entityManager).works(category);
+      return new CatalogRepository(entityManager).works(category);
     } finally {
       entityManager.close();
     }
@@ -70,7 +69,7 @@ public final class CatalogService {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
       List<CatalogRow> rows = new ArrayList<>();
-      CatalogRepository repository = new JpaCatalogRepository(entityManager);
+      CatalogRepository repository = new CatalogRepository(entityManager);
       List<WorkPriceRange> prices = repository.priceRanges(priceClass);
 
       for (WorkPriceRange price : prices) {

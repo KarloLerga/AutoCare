@@ -115,7 +115,7 @@ public final class ServicesController {
       List<WorkDefinition> works,
       List<Problem> openProblems) {
     final ServiceEditorDialog dialog =
-        new ServiceEditorDialog(frame, currentMileage, false, openProblems);
+        new ServiceEditorDialog(frame, currentMileage, openProblems);
     new ServiceEditorController(
         dialog,
         works,

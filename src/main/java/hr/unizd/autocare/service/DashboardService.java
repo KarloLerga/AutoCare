@@ -3,10 +3,9 @@ package hr.unizd.autocare.service;
 import hr.unizd.autocare.domain.Vehicle;
 import hr.unizd.autocare.model.Data.Dashboard;
 import hr.unizd.autocare.model.Data.MaintenanceRow;
-import hr.unizd.autocare.persistence.JpaCatalogRepository;
-import hr.unizd.autocare.persistence.JpaProblemRepository;
-import hr.unizd.autocare.persistence.JpaServiceRecordRepository;
-import hr.unizd.autocare.persistence.JpaVehicleRepository;
+import hr.unizd.autocare.repository.CatalogRepository;
+import hr.unizd.autocare.repository.ProblemRepository;
+import hr.unizd.autocare.repository.ServiceRecordRepository;
 import hr.unizd.autocare.repository.VehicleRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -23,11 +22,11 @@ public final class DashboardService {
   public Dashboard get(long ownerId, long vehicleId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
-      VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
-      JpaCatalogRepository catalogRepository = new JpaCatalogRepository(entityManager);
-      JpaServiceRecordRepository serviceRecordRepository =
-          new JpaServiceRecordRepository(entityManager);
-      JpaProblemRepository problemRepository = new JpaProblemRepository(entityManager);
+      VehicleRepository vehicleRepository = new VehicleRepository(entityManager);
+      CatalogRepository catalogRepository = new CatalogRepository(entityManager);
+      ServiceRecordRepository serviceRecordRepository =
+          new ServiceRecordRepository(entityManager);
+      ProblemRepository problemRepository = new ProblemRepository(entityManager);
 
       Vehicle vehicle = vehicleRepository.findForOwner(ownerId, vehicleId);
       if (vehicle == null) {
