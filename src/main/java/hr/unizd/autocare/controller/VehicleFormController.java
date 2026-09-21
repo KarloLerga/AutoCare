@@ -1,6 +1,6 @@
 package hr.unizd.autocare.controller;
 
-import hr.unizd.autocare.model.Data.VariantRow;
+import hr.unizd.autocare.domain.VehicleVariant;
 import hr.unizd.autocare.service.CatalogService;
 import hr.unizd.autocare.view.components.Ui;
 import hr.unizd.autocare.view.components.VehicleForm;
@@ -125,7 +125,7 @@ public final class VehicleFormController {
     }
     try {
       view.state.setText("Učitavanje varijanti...");
-      List<VariantRow> values = catalogService.variants(make, model, year);
+      List<VehicleVariant> values = catalogService.variants(make, model, year);
       view.updating = true;
       view.setVariants(values);
       view.updating = false;

@@ -1,7 +1,7 @@
 package hr.unizd.autocare.controller;
 
-import hr.unizd.autocare.event.AppEvent;
-import hr.unizd.autocare.event.AppEvents;
+import hr.unizd.autocare.observer.AppEvent;
+import hr.unizd.autocare.observer.Subject;
 import hr.unizd.autocare.model.Data.VehicleRow;
 import hr.unizd.autocare.service.CatalogService;
 import hr.unizd.autocare.service.VehicleService;
@@ -26,19 +26,19 @@ public final class VehiclesController {
   private final VehicleService vehicleService;
   private final CatalogService catalogService;
   private final Session session;
-  private final AppEvents events;
+  private final Subject subject;
 
   public VehiclesController(
       MainFrame frame,
       VehicleService vehicleService,
       CatalogService catalogService,
       Session session,
-      AppEvents events) {
+      Subject subject) {
     this.frame = frame;
     this.vehicleService = vehicleService;
     this.catalogService = catalogService;
     this.session = session;
-    this.events = events;
+    this.subject = subject;
     registerListeners();
   }
 
@@ -110,7 +110,7 @@ public final class VehiclesController {
             try {
               vehicleService.add(session.getOwnerId(), form.input());
               dialog.dispose();
-              events.publish(AppEvent.VEHICLE_CHANGED);
+              subject.notifyObservers(AppEvent.VEHICLE_CHANGED);
             } catch (RuntimeException exception) {
               Ui.error(dialog, exception);
             }
@@ -123,7 +123,6 @@ public final class VehiclesController {
             dialog.dispose();
           }
         });
-    Ui.escape(dialog);
     dialog.setVisible(true);
   }
 
@@ -157,7 +156,7 @@ public final class VehiclesController {
               vehicleService.updateMileage(
                   session.getOwnerId(), vehicle.getId(), Ui.mileage(mileage));
               dialog.dispose();
-              events.publish(AppEvent.VEHICLE_CHANGED);
+              subject.notifyObservers(AppEvent.VEHICLE_CHANGED);
             } catch (RuntimeException exception) {
               Ui.error(dialog, exception);
             }
@@ -170,7 +169,6 @@ public final class VehiclesController {
             dialog.dispose();
           }
         });
-    Ui.escape(dialog);
     dialog.setVisible(true);
   }
 
@@ -181,7 +179,7 @@ public final class VehiclesController {
     }
     try {
       vehicleService.activate(session.getOwnerId(), vehicle.getId());
-      events.publish(AppEvent.ACTIVE_VEHICLE_CHANGED);
+      subject.notifyObservers(AppEvent.ACTIVE_VEHICLE_CHANGED);
     } catch (RuntimeException exception) {
       Ui.error(frame, exception);
     }
@@ -197,7 +195,7 @@ public final class VehiclesController {
     }
     try {
       vehicleService.delete(session.getOwnerId(), vehicle.getId());
-      events.publish(AppEvent.VEHICLE_CHANGED);
+      subject.notifyObservers(AppEvent.VEHICLE_CHANGED);
     } catch (RuntimeException exception) {
       Ui.error(frame, exception);
     }

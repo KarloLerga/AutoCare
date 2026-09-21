@@ -33,12 +33,6 @@ public class AppUser {
       throw new IllegalArgumentException("Vozilo je obavezno.");
     }
 
-    boolean sameObject = vehicle.getOwner() == this;
-    boolean sameId = id != null && id.equals(vehicle.getOwner().getId());
-    if (!sameObject && !sameId) {
-      throw new IllegalArgumentException("Vozilo nije vaše.");
-    }
-
     activeVehicle = vehicle;
   }
 

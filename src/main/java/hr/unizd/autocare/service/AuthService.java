@@ -20,7 +20,6 @@ import hr.unizd.autocare.repository.VehicleRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
-import java.time.LocalDate;
 import java.util.List;
 
 /** Registracija, prijava i profil korisnika. */
@@ -57,14 +56,8 @@ public final class AuthService {
       String password,
       VehicleInput vehicleInput,
       List<ServiceInput> history) {
-    String cleanName = Checks.text(name, 100, "Ime");
-    String cleanEmail = Checks.email(email);
-    String cleanPassword = Checks.password(password);
-
-    if (vehicleInput == null
-        || vehicleInput.getYear() < 1886
-        || vehicleInput.getYear() > LocalDate.now().getYear()) {
-      throw new IllegalArgumentException("Godina proizvodnje nije valjana.");
+    if (vehicleInput == null) {
+      throw new IllegalArgumentException("Vozilo je obavezno.");
     }
 
     EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -80,11 +73,10 @@ public final class AuthService {
           new JpaServiceRecordRepository(entityManager);
       ProblemRepository problemRepository = new JpaProblemRepository(entityManager);
 
-      if (userRepository.findByEmail(cleanEmail) != null) {
+      AppUser user = new AppUser(name, email, password);
+      if (userRepository.findByEmail(user.getEmail()) != null) {
         throw new IllegalArgumentException("E-mail adresa je već registrirana.");
       }
-
-      AppUser user = new AppUser(cleanName, cleanEmail, cleanPassword);
       userRepository.add(user);
 
       VehicleVariant variant = catalogRepository.findVariant(vehicleInput.getVariantId());
@@ -143,7 +135,6 @@ public final class AuthService {
   }
 
   public void profile(long ownerId, String name, String email) {
-    String cleanName = Checks.text(name, 100, "Ime");
     String cleanEmail = Checks.email(email);
 
     EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -165,7 +156,7 @@ public final class AuthService {
         throw new IllegalArgumentException("E-mail adresa je zauzeta.");
       }
 
-      user.changeProfile(cleanName, cleanEmail);
+      user.changeProfile(name, cleanEmail);
       transaction.commit();
     } catch (RuntimeException exception) {
       if (transaction.isActive()) {

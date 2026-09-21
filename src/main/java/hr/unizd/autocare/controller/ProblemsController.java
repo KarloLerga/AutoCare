@@ -1,7 +1,7 @@
 package hr.unizd.autocare.controller;
 
 import hr.unizd.autocare.app.Session;
-import hr.unizd.autocare.model.Data.ProblemRow;
+import hr.unizd.autocare.domain.Problem;
 import hr.unizd.autocare.service.ProblemService;
 import hr.unizd.autocare.view.MainFrame;
 import hr.unizd.autocare.view.components.Ui;
@@ -61,7 +61,7 @@ public final class ProblemsController {
   }
 
   private void closeSelected() {
-    ProblemRow selected = frame.problems.selectedRow();
+    Problem selected = frame.problems.selectedProblem();
     if (selected == null) {
       Ui.info(frame.problems, "Odaberite problem.");
       return;

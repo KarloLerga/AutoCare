@@ -1,6 +1,6 @@
 package hr.unizd.autocare.view.components;
 
-import hr.unizd.autocare.model.Data.VariantRow;
+import hr.unizd.autocare.domain.VehicleVariant;
 import hr.unizd.autocare.model.Data.VehicleInput;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -16,7 +16,7 @@ public final class VehicleForm extends JPanel {
   public final JComboBox<String> make = new JComboBox<>();
   public final JComboBox<String> model = new JComboBox<>();
   public final JComboBox<Integer> year = new JComboBox<>();
-  public final JComboBox<VariantRow> variant = new JComboBox<>();
+  public final JComboBox<VehicleVariant> variant = new JComboBox<>();
   public final JTextField mileage = new JTextField(12);
   public final JLabel details = Ui.hint("Odaberite točnu varijantu.");
   public final JLabel state = Ui.hint("Odaberite marku, model, godinu i varijantu.");
@@ -45,7 +45,7 @@ public final class VehicleForm extends JPanel {
   }
 
   public VehicleInput input() {
-    VariantRow selected = selectedVariant();
+    VehicleVariant selected = selectedVariant();
     if (selected == null) {
       throw new IllegalArgumentException("Odaberite točnu varijantu vozila.");
     }
@@ -71,14 +71,14 @@ public final class VehicleForm extends JPanel {
     year.setSelectedIndex(-1);
   }
 
-  public void setVariants(List<VariantRow> values) {
-    variant.setModel(new DefaultComboBoxModel<>(values.toArray(new VariantRow[0])));
+  public void setVariants(List<VehicleVariant> values) {
+    variant.setModel(new DefaultComboBoxModel<>(values.toArray(new VehicleVariant[0])));
     variant.setSelectedIndex(-1);
     details.setText("Odaberite točnu varijantu.");
   }
 
-  public VariantRow selectedVariant() {
-    return (VariantRow) variant.getSelectedItem();
+  public VehicleVariant selectedVariant() {
+    return (VehicleVariant) variant.getSelectedItem();
   }
 
   public void clearBelowMake() {
@@ -102,25 +102,28 @@ public final class VehicleForm extends JPanel {
     updating = false;
   }
 
-  public void showDetails(VariantRow selected) {
+  public void showDetails(VehicleVariant selected) {
     if (selected == null) {
       details.setText("Odaberite točnu varijantu.");
       return;
     }
+
     String power = "? KS";
     if (selected.getPowerHp() != null) {
       power = selected.getPowerHp() + " KS";
     }
+
     String transmission = selected.getTransmission();
     if (transmission == null || transmission.isBlank()) {
       transmission = "Mjenjač nije naveden";
     }
+
     details.setText(
         selected.getGeneration()
             + " / "
-            + selected.getEngine()
+            + selected.getEngineLabel()
             + " / "
-            + selected.getFuel()
+            + selected.getFuelType()
             + " / "
             + power
             + " / "

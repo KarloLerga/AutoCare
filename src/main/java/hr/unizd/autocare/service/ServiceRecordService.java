@@ -71,7 +71,7 @@ public final class ServiceRecordService {
     }
   }
 
-  static ServiceRecord saveInside(
+  static void saveInside(
       CatalogRepository catalogRepository,
       ServiceRecordRepository serviceRecordRepository,
       ProblemRepository problemRepository,
@@ -103,7 +103,6 @@ public final class ServiceRecordService {
     }
 
     resolveSelectedProblems(problemRepository, vehicle, serviceRecord, input.getResolvedProblemIds());
-    return serviceRecord;
   }
 
   private static void resolveSelectedProblems(
@@ -114,7 +113,7 @@ public final class ServiceRecordService {
     for (Long problemId : problemIds) {
       Problem problem = problemRepository.findForOwner(vehicle.getOwner().getId(), problemId);
       if (problem == null) {
-        throw new IllegalArgumentException("Bilješka nije pronađena.");
+        throw new IllegalArgumentException("Problem nije pronađen.");
       }
 
       problem.resolve(serviceRecord);
@@ -140,23 +139,14 @@ public final class ServiceRecordService {
     for (ItemInput itemInput : input.getItems()) {
       Checks.money(itemInput.getActualPrice(), historical);
     }
-
-    if (historical && !input.getResolvedProblemIds().isEmpty()) {
-      throw new IllegalArgumentException("Početna povijest ne zatvara postojeće probleme.");
-    }
   }
 
   public List<ServiceRow> list(long ownerId, long vehicleId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
 
     try {
-      VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
       ServiceRecordRepository serviceRecordRepository =
           new JpaServiceRecordRepository(entityManager);
-
-      if (vehicleRepository.findForOwner(ownerId, vehicleId) == null) {
-        throw new IllegalArgumentException("Vozilo nije pronađeno.");
-      }
 
       List<ServiceRow> rows = new ArrayList<>();
       for (ServiceRecord serviceRecord : serviceRecordRepository.list(ownerId, vehicleId)) {

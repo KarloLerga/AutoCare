@@ -8,12 +8,8 @@ public final class CostSummary {
   private final BigDecimal knownTotal;
   private final long unknownCount;
 
-  public CostSummary(BigDecimal knownTotal, long unknownCount) {
-    if (knownTotal == null) {
-      this.knownTotal = BigDecimal.ZERO.setScale(2);
-    } else {
-      this.knownTotal = knownTotal;
-    }
+  private CostSummary(BigDecimal knownTotal, long unknownCount) {
+    this.knownTotal = knownTotal;
     this.unknownCount = unknownCount;
   }
 

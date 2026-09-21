@@ -1,9 +1,9 @@
 package hr.unizd.autocare.controller;
 
 import hr.unizd.autocare.app.Session;
-import hr.unizd.autocare.event.AppEvent;
-import hr.unizd.autocare.event.AppEvents;
-import hr.unizd.autocare.event.AppListener;
+import hr.unizd.autocare.observer.AppEvent;
+import hr.unizd.autocare.observer.Subject;
+import hr.unizd.autocare.observer.Observer;
 import hr.unizd.autocare.model.Data.VehicleRow;
 import hr.unizd.autocare.service.AuthService;
 import hr.unizd.autocare.service.CatalogService;
@@ -21,7 +21,7 @@ import java.util.Map;
 import javax.swing.JButton;
 
 /** Glavna navigacija i podaci prijavljenog korisnika. */
-public final class MainController implements AppListener {
+public final class MainController implements Observer {
   private final MainFrame frame;
   private final Session session;
   private final VehicleService vehicleService;
@@ -43,16 +43,16 @@ public final class MainController implements AppListener {
       MaintenanceService maintenanceService,
       ProblemService problemService,
       DashboardService dashboardService,
-      AppEvents events) {
+      Subject subject) {
     this.frame = frame;
     this.session = session;
     this.vehicleService = vehicleService;
     this.dashboardService = dashboardService;
 
-    vehicles = new VehiclesController(frame, vehicleService, catalogService, session, events);
+    vehicles = new VehiclesController(frame, vehicleService, catalogService, session, subject);
     services =
         new ServicesController(
-            frame, serviceRecordService, catalogService, problemService, session, events);
+            frame, serviceRecordService, catalogService, problemService, session, subject);
     maintenance = new MaintenanceController(frame, maintenanceService, session);
     catalog = new CatalogController(frame, catalogService, session);
     problems = new ProblemsController(frame, problemService, session);
@@ -69,7 +69,7 @@ public final class MainController implements AppListener {
           }
         });
     activateForm();
-    events.add(this);
+    subject.addObserver(this);
     frame.auth();
   }
 
@@ -153,7 +153,7 @@ public final class MainController implements AppListener {
   }
 
   @Override
-  public void onChange(AppEvent event) {
+  public void update(AppEvent event) {
     if (event == AppEvent.ACTIVE_VEHICLE_CHANGED) {
       refreshContext(true);
     } else {

@@ -17,5 +17,5 @@ public interface ServiceRecordRepository {
 
   CostSummary total(long ownerId, long vehicleId);
 
-  void deleteForVehicle(long vehicle);
+  void deleteForVehicle(long vehicleId);
 }

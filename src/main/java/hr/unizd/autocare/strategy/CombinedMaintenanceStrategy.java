@@ -16,9 +16,11 @@ public final class CombinedMaintenanceStrategy implements MaintenanceStrategy {
       int currentMileage,
       LocalDate today) {
     double mileageRemaining =
-        mileageStrategy.calculate(intervalKm, null, lastDate, lastMileage, currentMileage, today);
+        mileageStrategy.calculate(
+            intervalKm, null, lastDate, lastMileage, currentMileage, today);
     double timeRemaining =
-        timeStrategy.calculate(null, intervalMonths, lastDate, lastMileage, currentMileage, today);
+        timeStrategy.calculate(
+            null, intervalMonths, lastDate, lastMileage, currentMileage, today);
     return Math.min(mileageRemaining, timeRemaining);
   }
 }

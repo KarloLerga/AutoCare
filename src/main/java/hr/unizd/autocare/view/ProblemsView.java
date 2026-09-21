@@ -1,8 +1,8 @@
 package hr.unizd.autocare.view;
 
+import hr.unizd.autocare.domain.Problem;
 import hr.unizd.autocare.domain.ProblemCategory;
 import hr.unizd.autocare.domain.ProblemStatus;
-import hr.unizd.autocare.model.Data.ProblemRow;
 import hr.unizd.autocare.view.components.Ui;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
@@ -22,11 +22,11 @@ public final class ProblemsView extends JPanel {
       new JComboBox<>(ProblemCategory.values());
   public final JTextArea description = new JTextArea(3, 36);
   public final JButton add = Ui.button("Spremi problem");
-  public final JButton close = Ui.button("Zatvori odabranu");
+  public final JButton close = Ui.button("Zatvori odabrani");
   public final JTable table;
 
   private final DefaultTableModel tableModel;
-  private final List<ProblemRow> rows = new ArrayList<>();
+  private final List<Problem> problems = new ArrayList<>();
 
   public ProblemsView() {
     super(new BorderLayout(12, 12));
@@ -75,19 +75,19 @@ public final class ProblemsView extends JPanel {
     return (ProblemCategory) category.getSelectedItem();
   }
 
-  public ProblemRow selectedRow() {
+  public Problem selectedProblem() {
     int selected = table.getSelectedRow();
     if (selected < 0) {
       return null;
     }
-    return rows.get(table.convertRowIndexToModel(selected));
+    return problems.get(table.convertRowIndexToModel(selected));
   }
 
-  public void setRows(List<ProblemRow> values) {
-    rows.clear();
-    rows.addAll(values);
+  public void setRows(List<Problem> values) {
+    problems.clear();
+    problems.addAll(values);
     tableModel.setRowCount(0);
-    for (ProblemRow problem : values) {
+    for (Problem problem : values) {
       tableModel.addRow(
           new Object[] {
             problem.getCategory(),
@@ -104,7 +104,7 @@ public final class ProblemsView extends JPanel {
   }
 
   public boolean selectedIsOpen() {
-    ProblemRow selected = selectedRow();
+    Problem selected = selectedProblem();
     return selected != null && selected.getStatus() == ProblemStatus.OPEN;
   }
 }

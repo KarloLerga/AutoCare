@@ -7,17 +7,13 @@ import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.domain.WorkDefinition;
 import hr.unizd.autocare.domain.WorkPriceRange;
 import hr.unizd.autocare.model.Data.CatalogRow;
-import hr.unizd.autocare.model.Data.VariantRow;
-import hr.unizd.autocare.model.Data.WorkRow;
 import hr.unizd.autocare.persistence.JpaCatalogRepository;
 import hr.unizd.autocare.persistence.JpaVehicleRepository;
 import hr.unizd.autocare.repository.CatalogRepository;
-import hr.unizd.autocare.repository.VehicleRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /** Čitanje kataloga vozila, zahvata i informativnih raspona cijena. */
 public final class CatalogService {
@@ -54,50 +50,19 @@ public final class CatalogService {
     }
   }
 
-  public List<VariantRow> variants(String make, String model, int year) {
+  public List<VehicleVariant> variants(String make, String model, int year) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
-      CatalogRepository repository = new JpaCatalogRepository(entityManager);
-      List<VariantRow> rows = new ArrayList<>();
-      for (VehicleVariant variant : repository.variants(make, model, year)) {
-        rows.add(Mapping.variant(variant));
-      }
-      return rows;
+      return new JpaCatalogRepository(entityManager).variants(make, model, year);
     } finally {
       entityManager.close();
     }
   }
 
-  public List<WorkRow> works(WorkCategory category) {
+  public List<WorkDefinition> works(WorkCategory category) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
-      return workRows(new JpaCatalogRepository(entityManager).works(category));
-    } finally {
-      entityManager.close();
-    }
-  }
-
-  public List<WorkRow> works(long ownerId, long vehicleId, WorkCategory category) {
-    EntityManager entityManager = entityManagerFactory.createEntityManager();
-    try {
-      VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
-      if (vehicleRepository.findForOwner(ownerId, vehicleId) == null) {
-        throw new IllegalArgumentException("Vozilo nije pronađeno.");
-      }
-      return workRows(new JpaCatalogRepository(entityManager).works(category));
-    } finally {
-      entityManager.close();
-    }
-  }
-
-  public List<WorkRow> onboardingWorks(long variantId, WorkCategory category) {
-    EntityManager entityManager = entityManagerFactory.createEntityManager();
-    try {
-      CatalogRepository repository = new JpaCatalogRepository(entityManager);
-      if (repository.findVariant(variantId) == null) {
-        throw new IllegalArgumentException("Odaberite postojeću varijantu vozila.");
-      }
-      return workRows(repository.works(category));
+      return new JpaCatalogRepository(entityManager).works(category);
     } finally {
       entityManager.close();
     }
@@ -117,7 +82,7 @@ public final class CatalogService {
 
       String search = "";
       if (searchText != null) {
-        search = searchText.trim().toLowerCase(Locale.ROOT);
+        search = searchText.trim().toLowerCase();
       }
 
       List<CatalogRow> rows = new ArrayList<>();
@@ -131,12 +96,8 @@ public final class CatalogService {
           continue;
         }
 
-        if (!search.isEmpty()) {
-          String name = work.getName().toLowerCase(Locale.ROOT);
-          String code = work.getCode().toLowerCase(Locale.ROOT);
-          if (!name.contains(search) && !code.contains(search)) {
-            continue;
-          }
+        if (!search.isEmpty() && !work.getName().toLowerCase().contains(search)) {
+          continue;
         }
 
         rows.add(
@@ -153,13 +114,5 @@ public final class CatalogService {
     } finally {
       entityManager.close();
     }
-  }
-
-  private static List<WorkRow> workRows(List<WorkDefinition> works) {
-    List<WorkRow> rows = new ArrayList<>();
-    for (WorkDefinition work : works) {
-      rows.add(new WorkRow(work.getId(), work.getName(), work.getCategory()));
-    }
-    return rows;
   }
 }

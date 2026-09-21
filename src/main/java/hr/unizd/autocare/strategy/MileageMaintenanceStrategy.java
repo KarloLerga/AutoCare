@@ -12,10 +12,7 @@ public final class MileageMaintenanceStrategy implements MaintenanceStrategy {
       Integer lastMileage,
       int currentMileage,
       LocalDate today) {
-    if (intervalKm == null || lastMileage == null) {
-      throw new IllegalArgumentException("Kilometarski interval zahtijeva zadnju kilometražu.");
-    }
-    int remaining = lastMileage + intervalKm - currentMileage;
-    return (double) remaining / intervalKm;
+    int remainingKm = lastMileage + intervalKm - currentMileage;
+    return (double) remainingKm / intervalKm;
   }
 }

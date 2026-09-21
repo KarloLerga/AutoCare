@@ -1,6 +1,5 @@
 target/
 connection.local.properties
-*.local.json
 .vscode/
 .idea/
 *.iml

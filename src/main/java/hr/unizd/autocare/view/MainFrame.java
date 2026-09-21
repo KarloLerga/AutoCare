@@ -141,6 +141,6 @@ public final class MainFrame extends JFrame {
     vehicleDetails.setText(
         vehicle.getYear() + " / " + Ui.km(vehicle.getMileage()) + " / " + Ui.date(LocalDate.now()));
     vehicleName.setToolTipText(
-        vehicle.getVariant().getGeneration() + " / " + vehicle.getVariant().getEngine());
+        vehicle.getVariant().getGeneration() + " / " + vehicle.getVariant().getEngineLabel());
   }
 }

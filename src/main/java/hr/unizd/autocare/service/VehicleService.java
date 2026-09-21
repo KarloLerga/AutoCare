@@ -1,7 +1,6 @@
 package hr.unizd.autocare.service;
 
 import hr.unizd.autocare.domain.AppUser;
-import hr.unizd.autocare.domain.Checks;
 import hr.unizd.autocare.domain.Vehicle;
 import hr.unizd.autocare.domain.VehicleVariant;
 import hr.unizd.autocare.model.Data.VehicleInput;
@@ -19,7 +18,6 @@ import hr.unizd.autocare.repository.VehicleRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +69,10 @@ public final class VehicleService {
   }
 
   public void add(long ownerId, VehicleInput input) {
-    validate(input);
+    if (input == null) {
+      throw new IllegalArgumentException("Vozilo je obavezno.");
+    }
+
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();
     try {
@@ -101,7 +102,6 @@ public final class VehicleService {
   }
 
   public void updateMileage(long ownerId, long vehicleId, int mileage) {
-    Checks.mileage(mileage);
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();
     try {
@@ -193,14 +193,4 @@ public final class VehicleService {
       entityManager.close();
     }
   }
-
-  private static void validate(VehicleInput input) {
-    if (input == null
-        || input.getYear() < 1886
-        || input.getYear() > LocalDate.now().getYear()) {
-      throw new IllegalArgumentException("Nevaljana godina proizvodnje.");
-    }
-    Checks.mileage(input.getMileage());
-  }
-
 }

@@ -13,9 +13,6 @@ public final class TimeMaintenanceStrategy implements MaintenanceStrategy {
       Integer lastMileage,
       int currentMileage,
       LocalDate today) {
-    if (intervalMonths == null || lastDate == null) {
-      throw new IllegalArgumentException("Vremenski interval zahtijeva datum zadnjeg servisa.");
-    }
     LocalDate nextDate = lastDate.plusMonths(intervalMonths);
     long intervalDays = ChronoUnit.DAYS.between(lastDate, nextDate);
     long remainingDays = ChronoUnit.DAYS.between(today, nextDate);
