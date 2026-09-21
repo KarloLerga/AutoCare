@@ -1,5 +1,4 @@
 target/
-connection.local.properties
 .vscode/
 .idea/
 *.iml
