@@ -8,7 +8,6 @@ import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.util.List;
 
-/** JPA pristup servisnoj povijesti. */
 public final class JpaServiceRecordRepository implements ServiceRecordRepository {
   private final EntityManager entityManager;
 
@@ -25,11 +24,11 @@ public final class JpaServiceRecordRepository implements ServiceRecordRepository
   public List<ServiceRecord> list(long ownerId, long vehicleId) {
     return entityManager
         .createQuery(
-            "select distinct serviceRecord from ServiceRecord serviceRecord "
-                + "left join fetch serviceRecord.items serviceItem "
-                + "left join fetch serviceItem.work where serviceRecord.vehicle.id=:vehicleId "
+            "select serviceRecord from ServiceRecord serviceRecord "
+                + "where serviceRecord.vehicle.id=:vehicleId "
                 + "and serviceRecord.vehicle.owner.id=:ownerId "
-                + "order by serviceRecord.serviceDate desc,serviceRecord.mileage desc,serviceRecord.id desc",
+                + "order by serviceRecord.serviceDate desc, "
+                + "serviceRecord.mileage desc, serviceRecord.id desc",
             ServiceRecord.class)
         .setParameter("vehicleId", vehicleId)
         .setParameter("ownerId", ownerId)
@@ -41,15 +40,15 @@ public final class JpaServiceRecordRepository implements ServiceRecordRepository
     List<ServiceRecord> serviceRecords =
         entityManager
             .createQuery(
-                "select distinct serviceRecord from ServiceRecord serviceRecord "
-                    + "left join fetch serviceRecord.items serviceItem "
-                    + "left join fetch serviceItem.work where serviceRecord.id=:serviceId "
+                "select serviceRecord from ServiceRecord serviceRecord "
+                    + "where serviceRecord.id=:serviceId "
                     + "and serviceRecord.vehicle.owner.id=:ownerId",
                 ServiceRecord.class)
             .setParameter("serviceId", serviceId)
             .setParameter("ownerId", ownerId)
             .setMaxResults(1)
             .getResultList();
+
     if (serviceRecords.isEmpty()) {
       return null;
     }
@@ -60,12 +59,12 @@ public final class JpaServiceRecordRepository implements ServiceRecordRepository
   public List<ServiceItem> historyItems(long ownerId, long vehicleId) {
     return entityManager
         .createQuery(
-            "select serviceItem from ServiceItem serviceItem join fetch serviceItem.work "
-                + "join fetch serviceItem.serviceRecord serviceRecord "
-                + "where serviceRecord.vehicle.owner.id=:ownerId "
-                + "and serviceRecord.vehicle.id=:vehicleId "
-                + "order by serviceRecord.serviceDate desc,serviceRecord.mileage desc,"
-                + "serviceRecord.id desc",
+            "select serviceItem from ServiceItem serviceItem "
+                + "where serviceItem.serviceRecord.vehicle.owner.id=:ownerId "
+                + "and serviceItem.serviceRecord.vehicle.id=:vehicleId "
+                + "order by serviceItem.serviceRecord.serviceDate desc, "
+                + "serviceItem.serviceRecord.mileage desc, "
+                + "serviceItem.serviceRecord.id desc",
             ServiceItem.class)
         .setParameter("ownerId", ownerId)
         .setParameter("vehicleId", vehicleId)
@@ -77,28 +76,30 @@ public final class JpaServiceRecordRepository implements ServiceRecordRepository
     List<BigDecimal> prices =
         entityManager
             .createQuery(
-                "select serviceItem.actualPrice from ServiceItem serviceItem where "
-                    + "serviceItem.serviceRecord.vehicle.owner.id=:ownerId and "
-                    + "serviceItem.serviceRecord.vehicle.id=:vehicleId",
+                "select serviceItem.actualPrice from ServiceItem serviceItem "
+                    + "where serviceItem.serviceRecord.vehicle.owner.id=:ownerId "
+                    + "and serviceItem.serviceRecord.vehicle.id=:vehicleId",
                 BigDecimal.class)
             .setParameter("ownerId", ownerId)
             .setParameter("vehicleId", vehicleId)
             .getResultList();
+
     return CostSummary.of(prices);
   }
 
   @Override
   public void deleteForVehicle(long vehicleId) {
-    entityManager
-        .createQuery(
-            "delete from ServiceItem serviceItem where serviceItem.serviceRecord.id in "
-                + "(select serviceRecord.id from ServiceRecord serviceRecord "
-                + "where serviceRecord.vehicle.id=:vehicleId)")
-        .setParameter("vehicleId", vehicleId)
-        .executeUpdate();
-    entityManager
-        .createQuery("delete from ServiceRecord serviceRecord where serviceRecord.vehicle.id=:vehicleId")
-        .setParameter("vehicleId", vehicleId)
-        .executeUpdate();
+    List<ServiceRecord> serviceRecords =
+        entityManager
+            .createQuery(
+                "select serviceRecord from ServiceRecord serviceRecord "
+                    + "where serviceRecord.vehicle.id=:vehicleId",
+                ServiceRecord.class)
+            .setParameter("vehicleId", vehicleId)
+            .getResultList();
+
+    for (ServiceRecord serviceRecord : serviceRecords) {
+      entityManager.remove(serviceRecord);
+    }
   }
 }

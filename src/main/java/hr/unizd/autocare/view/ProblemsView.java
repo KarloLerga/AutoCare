@@ -41,7 +41,6 @@ public final class ProblemsView extends JPanel {
         };
     table = new JTable(tableModel);
     table.setRowHeight(32);
-    table.setAutoCreateRowSorter(true);
     table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     table.setFillsViewportHeight(true);
     table.getTableHeader().setReorderingAllowed(false);
@@ -80,7 +79,7 @@ public final class ProblemsView extends JPanel {
     if (selected < 0) {
       return null;
     }
-    return problems.get(table.convertRowIndexToModel(selected));
+    return problems.get(selected);
   }
 
   public void setRows(List<Problem> values) {

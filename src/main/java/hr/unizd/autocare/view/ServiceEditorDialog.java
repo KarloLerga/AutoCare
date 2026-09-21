@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -158,14 +157,13 @@ public final class ServiceEditorDialog extends JDialog {
       selectedCategory = WorkCategory.MAINTENANCE;
     }
 
-    List<WorkDefinition> filtered = new ArrayList<>();
+    work.removeAllItems();
     for (WorkDefinition workDefinition : availableWorks) {
       if (workDefinition.getCategory() == selectedCategory) {
-        filtered.add(workDefinition);
+        work.addItem(workDefinition);
       }
     }
 
-    work.setModel(new DefaultComboBoxModel<>(filtered.toArray(new WorkDefinition[0])));
     if (work.getItemCount() > 0) {
       work.setSelectedIndex(0);
     }
@@ -193,7 +191,7 @@ public final class ServiceEditorDialog extends JDialog {
   public void removeSelectedItem() {
     int row = itemTable.getSelectedRow();
     if (row >= 0) {
-      items.remove(itemTable.convertRowIndexToModel(row));
+      items.remove(row);
       refreshItems();
     }
   }

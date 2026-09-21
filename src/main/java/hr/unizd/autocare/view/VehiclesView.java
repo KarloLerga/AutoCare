@@ -71,13 +71,11 @@ public final class VehiclesView extends JPanel {
     if (selectedRow < 0) {
       return null;
     }
-    int modelRow = table.convertRowIndexToModel(selectedRow);
-    return vehicles.get(modelRow);
+    return vehicles.get(selectedRow);
   }
 
   private static void configureTable(JTable table) {
     table.setRowHeight(32);
-    table.setAutoCreateRowSorter(true);
     table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     table.setFillsViewportHeight(true);
     table.getTableHeader().setReorderingAllowed(false);

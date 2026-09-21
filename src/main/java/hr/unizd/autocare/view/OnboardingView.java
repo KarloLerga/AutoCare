@@ -111,7 +111,7 @@ public final class OnboardingView extends JPanel {
     if (selectedRow < 0) {
       return null;
     }
-    return history.get(historyTable.convertRowIndexToModel(selectedRow));
+    return history.get(selectedRow);
   }
 
   public void clearPasswords() {
@@ -123,12 +123,7 @@ public final class OnboardingView extends JPanel {
     name.setText("");
     email.setText("");
     clearPasswords();
-    vehicle.updating = true;
-    vehicle.setMakes(List.of());
-    vehicle.clearBelowMake();
-    vehicle.mileage.setText("");
-    vehicle.updating = false;
-    setHistory(List.of());
+    setHistory(new ArrayList<ServiceInput>());
     step(0);
   }
 }

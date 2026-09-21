@@ -1,10 +1,10 @@
 package hr.unizd.autocare.controller;
 
 import hr.unizd.autocare.app.Session;
-import hr.unizd.autocare.observer.AppEvent;
-import hr.unizd.autocare.observer.Subject;
-import hr.unizd.autocare.observer.Observer;
 import hr.unizd.autocare.model.Data.VehicleRow;
+import hr.unizd.autocare.observer.AppEvent;
+import hr.unizd.autocare.observer.Observer;
+import hr.unizd.autocare.observer.Subject;
 import hr.unizd.autocare.service.AuthService;
 import hr.unizd.autocare.service.CatalogService;
 import hr.unizd.autocare.service.DashboardService;
@@ -17,10 +17,7 @@ import hr.unizd.autocare.view.components.Ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Map;
-import javax.swing.JButton;
 
-/** Glavna navigacija i podaci prijavljenog korisnika. */
 public final class MainController implements Observer {
   private final MainFrame frame;
   private final Session session;
@@ -68,22 +65,69 @@ public final class MainController implements Observer {
             enter(ownerId);
           }
         });
+
     activateForm();
     subject.addObserver(this);
     frame.auth();
   }
 
   private void activateForm() {
-    for (Map.Entry<String, JButton> entry : frame.navigation.entrySet()) {
-      final String pageName = entry.getKey();
-      entry.getValue().addActionListener(
-          new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-              navigate(pageName);
-            }
-          });
-    }
+    frame.dashboardButton.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            navigate("Dashboard");
+          }
+        });
+
+    frame.vehiclesButton.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            navigate("Vozila");
+          }
+        });
+
+    frame.maintenanceButton.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            navigate("Održavanje");
+          }
+        });
+
+    frame.catalogButton.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            navigate("Katalog");
+          }
+        });
+
+    frame.servicesButton.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            navigate("Servisi");
+          }
+        });
+
+    frame.problemsButton.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            navigate("Problemi");
+          }
+        });
+
+    frame.profileButton.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            navigate("Profil");
+          }
+        });
+
     frame.profile.logout.addActionListener(
         new ActionListener() {
           @Override
@@ -102,14 +146,17 @@ public final class MainController implements Observer {
     if (session.getOwnerId() == 0) {
       return;
     }
+
     try {
       VehicleRow activeVehicle = vehicleService.active(session.getOwnerId());
       session.setActiveVehicle(activeVehicle);
       frame.context(activeVehicle);
       frame.application();
+
       if (showDashboard) {
         frame.showPage("Dashboard");
       }
+
       loadVisible();
     } catch (RuntimeException exception) {
       Ui.error(frame, exception);
@@ -125,6 +172,7 @@ public final class MainController implements Observer {
     if (session.getActiveVehicle() == null) {
       return;
     }
+
     String page = frame.page();
     if (page.equals("Dashboard")) {
       loadDashboard();

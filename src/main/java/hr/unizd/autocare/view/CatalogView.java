@@ -44,7 +44,6 @@ public final class CatalogView extends JPanel {
         };
     table = new JTable(tableModel);
     table.setRowHeight(32);
-    table.setAutoCreateRowSorter(true);
     table.setFillsViewportHeight(true);
     table.getTableHeader().setReorderingAllowed(false);
 

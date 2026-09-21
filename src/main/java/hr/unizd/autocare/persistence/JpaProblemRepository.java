@@ -6,7 +6,6 @@ import hr.unizd.autocare.repository.ProblemRepository;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 
-/** JPA pristup problemima vozila. */
 public final class JpaProblemRepository implements ProblemRepository {
   private final EntityManager entityManager;
 
@@ -31,6 +30,7 @@ public final class JpaProblemRepository implements ProblemRepository {
             .setParameter("ownerId", ownerId)
             .setMaxResults(1)
             .getResultList();
+
     if (problems.isEmpty()) {
       return null;
     }
@@ -44,7 +44,7 @@ public final class JpaProblemRepository implements ProblemRepository {
             "select problem from Problem problem "
                 + "where problem.vehicle.id=:vehicleId "
                 + "and problem.vehicle.owner.id=:ownerId "
-                + "order by problem.createdAt desc,problem.id desc",
+                + "order by problem.createdAt desc, problem.id desc",
             Problem.class)
         .setParameter("vehicleId", vehicleId)
         .setParameter("ownerId", ownerId)
@@ -55,9 +55,9 @@ public final class JpaProblemRepository implements ProblemRepository {
   public List<String> resolvedDescriptions(long ownerId, long serviceId) {
     return entityManager
         .createQuery(
-            "select problem.description from Problem problem where "
-                + "problem.resolvedByService.id=:serviceId and problem.vehicle.owner.id=:ownerId "
-                + "order by problem.id",
+            "select problem.description from Problem problem "
+                + "where problem.resolvedByService.id=:serviceId "
+                + "and problem.vehicle.owner.id=:ownerId order by problem.id",
             String.class)
         .setParameter("serviceId", serviceId)
         .setParameter("ownerId", ownerId)
@@ -68,7 +68,8 @@ public final class JpaProblemRepository implements ProblemRepository {
   public long openCount(long ownerId, long vehicleId) {
     return entityManager
         .createQuery(
-            "select count(problem) from Problem problem where problem.vehicle.owner.id=:ownerId "
+            "select count(problem) from Problem problem "
+                + "where problem.vehicle.owner.id=:ownerId "
                 + "and problem.vehicle.id=:vehicleId and problem.status=:status",
             Long.class)
         .setParameter("ownerId", ownerId)
@@ -79,9 +80,16 @@ public final class JpaProblemRepository implements ProblemRepository {
 
   @Override
   public void deleteForVehicle(long vehicleId) {
-    entityManager
-        .createQuery("delete from Problem problem where problem.vehicle.id=:vehicleId")
-        .setParameter("vehicleId", vehicleId)
-        .executeUpdate();
+    List<Problem> problems =
+        entityManager
+            .createQuery(
+                "select problem from Problem problem where problem.vehicle.id=:vehicleId",
+                Problem.class)
+            .setParameter("vehicleId", vehicleId)
+            .getResultList();
+
+    for (Problem problem : problems) {
+      entityManager.remove(problem);
+    }
   }
 }

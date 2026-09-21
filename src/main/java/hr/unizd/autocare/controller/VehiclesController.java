@@ -1,26 +1,18 @@
 package hr.unizd.autocare.controller;
 
+import hr.unizd.autocare.app.Session;
+import hr.unizd.autocare.model.Data.VehicleRow;
 import hr.unizd.autocare.observer.AppEvent;
 import hr.unizd.autocare.observer.Subject;
-import hr.unizd.autocare.model.Data.VehicleRow;
 import hr.unizd.autocare.service.CatalogService;
 import hr.unizd.autocare.service.VehicleService;
 import hr.unizd.autocare.view.MainFrame;
+import hr.unizd.autocare.view.MileageDialog;
+import hr.unizd.autocare.view.VehicleDialog;
 import hr.unizd.autocare.view.components.Ui;
-import hr.unizd.autocare.view.components.VehicleForm;
-import hr.unizd.autocare.app.Session;
-import java.awt.BorderLayout;
-import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 
-/** Dodavanje, aktiviranje, brisanje i promjena kilometraže vozila. */
 public final class VehiclesController {
   private final MainFrame frame;
   private final VehicleService vehicleService;
@@ -50,6 +42,7 @@ public final class VehiclesController {
             showAdd();
           }
         });
+
     frame.vehicles.edit.addActionListener(
         new ActionListener() {
           @Override
@@ -57,6 +50,7 @@ public final class VehiclesController {
             showMileageEditor();
           }
         });
+
     frame.vehicles.activate.addActionListener(
         new ActionListener() {
           @Override
@@ -64,6 +58,7 @@ public final class VehiclesController {
             activate();
           }
         });
+
     frame.vehicles.delete.addActionListener(
         new ActionListener() {
           @Override
@@ -90,25 +85,16 @@ public final class VehiclesController {
   }
 
   private void showAdd() {
-    JDialog dialog = new JDialog(frame, "Dodaj vozilo", Dialog.ModalityType.APPLICATION_MODAL);
-    VehicleForm form = new VehicleForm();
-    new VehicleFormController(form, catalogService).loadMakes();
-    JButton save = Ui.button("Spremi vozilo");
-    JButton cancel = Ui.button("Odustani");
-    JPanel root = new JPanel(new BorderLayout(12, 12));
-    root.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-    root.add(form, BorderLayout.CENTER);
-    root.add(Ui.actions(cancel, save), BorderLayout.SOUTH);
-    dialog.setContentPane(root);
-    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-    dialog.setSize(820, 440);
-    dialog.setLocationRelativeTo(frame);
-    save.addActionListener(
+    final VehicleDialog dialog = new VehicleDialog(frame);
+    VehicleFormController formController = new VehicleFormController(dialog.form, catalogService);
+    formController.loadMakes();
+
+    dialog.save.addActionListener(
         new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent event) {
             try {
-              vehicleService.add(session.getOwnerId(), form.input());
+              vehicleService.add(session.getOwnerId(), dialog.form.input());
               dialog.dispose();
               subject.notifyObservers(AppEvent.VEHICLE_CHANGED);
             } catch (RuntimeException exception) {
@@ -116,13 +102,15 @@ public final class VehiclesController {
             }
           }
         });
-    cancel.addActionListener(
+
+    dialog.cancel.addActionListener(
         new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent event) {
             dialog.dispose();
           }
         });
+
     dialog.setVisible(true);
   }
 
@@ -131,30 +119,16 @@ public final class VehiclesController {
     if (vehicle == null) {
       return;
     }
-    JDialog dialog =
-        new JDialog(frame, "Promijeni kilometražu", Dialog.ModalityType.APPLICATION_MODAL);
-    JTextField mileage = new JTextField(Integer.toString(vehicle.getMileage()), 14);
-    JLabel hint = Ui.hint("Kilometraža se može samo povećati.");
-    JButton save = Ui.button("Spremi");
-    JButton cancel = Ui.button("Odustani");
-    JPanel root = new JPanel(new BorderLayout(12, 12));
-    root.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-    JPanel form = Ui.form();
-    Ui.field(form, 0, "Nova kilometraža", mileage);
-    form.add(hint);
-    root.add(form, BorderLayout.CENTER);
-    root.add(Ui.actions(cancel, save), BorderLayout.SOUTH);
-    dialog.setContentPane(root);
-    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-    dialog.pack();
-    dialog.setLocationRelativeTo(frame);
-    save.addActionListener(
+
+    final MileageDialog dialog = new MileageDialog(frame, vehicle.getMileage());
+
+    dialog.save.addActionListener(
         new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent event) {
             try {
               vehicleService.updateMileage(
-                  session.getOwnerId(), vehicle.getId(), Ui.mileage(mileage));
+                  session.getOwnerId(), vehicle.getId(), Ui.mileage(dialog.mileage));
               dialog.dispose();
               subject.notifyObservers(AppEvent.VEHICLE_CHANGED);
             } catch (RuntimeException exception) {
@@ -162,13 +136,15 @@ public final class VehiclesController {
             }
           }
         });
-    cancel.addActionListener(
+
+    dialog.cancel.addActionListener(
         new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent event) {
             dialog.dispose();
           }
         });
+
     dialog.setVisible(true);
   }
 
@@ -177,6 +153,7 @@ public final class VehiclesController {
     if (vehicle == null) {
       return;
     }
+
     try {
       vehicleService.activate(session.getOwnerId(), vehicle.getId());
       subject.notifyObservers(AppEvent.ACTIVE_VEHICLE_CHANGED);
@@ -190,9 +167,11 @@ public final class VehiclesController {
     if (vehicle == null) {
       return;
     }
+
     if (!Ui.confirm(frame, "Trajno obrisati vozilo, njegove servise i probleme?")) {
       return;
     }
+
     try {
       vehicleService.delete(session.getOwnerId(), vehicle.getId());
       subject.notifyObservers(AppEvent.VEHICLE_CHANGED);

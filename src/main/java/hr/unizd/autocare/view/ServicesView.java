@@ -38,7 +38,6 @@ public final class ServicesView extends JPanel {
         };
     table = new JTable(tableModel);
     table.setRowHeight(32);
-    table.setAutoCreateRowSorter(true);
     table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     table.setFillsViewportHeight(true);
     table.getTableHeader().setReorderingAllowed(false);
@@ -69,37 +68,34 @@ public final class ServicesView extends JPanel {
     if (selectedRow < 0) {
       return null;
     }
-    return services.get(table.convertRowIndexToModel(selectedRow));
+    return services.get(selectedRow);
   }
 
   public void showServiceDetails(ServiceDetail detail) {
-    StringBuilder text = new StringBuilder();
-    text.append(Ui.date(detail.getHeader().getDate()));
-    text.append(" / ");
-    text.append(Ui.km(detail.getHeader().getMileage()));
-    text.append("\n\n");
+    String text = Ui.date(detail.getHeader().getDate());
+    text += " / " + Ui.km(detail.getHeader().getMileage());
+    text += "\n\n";
+
     for (ItemRow item : detail.getItems()) {
-      text.append(item.getName());
-      text.append(": ");
-      text.append(Ui.money(item.getActualPrice()));
-      text.append("\n");
-    }
-    text.append("\nUkupno: ");
-    text.append(Ui.total(detail.getHeader().getTotal()));
-    text.append("\nNapomena: ");
-    String note = detail.getHeader().getNote();
-    if (note == null || note.isBlank()) {
-      text.append("-");
-    } else {
-      text.append(note);
-    }
-    text.append("\n\nRiješeni problemi:\n");
-    for (String problem : detail.getResolvedProblems()) {
-      text.append(problem);
-      text.append("\n");
+      text += item.getName() + ": " + Ui.money(item.getActualPrice()) + "\n";
     }
 
-    JTextArea area = new JTextArea(text.toString(), 18, 65);
+    text += "\nUkupno: " + Ui.total(detail.getHeader().getTotal());
+    text += "\nNapomena: ";
+
+    String note = detail.getHeader().getNote();
+    if (note == null || note.isBlank()) {
+      text += "-";
+    } else {
+      text += note;
+    }
+
+    text += "\n\nRiješeni problemi:\n";
+    for (String problem : detail.getResolvedProblems()) {
+      text += problem + "\n";
+    }
+
+    JTextArea area = new JTextArea(text, 18, 65);
     area.setEditable(false);
     area.setLineWrap(true);
     area.setWrapStyleWord(true);

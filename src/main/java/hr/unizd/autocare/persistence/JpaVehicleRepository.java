@@ -5,7 +5,6 @@ import hr.unizd.autocare.repository.VehicleRepository;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 
-/** JPA pristup korisnikovim vozilima. */
 public final class JpaVehicleRepository implements VehicleRepository {
   private final EntityManager entityManager;
 
@@ -18,13 +17,14 @@ public final class JpaVehicleRepository implements VehicleRepository {
     List<Vehicle> vehicles =
         entityManager
             .createQuery(
-                "select vehicle from Vehicle vehicle join fetch vehicle.variant "
+                "select vehicle from Vehicle vehicle "
                     + "where vehicle.id=:vehicleId and vehicle.owner.id=:ownerId",
                 Vehicle.class)
             .setParameter("vehicleId", vehicleId)
             .setParameter("ownerId", ownerId)
             .setMaxResults(1)
             .getResultList();
+
     if (vehicles.isEmpty()) {
       return null;
     }
@@ -35,7 +35,7 @@ public final class JpaVehicleRepository implements VehicleRepository {
   public List<Vehicle> findAllForOwner(long ownerId) {
     return entityManager
         .createQuery(
-            "select vehicle from Vehicle vehicle join fetch vehicle.variant "
+            "select vehicle from Vehicle vehicle "
                 + "where vehicle.owner.id=:ownerId order by vehicle.id",
             Vehicle.class)
         .setParameter("ownerId", ownerId)
@@ -51,5 +51,4 @@ public final class JpaVehicleRepository implements VehicleRepository {
   public void delete(Vehicle vehicle) {
     entityManager.remove(vehicle);
   }
-
 }

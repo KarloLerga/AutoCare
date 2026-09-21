@@ -15,6 +15,7 @@ import hr.unizd.autocare.repository.VehicleRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,6 +68,8 @@ public final class MaintenanceService {
       Integer lastMileage = last.getServiceRecord().getMileage();
       LocalDate nextDate = nextDate(lastDate, work.getIntervalMonths());
       Integer nextMileage = nextMileage(lastMileage, work.getIntervalKm());
+      Integer remainingKm = remainingKm(nextMileage, vehicle.getCurrentMileage());
+      Long remainingDays = remainingDays(nextDate, today);
       double remainingRatio =
           calculator.calculate(
               work.getIntervalKm(),
@@ -83,6 +86,8 @@ public final class MaintenanceService {
               lastMileage,
               nextDate,
               nextMileage,
+              remainingKm,
+              remainingDays,
               remainingRatio));
     }
     return rows;
@@ -97,6 +102,31 @@ public final class MaintenanceService {
       }
     }
     return latest;
+  }
+
+
+  private static Integer remainingKm(Integer nextMileage, int currentMileage) {
+    if (nextMileage == null) {
+      return null;
+    }
+
+    int remaining = nextMileage - currentMileage;
+    if (remaining < 0) {
+      return 0;
+    }
+    return remaining;
+  }
+
+  private static Long remainingDays(LocalDate nextDate, LocalDate today) {
+    if (nextDate == null) {
+      return null;
+    }
+
+    long remaining = ChronoUnit.DAYS.between(today, nextDate);
+    if (remaining < 0) {
+      return 0L;
+    }
+    return remaining;
   }
 
   private static LocalDate nextDate(LocalDate lastDate, Integer months) {
