@@ -1,7 +1,6 @@
 package hr.unizd.autocare.domain;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 /** Osnovne provjere korisničkog unosa. */
 public final class Checks {
@@ -62,7 +61,7 @@ public final class Checks {
       throw new IllegalArgumentException("Cijena ne može biti negativna.");
     }
 
-    return value.setScale(2, RoundingMode.HALF_UP);
+    return value;
   }
 
   public static String password(String value) {

@@ -249,6 +249,8 @@ public final class Data {
     private final Integer lastMileage;
     private final LocalDate nextDate;
     private final Integer nextMileage;
+    private final Integer remainingKm;
+    private final Long remainingDays;
     private final double remainingRatio;
 
     public MaintenanceRow(
@@ -257,12 +259,16 @@ public final class Data {
         Integer lastMileage,
         LocalDate nextDate,
         Integer nextMileage,
+        Integer remainingKm,
+        Long remainingDays,
         double remainingRatio) {
       this.name = name;
       this.lastDate = lastDate;
       this.lastMileage = lastMileage;
       this.nextDate = nextDate;
       this.nextMileage = nextMileage;
+      this.remainingKm = remainingKm;
+      this.remainingDays = remainingDays;
       this.remainingRatio = remainingRatio;
     }
 
@@ -284,6 +290,14 @@ public final class Data {
 
     public Integer getNextMileage() {
       return nextMileage;
+    }
+
+    public Integer getRemainingKm() {
+      return remainingKm;
+    }
+
+    public Long getRemainingDays() {
+      return remainingDays;
     }
 
     public double getRemainingRatio() {

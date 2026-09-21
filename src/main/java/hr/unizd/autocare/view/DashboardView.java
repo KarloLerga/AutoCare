@@ -7,8 +7,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -16,7 +14,6 @@ import javax.swing.UIManager;
 import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 import org.kordamp.ikonli.swing.FontIcon;
 
-/** Četiri jednostavne kartice sa sažetkom aktivnog vozila. */
 public final class DashboardView extends JPanel {
   private final JLabel total = Ui.hint("-");
   private final JLabel maintenance = Ui.hint("-");
@@ -27,6 +24,7 @@ public final class DashboardView extends JPanel {
     super(new BorderLayout(16, 16));
     setOpaque(false);
     add(Ui.heading("Pregled vozila"), BorderLayout.NORTH);
+
     JPanel grid = new JPanel(new GridLayout(2, 2, 16, 16));
     grid.setOpaque(false);
     addCard(grid, "Ukupni stvarni troškovi", total, FontAwesomeSolid.EURO_SIGN);
@@ -34,6 +32,7 @@ public final class DashboardView extends JPanel {
     addCard(grid, "Otvoreni problemi", problems, FontAwesomeSolid.EXCLAMATION_TRIANGLE);
     addCard(grid, "Trenutna kilometraža", mileage, FontAwesomeSolid.TACHOMETER_ALT);
     add(grid, BorderLayout.CENTER);
+
     add(
         Ui.hint(
             "Procjene u Katalogu su informativne; stvarni trošak dolazi iz servisne evidencije."),
@@ -48,8 +47,10 @@ public final class DashboardView extends JPanel {
 
     JLabel iconLabel = new JLabel(icon(iconCode, 34));
     iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
     JLabel titleLabel = Ui.hint(title);
     titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
     value.setHorizontalAlignment(SwingConstants.CENTER);
     value.setFont(value.getFont().deriveFont(Font.BOLD, 18f));
 
@@ -70,46 +71,37 @@ public final class DashboardView extends JPanel {
 
   public void showDashboard(Dashboard dashboard) {
     total.setText(Ui.total(dashboard.getTotal()));
+
     MaintenanceRow next = dashboard.getNextMaintenance();
     if (next == null) {
       maintenance.setText("Nema praćenog održavanja");
     } else if (next.getRemainingRatio() <= 0) {
-      maintenance.setText(
-          "<html><div style='text-align:center;'>" + next.getName() + "<br>Dospjelo</div></html>");
+      maintenance.setText(next.getName() + " - dospjelo");
     } else {
-      String remaining = remaining(next, dashboard.getVehicle().getMileage());
-      maintenance.setText(
-          "<html><div style='text-align:center;'>"
-              + next.getName()
-              + "<br>za "
-              + remaining
-              + "</div></html>");
+      maintenance.setText(next.getName() + " - za " + remaining(next));
     }
+
     problems.setText(Long.toString(dashboard.getOpenProblems()));
     mileage.setText(Ui.km(dashboard.getVehicle().getMileage()));
   }
 
-  private static String remaining(MaintenanceRow row, int currentMileage) {
-    StringBuilder result = new StringBuilder();
-    if (row.getNextMileage() != null) {
-      int remainingKm = Math.max(0, row.getNextMileage() - currentMileage);
-      result.append(Ui.km(remainingKm));
+  private static String remaining(MaintenanceRow row) {
+    String result = "";
+
+    if (row.getRemainingKm() != null) {
+      result = Ui.km(row.getRemainingKm());
     }
-    if (row.getNextDate() != null) {
-      long remainingDays = Math.max(0, ChronoUnit.DAYS.between(LocalDate.now(), row.getNextDate()));
-      if (result.length() > 0) {
-        result.append(" / ");
+
+    if (row.getRemainingDays() != null) {
+      if (!result.isEmpty()) {
+        result += " / ";
       }
-      if (remainingDays >= 60) {
-        long months = Math.max(1, Math.round(remainingDays / 30.0));
-        result.append(months).append(" mj.");
-      } else {
-        result.append(remainingDays).append(" dana");
-      }
+      result += row.getRemainingDays() + " dana";
     }
-    if (result.length() == 0) {
+
+    if (result.isEmpty()) {
       return "-";
     }
-    return result.toString();
+    return result;
   }
 }

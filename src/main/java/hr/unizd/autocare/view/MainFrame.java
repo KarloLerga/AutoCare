@@ -9,8 +9,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.time.LocalDate;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -22,7 +20,6 @@ import javax.swing.WindowConstants;
 import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 import org.kordamp.ikonli.swing.FontIcon;
 
-/** Jedan JFrame s CardLayoutom za prijavu, registraciju i aplikaciju. */
 public final class MainFrame extends JFrame {
   public final LoginView login = new LoginView();
   public final OnboardingView onboarding = new OnboardingView();
@@ -33,7 +30,14 @@ public final class MainFrame extends JFrame {
   public final ServicesView services = new ServicesView();
   public final ProblemsView problems = new ProblemsView();
   public final ProfileView profile = new ProfileView();
-  public final Map<String, JButton> navigation = new LinkedHashMap<>();
+
+  public final JButton dashboardButton = Ui.button("Dashboard");
+  public final JButton vehiclesButton = Ui.button("Vozila");
+  public final JButton maintenanceButton = Ui.button("Održavanje");
+  public final JButton catalogButton = Ui.button("Katalog");
+  public final JButton servicesButton = Ui.button("Servisi");
+  public final JButton problemsButton = Ui.button("Problemi");
+  public final JButton profileButton = Ui.button("Profil");
 
   private final CardLayout roots = new CardLayout();
   private final CardLayout pages = new CardLayout();
@@ -68,13 +72,13 @@ public final class MainFrame extends JFrame {
     sidebar.add(vehicleDetails);
     sidebar.add(Box.createVerticalStrut(24));
 
-    addNavigation(sidebar, "Dashboard", dashboard, FontAwesomeSolid.TACHOMETER_ALT);
-    addNavigation(sidebar, "Vozila", vehicles, FontAwesomeSolid.CAR);
-    addNavigation(sidebar, "Održavanje", maintenance, FontAwesomeSolid.WRENCH);
-    addNavigation(sidebar, "Katalog", catalog, FontAwesomeSolid.EURO_SIGN);
-    addNavigation(sidebar, "Servisi", services, FontAwesomeSolid.CLIPBOARD);
-    addNavigation(sidebar, "Problemi", problems, FontAwesomeSolid.EXCLAMATION_TRIANGLE);
-    addNavigation(sidebar, "Profil", profile, FontAwesomeSolid.USER);
+    addNavigation(sidebar, dashboardButton, dashboard, FontAwesomeSolid.TACHOMETER_ALT);
+    addNavigation(sidebar, vehiclesButton, vehicles, FontAwesomeSolid.CAR);
+    addNavigation(sidebar, maintenanceButton, maintenance, FontAwesomeSolid.WRENCH);
+    addNavigation(sidebar, catalogButton, catalog, FontAwesomeSolid.EURO_SIGN);
+    addNavigation(sidebar, servicesButton, services, FontAwesomeSolid.CLIPBOARD);
+    addNavigation(sidebar, problemsButton, problems, FontAwesomeSolid.EXCLAMATION_TRIANGLE);
+    addNavigation(sidebar, profileButton, profile, FontAwesomeSolid.USER);
 
     sidebar.add(Box.createVerticalGlue());
     content.setOpaque(false);
@@ -86,15 +90,13 @@ public final class MainFrame extends JFrame {
   }
 
   private void addNavigation(
-      JPanel sidebar, String name, JPanel panel, FontAwesomeSolid iconCode) {
-    JButton navigationButton = Ui.button(name);
-    navigationButton.setIcon(icon(iconCode, 17));
-    navigationButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
-    navigationButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-    sidebar.add(navigationButton);
+      JPanel sidebar, JButton button, JPanel panel, FontAwesomeSolid iconCode) {
+    button.setIcon(icon(iconCode, 17));
+    button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
+    button.setAlignmentX(Component.LEFT_ALIGNMENT);
+    sidebar.add(button);
     sidebar.add(Box.createVerticalStrut(8));
-    navigation.put(name, navigationButton);
-    content.add(panel, name);
+    content.add(panel, button.getText());
   }
 
   private FontIcon icon(FontAwesomeSolid iconCode, int size) {
@@ -123,13 +125,22 @@ public final class MainFrame extends JFrame {
   public void showPage(String name) {
     page = name;
     pages.show(content, name);
-    for (Map.Entry<String, JButton> entry : navigation.entrySet()) {
-      int style = Font.PLAIN;
-      if (entry.getKey().equals(name)) {
-        style = Font.BOLD;
-      }
-      entry.getValue().setFont(entry.getValue().getFont().deriveFont(style));
+
+    setSelected(dashboardButton, name.equals("Dashboard"));
+    setSelected(vehiclesButton, name.equals("Vozila"));
+    setSelected(maintenanceButton, name.equals("Održavanje"));
+    setSelected(catalogButton, name.equals("Katalog"));
+    setSelected(servicesButton, name.equals("Servisi"));
+    setSelected(problemsButton, name.equals("Problemi"));
+    setSelected(profileButton, name.equals("Profil"));
+  }
+
+  private void setSelected(JButton button, boolean selected) {
+    int style = Font.PLAIN;
+    if (selected) {
+      style = Font.BOLD;
     }
+    button.setFont(button.getFont().deriveFont(style));
   }
 
   public String page() {

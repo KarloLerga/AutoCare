@@ -111,7 +111,7 @@ public final class JpaCatalogRepository implements CatalogRepository {
   public List<WorkPriceRange> priceRanges(VehiclePriceClass priceClass) {
     return entityManager
         .createQuery(
-            "select price from WorkPriceRange price join fetch price.work "
+            "select price from WorkPriceRange price "
                 + "where price.priceClass=:priceClass "
                 + "order by price.work.catalogCategory,price.work.name",
             WorkPriceRange.class)

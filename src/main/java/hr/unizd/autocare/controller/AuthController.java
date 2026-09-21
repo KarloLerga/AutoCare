@@ -1,6 +1,7 @@
 package hr.unizd.autocare.controller;
 
 import hr.unizd.autocare.domain.Checks;
+import hr.unizd.autocare.domain.Problem;
 import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.domain.WorkDefinition;
 import hr.unizd.autocare.model.Data.Account;
@@ -116,6 +117,7 @@ public final class AuthController {
 
   private void openRegistration() {
     onboardingView.reset();
+    vehiclePicker.reset();
     registrationHistory.clear();
     historyVariantId = -1L;
     frame.registration();
@@ -163,8 +165,9 @@ public final class AuthController {
               catalogService.works(WorkCategory.MAINTENANCE));
       works.addAll(
           catalogService.works(WorkCategory.REPAIR));
+      List<Problem> noProblems = new ArrayList<>();
       ServiceEditorDialog editor =
-          new ServiceEditorDialog(frame, vehicleInput.getMileage(), true, List.of());
+          new ServiceEditorDialog(frame, vehicleInput.getMileage(), true, noProblems);
       new ServiceEditorController(
           editor,
           works,

@@ -7,7 +7,6 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 /** Pregled održavanja koje se već prati iz stvarne servisne povijesti. */
@@ -32,8 +31,6 @@ public final class MaintenanceView extends JPanel {
         };
     table = new JTable(tableModel);
     table.setRowHeight(32);
-    table.setAutoCreateRowSorter(true);
-    table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     table.setFillsViewportHeight(true);
     table.getTableHeader().setReorderingAllowed(false);
 
