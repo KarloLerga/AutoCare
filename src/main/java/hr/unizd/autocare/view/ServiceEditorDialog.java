@@ -99,16 +99,16 @@ public final class ServiceEditorDialog extends JDialog {
     root.add(top, BorderLayout.NORTH);
 
     JPanel middle = new JPanel(new BorderLayout(8, 8));
-    JPanel picker =
+    JPanel picker = Ui.column();
+    picker.add(
         Ui.row(
             new JLabel("Vrsta:"),
             type,
             new JLabel("Rad:"),
             work,
             new JLabel("Stvarno plaćeno:"),
-            actualPrice,
-            addItem,
-            remove);
+            actualPrice));
+    picker.add(Ui.row(addItem, remove));
     middle.add(picker, BorderLayout.NORTH);
     middle.add(new JScrollPane(itemTable), BorderLayout.CENTER);
 
