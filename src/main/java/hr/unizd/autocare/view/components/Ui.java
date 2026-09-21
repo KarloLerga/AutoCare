@@ -130,16 +130,13 @@ public final class Ui {
     }
   }
 
-  public static BigDecimal parseMoney(String text, boolean optional) {
+  public static BigDecimal parseMoney(String text) {
     if (text == null || text.isBlank()) {
-      if (optional) {
-        return null;
-      }
       throw new IllegalArgumentException("Unesite stvarno plaćenu cijenu za svaku stavku.");
     }
     try {
       BigDecimal amount = new BigDecimal(text.strip().replace(',', '.'));
-      return Checks.money(amount, optional);
+      return Checks.money(amount);
     } catch (NumberFormatException exception) {
       throw new IllegalArgumentException("Cijena mora biti broj, npr. 120,50.");
     }
@@ -199,11 +196,6 @@ public final class Ui {
     return "Riješen";
   }
 
-  public static boolean confirm(Component parent, String text) {
-    return JOptionPane.showConfirmDialog(
-            parent, text, "AutoCare", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)
-        == JOptionPane.YES_OPTION;
-  }
 
   public static void info(Component parent, String text) {
     JOptionPane.showMessageDialog(parent, text, "AutoCare", JOptionPane.INFORMATION_MESSAGE);

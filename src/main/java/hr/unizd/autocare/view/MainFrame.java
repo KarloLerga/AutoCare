@@ -29,7 +29,6 @@ public final class MainFrame extends JFrame {
   public final CatalogView catalog = new CatalogView();
   public final ServicesView services = new ServicesView();
   public final ProblemsView problems = new ProblemsView();
-  public final ProfileView profile = new ProfileView();
 
   public final JButton dashboardButton = Ui.button("Dashboard");
   public final JButton vehiclesButton = Ui.button("Vozila");
@@ -37,7 +36,7 @@ public final class MainFrame extends JFrame {
   public final JButton catalogButton = Ui.button("Katalog");
   public final JButton servicesButton = Ui.button("Servisi");
   public final JButton problemsButton = Ui.button("Problemi");
-  public final JButton profileButton = Ui.button("Profil");
+  public final JButton logoutButton = Ui.button("Odjava");
 
   private final CardLayout roots = new CardLayout();
   private final CardLayout pages = new CardLayout();
@@ -78,9 +77,10 @@ public final class MainFrame extends JFrame {
     addNavigation(sidebar, catalogButton, catalog, FontAwesomeSolid.EURO_SIGN);
     addNavigation(sidebar, servicesButton, services, FontAwesomeSolid.CLIPBOARD);
     addNavigation(sidebar, problemsButton, problems, FontAwesomeSolid.EXCLAMATION_TRIANGLE);
-    addNavigation(sidebar, profileButton, profile, FontAwesomeSolid.USER);
-
     sidebar.add(Box.createVerticalGlue());
+    logoutButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
+    logoutButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+    sidebar.add(logoutButton);
     content.setOpaque(false);
     content.setBorder(BorderFactory.createEmptyBorder(24, 24, 24, 24));
     shell.add(sidebar, BorderLayout.WEST);
@@ -132,7 +132,6 @@ public final class MainFrame extends JFrame {
     setSelected(catalogButton, name.equals("Katalog"));
     setSelected(servicesButton, name.equals("Servisi"));
     setSelected(problemsButton, name.equals("Problemi"));
-    setSelected(profileButton, name.equals("Profil"));
   }
 
   private void setSelected(JButton button, boolean selected) {

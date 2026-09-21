@@ -36,18 +36,11 @@ public class AppUser {
     activeVehicle = vehicle;
   }
 
-  public void changeProfile(String name, String email) {
-    this.name = Checks.text(name, 100, "Ime");
-    this.email = Checks.email(email);
-  }
 
   public Long getId() {
     return id;
   }
 
-  public String getName() {
-    return name;
-  }
 
   public String getEmail() {
     return email;

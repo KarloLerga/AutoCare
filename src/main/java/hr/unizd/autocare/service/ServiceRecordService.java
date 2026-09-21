@@ -11,10 +11,6 @@ import hr.unizd.autocare.model.Data.ItemRow;
 import hr.unizd.autocare.model.Data.ServiceDetail;
 import hr.unizd.autocare.model.Data.ServiceInput;
 import hr.unizd.autocare.model.Data.ServiceRow;
-import hr.unizd.autocare.persistence.JpaCatalogRepository;
-import hr.unizd.autocare.persistence.JpaProblemRepository;
-import hr.unizd.autocare.persistence.JpaServiceRecordRepository;
-import hr.unizd.autocare.persistence.JpaVehicleRepository;
 import hr.unizd.autocare.repository.CatalogRepository;
 import hr.unizd.autocare.repository.ProblemRepository;
 import hr.unizd.autocare.repository.ServiceRecordRepository;
@@ -35,31 +31,45 @@ public final class ServiceRecordService {
   }
 
   public void create(long ownerId, long vehicleId, ServiceInput input) {
+    validate(input);
+
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();
 
     try {
       transaction.begin();
 
-      VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
-      CatalogRepository catalogRepository = new JpaCatalogRepository(entityManager);
-      ServiceRecordRepository serviceRecordRepository =
-          new JpaServiceRecordRepository(entityManager);
-      ProblemRepository problemRepository = new JpaProblemRepository(entityManager);
+      VehicleRepository vehicleRepository = new VehicleRepository(entityManager);
+      CatalogRepository catalogRepository = new CatalogRepository(entityManager);
+      ServiceRecordRepository serviceRecordRepository = new ServiceRecordRepository(entityManager);
+      ProblemRepository problemRepository = new ProblemRepository(entityManager);
 
       Vehicle vehicle = vehicleRepository.findForOwner(ownerId, vehicleId);
       if (vehicle == null) {
         throw new IllegalArgumentException("Vozilo nije pronađeno.");
       }
+      if (input.getDate().getYear() < vehicle.getProductionYear()) {
+        throw new IllegalArgumentException("Servis ne može biti prije godine proizvodnje.");
+      }
 
-      saveInside(
-          catalogRepository,
-          serviceRecordRepository,
-          problemRepository,
-          vehicle,
-          input,
-          false);
+      ServiceRecord serviceRecord =
+          new ServiceRecord(vehicle, input.getDate(), input.getMileage(), input.getNote());
 
+      for (ItemInput itemInput : input.getItems()) {
+        WorkDefinition work = catalogRepository.findWork(itemInput.getWorkId());
+        if (work == null) {
+          throw new IllegalArgumentException("Odabrani rad nije pronađen.");
+        }
+        serviceRecord.addItem(work, itemInput.getActualPrice());
+      }
+
+      serviceRecordRepository.add(serviceRecord);
+
+      if (input.getMileage() > vehicle.getCurrentMileage()) {
+        vehicle.updateMileage(input.getMileage());
+      }
+
+      resolveSelectedProblems(problemRepository, vehicle, serviceRecord, input.getResolvedProblemIds());
       transaction.commit();
     } catch (RuntimeException exception) {
       if (transaction.isActive()) {
@@ -69,40 +79,6 @@ public final class ServiceRecordService {
     } finally {
       entityManager.close();
     }
-  }
-
-  static void saveInside(
-      CatalogRepository catalogRepository,
-      ServiceRecordRepository serviceRecordRepository,
-      ProblemRepository problemRepository,
-      Vehicle vehicle,
-      ServiceInput input,
-      boolean historical) {
-    validate(input, historical);
-
-    if (input.getDate().getYear() < vehicle.getProductionYear()) {
-      throw new IllegalArgumentException("Servis ne može biti prije godine proizvodnje.");
-    }
-
-    ServiceRecord serviceRecord =
-        new ServiceRecord(vehicle, input.getDate(), input.getMileage(), input.getNote());
-
-    for (ItemInput itemInput : input.getItems()) {
-      WorkDefinition work = catalogRepository.findWork(itemInput.getWorkId());
-      if (work == null) {
-        throw new IllegalArgumentException("Odabrani rad nije pronađen.");
-      }
-
-      serviceRecord.addItem(work, itemInput.getActualPrice());
-    }
-
-    serviceRecordRepository.add(serviceRecord);
-
-    if (input.getMileage() > vehicle.getCurrentMileage()) {
-      vehicle.updateMileage(input.getMileage());
-    }
-
-    resolveSelectedProblems(problemRepository, vehicle, serviceRecord, input.getResolvedProblemIds());
   }
 
   private static void resolveSelectedProblems(
@@ -115,16 +91,14 @@ public final class ServiceRecordService {
       if (problem == null) {
         throw new IllegalArgumentException("Problem nije pronađen.");
       }
-
       problem.resolve(serviceRecord);
     }
   }
 
-  public static void validate(ServiceInput input, boolean historical) {
+  private static void validate(ServiceInput input) {
     if (input == null || input.getDate() == null) {
       throw new IllegalArgumentException("Unesite datum servisa.");
     }
-
     if (input.getDate().isAfter(LocalDate.now())) {
       throw new IllegalArgumentException("Datum servisa ne može biti u budućnosti.");
     }
@@ -137,7 +111,7 @@ public final class ServiceRecordService {
     }
 
     for (ItemInput itemInput : input.getItems()) {
-      Checks.money(itemInput.getActualPrice(), historical);
+      Checks.money(itemInput.getActualPrice());
     }
   }
 
@@ -145,9 +119,7 @@ public final class ServiceRecordService {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
 
     try {
-      ServiceRecordRepository serviceRecordRepository =
-          new JpaServiceRecordRepository(entityManager);
-
+      ServiceRecordRepository serviceRecordRepository = new ServiceRecordRepository(entityManager);
       List<ServiceRow> rows = new ArrayList<>();
       for (ServiceRecord serviceRecord : serviceRecordRepository.list(ownerId, vehicleId)) {
         rows.add(Mapping.service(serviceRecord));
@@ -162,9 +134,8 @@ public final class ServiceRecordService {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
 
     try {
-      ServiceRecordRepository serviceRecordRepository =
-          new JpaServiceRecordRepository(entityManager);
-      ProblemRepository problemRepository = new JpaProblemRepository(entityManager);
+      ServiceRecordRepository serviceRecordRepository = new ServiceRecordRepository(entityManager);
+      ProblemRepository problemRepository = new ProblemRepository(entityManager);
 
       ServiceRecord serviceRecord = serviceRecordRepository.findForOwner(ownerId, serviceId);
       if (serviceRecord == null) {

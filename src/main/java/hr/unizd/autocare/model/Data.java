@@ -13,30 +13,6 @@ import java.util.List;
 public final class Data {
   private Data() {}
 
-  public static final class Account {
-    private final long id;
-    private final String name;
-    private final String email;
-
-    public Account(long id, String name, String email) {
-      this.id = id;
-      this.name = name;
-      this.email = email;
-    }
-
-    public long getId() {
-      return id;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public String getEmail() {
-      return email;
-    }
-  }
-
   public static final class VehicleRow {
     private final long id;
     private final VehicleVariant variant;

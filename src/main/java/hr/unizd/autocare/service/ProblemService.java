@@ -3,8 +3,7 @@ package hr.unizd.autocare.service;
 import hr.unizd.autocare.domain.Problem;
 import hr.unizd.autocare.domain.ProblemCategory;
 import hr.unizd.autocare.domain.Vehicle;
-import hr.unizd.autocare.persistence.JpaProblemRepository;
-import hr.unizd.autocare.persistence.JpaVehicleRepository;
+import hr.unizd.autocare.repository.ProblemRepository;
 import hr.unizd.autocare.repository.VehicleRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -23,11 +22,11 @@ public final class ProblemService {
   public List<Problem> list(long ownerId, long vehicleId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
-      VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
+      VehicleRepository vehicleRepository = new VehicleRepository(entityManager);
       if (vehicleRepository.findForOwner(ownerId, vehicleId) == null) {
         throw new IllegalArgumentException("Vozilo nije pronađeno.");
       }
-      return new JpaProblemRepository(entityManager).list(ownerId, vehicleId);
+      return new ProblemRepository(entityManager).list(ownerId, vehicleId);
     } finally {
       entityManager.close();
     }
@@ -38,12 +37,12 @@ public final class ProblemService {
     EntityTransaction transaction = entityManager.getTransaction();
     try {
       transaction.begin();
-      Vehicle vehicle = new JpaVehicleRepository(entityManager).findForOwner(ownerId, vehicleId);
+      Vehicle vehicle = new VehicleRepository(entityManager).findForOwner(ownerId, vehicleId);
       if (vehicle == null) {
         throw new IllegalArgumentException("Vozilo nije pronađeno.");
       }
       Problem problem = new Problem(vehicle, description, category, LocalDateTime.now());
-      new JpaProblemRepository(entityManager).add(problem);
+      new ProblemRepository(entityManager).add(problem);
       transaction.commit();
     } catch (RuntimeException exception) {
       if (transaction.isActive()) {

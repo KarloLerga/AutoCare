@@ -48,19 +48,13 @@ public final class Checks {
     return value;
   }
 
-  public static BigDecimal money(BigDecimal value, boolean nullable) {
+  public static BigDecimal money(BigDecimal value) {
     if (value == null) {
-      if (nullable) {
-        return null;
-      }
-
       throw new IllegalArgumentException("Unesite stvarno plaćenu cijenu.");
     }
-
     if (value.signum() < 0) {
       throw new IllegalArgumentException("Cijena ne može biti negativna.");
     }
-
     return value;
   }
 

@@ -5,14 +5,7 @@ import hr.unizd.autocare.domain.Vehicle;
 import hr.unizd.autocare.domain.VehicleVariant;
 import hr.unizd.autocare.model.Data.VehicleInput;
 import hr.unizd.autocare.model.Data.VehicleRow;
-import hr.unizd.autocare.persistence.JpaCatalogRepository;
-import hr.unizd.autocare.persistence.JpaProblemRepository;
-import hr.unizd.autocare.persistence.JpaServiceRecordRepository;
-import hr.unizd.autocare.persistence.JpaUserRepository;
-import hr.unizd.autocare.persistence.JpaVehicleRepository;
 import hr.unizd.autocare.repository.CatalogRepository;
-import hr.unizd.autocare.repository.ProblemRepository;
-import hr.unizd.autocare.repository.ServiceRecordRepository;
 import hr.unizd.autocare.repository.UserRepository;
 import hr.unizd.autocare.repository.VehicleRepository;
 import jakarta.persistence.EntityManager;
@@ -32,8 +25,8 @@ public final class VehicleService {
   public List<VehicleRow> list(long ownerId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
-      UserRepository userRepository = new JpaUserRepository(entityManager);
-      VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
+      UserRepository userRepository = new UserRepository(entityManager);
+      VehicleRepository vehicleRepository = new VehicleRepository(entityManager);
       AppUser user = userRepository.findById(ownerId);
       if (user == null) {
         throw new IllegalArgumentException("Korisnik nije pronađen.");
@@ -55,7 +48,7 @@ public final class VehicleService {
   public VehicleRow active(long ownerId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
-      UserRepository userRepository = new JpaUserRepository(entityManager);
+      UserRepository userRepository = new UserRepository(entityManager);
       AppUser user = userRepository.findById(ownerId);
       if (user == null) {
         throw new IllegalArgumentException("Korisnik nije pronađen.");
@@ -80,9 +73,9 @@ public final class VehicleService {
     EntityTransaction transaction = entityManager.getTransaction();
     try {
       transaction.begin();
-      UserRepository userRepository = new JpaUserRepository(entityManager);
-      VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
-      CatalogRepository catalogRepository = new JpaCatalogRepository(entityManager);
+      UserRepository userRepository = new UserRepository(entityManager);
+      VehicleRepository vehicleRepository = new VehicleRepository(entityManager);
+      CatalogRepository catalogRepository = new CatalogRepository(entityManager);
       AppUser user = userRepository.findById(ownerId);
       if (user == null) {
         throw new IllegalArgumentException("Korisnik nije pronađen.");
@@ -112,7 +105,7 @@ public final class VehicleService {
     EntityTransaction transaction = entityManager.getTransaction();
     try {
       transaction.begin();
-      Vehicle vehicle = new JpaVehicleRepository(entityManager).findForOwner(ownerId, vehicleId);
+      Vehicle vehicle = new VehicleRepository(entityManager).findForOwner(ownerId, vehicleId);
       if (vehicle == null) {
         throw new IllegalArgumentException("Vozilo nije pronađeno.");
       }
@@ -133,8 +126,8 @@ public final class VehicleService {
     EntityTransaction transaction = entityManager.getTransaction();
     try {
       transaction.begin();
-      UserRepository userRepository = new JpaUserRepository(entityManager);
-      VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
+      UserRepository userRepository = new UserRepository(entityManager);
+      VehicleRepository vehicleRepository = new VehicleRepository(entityManager);
       AppUser user = userRepository.findById(ownerId);
       Vehicle vehicle = vehicleRepository.findForOwner(ownerId, vehicleId);
       if (user == null) {
@@ -155,48 +148,4 @@ public final class VehicleService {
     }
   }
 
-  public void delete(long ownerId, long vehicleId) {
-    EntityManager entityManager = entityManagerFactory.createEntityManager();
-    EntityTransaction transaction = entityManager.getTransaction();
-    try {
-      transaction.begin();
-      UserRepository userRepository = new JpaUserRepository(entityManager);
-      VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
-      ProblemRepository problemRepository = new JpaProblemRepository(entityManager);
-      ServiceRecordRepository serviceRecordRepository =
-          new JpaServiceRecordRepository(entityManager);
-      AppUser user = userRepository.findById(ownerId);
-      List<Vehicle> vehicles = vehicleRepository.findAllForOwner(ownerId);
-      Vehicle vehicle = vehicleRepository.findForOwner(ownerId, vehicleId);
-      if (user == null) {
-        throw new IllegalArgumentException("Korisnik nije pronađen.");
-      }
-      if (vehicles.size() <= 1) {
-        throw new IllegalArgumentException("Posljednje vozilo nije moguće obrisati.");
-      }
-      if (vehicle == null) {
-        throw new IllegalArgumentException("Vozilo nije pronađeno.");
-      }
-      if (user.getActiveVehicle() != null
-          && user.getActiveVehicle().getId().equals(vehicleId)) {
-        for (Vehicle other : vehicles) {
-          if (!other.getId().equals(vehicleId)) {
-            user.activate(other);
-            break;
-          }
-        }
-      }
-      problemRepository.deleteForVehicle(vehicleId);
-      serviceRecordRepository.deleteForVehicle(vehicleId);
-      vehicleRepository.delete(vehicle);
-      transaction.commit();
-    } catch (RuntimeException exception) {
-      if (transaction.isActive()) {
-        transaction.rollback();
-      }
-      throw exception;
-    } finally {
-      entityManager.close();
-    }
-  }
 }
