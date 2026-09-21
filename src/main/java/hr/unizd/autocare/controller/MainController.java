@@ -58,7 +58,6 @@ public final class MainController implements Observer {
     new AuthController(
         frame,
         authService,
-        catalogService,
         new AuthController.LoginListener() {
           @Override
           public void loggedIn(long ownerId) {
@@ -153,7 +152,9 @@ public final class MainController implements Observer {
       frame.context(activeVehicle);
       frame.application();
 
-      if (showDashboard) {
+      if (activeVehicle == null) {
+        frame.showPage("Vozila");
+      } else if (showDashboard) {
         frame.showPage("Dashboard");
       }
 
@@ -169,15 +170,22 @@ public final class MainController implements Observer {
   }
 
   private void loadVisible() {
+    String page = frame.page();
+    if (page.equals("Vozila")) {
+      vehicles.load();
+      return;
+    }
+    if (page.equals("Profil")) {
+      profile.load();
+      return;
+    }
+
     if (session.getActiveVehicle() == null) {
       return;
     }
 
-    String page = frame.page();
     if (page.equals("Dashboard")) {
       loadDashboard();
-    } else if (page.equals("Vozila")) {
-      vehicles.load();
     } else if (page.equals("Servisi")) {
       services.load();
     } else if (page.equals("Održavanje")) {
@@ -186,8 +194,6 @@ public final class MainController implements Observer {
       catalog.load();
     } else if (page.equals("Problemi")) {
       problems.load();
-    } else if (page.equals("Profil")) {
-      profile.load();
     }
   }
 
@@ -218,7 +224,7 @@ public final class MainController implements Observer {
     frame.maintenance.setRows(new ArrayList<>());
     frame.catalog.search.setText("");
     frame.catalog.category.setSelectedIndex(0);
-    frame.catalog.setRows(new ArrayList<>());
+    catalog.clear();
     frame.problems.setRows(new ArrayList<>());
     frame.auth();
   }

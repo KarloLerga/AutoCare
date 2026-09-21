@@ -76,7 +76,7 @@ public final class DashboardView extends JPanel {
     if (next == null) {
       maintenance.setText("Nema praćenog održavanja");
     } else if (next.getRemainingRatio() <= 0) {
-      maintenance.setText(next.getName() + " - dospjelo");
+      maintenance.setText(next.getName() + " - potrebno obaviti");
     } else {
       maintenance.setText(next.getName() + " - za " + remaining(next));
     }

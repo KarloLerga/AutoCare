@@ -114,7 +114,7 @@ public final class MainFrame extends JFrame {
 
   public void registration() {
     roots.show(root, "REGISTER");
-    getRootPane().setDefaultButton(onboarding.next);
+    getRootPane().setDefaultButton(onboarding.finish);
   }
 
   public void application() {
@@ -148,6 +148,20 @@ public final class MainFrame extends JFrame {
   }
 
   public void context(VehicleRow vehicle) {
+    boolean hasVehicle = vehicle != null;
+    dashboardButton.setEnabled(hasVehicle);
+    maintenanceButton.setEnabled(hasVehicle);
+    catalogButton.setEnabled(hasVehicle);
+    servicesButton.setEnabled(hasVehicle);
+    problemsButton.setEnabled(hasVehicle);
+
+    if (!hasVehicle) {
+      vehicleName.setText("Nema dodanog vozila");
+      vehicleDetails.setText("Dodajte vozilo u izborniku Vozila");
+      vehicleName.setToolTipText(null);
+      return;
+    }
+
     vehicleName.setText(vehicle.getVariant().getMake() + " " + vehicle.getVariant().getModel());
     vehicleDetails.setText(
         vehicle.getYear() + " / " + Ui.km(vehicle.getMileage()) + " / " + Ui.date(LocalDate.now()));

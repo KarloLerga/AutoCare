@@ -1,14 +1,12 @@
 package hr.unizd.autocare.service;
 
-import hr.unizd.autocare.domain.CatalogCategory;
-import hr.unizd.autocare.domain.Vehicle;
+import hr.unizd.autocare.domain.VehiclePriceClass;
 import hr.unizd.autocare.domain.VehicleVariant;
 import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.domain.WorkDefinition;
 import hr.unizd.autocare.domain.WorkPriceRange;
 import hr.unizd.autocare.model.Data.CatalogRow;
 import hr.unizd.autocare.persistence.JpaCatalogRepository;
-import hr.unizd.autocare.persistence.JpaVehicleRepository;
 import hr.unizd.autocare.repository.CatalogRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -68,38 +66,15 @@ public final class CatalogService {
     }
   }
 
-  public List<CatalogRow> catalog(
-      long ownerId,
-      long vehicleId,
-      String searchText,
-      CatalogCategory selectedCategory) {
+  public List<CatalogRow> catalog(VehiclePriceClass priceClass) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
-      Vehicle vehicle = new JpaVehicleRepository(entityManager).findForOwner(ownerId, vehicleId);
-      if (vehicle == null) {
-        throw new IllegalArgumentException("Vozilo nije pronađeno.");
-      }
-
-      String search = "";
-      if (searchText != null) {
-        search = searchText.trim().toLowerCase();
-      }
-
       List<CatalogRow> rows = new ArrayList<>();
       CatalogRepository repository = new JpaCatalogRepository(entityManager);
-      List<WorkPriceRange> prices = repository.priceRanges(vehicle.getVariant().getPriceClass());
+      List<WorkPriceRange> prices = repository.priceRanges(priceClass);
 
       for (WorkPriceRange price : prices) {
         WorkDefinition work = price.getWork();
-
-        if (selectedCategory != null && work.getCatalogCategory() != selectedCategory) {
-          continue;
-        }
-
-        if (!search.isEmpty() && !work.getName().toLowerCase().contains(search)) {
-          continue;
-        }
-
         rows.add(
             new CatalogRow(
                 work.getName(),

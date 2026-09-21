@@ -57,13 +57,6 @@ public class Problem {
     status = ProblemStatus.OPEN;
   }
 
-  public void close() {
-    if (status != ProblemStatus.OPEN) {
-      throw new IllegalArgumentException("Problem je već zatvoren.");
-    }
-    status = ProblemStatus.RESOLVED;
-  }
-
   public void resolve(ServiceRecord serviceRecord) {
     if (status != ProblemStatus.OPEN) {
       throw new IllegalArgumentException("Problem je već zatvoren.");

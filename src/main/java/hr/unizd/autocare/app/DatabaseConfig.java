@@ -5,7 +5,7 @@ import jakarta.persistence.Persistence;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Učitava lokalnu konfiguraciju baze i otvara EntityManagerFactory. */
+/** Otvara EntityManagerFactory za bazu podataka. */
 public final class DatabaseConfig {
   private static final String HOST = "auto-care.database.windows.net";
   private static final String PORT = "1433";
@@ -32,5 +32,4 @@ public final class DatabaseConfig {
 
     return Persistence.createEntityManagerFactory("autocare", properties);
   }
-
 }

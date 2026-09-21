@@ -2,25 +2,12 @@ package hr.unizd.autocare.service;
 
 import hr.unizd.autocare.domain.AppUser;
 import hr.unizd.autocare.domain.Checks;
-import hr.unizd.autocare.domain.Vehicle;
-import hr.unizd.autocare.domain.VehicleVariant;
 import hr.unizd.autocare.model.Data.Account;
-import hr.unizd.autocare.model.Data.ServiceInput;
-import hr.unizd.autocare.model.Data.VehicleInput;
-import hr.unizd.autocare.persistence.JpaCatalogRepository;
-import hr.unizd.autocare.persistence.JpaProblemRepository;
-import hr.unizd.autocare.persistence.JpaServiceRecordRepository;
 import hr.unizd.autocare.persistence.JpaUserRepository;
-import hr.unizd.autocare.persistence.JpaVehicleRepository;
-import hr.unizd.autocare.repository.CatalogRepository;
-import hr.unizd.autocare.repository.ProblemRepository;
-import hr.unizd.autocare.repository.ServiceRecordRepository;
 import hr.unizd.autocare.repository.UserRepository;
-import hr.unizd.autocare.repository.VehicleRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
-import java.util.List;
 
 /** Registracija, prijava i profil korisnika. */
 public final class AuthService {
@@ -38,9 +25,7 @@ public final class AuthService {
       UserRepository userRepository = new JpaUserRepository(entityManager);
       AppUser user = userRepository.findByEmail(cleanEmail);
 
-      if (user == null
-          || user.getPassword() == null
-          || !user.getPassword().equals(password)) {
+      if (user == null || user.getPassword() == null || !user.getPassword().equals(password)) {
         throw new IllegalArgumentException("E-mail ili lozinka nisu ispravni.");
       }
 
@@ -50,16 +35,7 @@ public final class AuthService {
     }
   }
 
-  public long register(
-      String name,
-      String email,
-      String password,
-      VehicleInput vehicleInput,
-      List<ServiceInput> history) {
-    if (vehicleInput == null) {
-      throw new IllegalArgumentException("Vozilo je obavezno.");
-    }
-
+  public long register(String name, String email, String password) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();
 
@@ -67,50 +43,19 @@ public final class AuthService {
       transaction.begin();
 
       UserRepository userRepository = new JpaUserRepository(entityManager);
-      VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
-      CatalogRepository catalogRepository = new JpaCatalogRepository(entityManager);
-      ServiceRecordRepository serviceRecordRepository =
-          new JpaServiceRecordRepository(entityManager);
-      ProblemRepository problemRepository = new JpaProblemRepository(entityManager);
-
       AppUser user = new AppUser(name, email, password);
+
       if (userRepository.findByEmail(user.getEmail()) != null) {
         throw new IllegalArgumentException("E-mail adresa je već registrirana.");
       }
+
       userRepository.add(user);
-
-      VehicleVariant variant = catalogRepository.findVariant(vehicleInput.getVariantId());
-
-      if (variant == null) {
-        throw new IllegalArgumentException("Odaberite postojeću varijantu vozila.");
-      }
-
-      Vehicle vehicle =
-          new Vehicle(user, variant, vehicleInput.getYear(), vehicleInput.getMileage());
-      vehicleRepository.add(vehicle);
-      user.activate(vehicle);
-
-      for (ServiceInput serviceInput : history) {
-        if (serviceInput.getMileage() > vehicleInput.getMileage()) {
-          throw new IllegalArgumentException("Početna povijest ne može imati veću kilometražu od trenutne.");
-        }
-
-        ServiceRecordService.saveInside(
-            catalogRepository,
-            serviceRecordRepository,
-            problemRepository,
-            vehicle,
-            serviceInput,
-            true);
-      }
-
       transaction.commit();
       return user.getId();
     } catch (RuntimeException exception) {
       if (transaction.isActive()) {
         transaction.rollback();
       }
-
       throw exception;
     } finally {
       entityManager.close();
@@ -162,7 +107,6 @@ public final class AuthService {
       if (transaction.isActive()) {
         transaction.rollback();
       }
-
       throw exception;
     } finally {
       entityManager.close();
