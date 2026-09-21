@@ -2,10 +2,8 @@ package hr.unizd.autocare.view;
 
 import hr.unizd.autocare.domain.Problem;
 import hr.unizd.autocare.domain.ProblemCategory;
-import hr.unizd.autocare.domain.ProblemStatus;
 import hr.unizd.autocare.view.components.Ui;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -18,15 +16,12 @@ import javax.swing.table.DefaultTableModel;
 
 /** Problemi koje vlasnik želi zapamtiti za mehaničara. */
 public final class ProblemsView extends JPanel {
-  public final JComboBox<ProblemCategory> category =
-      new JComboBox<>(ProblemCategory.values());
+  public final JComboBox<ProblemCategory> category = new JComboBox<>(ProblemCategory.values());
   public final JTextArea description = new JTextArea(3, 36);
   public final JButton add = Ui.button("Spremi problem");
-  public final JButton close = Ui.button("Zatvori odabrani");
   public final JTable table;
 
   private final DefaultTableModel tableModel;
-  private final List<Problem> problems = new ArrayList<>();
 
   public ProblemsView() {
     super(new BorderLayout(12, 12));
@@ -58,33 +53,17 @@ public final class ProblemsView extends JPanel {
 
     JPanel top = Ui.column();
     top.add(Ui.heading("Problemi"));
-    top.add(Ui.hint("Zapišite što primjećujete bez pokušaja dijagnosticiranja kvara."));
+    top.add(Ui.hint("Problem se označava riješenim prilikom spremanja servisa."));
     top.add(editor);
     add(top, BorderLayout.NORTH);
     add(new JScrollPane(table), BorderLayout.CENTER);
-    add(
-        Ui.row(
-            close,
-            Ui.hint(
-                "Problem možete zatvoriti ovdje ili ga označiti riješenim prilikom spremanja servisa.")),
-        BorderLayout.SOUTH);
   }
 
   public ProblemCategory selectedCategory() {
     return (ProblemCategory) category.getSelectedItem();
   }
 
-  public Problem selectedProblem() {
-    int selected = table.getSelectedRow();
-    if (selected < 0) {
-      return null;
-    }
-    return problems.get(selected);
-  }
-
   public void setRows(List<Problem> values) {
-    problems.clear();
-    problems.addAll(values);
     tableModel.setRowCount(0);
     for (Problem problem : values) {
       tableModel.addRow(
@@ -100,10 +79,5 @@ public final class ProblemsView extends JPanel {
   public void clearEditor() {
     category.setSelectedItem(ProblemCategory.OTHER);
     description.setText("");
-  }
-
-  public boolean selectedIsOpen() {
-    Problem selected = selectedProblem();
-    return selected != null && selected.getStatus() == ProblemStatus.OPEN;
   }
 }

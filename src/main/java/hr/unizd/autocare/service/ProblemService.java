@@ -33,11 +33,7 @@ public final class ProblemService {
     }
   }
 
-  public void create(
-      long ownerId,
-      long vehicleId,
-      String description,
-      ProblemCategory category) {
+  public void create(long ownerId, long vehicleId, String description, ProblemCategory category) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();
     try {
@@ -48,27 +44,6 @@ public final class ProblemService {
       }
       Problem problem = new Problem(vehicle, description, category, LocalDateTime.now());
       new JpaProblemRepository(entityManager).add(problem);
-      transaction.commit();
-    } catch (RuntimeException exception) {
-      if (transaction.isActive()) {
-        transaction.rollback();
-      }
-      throw exception;
-    } finally {
-      entityManager.close();
-    }
-  }
-
-  public void close(long ownerId, long problemId) {
-    EntityManager entityManager = entityManagerFactory.createEntityManager();
-    EntityTransaction transaction = entityManager.getTransaction();
-    try {
-      transaction.begin();
-      Problem problem = new JpaProblemRepository(entityManager).findForOwner(ownerId, problemId);
-      if (problem == null) {
-        throw new IllegalArgumentException("Problem nije pronađen.");
-      }
-      problem.close();
       transaction.commit();
     } catch (RuntimeException exception) {
       if (transaction.isActive()) {

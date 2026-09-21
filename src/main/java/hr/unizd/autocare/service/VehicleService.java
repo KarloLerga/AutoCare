@@ -57,8 +57,11 @@ public final class VehicleService {
     try {
       UserRepository userRepository = new JpaUserRepository(entityManager);
       AppUser user = userRepository.findById(ownerId);
-      if (user == null || user.getActiveVehicle() == null) {
-        throw new IllegalArgumentException("Korisnik nema aktivno vozilo.");
+      if (user == null) {
+        throw new IllegalArgumentException("Korisnik nije pronađen.");
+      }
+      if (user.getActiveVehicle() == null) {
+        return null;
       }
 
       Vehicle vehicle = user.getActiveVehicle();
@@ -90,6 +93,9 @@ public final class VehicleService {
       }
       Vehicle vehicle = new Vehicle(user, variant, input.getYear(), input.getMileage());
       vehicleRepository.add(vehicle);
+      if (user.getActiveVehicle() == null) {
+        user.activate(vehicle);
+      }
       transaction.commit();
     } catch (RuntimeException exception) {
       if (transaction.isActive()) {

@@ -75,7 +75,7 @@ public final class Main {
 
       JOptionPane.showMessageDialog(
           null,
-          "Povezivanje nije uspjelo. Provjerite mrežu i vanjsku konfiguraciju baze.",
+          "Povezivanje s bazom nije uspjelo. Provjerite mrežu i podatke za povezivanje.",
           "AutoCare",
           JOptionPane.ERROR_MESSAGE);
     }
