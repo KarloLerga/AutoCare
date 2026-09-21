@@ -2,7 +2,7 @@ package hr.unizd.autocare.app;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import hr.unizd.autocare.controller.MainController;
-import hr.unizd.autocare.event.AppEvents;
+import hr.unizd.autocare.observer.Subject;
 import hr.unizd.autocare.service.AuthService;
 import hr.unizd.autocare.service.CatalogService;
 import hr.unizd.autocare.service.DashboardService;
@@ -51,8 +51,8 @@ public final class Main {
       DashboardService dashboardService = new DashboardService(entityManagerFactory);
 
       MainFrame frame = new MainFrame();
-      Session session = new Session();
-      AppEvents events = new AppEvents();
+      Session session = Session.getInstance();
+      Subject subject = new Subject();
 
       new MainController(
           frame,
@@ -64,7 +64,7 @@ public final class Main {
           maintenanceService,
           problemService,
           dashboardService,
-          events);
+          subject);
 
       closeDatabaseWhenWindowCloses(frame, entityManagerFactory);
       frame.setVisible(true);

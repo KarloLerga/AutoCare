@@ -50,12 +50,6 @@ public class ServiceRecord {
       throw new IllegalArgumentException("Rad je obavezan.");
     }
 
-    for (ServiceItem serviceItem : items) {
-      if (serviceItem.getWork().getCode().equals(work.getCode())) {
-        throw new IllegalArgumentException("Rad je već dodan u servis.");
-      }
-    }
-
     items.add(new ServiceItem(this, work, actualPrice));
   }
 

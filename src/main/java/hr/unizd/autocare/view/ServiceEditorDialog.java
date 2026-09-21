@@ -1,10 +1,10 @@
 package hr.unizd.autocare.view;
 
+import hr.unizd.autocare.domain.Problem;
 import hr.unizd.autocare.domain.WorkCategory;
+import hr.unizd.autocare.domain.WorkDefinition;
 import hr.unizd.autocare.model.Data.ItemInput;
-import hr.unizd.autocare.model.Data.ProblemRow;
 import hr.unizd.autocare.model.Data.ServiceInput;
-import hr.unizd.autocare.model.Data.WorkRow;
 import hr.unizd.autocare.view.components.Ui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -32,7 +32,7 @@ public final class ServiceEditorDialog extends JDialog {
   public final JTextField mileage;
   public final JTextArea note = new JTextArea(3, 25);
   public final JComboBox<String> type = new JComboBox<>(new String[] {"Održavanje", "Popravak"});
-  public final JComboBox<WorkRow> work = new JComboBox<>();
+  public final JComboBox<WorkDefinition> work = new JComboBox<>();
   public final JTextField actualPrice = new JTextField(12);
   public final JButton addItem = Ui.button("Dodaj stavku");
   public final JButton remove = Ui.button("Ukloni odabranu stavku");
@@ -40,15 +40,15 @@ public final class ServiceEditorDialog extends JDialog {
   public final JButton cancel = Ui.button("Odustani");
   public final JTable itemTable;
 
-  private final List<ProblemRow> problems;
+  private final List<Problem> problems;
   private final DefaultTableModel itemTableModel;
   private final DefaultTableModel problemsTableModel;
   private final List<AddedItem> items = new ArrayList<>();
-  private final List<WorkRow> availableWorks = new ArrayList<>();
+  private final List<WorkDefinition> availableWorks = new ArrayList<>();
   private final boolean historical;
 
   public ServiceEditorDialog(
-      Window owner, int mileageValue, boolean historical, List<ProblemRow> problems) {
+      Window owner, int mileageValue, boolean historical, List<Problem> problems) {
     super(owner, dialogTitle(historical), ModalityType.APPLICATION_MODAL);
     this.historical = historical;
     this.problems = new ArrayList<>(problems);
@@ -83,7 +83,7 @@ public final class ServiceEditorDialog extends JDialog {
             return column == 0;
           }
         };
-    for (ProblemRow problem : this.problems) {
+    for (Problem problem : this.problems) {
       problemsTableModel.addRow(new Object[] {Boolean.FALSE, problem.getDescription()});
     }
 
@@ -138,7 +138,6 @@ public final class ServiceEditorDialog extends JDialog {
     getRootPane().setDefaultButton(save);
   }
 
-
   private static String dialogTitle(boolean historical) {
     if (historical) {
       return "Početna povijest — novi zapis";
@@ -146,7 +145,7 @@ public final class ServiceEditorDialog extends JDialog {
     return "Novi servis";
   }
 
-  public void setWorks(List<WorkRow> works) {
+  public void setWorks(List<WorkDefinition> works) {
     availableWorks.clear();
     availableWorks.addAll(works);
     type.setSelectedIndex(0);
@@ -158,28 +157,31 @@ public final class ServiceEditorDialog extends JDialog {
     if (type.getSelectedIndex() == 0) {
       selectedCategory = WorkCategory.MAINTENANCE;
     }
-    List<WorkRow> filtered = new ArrayList<>();
-    for (WorkRow row : availableWorks) {
-      if (row.getCategory() == selectedCategory) {
-        filtered.add(row);
+
+    List<WorkDefinition> filtered = new ArrayList<>();
+    for (WorkDefinition workDefinition : availableWorks) {
+      if (workDefinition.getCategory() == selectedCategory) {
+        filtered.add(workDefinition);
       }
     }
-    work.setModel(new DefaultComboBoxModel<>(filtered.toArray(new WorkRow[0])));
+
+    work.setModel(new DefaultComboBoxModel<>(filtered.toArray(new WorkDefinition[0])));
     if (work.getItemCount() > 0) {
       work.setSelectedIndex(0);
     }
   }
 
-  public WorkRow selectedWork() {
-    return (WorkRow) work.getSelectedItem();
+  public WorkDefinition selectedWork() {
+    return (WorkDefinition) work.getSelectedItem();
   }
 
-  public void addWork(WorkRow selected) {
+  public void addWork(WorkDefinition selected) {
     for (AddedItem item : items) {
-      if (item.work.getId() == selected.getId()) {
+      if (item.work.getId().equals(selected.getId())) {
         throw new IllegalArgumentException("Rad je već dodan u servis.");
       }
     }
+
     items.add(new AddedItem(selected, Ui.parseMoney(actualPrice.getText(), historical)));
     actualPrice.setText("");
     if (work.getItemCount() > 0) {
@@ -210,19 +212,21 @@ public final class ServiceEditorDialog extends JDialog {
         resolvedProblemIds.add(problems.get(row).getId());
       }
     }
+
     List<ItemInput> inputs = new ArrayList<>();
     for (AddedItem item : items) {
       inputs.add(new ItemInput(item.work.getId(), item.price));
     }
+
     return new ServiceInput(
         Ui.parseDate(date.getText()), Ui.mileage(mileage), note.getText(), inputs, resolvedProblemIds);
   }
 
   private static final class AddedItem {
-    private final WorkRow work;
+    private final WorkDefinition work;
     private final BigDecimal price;
 
-    private AddedItem(WorkRow work, BigDecimal price) {
+    private AddedItem(WorkDefinition work, BigDecimal price) {
       this.work = work;
       this.price = price;
     }

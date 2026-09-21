@@ -4,7 +4,6 @@ import hr.unizd.autocare.model.Data.MaintenanceRow;
 import hr.unizd.autocare.view.components.Ui;
 import java.awt.BorderLayout;
 import java.util.List;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -23,7 +22,9 @@ public final class MaintenanceView extends JPanel {
     tableModel =
         new DefaultTableModel(
             new Object[][] {},
-            new String[] {"Rad", "Zadnji datum", "Zadnji km", "Sljedeći datum", "Sljedeći km"}) {
+            new String[] {
+              "Rad", "Zadnji datum", "Zadnji km", "Sljedeći datum", "Sljedeći km"
+            }) {
           @Override
           public boolean isCellEditable(int row, int column) {
             return false;

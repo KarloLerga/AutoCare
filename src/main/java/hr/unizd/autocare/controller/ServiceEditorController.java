@@ -1,6 +1,6 @@
 package hr.unizd.autocare.controller;
 
-import hr.unizd.autocare.model.Data.WorkRow;
+import hr.unizd.autocare.domain.WorkDefinition;
 import hr.unizd.autocare.view.ServiceEditorDialog;
 import hr.unizd.autocare.view.components.Ui;
 import java.awt.event.ActionEvent;
@@ -12,7 +12,7 @@ import java.util.List;
 public final class ServiceEditorController {
   public ServiceEditorController(
       final ServiceEditorDialog view,
-      final List<WorkRow> works,
+      final List<WorkDefinition> works,
       final ServiceEditorListener listener) {
     view.setWorks(new ArrayList<>(works));
     view.type.addActionListener(
@@ -27,7 +27,7 @@ public final class ServiceEditorController {
           @Override
           public void actionPerformed(ActionEvent event) {
             try {
-              WorkRow selected = view.selectedWork();
+              WorkDefinition selected = view.selectedWork();
               if (selected == null) {
                 throw new IllegalArgumentException("Odaberite rad.");
               }
@@ -62,6 +62,5 @@ public final class ServiceEditorController {
             view.dispose();
           }
         });
-    Ui.escape(view);
   }
 }

@@ -27,10 +27,7 @@ public final class MaintenanceCalculator {
       return mileageStrategy.calculate(
           intervalKm, null, lastDate, lastMileage, currentMileage, today);
     }
-    if (intervalMonths != null) {
-      return timeStrategy.calculate(
-          null, intervalMonths, lastDate, lastMileage, currentMileage, today);
-    }
-    throw new IllegalArgumentException("Pravilo nema interval.");
+    return timeStrategy.calculate(
+        null, intervalMonths, lastDate, lastMileage, currentMileage, today);
   }
 }

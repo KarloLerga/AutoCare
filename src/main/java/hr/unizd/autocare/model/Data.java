@@ -2,16 +2,14 @@ package hr.unizd.autocare.model;
 
 import hr.unizd.autocare.domain.CatalogCategory;
 import hr.unizd.autocare.domain.CostSummary;
-import hr.unizd.autocare.domain.ProblemCategory;
-import hr.unizd.autocare.domain.ProblemStatus;
+import hr.unizd.autocare.domain.VehicleVariant;
 import hr.unizd.autocare.domain.WorkCategory;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Jednostavni podaci koje razmjenjuju slojevi aplikacije. */
+/** Jednostavni podaci koji nisu zasebni domenski entiteti. */
 public final class Data {
   private Data() {}
 
@@ -39,81 +37,15 @@ public final class Data {
     }
   }
 
-  public static final class VariantRow {
-    private final long id;
-    private final String make;
-    private final String model;
-    private final String generation;
-    private final String engine;
-    private final String fuel;
-    private final String transmission;
-    private final Integer powerHp;
-
-    public VariantRow(
-        long id,
-        String make,
-        String model,
-        String generation,
-        String engine,
-        String fuel,
-        String transmission,
-        Integer powerHp) {
-      this.id = id;
-      this.make = make;
-      this.model = model;
-      this.generation = generation;
-      this.engine = engine;
-      this.fuel = fuel;
-      this.transmission = transmission;
-      this.powerHp = powerHp;
-    }
-
-    public long getId() {
-      return id;
-    }
-
-    public String getMake() {
-      return make;
-    }
-
-    public String getModel() {
-      return model;
-    }
-
-    public String getGeneration() {
-      return generation;
-    }
-
-    public String getEngine() {
-      return engine;
-    }
-
-    public String getFuel() {
-      return fuel;
-    }
-
-    public String getTransmission() {
-      return transmission;
-    }
-
-    public Integer getPowerHp() {
-      return powerHp;
-    }
-
-    @Override
-    public String toString() {
-      return generation + " / " + engine + " / " + fuel;
-    }
-  }
-
   public static final class VehicleRow {
     private final long id;
-    private final VariantRow variant;
+    private final VehicleVariant variant;
     private final int year;
     private final int mileage;
     private final boolean active;
 
-    public VehicleRow(long id, VariantRow variant, int year, int mileage, boolean active) {
+    public VehicleRow(
+        long id, VehicleVariant variant, int year, int mileage, boolean active) {
       this.id = id;
       this.variant = variant;
       this.year = year;
@@ -125,7 +57,7 @@ public final class Data {
       return id;
     }
 
-    public VariantRow getVariant() {
+    public VehicleVariant getVariant() {
       return variant;
     }
 
@@ -142,7 +74,7 @@ public final class Data {
     }
   }
 
-  /** Ulaz za stvaranje vozila; identitet se nakon stvaranja više ne mijenja. */
+  /** Podaci uneseni pri dodavanju vozila. */
   public static final class VehicleInput {
     private final long variantId;
     private final int year;
@@ -164,35 +96,6 @@ public final class Data {
 
     public int getMileage() {
       return mileage;
-    }
-  }
-
-  public static final class WorkRow {
-    private final long id;
-    private final String name;
-    private final WorkCategory category;
-
-    public WorkRow(long id, String name, WorkCategory category) {
-      this.id = id;
-      this.name = name;
-      this.category = category;
-    }
-
-    public long getId() {
-      return id;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public WorkCategory getCategory() {
-      return category;
-    }
-
-    @Override
-    public String toString() {
-      return name;
     }
   }
 
@@ -337,47 +240,6 @@ public final class Data {
 
     public List<String> getResolvedProblems() {
       return resolvedProblems;
-    }
-  }
-
-  public static final class ProblemRow {
-    private final long id;
-    private final String description;
-    private final ProblemCategory category;
-    private final ProblemStatus status;
-    private final LocalDateTime createdAt;
-
-    public ProblemRow(
-        long id,
-        String description,
-        ProblemCategory category,
-        ProblemStatus status,
-        LocalDateTime createdAt) {
-      this.id = id;
-      this.description = description;
-      this.category = category;
-      this.status = status;
-      this.createdAt = createdAt;
-    }
-
-    public long getId() {
-      return id;
-    }
-
-    public String getDescription() {
-      return description;
-    }
-
-    public ProblemCategory getCategory() {
-      return category;
-    }
-
-    public ProblemStatus getStatus() {
-      return status;
-    }
-
-    public LocalDateTime getCreatedAt() {
-      return createdAt;
     }
   }
 

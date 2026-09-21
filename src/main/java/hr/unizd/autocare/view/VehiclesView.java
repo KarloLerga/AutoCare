@@ -59,7 +59,7 @@ public final class VehiclesView extends JPanel {
           new Object[] {
             vehicle.getVariant().getMake() + " " + vehicle.getVariant().getModel(),
             vehicle.getYear(),
-            vehicle.getVariant().getEngine(),
+            vehicle.getVariant().getEngineLabel(),
             Ui.km(vehicle.getMileage()),
             active
           });

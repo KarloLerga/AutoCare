@@ -25,13 +25,6 @@ public class ServiceItem {
   protected ServiceItem() {}
 
   ServiceItem(ServiceRecord serviceRecord, WorkDefinition work, BigDecimal actualPrice) {
-    if (serviceRecord == null) {
-      throw new IllegalArgumentException("Servis je obavezan.");
-    }
-    if (work == null) {
-      throw new IllegalArgumentException("Rad je obavezan.");
-    }
-
     this.serviceRecord = serviceRecord;
     this.work = work;
     this.actualPrice = Checks.money(actualPrice, true);

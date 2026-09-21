@@ -15,25 +15,20 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.format.ResolverStyle;
 import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.BoxLayout;
-import javax.swing.KeyStroke;
-import javax.swing.WindowConstants;
-import java.awt.event.ActionListener;
 
 /** Standardni Swing layouti i formatiranje, bez poslovnih pravila. */
 public final class Ui {
   public static final DateTimeFormatter DATE =
-      DateTimeFormatter.ofPattern("dd.MM.uuuu.").withResolverStyle(ResolverStyle.STRICT);
+      DateTimeFormatter.ofPattern("dd.MM.yyyy.");
 
   private Ui() {}
 
@@ -199,9 +194,9 @@ public final class Ui {
 
   public static String problemStatus(ProblemStatus status) {
     if (status == ProblemStatus.OPEN) {
-      return "Aktivna";
+      return "Otvoren";
     }
-    return "Riješena";
+    return "Riješen";
   }
 
   public static boolean confirm(Component parent, String text) {
@@ -222,18 +217,4 @@ public final class Ui {
     JOptionPane.showMessageDialog(parent, message, "AutoCare", JOptionPane.ERROR_MESSAGE);
   }
 
-  public static void escape(final JDialog dialog) {
-    dialog
-        .getRootPane()
-        .registerKeyboardAction(
-            new ActionListener() {
-              @Override
-              public void actionPerformed(java.awt.event.ActionEvent event) {
-                dialog.dispose();
-              }
-            },
-            KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0),
-            JComponent.WHEN_IN_FOCUSED_WINDOW);
-    dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-  }
 }

@@ -2,7 +2,6 @@ package hr.unizd.autocare.domain;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Locale;
 
 /** Osnovne provjere korisničkog unosa. */
 public final class Checks {
@@ -31,7 +30,7 @@ public final class Checks {
   }
 
   public static String email(String value) {
-    String email = text(value, 254, "E-mail").toLowerCase(Locale.ROOT);
+    String email = text(value, 254, "E-mail").toLowerCase();
     int at = email.indexOf('@');
     int dot = email.lastIndexOf('.');
 

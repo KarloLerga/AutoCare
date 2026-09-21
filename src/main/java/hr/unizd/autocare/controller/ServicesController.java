@@ -1,15 +1,15 @@
 package hr.unizd.autocare.controller;
 
 import hr.unizd.autocare.app.Session;
+import hr.unizd.autocare.domain.Problem;
 import hr.unizd.autocare.domain.ProblemStatus;
 import hr.unizd.autocare.domain.WorkCategory;
-import hr.unizd.autocare.event.AppEvent;
-import hr.unizd.autocare.event.AppEvents;
-import hr.unizd.autocare.model.Data.ProblemRow;
+import hr.unizd.autocare.domain.WorkDefinition;
+import hr.unizd.autocare.observer.AppEvent;
+import hr.unizd.autocare.observer.Subject;
 import hr.unizd.autocare.model.Data.ServiceDetail;
 import hr.unizd.autocare.model.Data.ServiceInput;
 import hr.unizd.autocare.model.Data.ServiceRow;
-import hr.unizd.autocare.model.Data.WorkRow;
 import hr.unizd.autocare.service.CatalogService;
 import hr.unizd.autocare.service.ProblemService;
 import hr.unizd.autocare.service.ServiceRecordService;
@@ -28,7 +28,7 @@ public final class ServicesController {
   private final CatalogService catalogService;
   private final ProblemService problemService;
   private final Session session;
-  private final AppEvents events;
+  private final Subject subject;
 
   public ServicesController(
       MainFrame frame,
@@ -36,13 +36,13 @@ public final class ServicesController {
       CatalogService catalogService,
       ProblemService problemService,
       Session session,
-      AppEvents events) {
+      Subject subject) {
     this.frame = frame;
     this.serviceRecordService = serviceRecordService;
     this.catalogService = catalogService;
     this.problemService = problemService;
     this.session = session;
-    this.events = events;
+    this.subject = subject;
     frame.services.add.addActionListener(
         new ActionListener() {
           @Override
@@ -88,9 +88,9 @@ public final class ServicesController {
     long vehicleId = session.getActiveVehicle().getId();
     int currentMileage = session.getActiveVehicle().getMileage();
     try {
-      List<WorkRow> works = loadEditorWorks(ownerId, vehicleId);
-      List<ProblemRow> openProblems = new ArrayList<>();
-      for (ProblemRow problem : problemService.list(ownerId, vehicleId)) {
+      List<WorkDefinition> works = loadEditorWorks();
+      List<Problem> openProblems = new ArrayList<>();
+      for (Problem problem : problemService.list(ownerId, vehicleId)) {
         if (problem.getStatus() == ProblemStatus.OPEN) {
           openProblems.add(problem);
         }
@@ -101,10 +101,10 @@ public final class ServicesController {
     }
   }
 
-  private List<WorkRow> loadEditorWorks(long ownerId, long vehicleId) {
-    List<WorkRow> works =
-        new ArrayList<>(catalogService.works(ownerId, vehicleId, WorkCategory.MAINTENANCE));
-    works.addAll(catalogService.works(ownerId, vehicleId, WorkCategory.REPAIR));
+  private List<WorkDefinition> loadEditorWorks() {
+    List<WorkDefinition> works =
+        new ArrayList<>(catalogService.works(WorkCategory.MAINTENANCE));
+    works.addAll(catalogService.works(WorkCategory.REPAIR));
     return works;
   }
 
@@ -112,8 +112,8 @@ public final class ServicesController {
       final long ownerId,
       final long vehicleId,
       int currentMileage,
-      List<WorkRow> works,
-      List<ProblemRow> openProblems) {
+      List<WorkDefinition> works,
+      List<Problem> openProblems) {
     final ServiceEditorDialog dialog =
         new ServiceEditorDialog(frame, currentMileage, false, openProblems);
     new ServiceEditorController(
@@ -124,7 +124,7 @@ public final class ServicesController {
           public void saveService(ServiceInput serviceInput) {
             serviceRecordService.create(ownerId, vehicleId, serviceInput);
             dialog.dispose();
-            events.publish(AppEvent.SERVICE_SAVED);
+            subject.notifyObservers(AppEvent.SERVICE_SAVED);
           }
         });
     dialog.setVisible(true);

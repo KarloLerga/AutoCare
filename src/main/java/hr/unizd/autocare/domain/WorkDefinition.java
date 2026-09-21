@@ -14,7 +14,6 @@ public class WorkDefinition {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String code;
   private String name;
 
   @Enumerated(EnumType.STRING)
@@ -30,10 +29,6 @@ public class WorkDefinition {
 
   public Long getId() {
     return id;
-  }
-
-  public String getCode() {
-    return code;
   }
 
   public String getName() {
@@ -54,5 +49,10 @@ public class WorkDefinition {
 
   public Integer getIntervalMonths() {
     return intervalMonths;
+  }
+
+  @Override
+  public String toString() {
+    return name;
   }
 }

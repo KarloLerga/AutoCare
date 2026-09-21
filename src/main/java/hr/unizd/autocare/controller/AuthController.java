@@ -2,10 +2,10 @@ package hr.unizd.autocare.controller;
 
 import hr.unizd.autocare.domain.Checks;
 import hr.unizd.autocare.domain.WorkCategory;
+import hr.unizd.autocare.domain.WorkDefinition;
 import hr.unizd.autocare.model.Data.Account;
 import hr.unizd.autocare.model.Data.ServiceInput;
 import hr.unizd.autocare.model.Data.VehicleInput;
-import hr.unizd.autocare.model.Data.WorkRow;
 import hr.unizd.autocare.service.AuthService;
 import hr.unizd.autocare.service.CatalogService;
 import hr.unizd.autocare.service.ServiceRecordService;
@@ -158,11 +158,11 @@ public final class AuthController {
   private void addHistoryItem() {
     try {
       VehicleInput vehicleInput = onboardingView.vehicle.input();
-      List<WorkRow> works =
+      List<WorkDefinition> works =
           new ArrayList<>(
-              catalogService.onboardingWorks(vehicleInput.getVariantId(), WorkCategory.MAINTENANCE));
+              catalogService.works(WorkCategory.MAINTENANCE));
       works.addAll(
-          catalogService.onboardingWorks(vehicleInput.getVariantId(), WorkCategory.REPAIR));
+          catalogService.works(WorkCategory.REPAIR));
       ServiceEditorDialog editor =
           new ServiceEditorDialog(frame, vehicleInput.getMileage(), true, List.of());
       new ServiceEditorController(

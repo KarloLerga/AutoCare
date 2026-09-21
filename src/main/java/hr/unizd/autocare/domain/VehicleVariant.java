@@ -14,12 +14,10 @@ public class VehicleVariant {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String code;
   private String make;
   private String model;
   private String generation;
   private String engineLabel;
-  private String bodyType;
   private String fuelType;
   private Integer powerHp;
   private String transmission;
@@ -83,5 +81,10 @@ public class VehicleVariant {
 
   public VehiclePriceClass getPriceClass() {
     return priceClass;
+  }
+
+  @Override
+  public String toString() {
+    return generation + " / " + engineLabel + " / " + fuelType;
   }
 }

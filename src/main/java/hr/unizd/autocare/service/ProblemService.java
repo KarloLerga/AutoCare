@@ -3,7 +3,6 @@ package hr.unizd.autocare.service;
 import hr.unizd.autocare.domain.Problem;
 import hr.unizd.autocare.domain.ProblemCategory;
 import hr.unizd.autocare.domain.Vehicle;
-import hr.unizd.autocare.model.Data.ProblemRow;
 import hr.unizd.autocare.persistence.JpaProblemRepository;
 import hr.unizd.autocare.persistence.JpaVehicleRepository;
 import hr.unizd.autocare.repository.VehicleRepository;
@@ -11,10 +10,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-/** Problemi koje vlasnik zapisuje bez automatske dijagnostike ili pogađanja kvara. */
+/** Problemi koje vlasnik bilježi bez automatske dijagnostike. */
 public final class ProblemService {
   private final EntityManagerFactory entityManagerFactory;
 
@@ -22,18 +20,14 @@ public final class ProblemService {
     this.entityManagerFactory = entityManagerFactory;
   }
 
-  public List<ProblemRow> list(long ownerId, long vehicleId) {
+  public List<Problem> list(long ownerId, long vehicleId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
       VehicleRepository vehicleRepository = new JpaVehicleRepository(entityManager);
       if (vehicleRepository.findForOwner(ownerId, vehicleId) == null) {
         throw new IllegalArgumentException("Vozilo nije pronađeno.");
       }
-      List<ProblemRow> rows = new ArrayList<>();
-      for (Problem problem : new JpaProblemRepository(entityManager).list(ownerId, vehicleId)) {
-        rows.add(Mapping.problem(problem));
-      }
-      return rows;
+      return new JpaProblemRepository(entityManager).list(ownerId, vehicleId);
     } finally {
       entityManager.close();
     }
@@ -72,7 +66,7 @@ public final class ProblemService {
       transaction.begin();
       Problem problem = new JpaProblemRepository(entityManager).findForOwner(ownerId, problemId);
       if (problem == null) {
-      throw new IllegalArgumentException("Problem nije pronađen.");
+        throw new IllegalArgumentException("Problem nije pronađen.");
       }
       problem.close();
       transaction.commit();
