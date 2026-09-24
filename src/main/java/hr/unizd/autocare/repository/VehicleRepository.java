@@ -12,7 +12,7 @@ public final class VehicleRepository {
     this.entityManager = entityManager;
   }
 
-  public Vehicle findForOwner(long ownerId, long vehicleId) {
+  public Vehicle findForOwner(int ownerId, int vehicleId) {
     List<Vehicle> vehicles =
         entityManager
             .createQuery(
@@ -30,7 +30,7 @@ public final class VehicleRepository {
     return vehicles.get(0);
   }
 
-  public List<Vehicle> findAllForOwner(long ownerId) {
+  public List<Vehicle> findAllForOwner(int ownerId) {
     return entityManager
         .createQuery(
             "select vehicle from Vehicle vehicle "

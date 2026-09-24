@@ -11,7 +11,7 @@ import jakarta.persistence.ManyToOne;
 public class AppUser {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
   private String name;
   private String email;
@@ -37,7 +37,7 @@ public class AppUser {
   }
 
 
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 

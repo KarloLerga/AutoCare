@@ -6,13 +6,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.math.BigDecimal;
 
 /** Standardni zahvat iz kataloga i, za održavanje, njegov servisni interval. */
 @Entity
 public class WorkDefinition {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
   private String name;
 
@@ -24,10 +25,12 @@ public class WorkDefinition {
 
   private Integer intervalKm;
   private Integer intervalMonths;
+  private BigDecimal minPrice;
+  private BigDecimal maxPrice;
 
   protected WorkDefinition() {}
 
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 
@@ -49,6 +52,14 @@ public class WorkDefinition {
 
   public Integer getIntervalMonths() {
     return intervalMonths;
+  }
+
+  public BigDecimal getMinPrice() {
+    return minPrice;
+  }
+
+  public BigDecimal getMaxPrice() {
+    return maxPrice;
   }
 
   @Override

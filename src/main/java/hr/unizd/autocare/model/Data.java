@@ -1,7 +1,6 @@
 package hr.unizd.autocare.model;
 
 import hr.unizd.autocare.domain.CatalogCategory;
-import hr.unizd.autocare.domain.CostSummary;
 import hr.unizd.autocare.domain.VehicleVariant;
 import hr.unizd.autocare.domain.WorkCategory;
 import java.math.BigDecimal;
@@ -14,14 +13,14 @@ public final class Data {
   private Data() {}
 
   public static final class VehicleRow {
-    private final long id;
+    private final int id;
     private final VehicleVariant variant;
     private final int year;
     private final int mileage;
     private final boolean active;
 
     public VehicleRow(
-        long id, VehicleVariant variant, int year, int mileage, boolean active) {
+        int id, VehicleVariant variant, int year, int mileage, boolean active) {
       this.id = id;
       this.variant = variant;
       this.year = year;
@@ -29,7 +28,7 @@ public final class Data {
       this.active = active;
     }
 
-    public long getId() {
+    public int getId() {
       return id;
     }
 
@@ -52,17 +51,17 @@ public final class Data {
 
   /** Podaci uneseni pri dodavanju vozila. */
   public static final class VehicleInput {
-    private final long variantId;
+    private final int variantId;
     private final int year;
     private final int mileage;
 
-    public VehicleInput(long variantId, int year, int mileage) {
+    public VehicleInput(int variantId, int year, int mileage) {
       this.variantId = variantId;
       this.year = year;
       this.mileage = mileage;
     }
 
-    public long getVariantId() {
+    public int getVariantId() {
       return variantId;
     }
 
@@ -76,15 +75,15 @@ public final class Data {
   }
 
   public static final class ItemInput {
-    private final long workId;
+    private final int workId;
     private final BigDecimal actualPrice;
 
-    public ItemInput(long workId, BigDecimal actualPrice) {
+    public ItemInput(int workId, BigDecimal actualPrice) {
       this.workId = workId;
       this.actualPrice = actualPrice;
     }
 
-    public long getWorkId() {
+    public int getWorkId() {
       return workId;
     }
 
@@ -98,14 +97,14 @@ public final class Data {
     private final int mileage;
     private final String note;
     private final List<ItemInput> items;
-    private final List<Long> resolvedProblemIds;
+    private final List<Integer> resolvedProblemIds;
 
     public ServiceInput(
         LocalDate date,
         int mileage,
         String note,
         List<ItemInput> items,
-        List<Long> resolvedProblemIds) {
+        List<Integer> resolvedProblemIds) {
       this.date = date;
       this.mileage = mileage;
       this.note = note;
@@ -129,21 +128,21 @@ public final class Data {
       return items;
     }
 
-    public List<Long> getResolvedProblemIds() {
+    public List<Integer> getResolvedProblemIds() {
       return resolvedProblemIds;
     }
   }
 
   public static final class ServiceRow {
-    private final long id;
+    private final int id;
     private final LocalDate date;
     private final int mileage;
     private final String names;
-    private final CostSummary total;
+    private final BigDecimal total;
     private final String note;
 
     public ServiceRow(
-        long id, LocalDate date, int mileage, String names, CostSummary total, String note) {
+        int id, LocalDate date, int mileage, String names, BigDecimal total, String note) {
       this.id = id;
       this.date = date;
       this.mileage = mileage;
@@ -152,7 +151,7 @@ public final class Data {
       this.note = note;
     }
 
-    public long getId() {
+    public int getId() {
       return id;
     }
 
@@ -168,7 +167,7 @@ public final class Data {
       return names;
     }
 
-    public CostSummary getTotal() {
+    public BigDecimal getTotal() {
       return total;
     }
 
@@ -338,13 +337,13 @@ public final class Data {
 
   public static final class Dashboard {
     private final VehicleRow vehicle;
-    private final CostSummary total;
+    private final BigDecimal total;
     private final long openProblems;
     private final MaintenanceRow nextMaintenance;
 
     public Dashboard(
         VehicleRow vehicle,
-        CostSummary total,
+        BigDecimal total,
         long openProblems,
         MaintenanceRow nextMaintenance) {
       this.vehicle = vehicle;
@@ -357,7 +356,7 @@ public final class Data {
       return vehicle;
     }
 
-    public CostSummary getTotal() {
+    public BigDecimal getTotal() {
       return total;
     }
 

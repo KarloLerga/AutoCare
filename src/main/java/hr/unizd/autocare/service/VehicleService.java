@@ -22,7 +22,7 @@ public final class VehicleService {
     this.entityManagerFactory = entityManagerFactory;
   }
 
-  public List<VehicleRow> list(long ownerId) {
+  public List<VehicleRow> list(int ownerId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
       UserRepository userRepository = new UserRepository(entityManager);
@@ -31,7 +31,7 @@ public final class VehicleService {
       if (user == null) {
         throw new IllegalArgumentException("Korisnik nije pronađen.");
       }
-      Long activeId = null;
+      Integer activeId = null;
       if (user.getActiveVehicle() != null) {
         activeId = user.getActiveVehicle().getId();
       }
@@ -45,7 +45,7 @@ public final class VehicleService {
     }
   }
 
-  public VehicleRow active(long ownerId) {
+  public VehicleRow active(int ownerId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
       UserRepository userRepository = new UserRepository(entityManager);
@@ -64,7 +64,7 @@ public final class VehicleService {
     }
   }
 
-  public void add(long ownerId, VehicleInput input) {
+  public void add(int ownerId, VehicleInput input) {
     if (input == null) {
       throw new IllegalArgumentException("Vozilo je obavezno.");
     }
@@ -100,7 +100,7 @@ public final class VehicleService {
     }
   }
 
-  public void updateMileage(long ownerId, long vehicleId, int mileage) {
+  public void updateMileage(int ownerId, int vehicleId, int mileage) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();
     try {
@@ -121,7 +121,7 @@ public final class VehicleService {
     }
   }
 
-  public void activate(long ownerId, long vehicleId) {
+  public void activate(int ownerId, int vehicleId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();
     try {

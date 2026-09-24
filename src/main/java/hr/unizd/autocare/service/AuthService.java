@@ -15,7 +15,7 @@ public final class AuthService {
     this.entityManagerFactory = entityManagerFactory;
   }
 
-  public long login(String email, String password) {
+  public int login(String email, String password) {
     String cleanEmail = Checks.email(email);
     EntityManager entityManager = entityManagerFactory.createEntityManager();
 
@@ -33,7 +33,7 @@ public final class AuthService {
     }
   }
 
-  public long register(String name, String email, String password) {
+  public int register(String name, String email, String password) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();
 

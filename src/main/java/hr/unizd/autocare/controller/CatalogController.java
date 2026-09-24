@@ -1,6 +1,5 @@
 package hr.unizd.autocare.controller;
 
-import hr.unizd.autocare.app.Session;
 import hr.unizd.autocare.domain.CatalogCategory;
 import hr.unizd.autocare.model.Data.CatalogRow;
 import hr.unizd.autocare.service.CatalogService;
@@ -11,18 +10,14 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Učitava katalog za aktivno vozilo i lokalno filtrira već učitane retke. */
+/** Učitava i filtrira informativni katalog zahvata. */
 public final class CatalogController {
   private final MainFrame frame;
   private final CatalogService catalogService;
-  private final Session session;
-  private final List<CatalogRow> allRows = new ArrayList<>();
-  private long loadedVehicleId = -1L;
 
-  public CatalogController(MainFrame frame, CatalogService catalogService, Session session) {
+  public CatalogController(MainFrame frame, CatalogService catalogService) {
     this.frame = frame;
     this.catalogService = catalogService;
-    this.session = session;
 
     frame.catalog.searchButton.addActionListener(
         new ActionListener() {
@@ -48,26 +43,14 @@ public final class CatalogController {
   }
 
   public void load() {
-    if (session.getActiveVehicle() == null) {
-      return;
-    }
-
     try {
-      long vehicleId = session.getActiveVehicle().getId();
-      if (loadedVehicleId != vehicleId) {
-        allRows.clear();
-        allRows.addAll(
-            catalogService.catalog(session.getActiveVehicle().getVariant().getPriceClass()));
-        loadedVehicleId = vehicleId;
-      }
-
-      filterRows();
+      filterRows(catalogService.catalog());
     } catch (RuntimeException exception) {
       Ui.error(frame.catalog, exception);
     }
   }
 
-  private void filterRows() {
+  private void filterRows(List<CatalogRow> allRows) {
     String search = frame.catalog.search.getText();
     if (search == null) {
       search = "";
@@ -88,11 +71,5 @@ public final class CatalogController {
     }
 
     frame.catalog.setRows(filteredRows);
-  }
-
-  public void clear() {
-    allRows.clear();
-    loadedVehicleId = -1L;
-    frame.catalog.setRows(new ArrayList<CatalogRow>());
   }
 }

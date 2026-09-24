@@ -15,7 +15,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-/** Pretraživi informativni cjenik standardnih zahvata za aktivno vozilo. */
+/** Pretraživi informativni cjenik standardnih zahvata. */
 public final class CatalogView extends JPanel {
   public final JTextField search = new JTextField(24);
   public final JComboBox<String> category = new JComboBox<>();
@@ -51,7 +51,7 @@ public final class CatalogView extends JPanel {
     top.add(Ui.heading("Katalog"));
     top.add(
         Ui.hint(
-            "Informativni rasponi cijena standardnih zahvata za cjenovnu klasu aktivnog vozila."));
+            "Informativni rasponi cijena standardnih zahvata."));
     top.add(
         Ui.row(
             new JLabel("Pretraži:"),

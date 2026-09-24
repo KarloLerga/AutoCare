@@ -191,7 +191,7 @@ public final class ServiceEditorDialog extends JDialog {
   }
 
   public ServiceInput input() {
-    List<Long> resolvedProblemIds = new ArrayList<>();
+    List<Integer> resolvedProblemIds = new ArrayList<>();
     for (int row = 0; row < problemsTableModel.getRowCount(); row++) {
       if (Boolean.TRUE.equals(problemsTableModel.getValueAt(row, 0))) {
         resolvedProblemIds.add(problems.get(row).getId());

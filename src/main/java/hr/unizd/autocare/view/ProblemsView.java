@@ -70,8 +70,8 @@ public final class ProblemsView extends JPanel {
           new Object[] {
             problem.getCategory(),
             problem.getDescription(),
-            Ui.problemStatus(problem.getStatus()),
-            Ui.date(problem.getCreatedAt().toLocalDate())
+            Ui.problemStatus(problem.isResolved()),
+            Ui.date(problem.getCreatedAt())
           });
     }
   }

@@ -17,7 +17,7 @@ import java.util.List;
 public class ServiceRecord {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
   @ManyToOne
   private Vehicle vehicle;
@@ -53,15 +53,15 @@ public class ServiceRecord {
     items.add(new ServiceItem(this, work, actualPrice));
   }
 
-  public CostSummary total() {
-    List<BigDecimal> prices = new ArrayList<>();
+  public BigDecimal total() {
+    BigDecimal total = BigDecimal.ZERO;
     for (ServiceItem serviceItem : items) {
-      prices.add(serviceItem.getActualPrice());
+      total = total.add(serviceItem.getActualPrice());
     }
-    return CostSummary.of(prices);
+    return total;
   }
 
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 

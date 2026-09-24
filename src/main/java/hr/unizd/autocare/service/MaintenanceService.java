@@ -26,7 +26,7 @@ public final class MaintenanceService {
     this.entityManagerFactory = entityManagerFactory;
   }
 
-  public List<MaintenanceRow> list(long ownerId, long vehicleId) {
+  public List<MaintenanceRow> list(int ownerId, int vehicleId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
       VehicleRepository vehicleRepository = new VehicleRepository(entityManager);
@@ -47,9 +47,9 @@ public final class MaintenanceService {
   static List<MaintenanceRow> calculate(
       CatalogRepository catalogRepository,
       ServiceRecordRepository serviceRecordRepository,
-      long ownerId,
+      int ownerId,
       Vehicle vehicle) {
-    Map<Long, ServiceItem> latestItems =
+    Map<Integer, ServiceItem> latestItems =
         latestItems(serviceRecordRepository, ownerId, vehicle.getId());
     MaintenanceCalculator calculator = new MaintenanceCalculator();
     LocalDate today = LocalDate.now();
@@ -90,9 +90,9 @@ public final class MaintenanceService {
     return rows;
   }
 
-  private static Map<Long, ServiceItem> latestItems(
-      ServiceRecordRepository serviceRecordRepository, long ownerId, long vehicleId) {
-    Map<Long, ServiceItem> latest = new HashMap<>();
+  private static Map<Integer, ServiceItem> latestItems(
+      ServiceRecordRepository serviceRecordRepository, int ownerId, int vehicleId) {
+    Map<Integer, ServiceItem> latest = new HashMap<>();
     for (ServiceItem item : serviceRecordRepository.historyItems(ownerId, vehicleId)) {
       if (!latest.containsKey(item.getWork().getId())) {
         latest.put(item.getWork().getId(), item);

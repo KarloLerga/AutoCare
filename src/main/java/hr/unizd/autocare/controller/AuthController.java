@@ -3,7 +3,7 @@ package hr.unizd.autocare.controller;
 import hr.unizd.autocare.domain.Checks;
 import hr.unizd.autocare.service.AuthService;
 import hr.unizd.autocare.view.MainFrame;
-import hr.unizd.autocare.view.OnboardingView;
+import hr.unizd.autocare.view.RegistrationView;
 import hr.unizd.autocare.view.components.Ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,20 +11,20 @@ import java.awt.event.ActionListener;
 /** Prijava i registracija korisničkog računa. */
 public final class AuthController {
   public interface LoginListener {
-    void loggedIn(long ownerId);
+    void loggedIn(int ownerId);
   }
 
   private final MainFrame frame;
   private final AuthService authService;
   private final LoginListener loginListener;
-  private final OnboardingView onboardingView;
+  private final RegistrationView registrationView;
 
   public AuthController(
       MainFrame frame, AuthService authService, LoginListener loginListener) {
     this.frame = frame;
     this.authService = authService;
     this.loginListener = loginListener;
-    onboardingView = frame.onboarding;
+    registrationView = frame.registration;
 
     frame.login.login.addActionListener(
         new ActionListener() {
@@ -42,7 +42,7 @@ public final class AuthController {
           }
         });
 
-    onboardingView.finish.addActionListener(
+    registrationView.finish.addActionListener(
         new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent event) {
@@ -50,7 +50,7 @@ public final class AuthController {
           }
         });
 
-    onboardingView.cancel.addActionListener(
+    registrationView.cancel.addActionListener(
         new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent event) {
@@ -61,7 +61,7 @@ public final class AuthController {
 
   private void login() {
     try {
-      long ownerId =
+      int ownerId =
           authService.login(
               frame.login.email.getText(), new String(frame.login.password.getPassword()));
       frame.login.password.setText("");
@@ -72,31 +72,31 @@ public final class AuthController {
   }
 
   private void openRegistration() {
-    onboardingView.reset();
+    registrationView.reset();
     frame.registration();
   }
 
   private void finishRegistration() {
     try {
-      String password = new String(onboardingView.password.getPassword());
+      String password = new String(registrationView.password.getPassword());
       Checks.password(password);
 
-      if (!password.equals(new String(onboardingView.repeat.getPassword()))) {
+      if (!password.equals(new String(registrationView.repeat.getPassword()))) {
         throw new IllegalArgumentException("Lozinke se ne podudaraju.");
       }
 
-      long ownerId =
+      int ownerId =
           authService.register(
-              onboardingView.name.getText(), onboardingView.email.getText(), password);
-      onboardingView.clearPasswords();
+              registrationView.name.getText(), registrationView.email.getText(), password);
+      registrationView.clearPasswords();
       loginListener.loggedIn(ownerId);
     } catch (RuntimeException exception) {
-      Ui.error(onboardingView, exception);
+      Ui.error(registrationView, exception);
     }
   }
 
   private void cancelRegistration() {
-    onboardingView.clearPasswords();
+    registrationView.clearPasswords();
     frame.auth();
   }
 }

@@ -1,8 +1,6 @@
 package hr.unizd.autocare.view.components;
 
 import hr.unizd.autocare.domain.Checks;
-import hr.unizd.autocare.domain.CostSummary;
-import hr.unizd.autocare.domain.ProblemStatus;
 import hr.unizd.autocare.domain.WorkCategory;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -143,9 +141,6 @@ public final class Ui {
   }
 
   public static String money(BigDecimal value) {
-    if (value == null) {
-      return "Nepoznato";
-    }
     return String.format(Locale.forLanguageTag("hr-HR"), "%,.2f EUR", value);
   }
 
@@ -167,12 +162,8 @@ public final class Ui {
     return "Popravak";
   }
 
-  public static String total(CostSummary summary) {
-    String result = money(summary.getKnownTotal());
-    if (summary.getUnknownCount() > 0) {
-      result += " + " + summary.getUnknownCount() + " nepoznatih";
-    }
-    return result;
+  public static String total(BigDecimal total) {
+    return money(total);
   }
 
   public static String date(LocalDate date) {
@@ -189,11 +180,11 @@ public final class Ui {
     return String.format(Locale.forLanguageTag("hr-HR"), "%,d km", mileage);
   }
 
-  public static String problemStatus(ProblemStatus status) {
-    if (status == ProblemStatus.OPEN) {
-      return "Otvoren";
+  public static String problemStatus(boolean resolved) {
+    if (resolved) {
+      return "Riješen";
     }
-    return "Riješen";
+    return "Otvoren";
   }
 
 

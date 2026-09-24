@@ -2,7 +2,6 @@ package hr.unizd.autocare.controller;
 
 import hr.unizd.autocare.app.Session;
 import hr.unizd.autocare.domain.Problem;
-import hr.unizd.autocare.domain.ProblemStatus;
 import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.domain.WorkDefinition;
 import hr.unizd.autocare.observer.AppEvent;
@@ -84,14 +83,14 @@ public final class ServicesController {
   }
 
   private void create() {
-    long ownerId = session.getOwnerId();
-    long vehicleId = session.getActiveVehicle().getId();
+    int ownerId = session.getOwnerId();
+    int vehicleId = session.getActiveVehicle().getId();
     int currentMileage = session.getActiveVehicle().getMileage();
     try {
       List<WorkDefinition> works = loadEditorWorks();
       List<Problem> openProblems = new ArrayList<>();
       for (Problem problem : problemService.list(ownerId, vehicleId)) {
-        if (problem.getStatus() == ProblemStatus.OPEN) {
+        if (!problem.isResolved()) {
           openProblems.add(problem);
         }
       }
@@ -109,8 +108,8 @@ public final class ServicesController {
   }
 
   private void openEditor(
-      final long ownerId,
-      final long vehicleId,
+      final int ownerId,
+      final int vehicleId,
       int currentMileage,
       List<WorkDefinition> works,
       List<Problem> openProblems) {
