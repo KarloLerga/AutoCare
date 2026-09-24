@@ -6,7 +6,7 @@ import hr.unizd.autocare.model.Data.VehicleRow;
 public final class Session {
   private static Session instance;
 
-  private long ownerId;
+  private int ownerId;
   private VehicleRow activeVehicle;
 
   private Session() {}
@@ -18,7 +18,7 @@ public final class Session {
     return instance;
   }
 
-  public void login(long ownerId) {
+  public void login(int ownerId) {
     this.ownerId = ownerId;
     activeVehicle = null;
   }
@@ -28,7 +28,7 @@ public final class Session {
     activeVehicle = null;
   }
 
-  public long getOwnerId() {
+  public int getOwnerId() {
     return ownerId;
   }
 

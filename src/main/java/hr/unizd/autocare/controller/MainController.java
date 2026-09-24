@@ -50,7 +50,7 @@ public final class MainController implements Observer {
         new ServicesController(
             frame, serviceRecordService, catalogService, problemService, session, subject);
     maintenance = new MaintenanceController(frame, maintenanceService, session);
-    catalog = new CatalogController(frame, catalogService, session);
+    catalog = new CatalogController(frame, catalogService);
     problems = new ProblemsController(frame, problemService, session);
 
     new AuthController(
@@ -58,7 +58,7 @@ public final class MainController implements Observer {
         authService,
         new AuthController.LoginListener() {
           @Override
-          public void loggedIn(long ownerId) {
+          public void loggedIn(int ownerId) {
             enter(ownerId);
           }
         });
@@ -126,7 +126,7 @@ public final class MainController implements Observer {
         });
   }
 
-  private void enter(long ownerId) {
+  private void enter(int ownerId) {
     session.login(ownerId);
     refreshContext(true);
   }
@@ -165,6 +165,10 @@ public final class MainController implements Observer {
       vehicles.load();
       return;
     }
+    if (page.equals("Katalog")) {
+      catalog.load();
+      return;
+    }
     if (session.getActiveVehicle() == null) {
       return;
     }
@@ -175,8 +179,6 @@ public final class MainController implements Observer {
       services.load();
     } else if (page.equals("Održavanje")) {
       maintenance.load();
-    } else if (page.equals("Katalog")) {
-      catalog.load();
     } else if (page.equals("Problemi")) {
       problems.load();
     }
@@ -208,7 +210,6 @@ public final class MainController implements Observer {
     frame.maintenance.setRows(new ArrayList<>());
     frame.catalog.search.setText("");
     frame.catalog.category.setSelectedIndex(0);
-    catalog.clear();
     frame.problems.setRows(new ArrayList<>());
     frame.auth();
   }

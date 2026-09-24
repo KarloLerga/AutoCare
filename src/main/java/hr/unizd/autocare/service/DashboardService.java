@@ -19,7 +19,7 @@ public final class DashboardService {
     this.entityManagerFactory = entityManagerFactory;
   }
 
-  public Dashboard get(long ownerId, long vehicleId) {
+  public Dashboard get(int ownerId, int vehicleId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
       VehicleRepository vehicleRepository = new VehicleRepository(entityManager);

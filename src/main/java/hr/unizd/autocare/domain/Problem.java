@@ -7,14 +7,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 /** Problem koji korisnik primjećuje na vozilu, bez dijagnostike. */
 @Entity
 public class Problem {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
   @ManyToOne
   private Vehicle vehicle;
@@ -24,10 +24,7 @@ public class Problem {
   @Enumerated(EnumType.STRING)
   private ProblemCategory category;
 
-  @Enumerated(EnumType.STRING)
-  private ProblemStatus status;
-
-  private LocalDateTime createdAt;
+  private LocalDate createdAt;
 
   @ManyToOne
   private ServiceRecord resolvedByService;
@@ -38,7 +35,7 @@ public class Problem {
       Vehicle vehicle,
       String description,
       ProblemCategory category,
-      LocalDateTime createdAt) {
+      LocalDate createdAt) {
     if (vehicle == null) {
       throw new IllegalArgumentException("Vozilo je obavezno.");
     }
@@ -54,11 +51,10 @@ public class Problem {
       this.category = category;
     }
     this.createdAt = createdAt;
-    status = ProblemStatus.OPEN;
   }
 
   public void resolve(ServiceRecord serviceRecord) {
-    if (status != ProblemStatus.OPEN) {
+    if (resolvedByService != null) {
       throw new IllegalArgumentException("Problem je već zatvoren.");
     }
     if (serviceRecord == null) {
@@ -69,10 +65,9 @@ public class Problem {
     }
 
     resolvedByService = serviceRecord;
-    status = ProblemStatus.RESOLVED;
   }
 
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 
@@ -84,11 +79,11 @@ public class Problem {
     return category;
   }
 
-  public ProblemStatus getStatus() {
-    return status;
+  public LocalDate getCreatedAt() {
+    return createdAt;
   }
 
-  public LocalDateTime getCreatedAt() {
-    return createdAt;
+  public boolean isResolved() {
+    return resolvedByService != null;
   }
 }

@@ -1,8 +1,6 @@
 package hr.unizd.autocare.domain;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,7 +10,7 @@ import jakarta.persistence.Id;
 public class VehicleVariant {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
   private String make;
   private String model;
@@ -24,8 +22,6 @@ public class VehicleVariant {
   private int yearFrom;
   private Integer yearTo;
 
-  @Enumerated(EnumType.STRING)
-  private VehiclePriceClass priceClass;
 
   protected VehicleVariant() {}
 
@@ -39,7 +35,7 @@ public class VehicleVariant {
     return true;
   }
 
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 
@@ -77,10 +73,6 @@ public class VehicleVariant {
 
   public Integer getYearTo() {
     return yearTo;
-  }
-
-  public VehiclePriceClass getPriceClass() {
-    return priceClass;
   }
 
   @Override

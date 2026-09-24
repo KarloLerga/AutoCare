@@ -26,7 +26,7 @@ public final class UserRepository {
     return users.get(0);
   }
 
-  public AppUser findById(long id) {
+  public AppUser findById(int id) {
     return entityManager.find(AppUser.class, id);
   }
 

@@ -22,7 +22,7 @@ import org.kordamp.ikonli.swing.FontIcon;
 
 public final class MainFrame extends JFrame {
   public final LoginView login = new LoginView();
-  public final OnboardingView onboarding = new OnboardingView();
+  public final RegistrationView registration = new RegistrationView();
   public final DashboardView dashboard = new DashboardView();
   public final VehiclesView vehicles = new VehiclesView();
   public final MaintenanceView maintenance = new MaintenanceView();
@@ -54,7 +54,7 @@ public final class MainFrame extends JFrame {
     setLocationRelativeTo(null);
 
     root.add(login, "LOGIN");
-    root.add(onboarding, "REGISTER");
+    root.add(registration, "REGISTER");
 
     JPanel shell = new JPanel(new BorderLayout());
     JPanel sidebar = Ui.column();
@@ -114,7 +114,7 @@ public final class MainFrame extends JFrame {
 
   public void registration() {
     roots.show(root, "REGISTER");
-    getRootPane().setDefaultButton(onboarding.finish);
+    getRootPane().setDefaultButton(registration.finish);
   }
 
   public void application() {
@@ -150,7 +150,7 @@ public final class MainFrame extends JFrame {
     boolean hasVehicle = vehicle != null;
     dashboardButton.setEnabled(hasVehicle);
     maintenanceButton.setEnabled(hasVehicle);
-    catalogButton.setEnabled(hasVehicle);
+    catalogButton.setEnabled(true);
     servicesButton.setEnabled(hasVehicle);
     problemsButton.setEnabled(hasVehicle);
 

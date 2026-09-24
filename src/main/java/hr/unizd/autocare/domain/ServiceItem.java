@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 public class ServiceItem {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
   @ManyToOne
   private ServiceRecord serviceRecord;

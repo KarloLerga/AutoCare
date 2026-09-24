@@ -9,7 +9,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 /** Jednostavna registracija korisničkog računa. */
-public final class OnboardingView extends JPanel {
+public final class RegistrationView extends JPanel {
   public final JTextField name = new JTextField(25);
   public final JTextField email = new JTextField(25);
   public final JPasswordField password = new JPasswordField(25);
@@ -17,7 +17,7 @@ public final class OnboardingView extends JPanel {
   public final JButton finish = Ui.button("Kreiraj račun");
   public final JButton cancel = Ui.button("Odustani");
 
-  public OnboardingView() {
+  public RegistrationView() {
     super(new GridBagLayout());
 
     JPanel card = Ui.card();

@@ -8,7 +8,7 @@ import hr.unizd.autocare.repository.VehicleRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 /** Problemi koje vlasnik bilježi bez automatske dijagnostike. */
@@ -19,7 +19,7 @@ public final class ProblemService {
     this.entityManagerFactory = entityManagerFactory;
   }
 
-  public List<Problem> list(long ownerId, long vehicleId) {
+  public List<Problem> list(int ownerId, int vehicleId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
       VehicleRepository vehicleRepository = new VehicleRepository(entityManager);
@@ -32,7 +32,7 @@ public final class ProblemService {
     }
   }
 
-  public void create(long ownerId, long vehicleId, String description, ProblemCategory category) {
+  public void create(int ownerId, int vehicleId, String description, ProblemCategory category) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();
     try {
@@ -41,7 +41,7 @@ public final class ProblemService {
       if (vehicle == null) {
         throw new IllegalArgumentException("Vozilo nije pronađeno.");
       }
-      Problem problem = new Problem(vehicle, description, category, LocalDateTime.now());
+      Problem problem = new Problem(vehicle, description, category, LocalDate.now());
       new ProblemRepository(entityManager).add(problem);
       transaction.commit();
     } catch (RuntimeException exception) {

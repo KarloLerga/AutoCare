@@ -30,7 +30,7 @@ public final class ServiceRecordService {
     this.entityManagerFactory = entityManagerFactory;
   }
 
-  public void create(long ownerId, long vehicleId, ServiceInput input) {
+  public void create(int ownerId, int vehicleId, ServiceInput input) {
     validate(input);
 
     EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -85,8 +85,8 @@ public final class ServiceRecordService {
       ProblemRepository problemRepository,
       Vehicle vehicle,
       ServiceRecord serviceRecord,
-      List<Long> problemIds) {
-    for (Long problemId : problemIds) {
+      List<Integer> problemIds) {
+    for (Integer problemId : problemIds) {
       Problem problem = problemRepository.findForOwner(vehicle.getOwner().getId(), problemId);
       if (problem == null) {
         throw new IllegalArgumentException("Problem nije pronađen.");
@@ -115,7 +115,7 @@ public final class ServiceRecordService {
     }
   }
 
-  public List<ServiceRow> list(long ownerId, long vehicleId) {
+  public List<ServiceRow> list(int ownerId, int vehicleId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
 
     try {
@@ -130,7 +130,7 @@ public final class ServiceRecordService {
     }
   }
 
-  public ServiceDetail detail(long ownerId, long serviceId) {
+  public ServiceDetail detail(int ownerId, int serviceId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
 
     try {

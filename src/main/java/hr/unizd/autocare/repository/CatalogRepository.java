@@ -1,17 +1,15 @@
 package hr.unizd.autocare.repository;
 
-import hr.unizd.autocare.domain.VehiclePriceClass;
 import hr.unizd.autocare.domain.VehicleVariant;
 import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.domain.WorkDefinition;
-import hr.unizd.autocare.domain.WorkPriceRange;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/** JPA dohvat kataloga vozila, zahvata i cijena. */
+/** JPA dohvat kataloga vozila i standardnih zahvata. */
 public final class CatalogRepository {
   private final EntityManager entityManager;
 
@@ -82,7 +80,7 @@ public final class CatalogRepository {
         .getResultList();
   }
 
-  public VehicleVariant findVariant(long id) {
+  public VehicleVariant findVariant(int id) {
     return entityManager.find(VehicleVariant.class, id);
   }
 
@@ -95,18 +93,15 @@ public final class CatalogRepository {
         .getResultList();
   }
 
-  public WorkDefinition findWork(long id) {
-    return entityManager.find(WorkDefinition.class, id);
-  }
-
-  public List<WorkPriceRange> priceRanges(VehiclePriceClass priceClass) {
+  public List<WorkDefinition> allWorks() {
     return entityManager
         .createQuery(
-            "select price from WorkPriceRange price "
-                + "where price.priceClass=:priceClass "
-                + "order by price.work.catalogCategory,price.work.name",
-            WorkPriceRange.class)
-        .setParameter("priceClass", priceClass)
+            "select work from WorkDefinition work order by work.catalogCategory,work.name",
+            WorkDefinition.class)
         .getResultList();
+  }
+
+  public WorkDefinition findWork(int id) {
+    return entityManager.find(WorkDefinition.class, id);
   }
 }

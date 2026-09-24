@@ -1,6 +1,5 @@
 package hr.unizd.autocare.repository;
 
-import hr.unizd.autocare.domain.CostSummary;
 import hr.unizd.autocare.domain.ServiceItem;
 import hr.unizd.autocare.domain.ServiceRecord;
 import jakarta.persistence.EntityManager;
@@ -19,7 +18,7 @@ public final class ServiceRecordRepository {
     entityManager.persist(serviceRecord);
   }
 
-  public List<ServiceRecord> list(long ownerId, long vehicleId) {
+  public List<ServiceRecord> list(int ownerId, int vehicleId) {
     return entityManager
         .createQuery(
             "select serviceRecord from ServiceRecord serviceRecord "
@@ -33,7 +32,7 @@ public final class ServiceRecordRepository {
         .getResultList();
   }
 
-  public ServiceRecord findForOwner(long ownerId, long serviceId) {
+  public ServiceRecord findForOwner(int ownerId, int serviceId) {
     List<ServiceRecord> serviceRecords =
         entityManager
             .createQuery(
@@ -52,7 +51,7 @@ public final class ServiceRecordRepository {
     return serviceRecords.get(0);
   }
 
-  public List<ServiceItem> historyItems(long ownerId, long vehicleId) {
+  public List<ServiceItem> historyItems(int ownerId, int vehicleId) {
     return entityManager
         .createQuery(
             "select serviceItem from ServiceItem serviceItem "
@@ -67,18 +66,21 @@ public final class ServiceRecordRepository {
         .getResultList();
   }
 
-  public CostSummary total(long ownerId, long vehicleId) {
-    List<BigDecimal> prices =
+  public BigDecimal total(int ownerId, int vehicleId) {
+    BigDecimal total =
         entityManager
             .createQuery(
-                "select serviceItem.actualPrice from ServiceItem serviceItem "
+                "select sum(serviceItem.actualPrice) from ServiceItem serviceItem "
                     + "where serviceItem.serviceRecord.vehicle.owner.id=:ownerId "
                     + "and serviceItem.serviceRecord.vehicle.id=:vehicleId",
                 BigDecimal.class)
             .setParameter("ownerId", ownerId)
             .setParameter("vehicleId", vehicleId)
-            .getResultList();
+            .getSingleResult();
 
-    return CostSummary.of(prices);
+    if (total == null) {
+      return BigDecimal.ZERO;
+    }
+    return total;
   }
 }

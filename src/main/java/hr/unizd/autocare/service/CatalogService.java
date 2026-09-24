@@ -1,10 +1,8 @@
 package hr.unizd.autocare.service;
 
-import hr.unizd.autocare.domain.VehiclePriceClass;
 import hr.unizd.autocare.domain.VehicleVariant;
 import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.domain.WorkDefinition;
-import hr.unizd.autocare.domain.WorkPriceRange;
 import hr.unizd.autocare.model.Data.CatalogRow;
 import hr.unizd.autocare.repository.CatalogRepository;
 import jakarta.persistence.EntityManager;
@@ -12,7 +10,7 @@ import jakarta.persistence.EntityManagerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Čitanje kataloga vozila, zahvata i informativnih raspona cijena. */
+/** Čitanje kataloga vozila i standardnih zahvata. */
 public final class CatalogService {
   private final EntityManagerFactory entityManagerFactory;
 
@@ -65,22 +63,18 @@ public final class CatalogService {
     }
   }
 
-  public List<CatalogRow> catalog(VehiclePriceClass priceClass) {
+  public List<CatalogRow> catalog() {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
       List<CatalogRow> rows = new ArrayList<>();
-      CatalogRepository repository = new CatalogRepository(entityManager);
-      List<WorkPriceRange> prices = repository.priceRanges(priceClass);
-
-      for (WorkPriceRange price : prices) {
-        WorkDefinition work = price.getWork();
+      for (WorkDefinition work : new CatalogRepository(entityManager).allWorks()) {
         rows.add(
             new CatalogRow(
                 work.getName(),
                 work.getCatalogCategory(),
                 work.getCategory(),
-                price.getMinPrice(),
-                price.getMaxPrice(),
+                work.getMinPrice(),
+                work.getMaxPrice(),
                 work.getIntervalKm(),
                 work.getIntervalMonths()));
       }

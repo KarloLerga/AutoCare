@@ -11,7 +11,7 @@ import jakarta.persistence.ManyToOne;
 public class Vehicle {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Integer id;
 
   @ManyToOne
   private AppUser owner;
@@ -49,7 +49,7 @@ public class Vehicle {
     currentMileage = mileage;
   }
 
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 

@@ -1,7 +1,6 @@
 package hr.unizd.autocare.repository;
 
 import hr.unizd.autocare.domain.Problem;
-import hr.unizd.autocare.domain.ProblemStatus;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 
@@ -17,7 +16,7 @@ public final class ProblemRepository {
     entityManager.persist(problem);
   }
 
-  public Problem findForOwner(long ownerId, long problemId) {
+  public Problem findForOwner(int ownerId, int problemId) {
     List<Problem> problems =
         entityManager
             .createQuery(
@@ -35,7 +34,7 @@ public final class ProblemRepository {
     return problems.get(0);
   }
 
-  public List<Problem> list(long ownerId, long vehicleId) {
+  public List<Problem> list(int ownerId, int vehicleId) {
     return entityManager
         .createQuery(
             "select problem from Problem problem "
@@ -48,7 +47,7 @@ public final class ProblemRepository {
         .getResultList();
   }
 
-  public List<String> resolvedDescriptions(long ownerId, long serviceId) {
+  public List<String> resolvedDescriptions(int ownerId, int serviceId) {
     return entityManager
         .createQuery(
             "select problem.description from Problem problem "
@@ -60,16 +59,16 @@ public final class ProblemRepository {
         .getResultList();
   }
 
-  public long openCount(long ownerId, long vehicleId) {
+  public long openCount(int ownerId, int vehicleId) {
     return entityManager
         .createQuery(
             "select count(problem) from Problem problem "
                 + "where problem.vehicle.owner.id=:ownerId "
-                + "and problem.vehicle.id=:vehicleId and problem.status=:status",
+                + "and problem.vehicle.id=:vehicleId "
+                + "and problem.resolvedByService is null",
             Long.class)
         .setParameter("ownerId", ownerId)
         .setParameter("vehicleId", vehicleId)
-        .setParameter("status", ProblemStatus.OPEN)
         .getSingleResult();
   }
 }

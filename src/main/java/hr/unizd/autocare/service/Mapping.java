@@ -11,7 +11,7 @@ final class Mapping {
   private Mapping() {}
 
 
-  static VehicleRow vehicle(Vehicle vehicle, Long activeVehicleId) {
+  static VehicleRow vehicle(Vehicle vehicle, Integer activeVehicleId) {
     boolean active = false;
     if (activeVehicleId != null && vehicle.getId().equals(activeVehicleId)) {
       active = true;
