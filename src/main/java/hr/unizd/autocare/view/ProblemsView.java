@@ -18,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
 public final class ProblemsView extends JPanel {
   public final JComboBox<ProblemCategory> category = new JComboBox<>(ProblemCategory.values());
   public final JTextArea description = new JTextArea(3, 36);
-  public final JButton add = Ui.button("Spremi problem");
+  public final JButton add = new JButton("Spremi problem");
   public final JTable table;
 
   private final DefaultTableModel tableModel;

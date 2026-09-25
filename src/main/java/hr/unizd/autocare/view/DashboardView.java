@@ -70,7 +70,7 @@ public final class DashboardView extends JPanel {
   }
 
   public void showDashboard(Dashboard dashboard) {
-    total.setText(Ui.total(dashboard.getTotal()));
+    total.setText(Ui.money(dashboard.getTotal()));
 
     MaintenanceRow next = dashboard.getNextMaintenance();
     if (next == null) {
@@ -82,7 +82,7 @@ public final class DashboardView extends JPanel {
     }
 
     problems.setText(Long.toString(dashboard.getOpenProblems()));
-    mileage.setText(Ui.km(dashboard.getVehicle().getMileage()));
+    mileage.setText(Ui.km(dashboard.getVehicle().getCurrentMileage()));
   }
 
   private static String remaining(MaintenanceRow row) {

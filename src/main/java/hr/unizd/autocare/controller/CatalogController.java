@@ -1,7 +1,7 @@
 package hr.unizd.autocare.controller;
 
 import hr.unizd.autocare.domain.CatalogCategory;
-import hr.unizd.autocare.model.Data.CatalogRow;
+import hr.unizd.autocare.domain.WorkDefinition;
 import hr.unizd.autocare.service.CatalogService;
 import hr.unizd.autocare.view.MainFrame;
 import hr.unizd.autocare.view.components.Ui;
@@ -50,7 +50,7 @@ public final class CatalogController {
     }
   }
 
-  private void filterRows(List<CatalogRow> allRows) {
+  private void filterRows(List<WorkDefinition> allWorks) {
     String search = frame.catalog.search.getText();
     if (search == null) {
       search = "";
@@ -58,18 +58,18 @@ public final class CatalogController {
     search = search.trim().toLowerCase();
 
     CatalogCategory selectedCategory = frame.catalog.selectedCategory();
-    List<CatalogRow> filteredRows = new ArrayList<>();
+    List<WorkDefinition> filteredWorks = new ArrayList<>();
 
-    for (CatalogRow row : allRows) {
-      if (selectedCategory != null && row.getCatalogCategory() != selectedCategory) {
+    for (WorkDefinition work : allWorks) {
+      if (selectedCategory != null && work.getCatalogCategory() != selectedCategory) {
         continue;
       }
-      if (!search.isEmpty() && !row.getName().toLowerCase().contains(search)) {
+      if (!search.isEmpty() && !work.getName().toLowerCase().contains(search)) {
         continue;
       }
-      filteredRows.add(row);
+      filteredWorks.add(work);
     }
 
-    frame.catalog.setRows(filteredRows);
+    frame.catalog.setRows(filteredWorks);
   }
 }

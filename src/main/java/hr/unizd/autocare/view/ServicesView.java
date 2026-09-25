@@ -1,6 +1,6 @@
 package hr.unizd.autocare.view;
 
-import hr.unizd.autocare.model.Data.ItemRow;
+import hr.unizd.autocare.domain.ServiceItem;
 import hr.unizd.autocare.model.Data.ServiceDetail;
 import hr.unizd.autocare.model.Data.ServiceRow;
 import hr.unizd.autocare.view.components.Ui;
@@ -18,8 +18,8 @@ import javax.swing.table.DefaultTableModel;
 
 /** Servisna povijest aktivnog vozila. */
 public final class ServicesView extends JPanel {
-  public final JButton add = Ui.button("Novi servis");
-  public final JButton detail = Ui.button("Detalj");
+  public final JButton add = new JButton("Novi servis");
+  public final JButton detail = new JButton("Detalj");
   public final JTable table;
   private final DefaultTableModel tableModel;
   private List<ServiceRow> services = new ArrayList<>();
@@ -30,7 +30,7 @@ public final class ServicesView extends JPanel {
     tableModel =
         new DefaultTableModel(
             new Object[][] {},
-            new String[] {"Datum", "Km", "Radovi", "Poznati trošak", "Napomena"}) {
+            new String[] {"Datum", "Km", "Radovi", "Stvarni trošak", "Napomena"}) {
           @Override
           public boolean isCellEditable(int row, int column) {
             return false;
@@ -41,6 +41,7 @@ public final class ServicesView extends JPanel {
     table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     table.setFillsViewportHeight(true);
     table.getTableHeader().setReorderingAllowed(false);
+
     JPanel top = Ui.column();
     top.add(Ui.heading("Servisna povijest"));
     top.add(Ui.row(add, detail));
@@ -57,7 +58,7 @@ public final class ServicesView extends JPanel {
             Ui.date(service.getDate()),
             service.getMileage(),
             service.getNames(),
-            Ui.total(service.getTotal()),
+            Ui.money(service.getTotal()),
             service.getNote()
           });
     }
@@ -76,11 +77,11 @@ public final class ServicesView extends JPanel {
     text += " / " + Ui.km(detail.getHeader().getMileage());
     text += "\n\n";
 
-    for (ItemRow item : detail.getItems()) {
-      text += item.getName() + ": " + Ui.money(item.getActualPrice()) + "\n";
+    for (ServiceItem item : detail.getItems()) {
+      text += item.getWork().getName() + ": " + Ui.money(item.getActualPrice()) + "\n";
     }
 
-    text += "\nUkupno: " + Ui.total(detail.getHeader().getTotal());
+    text += "\nUkupno: " + Ui.money(detail.getHeader().getTotal());
     text += "\nNapomena: ";
 
     String note = detail.getHeader().getNote();

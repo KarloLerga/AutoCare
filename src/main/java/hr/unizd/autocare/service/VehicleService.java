@@ -3,15 +3,12 @@ package hr.unizd.autocare.service;
 import hr.unizd.autocare.domain.AppUser;
 import hr.unizd.autocare.domain.Vehicle;
 import hr.unizd.autocare.domain.VehicleVariant;
-import hr.unizd.autocare.model.Data.VehicleInput;
-import hr.unizd.autocare.model.Data.VehicleRow;
 import hr.unizd.autocare.repository.CatalogRepository;
 import hr.unizd.autocare.repository.UserRepository;
 import hr.unizd.autocare.repository.VehicleRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
-import java.util.ArrayList;
 import java.util.List;
 
 /** Upravljanje vozilima; identitet se stvara jednom, a kasnije se mijenja samo kilometraža. */
@@ -22,30 +19,7 @@ public final class VehicleService {
     this.entityManagerFactory = entityManagerFactory;
   }
 
-  public List<VehicleRow> list(int ownerId) {
-    EntityManager entityManager = entityManagerFactory.createEntityManager();
-    try {
-      UserRepository userRepository = new UserRepository(entityManager);
-      VehicleRepository vehicleRepository = new VehicleRepository(entityManager);
-      AppUser user = userRepository.findById(ownerId);
-      if (user == null) {
-        throw new IllegalArgumentException("Korisnik nije pronađen.");
-      }
-      Integer activeId = null;
-      if (user.getActiveVehicle() != null) {
-        activeId = user.getActiveVehicle().getId();
-      }
-      List<VehicleRow> rows = new ArrayList<>();
-      for (Vehicle vehicle : vehicleRepository.findAllForOwner(ownerId)) {
-        rows.add(Mapping.vehicle(vehicle, activeId));
-      }
-      return rows;
-    } finally {
-      entityManager.close();
-    }
-  }
-
-  public VehicleRow active(int ownerId) {
+  public List<Vehicle> list(int ownerId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
       UserRepository userRepository = new UserRepository(entityManager);
@@ -53,22 +27,27 @@ public final class VehicleService {
       if (user == null) {
         throw new IllegalArgumentException("Korisnik nije pronađen.");
       }
-      if (user.getActiveVehicle() == null) {
-        return null;
-      }
-
-      Vehicle vehicle = user.getActiveVehicle();
-      return Mapping.vehicle(vehicle, vehicle.getId());
+      return new VehicleRepository(entityManager).findAllForOwner(ownerId);
     } finally {
       entityManager.close();
     }
   }
 
-  public void add(int ownerId, VehicleInput input) {
-    if (input == null) {
-      throw new IllegalArgumentException("Vozilo je obavezno.");
+  public Vehicle active(int ownerId) {
+    EntityManager entityManager = entityManagerFactory.createEntityManager();
+    try {
+      UserRepository userRepository = new UserRepository(entityManager);
+      AppUser user = userRepository.findById(ownerId);
+      if (user == null) {
+        throw new IllegalArgumentException("Korisnik nije pronađen.");
+      }
+      return user.getActiveVehicle();
+    } finally {
+      entityManager.close();
     }
+  }
 
+  public void add(int ownerId, int variantId, int year, int mileage) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();
     try {
@@ -76,15 +55,18 @@ public final class VehicleService {
       UserRepository userRepository = new UserRepository(entityManager);
       VehicleRepository vehicleRepository = new VehicleRepository(entityManager);
       CatalogRepository catalogRepository = new CatalogRepository(entityManager);
+
       AppUser user = userRepository.findById(ownerId);
       if (user == null) {
         throw new IllegalArgumentException("Korisnik nije pronađen.");
       }
-      VehicleVariant variant = catalogRepository.findVariant(input.getVariantId());
+
+      VehicleVariant variant = catalogRepository.findVariant(variantId);
       if (variant == null) {
         throw new IllegalArgumentException("Odaberite postojeću varijantu vozila.");
       }
-      Vehicle vehicle = new Vehicle(user, variant, input.getYear(), input.getMileage());
+
+      Vehicle vehicle = new Vehicle(user, variant, year, mileage);
       vehicleRepository.add(vehicle);
       if (user.getActiveVehicle() == null) {
         user.activate(vehicle);
@@ -147,5 +129,4 @@ public final class VehicleService {
       entityManager.close();
     }
   }
-
 }

@@ -1,79 +1,17 @@
 package hr.unizd.autocare.model;
 
-import hr.unizd.autocare.domain.CatalogCategory;
-import hr.unizd.autocare.domain.VehicleVariant;
-import hr.unizd.autocare.domain.WorkCategory;
+import hr.unizd.autocare.domain.ServiceItem;
+import hr.unizd.autocare.domain.Vehicle;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Jednostavni podaci koji nisu zasebni domenski entiteti. */
+/** Jednostavni pomoćni podaci koji nisu zasebni domenski entiteti. */
 public final class Data {
   private Data() {}
 
-  public static final class VehicleRow {
-    private final int id;
-    private final VehicleVariant variant;
-    private final int year;
-    private final int mileage;
-    private final boolean active;
-
-    public VehicleRow(
-        int id, VehicleVariant variant, int year, int mileage, boolean active) {
-      this.id = id;
-      this.variant = variant;
-      this.year = year;
-      this.mileage = mileage;
-      this.active = active;
-    }
-
-    public int getId() {
-      return id;
-    }
-
-    public VehicleVariant getVariant() {
-      return variant;
-    }
-
-    public int getYear() {
-      return year;
-    }
-
-    public int getMileage() {
-      return mileage;
-    }
-
-    public boolean getActive() {
-      return active;
-    }
-  }
-
-  /** Podaci uneseni pri dodavanju vozila. */
-  public static final class VehicleInput {
-    private final int variantId;
-    private final int year;
-    private final int mileage;
-
-    public VehicleInput(int variantId, int year, int mileage) {
-      this.variantId = variantId;
-      this.year = year;
-      this.mileage = mileage;
-    }
-
-    public int getVariantId() {
-      return variantId;
-    }
-
-    public int getYear() {
-      return year;
-    }
-
-    public int getMileage() {
-      return mileage;
-    }
-  }
-
+  /** Jedna stavka unesena u formi novog servisa. */
   public static final class ItemInput {
     private final int workId;
     private final BigDecimal actualPrice;
@@ -92,6 +30,7 @@ public final class Data {
     }
   }
 
+  /** Podaci forme za spremanje novog servisa. */
   public static final class ServiceInput {
     private final LocalDate date;
     private final int mileage;
@@ -133,6 +72,7 @@ public final class Data {
     }
   }
 
+  /** Redak servisne povijesti s pripremljenim nazivima radova i ukupnim troškom. */
   public static final class ServiceRow {
     private final int id;
     private final LocalDate date;
@@ -176,30 +116,14 @@ public final class Data {
     }
   }
 
-  public static final class ItemRow {
-    private final String name;
-    private final BigDecimal actualPrice;
-
-    public ItemRow(String name, BigDecimal actualPrice) {
-      this.name = name;
-      this.actualPrice = actualPrice;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public BigDecimal getActualPrice() {
-      return actualPrice;
-    }
-  }
-
+  /** Detalj servisa koji sadrži redak servisa, njegove stavke i riješene probleme. */
   public static final class ServiceDetail {
     private final ServiceRow header;
-    private final List<ItemRow> items;
+    private final List<ServiceItem> items;
     private final List<String> resolvedProblems;
 
-    public ServiceDetail(ServiceRow header, List<ItemRow> items, List<String> resolvedProblems) {
+    public ServiceDetail(
+        ServiceRow header, List<ServiceItem> items, List<String> resolvedProblems) {
       this.header = header;
       this.items = new ArrayList<>(items);
       this.resolvedProblems = new ArrayList<>(resolvedProblems);
@@ -209,7 +133,7 @@ public final class Data {
       return header;
     }
 
-    public List<ItemRow> getItems() {
+    public List<ServiceItem> getItems() {
       return items;
     }
 
@@ -218,6 +142,7 @@ public final class Data {
     }
   }
 
+  /** Izračunati podaci jednog praćenog održavanja. */
   public static final class MaintenanceRow {
     private final String name;
     private final LocalDate lastDate;
@@ -280,69 +205,15 @@ public final class Data {
     }
   }
 
-  public static final class CatalogRow {
-    private final String name;
-    private final CatalogCategory catalogCategory;
-    private final WorkCategory workCategory;
-    private final BigDecimal minPrice;
-    private final BigDecimal maxPrice;
-    private final Integer intervalKm;
-    private final Integer intervalMonths;
-
-    public CatalogRow(
-        String name,
-        CatalogCategory catalogCategory,
-        WorkCategory workCategory,
-        BigDecimal minPrice,
-        BigDecimal maxPrice,
-        Integer intervalKm,
-        Integer intervalMonths) {
-      this.name = name;
-      this.catalogCategory = catalogCategory;
-      this.workCategory = workCategory;
-      this.minPrice = minPrice;
-      this.maxPrice = maxPrice;
-      this.intervalKm = intervalKm;
-      this.intervalMonths = intervalMonths;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public CatalogCategory getCatalogCategory() {
-      return catalogCategory;
-    }
-
-    public WorkCategory getWorkCategory() {
-      return workCategory;
-    }
-
-    public BigDecimal getMinPrice() {
-      return minPrice;
-    }
-
-    public BigDecimal getMaxPrice() {
-      return maxPrice;
-    }
-
-    public Integer getIntervalKm() {
-      return intervalKm;
-    }
-
-    public Integer getIntervalMonths() {
-      return intervalMonths;
-    }
-  }
-
+  /** Podaci koje Dashboard prikazuje za aktivno vozilo. */
   public static final class Dashboard {
-    private final VehicleRow vehicle;
+    private final Vehicle vehicle;
     private final BigDecimal total;
     private final long openProblems;
     private final MaintenanceRow nextMaintenance;
 
     public Dashboard(
-        VehicleRow vehicle,
+        Vehicle vehicle,
         BigDecimal total,
         long openProblems,
         MaintenanceRow nextMaintenance) {
@@ -352,7 +223,7 @@ public final class Data {
       this.nextMaintenance = nextMaintenance;
     }
 
-    public VehicleRow getVehicle() {
+    public Vehicle getVehicle() {
       return vehicle;
     }
 

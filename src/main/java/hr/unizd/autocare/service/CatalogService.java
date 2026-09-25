@@ -3,11 +3,9 @@ package hr.unizd.autocare.service;
 import hr.unizd.autocare.domain.VehicleVariant;
 import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.domain.WorkDefinition;
-import hr.unizd.autocare.model.Data.CatalogRow;
 import hr.unizd.autocare.repository.CatalogRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import java.util.ArrayList;
 import java.util.List;
 
 /** Čitanje kataloga vozila i standardnih zahvata. */
@@ -63,22 +61,10 @@ public final class CatalogService {
     }
   }
 
-  public List<CatalogRow> catalog() {
+  public List<WorkDefinition> catalog() {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
-      List<CatalogRow> rows = new ArrayList<>();
-      for (WorkDefinition work : new CatalogRepository(entityManager).allWorks()) {
-        rows.add(
-            new CatalogRow(
-                work.getName(),
-                work.getCatalogCategory(),
-                work.getCategory(),
-                work.getMinPrice(),
-                work.getMaxPrice(),
-                work.getIntervalKm(),
-                work.getIntervalMonths()));
-      }
-      return rows;
+      return new CatalogRepository(entityManager).allWorks();
     } finally {
       entityManager.close();
     }

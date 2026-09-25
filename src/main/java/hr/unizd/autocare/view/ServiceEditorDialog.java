@@ -33,10 +33,10 @@ public final class ServiceEditorDialog extends JDialog {
   public final JComboBox<String> type = new JComboBox<>(new String[] {"Održavanje", "Popravak"});
   public final JComboBox<WorkDefinition> work = new JComboBox<>();
   public final JTextField actualPrice = new JTextField(12);
-  public final JButton addItem = Ui.button("Dodaj stavku");
-  public final JButton remove = Ui.button("Ukloni odabranu stavku");
-  public final JButton save = Ui.button("Spremi servis");
-  public final JButton cancel = Ui.button("Odustani");
+  public final JButton addItem = new JButton("Dodaj stavku");
+  public final JButton remove = new JButton("Ukloni odabranu stavku");
+  public final JButton save = new JButton("Spremi servis");
+  public final JButton cancel = new JButton("Odustani");
   public final JTable itemTable;
 
   private final List<Problem> problems;
