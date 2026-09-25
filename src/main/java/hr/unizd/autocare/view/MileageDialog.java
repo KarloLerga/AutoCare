@@ -11,8 +11,8 @@ import javax.swing.JTextField;
 
 public final class MileageDialog extends JDialog {
   public final JTextField mileage;
-  public final JButton save = Ui.button("Spremi");
-  public final JButton cancel = Ui.button("Odustani");
+  public final JButton save = new JButton("Spremi");
+  public final JButton cancel = new JButton("Odustani");
 
   public MileageDialog(Window owner, int currentMileage) {
     super(owner, "Promijeni kilometražu", ModalityType.APPLICATION_MODAL);

@@ -1,7 +1,6 @@
 package hr.unizd.autocare.view.components;
 
 import hr.unizd.autocare.domain.VehicleVariant;
-import hr.unizd.autocare.model.Data.VehicleInput;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.List;
@@ -44,18 +43,16 @@ public final class VehicleForm extends JPanel {
     variant.setMaximumRowCount(18);
   }
 
-  public VehicleInput input() {
-    VehicleVariant selected = selectedVariant();
-    if (selected == null) {
-      throw new IllegalArgumentException("Odaberite točnu varijantu vozila.");
-    }
-
+  public int getSelectedYear() {
     Integer selectedYear = (Integer) year.getSelectedItem();
     if (selectedYear == null) {
       throw new IllegalArgumentException("Odaberite godinu proizvodnje.");
     }
+    return selectedYear;
+  }
 
-    return new VehicleInput(selected.getId(), selectedYear, Ui.mileage(mileage));
+  public int getMileage() {
+    return Ui.mileage(mileage);
   }
 
   public void setMakes(List<String> values) {

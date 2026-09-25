@@ -1,6 +1,6 @@
 package hr.unizd.autocare.view;
 
-import hr.unizd.autocare.model.Data.VehicleRow;
+import hr.unizd.autocare.domain.Vehicle;
 import hr.unizd.autocare.view.components.Ui;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
@@ -14,12 +14,12 @@ import javax.swing.table.DefaultTableModel;
 
 /** Upravljanje vozilima; jedino mjesto promjene aktivnog vozila. */
 public final class VehiclesView extends JPanel {
-  public final JButton add = Ui.button("Dodaj vozilo");
-  public final JButton edit = Ui.button("Promijeni kilometražu");
-  public final JButton activate = Ui.button("Aktiviraj");
+  public final JButton add = new JButton("Dodaj vozilo");
+  public final JButton edit = new JButton("Promijeni kilometražu");
+  public final JButton activate = new JButton("Aktiviraj");
   public final JTable table;
   private final DefaultTableModel tableModel;
-  private List<VehicleRow> vehicles = new ArrayList<>();
+  private List<Vehicle> vehicles = new ArrayList<>();
 
   public VehiclesView() {
     super(new BorderLayout(12, 12));
@@ -42,27 +42,28 @@ public final class VehiclesView extends JPanel {
     add(new JScrollPane(table), BorderLayout.CENTER);
   }
 
-  public void setRows(List<VehicleRow> values) {
+  public void setRows(List<Vehicle> values, Integer activeVehicleId) {
     vehicles = new ArrayList<>(values);
     tableModel.setRowCount(0);
-    for (VehicleRow vehicle : vehicles) {
+
+    for (Vehicle vehicle : vehicles) {
       String active = "";
-      if (vehicle.getActive()) {
+      if (activeVehicleId != null && vehicle.getId().equals(activeVehicleId)) {
         active = "Da";
       }
 
       tableModel.addRow(
           new Object[] {
             vehicle.getVariant().getMake() + " " + vehicle.getVariant().getModel(),
-            vehicle.getYear(),
+            vehicle.getProductionYear(),
             vehicle.getVariant().getEngineLabel(),
-            Ui.km(vehicle.getMileage()),
+            Ui.km(vehicle.getCurrentMileage()),
             active
           });
     }
   }
 
-  public VehicleRow selected() {
+  public Vehicle selected() {
     int selectedRow = table.getSelectedRow();
     if (selectedRow < 0) {
       return null;

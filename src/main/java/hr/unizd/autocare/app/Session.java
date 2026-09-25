@@ -1,13 +1,13 @@
 package hr.unizd.autocare.app;
 
-import hr.unizd.autocare.model.Data.VehicleRow;
+import hr.unizd.autocare.domain.Vehicle;
 
 /** Singleton koji čuva trenutno prijavljenog korisnika i aktivno vozilo. */
 public final class Session {
   private static Session instance;
 
   private int ownerId;
-  private VehicleRow activeVehicle;
+  private Vehicle activeVehicle;
 
   private Session() {}
 
@@ -32,11 +32,11 @@ public final class Session {
     return ownerId;
   }
 
-  public VehicleRow getActiveVehicle() {
+  public Vehicle getActiveVehicle() {
     return activeVehicle;
   }
 
-  public void setActiveVehicle(VehicleRow activeVehicle) {
+  public void setActiveVehicle(Vehicle activeVehicle) {
     this.activeVehicle = activeVehicle;
   }
 }

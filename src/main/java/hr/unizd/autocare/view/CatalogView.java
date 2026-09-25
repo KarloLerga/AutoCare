@@ -2,7 +2,7 @@ package hr.unizd.autocare.view;
 
 import hr.unizd.autocare.domain.CatalogCategory;
 import hr.unizd.autocare.domain.WorkCategory;
-import hr.unizd.autocare.model.Data.CatalogRow;
+import hr.unizd.autocare.domain.WorkDefinition;
 import hr.unizd.autocare.view.components.Ui;
 import java.awt.BorderLayout;
 import java.util.List;
@@ -19,7 +19,7 @@ import javax.swing.table.DefaultTableModel;
 public final class CatalogView extends JPanel {
   public final JTextField search = new JTextField(24);
   public final JComboBox<String> category = new JComboBox<>();
-  public final JButton searchButton = Ui.button("Pretraži");
+  public final JButton searchButton = new JButton("Pretraži");
   public final JTable table;
 
   private final DefaultTableModel tableModel;
@@ -49,9 +49,7 @@ public final class CatalogView extends JPanel {
 
     JPanel top = Ui.column();
     top.add(Ui.heading("Katalog"));
-    top.add(
-        Ui.hint(
-            "Informativni rasponi cijena standardnih zahvata."));
+    top.add(Ui.hint("Informativni rasponi cijena standardnih zahvata."));
     top.add(
         Ui.row(
             new JLabel("Pretraži:"),
@@ -62,7 +60,8 @@ public final class CatalogView extends JPanel {
     add(top, BorderLayout.NORTH);
     add(new JScrollPane(table), BorderLayout.CENTER);
     add(
-        Ui.hint("Procjena nije dijagnoza niti stvarni račun. Stvarna cijena sprema se tek u Servisima."),
+        Ui.hint(
+            "Procjena nije dijagnoza niti stvarni račun. Stvarna cijena sprema se tek u Servisima."),
         BorderLayout.SOUTH);
   }
 
@@ -74,33 +73,34 @@ public final class CatalogView extends JPanel {
     return CatalogCategory.values()[index - 1];
   }
 
-  public void setRows(List<CatalogRow> rows) {
+  public void setRows(List<WorkDefinition> works) {
     tableModel.setRowCount(0);
-    for (CatalogRow row : rows) {
+    for (WorkDefinition work : works) {
       tableModel.addRow(
           new Object[] {
-            row.getName(),
-            row.getCatalogCategory(),
-            Ui.workCategory(row.getWorkCategory()),
-            Ui.priceRange(row.getMinPrice(), row.getMaxPrice()),
-            interval(row)
+            work.getName(),
+            work.getCatalogCategory(),
+            Ui.workCategory(work.getCategory()),
+            Ui.priceRange(work.getMinPrice(), work.getMaxPrice()),
+            interval(work)
           });
     }
   }
 
-  private static String interval(CatalogRow row) {
-    if (row.getWorkCategory() == WorkCategory.REPAIR) {
+  private static String interval(WorkDefinition work) {
+    if (work.getCategory() == WorkCategory.REPAIR) {
       return "-";
     }
+
     String result = "";
-    if (row.getIntervalKm() != null) {
-      result = Ui.km(row.getIntervalKm());
+    if (work.getIntervalKm() != null) {
+      result = Ui.km(work.getIntervalKm());
     }
-    if (row.getIntervalMonths() != null) {
+    if (work.getIntervalMonths() != null) {
       if (!result.isEmpty()) {
         result += " / ";
       }
-      result += row.getIntervalMonths() + " mj.";
+      result += work.getIntervalMonths() + " mj.";
     }
     if (result.isEmpty()) {
       return "-";

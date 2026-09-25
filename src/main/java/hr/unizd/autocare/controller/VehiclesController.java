@@ -1,7 +1,8 @@
 package hr.unizd.autocare.controller;
 
 import hr.unizd.autocare.app.Session;
-import hr.unizd.autocare.model.Data.VehicleRow;
+import hr.unizd.autocare.domain.Vehicle;
+import hr.unizd.autocare.domain.VehicleVariant;
 import hr.unizd.autocare.observer.AppEvent;
 import hr.unizd.autocare.observer.Subject;
 import hr.unizd.autocare.service.CatalogService;
@@ -58,19 +59,22 @@ public final class VehiclesController {
             activate();
           }
         });
-
   }
 
   public void load() {
     try {
-      frame.vehicles.setRows(vehicleService.list(session.getOwnerId()));
+      Integer activeVehicleId = null;
+      if (session.getActiveVehicle() != null) {
+        activeVehicleId = session.getActiveVehicle().getId();
+      }
+      frame.vehicles.setRows(vehicleService.list(session.getOwnerId()), activeVehicleId);
     } catch (RuntimeException exception) {
       Ui.error(frame.vehicles, exception);
     }
   }
 
-  private VehicleRow selected() {
-    VehicleRow vehicle = frame.vehicles.selected();
+  private Vehicle selected() {
+    Vehicle vehicle = frame.vehicles.selected();
     if (vehicle == null) {
       Ui.info(frame, "Odaberite vozilo.");
     }
@@ -87,7 +91,16 @@ public final class VehiclesController {
           @Override
           public void actionPerformed(ActionEvent event) {
             try {
-              vehicleService.add(session.getOwnerId(), dialog.form.input());
+              VehicleVariant variant = dialog.form.selectedVariant();
+              if (variant == null) {
+                throw new IllegalArgumentException("Odaberite točnu varijantu vozila.");
+              }
+
+              vehicleService.add(
+                  session.getOwnerId(),
+                  variant.getId(),
+                  dialog.form.getSelectedYear(),
+                  dialog.form.getMileage());
               dialog.dispose();
               subject.notifyObservers(AppEvent.VEHICLE_CHANGED);
             } catch (RuntimeException exception) {
@@ -108,12 +121,12 @@ public final class VehiclesController {
   }
 
   private void showMileageEditor() {
-    VehicleRow vehicle = selected();
+    Vehicle vehicle = selected();
     if (vehicle == null) {
       return;
     }
 
-    final MileageDialog dialog = new MileageDialog(frame, vehicle.getMileage());
+    final MileageDialog dialog = new MileageDialog(frame, vehicle.getCurrentMileage());
 
     dialog.save.addActionListener(
         new ActionListener() {
@@ -142,7 +155,7 @@ public final class VehiclesController {
   }
 
   private void activate() {
-    VehicleRow vehicle = selected();
+    Vehicle vehicle = selected();
     if (vehicle == null) {
       return;
     }
@@ -154,5 +167,4 @@ public final class VehiclesController {
       Ui.error(frame, exception);
     }
   }
-
 }

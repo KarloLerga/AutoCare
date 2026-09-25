@@ -15,7 +15,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -75,10 +74,6 @@ public final class Ui {
       label.setForeground(javax.swing.UIManager.getColor("Label.disabledForeground"));
     }
     return label;
-  }
-
-  public static JButton button(String title) {
-    return new JButton(title);
   }
 
   public static JPanel form() {
@@ -160,10 +155,6 @@ public final class Ui {
       return "Održavanje";
     }
     return "Popravak";
-  }
-
-  public static String total(BigDecimal total) {
-    return money(total);
   }
 
   public static String date(LocalDate date) {

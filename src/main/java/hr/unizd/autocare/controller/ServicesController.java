@@ -4,11 +4,10 @@ import hr.unizd.autocare.app.Session;
 import hr.unizd.autocare.domain.Problem;
 import hr.unizd.autocare.domain.WorkCategory;
 import hr.unizd.autocare.domain.WorkDefinition;
+import hr.unizd.autocare.model.Data.ServiceDetail;
+import hr.unizd.autocare.model.Data.ServiceRow;
 import hr.unizd.autocare.observer.AppEvent;
 import hr.unizd.autocare.observer.Subject;
-import hr.unizd.autocare.model.Data.ServiceDetail;
-import hr.unizd.autocare.model.Data.ServiceInput;
-import hr.unizd.autocare.model.Data.ServiceRow;
 import hr.unizd.autocare.service.CatalogService;
 import hr.unizd.autocare.service.ProblemService;
 import hr.unizd.autocare.service.ServiceRecordService;
@@ -42,6 +41,7 @@ public final class ServicesController {
     this.problemService = problemService;
     this.session = session;
     this.subject = subject;
+
     frame.services.add.addActionListener(
         new ActionListener() {
           @Override
@@ -49,6 +49,7 @@ public final class ServicesController {
             create();
           }
         });
+
     frame.services.detail.addActionListener(
         new ActionListener() {
           @Override
@@ -73,6 +74,7 @@ public final class ServicesController {
       Ui.info(frame, "Odaberite servis.");
       return;
     }
+
     try {
       ServiceDetail detail =
           serviceRecordService.detail(session.getOwnerId(), selectedService.getId());
@@ -85,7 +87,8 @@ public final class ServicesController {
   private void create() {
     int ownerId = session.getOwnerId();
     int vehicleId = session.getActiveVehicle().getId();
-    int currentMileage = session.getActiveVehicle().getMileage();
+    int currentMileage = session.getActiveVehicle().getCurrentMileage();
+
     try {
       List<WorkDefinition> works = loadEditorWorks();
       List<Problem> openProblems = new ArrayList<>();
@@ -115,17 +118,62 @@ public final class ServicesController {
       List<Problem> openProblems) {
     final ServiceEditorDialog dialog =
         new ServiceEditorDialog(frame, currentMileage, openProblems);
-    new ServiceEditorController(
-        dialog,
-        works,
-        new ServiceEditorListener() {
+    dialog.setWorks(new ArrayList<>(works));
+
+    dialog.type.addActionListener(
+        new ActionListener() {
           @Override
-          public void saveService(ServiceInput serviceInput) {
-            serviceRecordService.create(ownerId, vehicleId, serviceInput);
-            dialog.dispose();
-            subject.notifyObservers(AppEvent.SERVICE_SAVED);
+          public void actionPerformed(ActionEvent event) {
+            dialog.filterWorks();
           }
         });
+
+    dialog.addItem.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            try {
+              WorkDefinition selected = dialog.selectedWork();
+              if (selected == null) {
+                throw new IllegalArgumentException("Odaberite rad.");
+              }
+              dialog.addWork(selected);
+            } catch (RuntimeException exception) {
+              Ui.error(dialog, exception);
+            }
+          }
+        });
+
+    dialog.remove.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            dialog.removeSelectedItem();
+          }
+        });
+
+    dialog.save.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            try {
+              serviceRecordService.create(ownerId, vehicleId, dialog.input());
+              dialog.dispose();
+              subject.notifyObservers(AppEvent.SERVICE_SAVED);
+            } catch (RuntimeException exception) {
+              Ui.error(dialog, exception);
+            }
+          }
+        });
+
+    dialog.cancel.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent event) {
+            dialog.dispose();
+          }
+        });
+
     dialog.setVisible(true);
   }
 }

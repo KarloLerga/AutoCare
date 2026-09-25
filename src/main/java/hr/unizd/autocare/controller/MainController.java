@@ -1,7 +1,7 @@
 package hr.unizd.autocare.controller;
 
 import hr.unizd.autocare.app.Session;
-import hr.unizd.autocare.model.Data.VehicleRow;
+import hr.unizd.autocare.domain.Vehicle;
 import hr.unizd.autocare.observer.AppEvent;
 import hr.unizd.autocare.observer.Observer;
 import hr.unizd.autocare.observer.Subject;
@@ -137,7 +137,7 @@ public final class MainController implements Observer {
     }
 
     try {
-      VehicleRow activeVehicle = vehicleService.active(session.getOwnerId());
+      Vehicle activeVehicle = vehicleService.active(session.getOwnerId());
       session.setActiveVehicle(activeVehicle);
       frame.context(activeVehicle);
       frame.application();
@@ -205,7 +205,7 @@ public final class MainController implements Observer {
   private void logout() {
     session.logout();
     frame.login.password.setText("");
-    frame.vehicles.setRows(new ArrayList<>());
+    frame.vehicles.setRows(new ArrayList<Vehicle>(), null);
     frame.services.setRows(new ArrayList<>());
     frame.maintenance.setRows(new ArrayList<>());
     frame.catalog.search.setText("");

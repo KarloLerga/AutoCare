@@ -11,8 +11,8 @@ import javax.swing.JPanel;
 
 public final class VehicleDialog extends JDialog {
   public final VehicleForm form = new VehicleForm();
-  public final JButton save = Ui.button("Spremi vozilo");
-  public final JButton cancel = Ui.button("Odustani");
+  public final JButton save = new JButton("Spremi vozilo");
+  public final JButton cancel = new JButton("Odustani");
 
   public VehicleDialog(Window owner) {
     super(owner, "Dodaj vozilo", ModalityType.APPLICATION_MODAL);

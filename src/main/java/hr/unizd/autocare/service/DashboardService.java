@@ -32,20 +32,23 @@ public final class DashboardService {
       if (vehicle == null) {
         throw new IllegalArgumentException("Vozilo nije pronađeno.");
       }
+
       List<MaintenanceRow> maintenance =
           MaintenanceService.calculate(
               catalogRepository,
               serviceRecordRepository,
               ownerId,
               vehicle);
+
       MaintenanceRow next = null;
       for (MaintenanceRow row : maintenance) {
         if (next == null || comesBefore(row, next)) {
           next = row;
         }
       }
+
       return new Dashboard(
-          Mapping.vehicle(vehicle, vehicleId),
+          vehicle,
           serviceRecordRepository.total(ownerId, vehicleId),
           problemRepository.openCount(ownerId, vehicleId),
           next);

@@ -7,7 +7,6 @@ import hr.unizd.autocare.domain.ServiceRecord;
 import hr.unizd.autocare.domain.Vehicle;
 import hr.unizd.autocare.domain.WorkDefinition;
 import hr.unizd.autocare.model.Data.ItemInput;
-import hr.unizd.autocare.model.Data.ItemRow;
 import hr.unizd.autocare.model.Data.ServiceDetail;
 import hr.unizd.autocare.model.Data.ServiceInput;
 import hr.unizd.autocare.model.Data.ServiceRow;
@@ -122,7 +121,7 @@ public final class ServiceRecordService {
       ServiceRecordRepository serviceRecordRepository = new ServiceRecordRepository(entityManager);
       List<ServiceRow> rows = new ArrayList<>();
       for (ServiceRecord serviceRecord : serviceRecordRepository.list(ownerId, vehicleId)) {
-        rows.add(Mapping.service(serviceRecord));
+        rows.add(serviceRow(serviceRecord));
       }
       return rows;
     } finally {
@@ -142,18 +141,35 @@ public final class ServiceRecordService {
         throw new IllegalArgumentException("Servis nije pronađen.");
       }
 
-      List<ItemRow> items = new ArrayList<>();
+      List<ServiceItem> items = new ArrayList<>();
       for (ServiceItem serviceItem : serviceRecord.getItems()) {
-        WorkDefinition work = serviceItem.getWork();
-        items.add(new ItemRow(work.getName(), serviceItem.getActualPrice()));
+        items.add(serviceItem);
       }
 
       return new ServiceDetail(
-          Mapping.service(serviceRecord),
+          serviceRow(serviceRecord),
           items,
           problemRepository.resolvedDescriptions(ownerId, serviceId));
     } finally {
       entityManager.close();
     }
+  }
+
+  private static ServiceRow serviceRow(ServiceRecord serviceRecord) {
+    String names = "";
+    for (ServiceItem serviceItem : serviceRecord.getItems()) {
+      if (!names.isEmpty()) {
+        names += ", ";
+      }
+      names += serviceItem.getWork().getName();
+    }
+
+    return new ServiceRow(
+        serviceRecord.getId(),
+        serviceRecord.getServiceDate(),
+        serviceRecord.getMileage(),
+        names,
+        serviceRecord.total(),
+        serviceRecord.getNote());
   }
 }

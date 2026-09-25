@@ -14,8 +14,8 @@ public final class RegistrationView extends JPanel {
   public final JTextField email = new JTextField(25);
   public final JPasswordField password = new JPasswordField(25);
   public final JPasswordField repeat = new JPasswordField(25);
-  public final JButton finish = Ui.button("Kreiraj račun");
-  public final JButton cancel = Ui.button("Odustani");
+  public final JButton finish = new JButton("Kreiraj račun");
+  public final JButton cancel = new JButton("Odustani");
 
   public RegistrationView() {
     super(new GridBagLayout());

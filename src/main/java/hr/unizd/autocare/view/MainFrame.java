@@ -1,6 +1,6 @@
 package hr.unizd.autocare.view;
 
-import hr.unizd.autocare.model.Data.VehicleRow;
+import hr.unizd.autocare.domain.Vehicle;
 import hr.unizd.autocare.view.components.Ui;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -30,13 +30,13 @@ public final class MainFrame extends JFrame {
   public final ServicesView services = new ServicesView();
   public final ProblemsView problems = new ProblemsView();
 
-  public final JButton dashboardButton = Ui.button("Dashboard");
-  public final JButton vehiclesButton = Ui.button("Vozila");
-  public final JButton maintenanceButton = Ui.button("Održavanje");
-  public final JButton catalogButton = Ui.button("Katalog");
-  public final JButton servicesButton = Ui.button("Servisi");
-  public final JButton problemsButton = Ui.button("Problemi");
-  public final JButton logoutButton = Ui.button("Odjava");
+  public final JButton dashboardButton = new JButton("Dashboard");
+  public final JButton vehiclesButton = new JButton("Vozila");
+  public final JButton maintenanceButton = new JButton("Održavanje");
+  public final JButton catalogButton = new JButton("Katalog");
+  public final JButton servicesButton = new JButton("Servisi");
+  public final JButton problemsButton = new JButton("Problemi");
+  public final JButton logoutButton = new JButton("Odjava");
 
   private final CardLayout roots = new CardLayout();
   private final CardLayout pages = new CardLayout();
@@ -146,7 +146,7 @@ public final class MainFrame extends JFrame {
     return page;
   }
 
-  public void context(VehicleRow vehicle) {
+  public void context(Vehicle vehicle) {
     boolean hasVehicle = vehicle != null;
     dashboardButton.setEnabled(hasVehicle);
     maintenanceButton.setEnabled(hasVehicle);
@@ -163,7 +163,7 @@ public final class MainFrame extends JFrame {
 
     vehicleName.setText(vehicle.getVariant().getMake() + " " + vehicle.getVariant().getModel());
     vehicleDetails.setText(
-        vehicle.getYear() + " / " + Ui.km(vehicle.getMileage()) + " / " + Ui.date(LocalDate.now()));
+        vehicle.getProductionYear() + " / " + Ui.km(vehicle.getCurrentMileage()) + " / " + Ui.date(LocalDate.now()));
     vehicleName.setToolTipText(
         vehicle.getVariant().getGeneration() + " / " + vehicle.getVariant().getEngineLabel());
   }
