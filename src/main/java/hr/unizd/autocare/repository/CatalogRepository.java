@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 /** JPA dohvat kataloga vozila i standardnih zahvata. */
-public final class CatalogRepository {
+public class CatalogRepository {
   private final EntityManager entityManager;
 
   public CatalogRepository(EntityManager entityManager) {
@@ -36,8 +36,7 @@ public final class CatalogRepository {
   }
 
   public List<Integer> years(String make, String model) {
-    List<VehicleVariant> variants =
-        entityManager
+    List<VehicleVariant> variants = entityManager
             .createQuery(
                 "select variant from VehicleVariant variant where variant.make=:make "
                     + "and variant.model=:model order by variant.yearFrom,variant.id",

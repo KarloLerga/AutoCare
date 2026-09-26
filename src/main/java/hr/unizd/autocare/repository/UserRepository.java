@@ -5,7 +5,7 @@ import jakarta.persistence.EntityManager;
 import java.util.List;
 
 /** JPA dohvat i spremanje korisnika. */
-public final class UserRepository {
+public class UserRepository {
   private final EntityManager entityManager;
 
   public UserRepository(EntityManager entityManager) {
@@ -13,8 +13,7 @@ public final class UserRepository {
   }
 
   public AppUser findByEmail(String email) {
-    List<AppUser> users =
-        entityManager
+    List<AppUser> users = entityManager
             .createQuery("select user from AppUser user where user.email=:email", AppUser.class)
             .setParameter("email", email)
             .setMaxResults(1)

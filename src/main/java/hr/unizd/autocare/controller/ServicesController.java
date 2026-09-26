@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** Servisna povijest, detalj servisa i unos novog servisa. */
-public final class ServicesController {
+public class ServicesController {
   private final MainFrame frame;
   private final ServiceRecordService serviceRecordService;
   private final CatalogService catalogService;
@@ -42,27 +42,24 @@ public final class ServicesController {
     this.session = session;
     this.subject = subject;
 
-    frame.services.add.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            create();
-          }
-        });
+    frame.services.add.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        create();
+      }
+    });
 
-    frame.services.detail.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            detail();
-          }
-        });
+    frame.services.detail.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        detail();
+      }
+    });
   }
 
   public void load() {
     try {
-      frame.services.setRows(
-          serviceRecordService.list(session.getOwnerId(), session.getActiveVehicle().getId()));
+      frame.services.setRows(serviceRecordService.list(session.getOwnerId(), session.getActiveVehicle().getId()));
     } catch (RuntimeException exception) {
       Ui.error(frame.services, exception);
     }
@@ -76,8 +73,7 @@ public final class ServicesController {
     }
 
     try {
-      ServiceDetail detail =
-          serviceRecordService.detail(session.getOwnerId(), selectedService.getId());
+      ServiceDetail detail = serviceRecordService.detail(session.getOwnerId(), selectedService.getId());
       frame.services.showServiceDetails(detail);
     } catch (RuntimeException exception) {
       Ui.error(frame, exception);
@@ -104,8 +100,7 @@ public final class ServicesController {
   }
 
   private List<WorkDefinition> loadEditorWorks() {
-    List<WorkDefinition> works =
-        new ArrayList<>(catalogService.works(WorkCategory.MAINTENANCE));
+    List<WorkDefinition> works = new ArrayList<>(catalogService.works(WorkCategory.MAINTENANCE));
     works.addAll(catalogService.works(WorkCategory.REPAIR));
     return works;
   }
@@ -116,63 +111,57 @@ public final class ServicesController {
       int currentMileage,
       List<WorkDefinition> works,
       List<Problem> openProblems) {
-    final ServiceEditorDialog dialog =
-        new ServiceEditorDialog(frame, currentMileage, openProblems);
+    final ServiceEditorDialog dialog = new ServiceEditorDialog(frame, currentMileage, openProblems);
     dialog.setWorks(new ArrayList<>(works));
 
-    dialog.type.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            dialog.filterWorks();
-          }
-        });
+    dialog.type.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        dialog.filterWorks();
+      }
+    });
 
-    dialog.addItem.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            try {
-              WorkDefinition selected = dialog.selectedWork();
-              if (selected == null) {
-                throw new IllegalArgumentException("Odaberite rad.");
-              }
-              dialog.addWork(selected);
-            } catch (RuntimeException exception) {
-              Ui.error(dialog, exception);
-            }
+    dialog.addItem.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        try {
+          WorkDefinition selected = dialog.selectedWork();
+          if (selected == null) {
+            throw new IllegalArgumentException("Odaberite rad.");
           }
-        });
+          dialog.addWork(selected);
+        } catch (RuntimeException exception) {
+          Ui.error(dialog, exception);
+        }
+      }
+    });
 
-    dialog.remove.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            dialog.removeSelectedItem();
-          }
-        });
+    dialog.remove.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        dialog.removeSelectedItem();
+      }
+    });
 
-    dialog.save.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            try {
-              serviceRecordService.create(ownerId, vehicleId, dialog.input());
-              dialog.dispose();
-              subject.notifyObservers(AppEvent.SERVICE_SAVED);
-            } catch (RuntimeException exception) {
-              Ui.error(dialog, exception);
-            }
-          }
-        });
+    dialog.save.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        try {
+          serviceRecordService.create(ownerId, vehicleId, dialog.input());
+          dialog.dispose();
+          subject.notifyObservers(AppEvent.SERVICE_SAVED);
+        } catch (RuntimeException exception) {
+          Ui.error(dialog, exception);
+        }
+      }
+    });
 
-    dialog.cancel.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            dialog.dispose();
-          }
-        });
+    dialog.cancel.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        dialog.dispose();
+      }
+    });
 
     dialog.setVisible(true);
   }

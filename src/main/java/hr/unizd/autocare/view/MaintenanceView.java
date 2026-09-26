@@ -10,7 +10,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /** Pregled održavanja koje se već prati iz stvarne servisne povijesti. */
-public final class MaintenanceView extends JPanel {
+public class MaintenanceView extends JPanel {
   public final JTable table;
 
   private final DefaultTableModel tableModel;
@@ -21,9 +21,7 @@ public final class MaintenanceView extends JPanel {
     tableModel =
         new DefaultTableModel(
             new Object[][] {},
-            new String[] {
-              "Rad", "Zadnji datum", "Zadnji km", "Sljedeći datum", "Sljedeći km"
-            }) {
+            new String[] {"Rad", "Zadnji datum", "Zadnji km", "Sljedeći datum", "Sljedeći km"}) {
           @Override
           public boolean isCellEditable(int row, int column) {
             return false;
@@ -46,8 +44,7 @@ public final class MaintenanceView extends JPanel {
     tableModel.setRowCount(0);
     for (MaintenanceRow row : values) {
       tableModel.addRow(
-          new Object[] {
-            row.getName(),
+          new Object[] {row.getName(),
             Ui.date(row.getLastDate()),
             Ui.km(row.getLastMileage()),
             Ui.date(row.getNextDate()),

@@ -20,7 +20,7 @@ import javax.swing.WindowConstants;
 import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 import org.kordamp.ikonli.swing.FontIcon;
 
-public final class MainFrame extends JFrame {
+public class MainFrame extends JFrame {
   public final LoginView login = new LoginView();
   public final RegistrationView registration = new RegistrationView();
   public final DashboardView dashboard = new DashboardView();
@@ -89,8 +89,7 @@ public final class MainFrame extends JFrame {
     setContentPane(root);
   }
 
-  private void addNavigation(
-      JPanel sidebar, JButton button, JPanel panel, FontAwesomeSolid iconCode) {
+  private void addNavigation(JPanel sidebar, JButton button, JPanel panel, FontAwesomeSolid iconCode) {
     button.setIcon(icon(iconCode, 17));
     button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
     button.setAlignmentX(Component.LEFT_ALIGNMENT);

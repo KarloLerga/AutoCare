@@ -17,7 +17,7 @@ import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 
 /** Servisna povijest aktivnog vozila. */
-public final class ServicesView extends JPanel {
+public class ServicesView extends JPanel {
   public final JButton add = new JButton("Novi servis");
   public final JButton detail = new JButton("Detalj");
   public final JTable table;
@@ -54,8 +54,7 @@ public final class ServicesView extends JPanel {
     tableModel.setRowCount(0);
     for (ServiceRow service : services) {
       tableModel.addRow(
-          new Object[] {
-            Ui.date(service.getDate()),
+          new Object[] {Ui.date(service.getDate()),
             service.getMileage(),
             service.getNames(),
             Ui.money(service.getTotal()),
@@ -100,10 +99,6 @@ public final class ServicesView extends JPanel {
     area.setEditable(false);
     area.setLineWrap(true);
     area.setWrapStyleWord(true);
-    JOptionPane.showMessageDialog(
-        this,
-        new JScrollPane(area),
-        "Detalj servisa",
-        JOptionPane.INFORMATION_MESSAGE);
+    JOptionPane.showMessageDialog(this, new JScrollPane(area), "Detalj servisa", JOptionPane.INFORMATION_MESSAGE);
   }
 }

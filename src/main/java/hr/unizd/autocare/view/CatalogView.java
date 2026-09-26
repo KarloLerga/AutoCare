@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /** Pretraživi informativni cjenik standardnih zahvata. */
-public final class CatalogView extends JPanel {
+public class CatalogView extends JPanel {
   public final JTextField search = new JTextField(24);
   public final JComboBox<String> category = new JComboBox<>();
   public final JButton searchButton = new JButton("Pretraži");
@@ -50,18 +50,11 @@ public final class CatalogView extends JPanel {
     JPanel top = Ui.column();
     top.add(Ui.heading("Katalog"));
     top.add(Ui.hint("Informativni rasponi cijena standardnih zahvata."));
-    top.add(
-        Ui.row(
-            new JLabel("Pretraži:"),
-            search,
-            new JLabel("Kategorija:"),
-            category,
-            searchButton));
+    top.add(Ui.row(new JLabel("Pretraži:"), search, new JLabel("Kategorija:"), category, searchButton));
     add(top, BorderLayout.NORTH);
     add(new JScrollPane(table), BorderLayout.CENTER);
     add(
-        Ui.hint(
-            "Procjena nije dijagnoza niti stvarni račun. Stvarna cijena sprema se tek u Servisima."),
+        Ui.hint("Procjena nije dijagnoza niti stvarni račun. Stvarna cijena sprema se tek u Servisima."),
         BorderLayout.SOUTH);
   }
 
@@ -77,8 +70,7 @@ public final class CatalogView extends JPanel {
     tableModel.setRowCount(0);
     for (WorkDefinition work : works) {
       tableModel.addRow(
-          new Object[] {
-            work.getName(),
+          new Object[] {work.getName(),
             work.getCatalogCategory(),
             Ui.workCategory(work.getCategory()),
             Ui.priceRange(work.getMinPrice(), work.getMaxPrice()),

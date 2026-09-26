@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /** JPA dohvat i spremanje servisne povijesti. */
-public final class ServiceRecordRepository {
+public class ServiceRecordRepository {
   private final EntityManager entityManager;
 
   public ServiceRecordRepository(EntityManager entityManager) {
@@ -33,8 +33,7 @@ public final class ServiceRecordRepository {
   }
 
   public ServiceRecord findForOwner(int ownerId, int serviceId) {
-    List<ServiceRecord> serviceRecords =
-        entityManager
+    List<ServiceRecord> serviceRecords = entityManager
             .createQuery(
                 "select serviceRecord from ServiceRecord serviceRecord "
                     + "where serviceRecord.id=:serviceId "
@@ -67,8 +66,7 @@ public final class ServiceRecordRepository {
   }
 
   public BigDecimal total(int ownerId, int vehicleId) {
-    BigDecimal total =
-        entityManager
+    BigDecimal total = entityManager
             .createQuery(
                 "select sum(serviceItem.actualPrice) from ServiceItem serviceItem "
                     + "where serviceItem.serviceRecord.vehicle.owner.id=:ownerId "

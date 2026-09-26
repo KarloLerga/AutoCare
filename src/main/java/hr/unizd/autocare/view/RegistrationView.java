@@ -9,7 +9,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 /** Jednostavna registracija korisničkog računa. */
-public final class RegistrationView extends JPanel {
+public class RegistrationView extends JPanel {
   public final JTextField name = new JTextField(25);
   public final JTextField email = new JTextField(25);
   public final JPasswordField password = new JPasswordField(25);

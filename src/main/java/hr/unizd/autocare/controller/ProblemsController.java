@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /** Spremanje i prikaz korisnikovih problema za aktivno vozilo. */
-public final class ProblemsController {
+public class ProblemsController {
   private final MainFrame frame;
   private final ProblemService problemService;
   private final Session session;
@@ -18,19 +18,17 @@ public final class ProblemsController {
     this.problemService = problemService;
     this.session = session;
 
-    frame.problems.add.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            save();
-          }
-        });
+    frame.problems.add.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        save();
+      }
+    });
   }
 
   public void load() {
     try {
-      frame.problems.setRows(
-          problemService.list(session.getOwnerId(), session.getActiveVehicle().getId()));
+      frame.problems.setRows(problemService.list(session.getOwnerId(), session.getActiveVehicle().getId()));
     } catch (RuntimeException exception) {
       Ui.error(frame.problems, exception);
     }

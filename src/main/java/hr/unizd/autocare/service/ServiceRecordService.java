@@ -1,6 +1,5 @@
 package hr.unizd.autocare.service;
 
-import hr.unizd.autocare.domain.Checks;
 import hr.unizd.autocare.domain.Problem;
 import hr.unizd.autocare.domain.ServiceItem;
 import hr.unizd.autocare.domain.ServiceRecord;
@@ -22,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** Spremanje i čitanje servisne povijesti. */
-public final class ServiceRecordService {
+public class ServiceRecordService {
   private final EntityManagerFactory entityManagerFactory;
 
   public ServiceRecordService(EntityManagerFactory entityManagerFactory) {
@@ -51,8 +50,7 @@ public final class ServiceRecordService {
         throw new IllegalArgumentException("Servis ne može biti prije godine proizvodnje.");
       }
 
-      ServiceRecord serviceRecord =
-          new ServiceRecord(vehicle, input.getDate(), input.getMileage(), input.getNote());
+      ServiceRecord serviceRecord = new ServiceRecord(vehicle, input.getDate(), input.getMileage(), input.getNote());
 
       for (ItemInput itemInput : input.getItems()) {
         WorkDefinition work = catalogRepository.findWork(itemInput.getWorkId());
@@ -101,16 +99,8 @@ public final class ServiceRecordService {
     if (input.getDate().isAfter(LocalDate.now())) {
       throw new IllegalArgumentException("Datum servisa ne može biti u budućnosti.");
     }
-
-    Checks.mileage(input.getMileage());
-    Checks.optional(input.getNote(), 2000, "Napomena");
-
     if (input.getItems().isEmpty()) {
       throw new IllegalArgumentException("Dodajte barem jednu stavku servisa.");
-    }
-
-    for (ItemInput itemInput : input.getItems()) {
-      Checks.money(itemInput.getActualPrice());
     }
   }
 

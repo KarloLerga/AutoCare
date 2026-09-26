@@ -15,7 +15,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 /** Problemi koje vlasnik želi zapamtiti za mehaničara. */
-public final class ProblemsView extends JPanel {
+public class ProblemsView extends JPanel {
   public final JComboBox<ProblemCategory> category = new JComboBox<>(ProblemCategory.values());
   public final JTextArea description = new JTextArea(3, 36);
   public final JButton add = new JButton("Spremi problem");
@@ -67,8 +67,7 @@ public final class ProblemsView extends JPanel {
     tableModel.setRowCount(0);
     for (Problem problem : values) {
       tableModel.addRow(
-          new Object[] {
-            problem.getCategory(),
+          new Object[] {problem.getCategory(),
             problem.getDescription(),
             Ui.problemStatus(problem.isResolved()),
             Ui.date(problem.getCreatedAt())

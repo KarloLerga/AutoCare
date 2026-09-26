@@ -14,7 +14,7 @@ import hr.unizd.autocare.view.components.Ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public final class VehiclesController {
+public class VehiclesController {
   private final MainFrame frame;
   private final VehicleService vehicleService;
   private final CatalogService catalogService;
@@ -36,29 +36,26 @@ public final class VehiclesController {
   }
 
   private void registerListeners() {
-    frame.vehicles.add.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            showAdd();
-          }
-        });
+    frame.vehicles.add.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        showAdd();
+      }
+    });
 
-    frame.vehicles.edit.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            showMileageEditor();
-          }
-        });
+    frame.vehicles.edit.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        showMileageEditor();
+      }
+    });
 
-    frame.vehicles.activate.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            activate();
-          }
-        });
+    frame.vehicles.activate.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        activate();
+      }
+    });
   }
 
   public void load() {
@@ -86,36 +83,34 @@ public final class VehiclesController {
     VehicleFormController formController = new VehicleFormController(dialog.form, catalogService);
     formController.loadMakes();
 
-    dialog.save.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            try {
-              VehicleVariant variant = dialog.form.selectedVariant();
-              if (variant == null) {
-                throw new IllegalArgumentException("Odaberite točnu varijantu vozila.");
-              }
-
-              vehicleService.add(
-                  session.getOwnerId(),
-                  variant.getId(),
-                  dialog.form.getSelectedYear(),
-                  dialog.form.getMileage());
-              dialog.dispose();
-              subject.notifyObservers(AppEvent.VEHICLE_CHANGED);
-            } catch (RuntimeException exception) {
-              Ui.error(dialog, exception);
-            }
+    dialog.save.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        try {
+          VehicleVariant variant = dialog.form.selectedVariant();
+          if (variant == null) {
+            throw new IllegalArgumentException("Odaberite točnu varijantu vozila.");
           }
-        });
 
-    dialog.cancel.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            dialog.dispose();
-          }
-        });
+          vehicleService.add(
+              session.getOwnerId(),
+              variant.getId(),
+              dialog.form.getSelectedYear(),
+              dialog.form.getMileage());
+          dialog.dispose();
+          subject.notifyObservers(AppEvent.VEHICLE_CHANGED);
+        } catch (RuntimeException exception) {
+          Ui.error(dialog, exception);
+        }
+      }
+    });
+
+    dialog.cancel.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        dialog.dispose();
+      }
+    });
 
     dialog.setVisible(true);
   }
@@ -128,28 +123,25 @@ public final class VehiclesController {
 
     final MileageDialog dialog = new MileageDialog(frame, vehicle.getCurrentMileage());
 
-    dialog.save.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            try {
-              vehicleService.updateMileage(
-                  session.getOwnerId(), vehicle.getId(), Ui.mileage(dialog.mileage));
-              dialog.dispose();
-              subject.notifyObservers(AppEvent.VEHICLE_CHANGED);
-            } catch (RuntimeException exception) {
-              Ui.error(dialog, exception);
-            }
-          }
-        });
+    dialog.save.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        try {
+          vehicleService.updateMileage(session.getOwnerId(), vehicle.getId(), Ui.mileage(dialog.mileage));
+          dialog.dispose();
+          subject.notifyObservers(AppEvent.VEHICLE_CHANGED);
+        } catch (RuntimeException exception) {
+          Ui.error(dialog, exception);
+        }
+      }
+    });
 
-    dialog.cancel.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            dialog.dispose();
-          }
-        });
+    dialog.cancel.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        dialog.dispose();
+      }
+    });
 
     dialog.setVisible(true);
   }

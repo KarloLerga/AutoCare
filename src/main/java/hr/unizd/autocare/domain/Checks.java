@@ -3,7 +3,7 @@ package hr.unizd.autocare.domain;
 import java.math.BigDecimal;
 
 /** Osnovne provjere korisničkog unosa. */
-public final class Checks {
+public class Checks {
   private Checks() {}
 
   public static String text(String value, int max, String label) {

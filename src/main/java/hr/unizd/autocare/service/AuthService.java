@@ -8,7 +8,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 
 /** Registracija i prijava korisnika. */
-public final class AuthService {
+public class AuthService {
   private final EntityManagerFactory entityManagerFactory;
 
   public AuthService(EntityManagerFactory entityManagerFactory) {

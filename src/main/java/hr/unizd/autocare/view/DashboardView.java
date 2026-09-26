@@ -14,7 +14,7 @@ import javax.swing.UIManager;
 import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 import org.kordamp.ikonli.swing.FontIcon;
 
-public final class DashboardView extends JPanel {
+public class DashboardView extends JPanel {
   private final JLabel total = Ui.hint("-");
   private final JLabel maintenance = Ui.hint("-");
   private final JLabel problems = Ui.hint("-");
@@ -34,13 +34,11 @@ public final class DashboardView extends JPanel {
     add(grid, BorderLayout.CENTER);
 
     add(
-        Ui.hint(
-            "Procjene u Katalogu su informativne; stvarni trošak dolazi iz servisne evidencije."),
+        Ui.hint("Procjene u Katalogu su informativne; stvarni trošak dolazi iz servisne evidencije."),
         BorderLayout.SOUTH);
   }
 
-  private static void addCard(
-      JPanel grid, String title, JLabel value, FontAwesomeSolid iconCode) {
+  private static void addCard(JPanel grid, String title, JLabel value, FontAwesomeSolid iconCode) {
     JPanel card = Ui.card();
     JPanel content = new JPanel(new GridLayout(3, 1, 0, 8));
     content.setOpaque(false);
