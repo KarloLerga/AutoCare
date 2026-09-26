@@ -15,7 +15,7 @@
 - [x] Završna dokumentacija opisuje problem, rješenje, UML, ERD, wireframeove i obrasce.
 - [x] Popis vanjskih biblioteka s verzijama i službenim linkovima je priložen.
 - [x] Javadoc HTML je generiran iz izvornog koda.
-- [ ] Git DAG je generiran iz stvarnog završnog repozitorija.
+- [x] Git DAG je generiran iz stvarnog završnog repozitorija.
 - [x] `git diff --check` prolazi nakon svih završnih promjena.
 - [x] `mvnw.cmd --no-transfer-progress clean package` prolazi.
 - [ ] Napravljen je finalni smoke test glavnih GUI tokova.
