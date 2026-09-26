@@ -8,14 +8,31 @@ import java.util.List;
 public class ProblemRepository {
   private final EntityManager entityManager;
 
+  /**
+   * Stvara repozitorij za EntityManager trenutačne operacije.
+   *
+   * @param entityManager EntityManager kojim upravlja pozivajući servis
+   */
   public ProblemRepository(EntityManager entityManager) {
     this.entityManager = entityManager;
   }
 
+  /**
+   * Predaje novi problem persistence kontekstu.
+   *
+   * @param problem problem koji treba spremiti
+   */
   public void add(Problem problem) {
     entityManager.persist(problem);
   }
 
+  /**
+   * Vraća problem samo ako pripada navedenom korisniku; inače vraća {@code null}.
+   *
+   * @param ownerId primarni ključ vlasnika
+   * @param problemId primarni ključ problema
+   * @return problem vlasnika ili {@code null}
+   */
   public Problem findForOwner(int ownerId, int problemId) {
     List<Problem> problems = entityManager
             .createQuery(
@@ -33,6 +50,13 @@ public class ProblemRepository {
     return problems.get(0);
   }
 
+  /**
+   * Vraća probleme vozila poredane od najnovijeg prema najstarijem.
+   *
+   * @param ownerId primarni ključ vlasnika
+   * @param vehicleId primarni ključ vozila
+   * @return evidentirani problemi
+   */
   public List<Problem> list(int ownerId, int vehicleId) {
     return entityManager
         .createQuery(
@@ -46,6 +70,13 @@ public class ProblemRepository {
         .getResultList();
   }
 
+  /**
+   * Vraća opise problema koje je riješio zadani servis.
+   *
+   * @param ownerId primarni ključ vlasnika
+   * @param serviceId primarni ključ servisa
+   * @return opisi povezanih riješenih problema
+   */
   public List<String> resolvedDescriptions(int ownerId, int serviceId) {
     return entityManager
         .createQuery(
@@ -58,6 +89,13 @@ public class ProblemRepository {
         .getResultList();
   }
 
+  /**
+   * Broji neriješene probleme vozila.
+   *
+   * @param ownerId primarni ključ vlasnika
+   * @param vehicleId primarni ključ vozila
+   * @return broj neriješenih problema
+   */
   public long openCount(int ownerId, int vehicleId) {
     return entityManager
         .createQuery(

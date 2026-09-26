@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 
 /** Standardni zahvat iz kataloga i, za održavanje, njegov servisni interval. */
 @Entity
+/** Standardni rad iz kataloga s kategorijom, intervalima i okvirnom cijenom. */
 public class WorkDefinition {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

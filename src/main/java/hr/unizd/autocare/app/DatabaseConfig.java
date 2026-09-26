@@ -5,7 +5,7 @@ import jakarta.persistence.Persistence;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Otvara EntityManagerFactory za bazu podataka. */
+/** Konfigurira i otvara JPA vezu aplikacije prema Azure SQL bazi. */
 public class DatabaseConfig {
   private static final String HOST = "auto-care.database.windows.net";
   private static final String PORT = "1433";
@@ -15,6 +15,12 @@ public class DatabaseConfig {
 
   private DatabaseConfig() {}
 
+  /**
+   * Stvara tvornicu JPA entity managera za persistence unit aplikacije.
+   *
+   * @return otvorena tvornica koju aplikacija zatvara pri gašenju
+   * @throws jakarta.persistence.PersistenceException ako se persistence unit ne može pokrenuti
+   */
   public static EntityManagerFactory open() {
     String jdbcUrl = "jdbc:sqlserver://" + HOST + ":" + PORT + ";databaseName=" + DATABASE
         + ";encrypt=true;trustServerCertificate=false;";

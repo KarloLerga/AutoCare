@@ -9,7 +9,13 @@ import java.awt.event.ActionListener;
 
 /** Prijava i registracija korisničkog računa. */
 public class AuthController {
+  /** Prima obavijest da se korisnik uspješno prijavio. */
   public interface LoginListener {
+    /**
+     * Obavještava glavnu navigaciju o uspješnoj prijavi.
+     *
+     * @param ownerId identifikator prijavljenog korisnika
+     */
     void loggedIn(int ownerId);
   }
 
@@ -18,6 +24,13 @@ public class AuthController {
   private final LoginListener loginListener;
   private final RegistrationView registrationView;
 
+  /**
+   * Povezuje prikaze prijave i registracije s autentifikacijskim servisom.
+   *
+   * @param frame glavni prozor
+   * @param authService servis prijave i registracije
+   * @param loginListener primatelj obavijesti o uspješnoj prijavi
+   */
   public AuthController(MainFrame frame, AuthService authService, LoginListener loginListener) {
     this.frame = frame;
     this.authService = authService;

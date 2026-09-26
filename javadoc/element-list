@@ -1,0 +1,10 @@
+hr.unizd.autocare.app
+hr.unizd.autocare.controller
+hr.unizd.autocare.domain
+hr.unizd.autocare.model
+hr.unizd.autocare.observer
+hr.unizd.autocare.repository
+hr.unizd.autocare.service
+hr.unizd.autocare.strategy
+hr.unizd.autocare.view
+hr.unizd.autocare.view.components

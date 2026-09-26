@@ -8,6 +8,7 @@ import jakarta.persistence.ManyToOne;
 
 /** Korisnički račun i njegovo aktivno vozilo. */
 @Entity
+/** Korisnički račun i veza prema trenutačno aktivnom vozilu. */
 public class AppUser {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,12 +23,26 @@ public class AppUser {
 
   protected AppUser() {}
 
+  /**
+   * Stvara račun nakon provjere imena, adrese e-pošte i lozinke.
+   *
+   * @param name ime korisnika
+   * @param email adresa korisničkog računa
+   * @param password lozinka korisničkog računa
+   * @throws IllegalArgumentException ako je neko od podataka nevaljano
+   */
   public AppUser(String name, String email, String password) {
     this.name = Checks.text(name, 100, "Ime");
     this.email = Checks.email(email);
     this.password = Checks.password(password);
   }
 
+  /**
+   * Postavlja aktivno vozilo korisnika.
+   *
+   * @param vehicle vozilo koje postaje aktivno
+   * @throws IllegalArgumentException ako vozilo nije zadano
+   */
   public void activate(Vehicle vehicle) {
     if (vehicle == null) {
       throw new IllegalArgumentException("Vozilo je obavezno.");

@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
+/** Dijalog koji prikuplja podatke za dodavanje korisnikova vozila. */
 public class VehicleDialog extends JDialog {
   public final VehicleForm form = new VehicleForm();
   public final JButton save = new JButton("Spremi vozilo");

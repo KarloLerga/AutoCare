@@ -1,0 +1,74 @@
+erDiagram
+
+    APP_USER {
+        INT id PK
+        VARCHAR name
+        VARCHAR email
+        VARCHAR password
+        INT active_vehicle_id FK
+    }
+
+    VEHICLE_VARIANT {
+        INT id PK
+        VARCHAR make
+        VARCHAR model
+        VARCHAR generation
+        VARCHAR engine_label
+        VARCHAR fuel_type
+        INT power_hp
+        VARCHAR transmission
+        INT year_from
+        INT year_to
+    }
+
+    VEHICLE {
+        INT id PK
+        INT owner_id FK
+        INT variant_id FK
+        INT production_year
+        INT current_mileage
+    }
+
+    WORK_DEFINITION {
+        INT id PK
+        VARCHAR name
+        VARCHAR category
+        VARCHAR catalog_category
+        INT interval_km
+        INT interval_months
+        DECIMAL min_price
+        DECIMAL max_price
+    }
+
+    SERVICE_RECORD {
+        INT id PK
+        INT vehicle_id FK
+        DATE service_date
+        INT mileage
+        VARCHAR note
+    }
+
+    SERVICE_ITEM {
+        INT id PK
+        INT service_record_id FK
+        INT work_id FK
+        DECIMAL actual_price
+    }
+
+    PROBLEM {
+        INT id PK
+        INT vehicle_id FK
+        INT resolved_by_service_id FK
+        VARCHAR description
+        VARCHAR category
+        DATE created_at
+    }
+
+    APP_USER ||--o{ VEHICLE : owns
+    APP_USER o|--o| VEHICLE : activeVehicle
+    VEHICLE_VARIANT ||--o{ VEHICLE : variant
+    VEHICLE ||--o{ SERVICE_RECORD : serviceHistory
+    VEHICLE ||--o{ PROBLEM : problems
+    SERVICE_RECORD ||--|{ SERVICE_ITEM : items
+    WORK_DEFINITION ||--o{ SERVICE_ITEM : work
+    SERVICE_RECORD o|--o{ PROBLEM : resolves

@@ -14,6 +14,7 @@ import hr.unizd.autocare.view.components.Ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/** Upravlja prikazom, dodavanjem i odabirom korisnikovih vozila. */
 public class VehiclesController {
   private final MainFrame frame;
   private final VehicleService vehicleService;

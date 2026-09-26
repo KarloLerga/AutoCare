@@ -19,10 +19,15 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-/** Pokretanje aplikacije. */
+/** Pokreće AutoCare sučelje i sastavlja aplikacijske slojeve. */
 public class Main {
   private Main() {}
 
+  /**
+   * Predaje pokretanje Swing aplikacije na Event Dispatch Thread.
+   *
+   * @param arguments argumenti naredbenog retka; aplikacija ih ne koristi
+   */
   public static void main(String[] arguments) {
     SwingUtilities.invokeLater(new Runnable() {
       @Override

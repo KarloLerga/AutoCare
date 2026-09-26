@@ -15,10 +15,23 @@ import java.util.List;
 public class DashboardService {
   private final EntityManagerFactory entityManagerFactory;
 
+  /**
+   * Stvara servis koji priprema podatke za Dashboard.
+   *
+   * @param entityManagerFactory zajednička JPA tvornica
+   */
   public DashboardService(EntityManagerFactory entityManagerFactory) {
     this.entityManagerFactory = entityManagerFactory;
   }
 
+  /**
+   * Vraća sažetak vozila, ukupnog troška, otvorenih problema i sljedećeg održavanja.
+   *
+   * @param ownerId identifikator vlasnika
+   * @param vehicleId identifikator vozila
+   * @return podaci za kartice Dashboarda
+   * @throws IllegalArgumentException ako vozilo ne pripada korisniku
+   */
   public Dashboard get(int ownerId, int vehicleId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {

@@ -22,10 +22,23 @@ import java.util.Map;
 public class MaintenanceService {
   private final EntityManagerFactory entityManagerFactory;
 
+  /**
+   * Stvara servis koji iz servisne povijesti izvodi plan održavanja.
+   *
+   * @param entityManagerFactory zajednička JPA tvornica
+   */
   public MaintenanceService(EntityManagerFactory entityManagerFactory) {
     this.entityManagerFactory = entityManagerFactory;
   }
 
+  /**
+   * Vraća intervale održavanja za vozilo na temelju posljednjih evidentiranih radova.
+   *
+   * @param ownerId identifikator vlasnika
+   * @param vehicleId identifikator vozila
+   * @return izračunati intervali održavanja
+   * @throws IllegalArgumentException ako vozilo ne pripada korisniku
+   */
   public List<MaintenanceRow> list(int ownerId, int vehicleId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {

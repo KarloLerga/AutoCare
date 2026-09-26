@@ -18,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+/** Povezuje glavnu navigaciju s Controllerima i osvježava aktivni kontekst. */
 public class MainController implements Observer {
   private final MainFrame frame;
   private final Session session;
@@ -29,6 +30,20 @@ public class MainController implements Observer {
   private final MaintenanceController maintenance;
   private final ProblemsController problems;
 
+  /**
+   * Povezuje glavne poglede i aplikacijske servise te registrira Observera.
+   *
+   * @param frame glavni prozor aplikacije
+   * @param session trenutačni korisnički kontekst
+   * @param authService servis prijave i registracije
+   * @param catalogService servis kataloga
+   * @param vehicleService servis vozila
+   * @param serviceRecordService servisne evidencije
+   * @param maintenanceService izračun održavanja
+   * @param problemService evidencija problema
+   * @param dashboardService sažetak aktivnog vozila
+   * @param subject izvor događaja promjene aplikacijskog stanja
+   */
   public MainController(
       MainFrame frame,
       Session session,
@@ -184,6 +199,7 @@ public class MainController implements Observer {
   }
 
   @Override
+  /** Osvježava prikaze koji ovise o vozilu ili servisnoj povijesti. */
   public void update(AppEvent event) {
     if (event == AppEvent.ACTIVE_VEHICLE_CHANGED) {
       refreshContext(true);

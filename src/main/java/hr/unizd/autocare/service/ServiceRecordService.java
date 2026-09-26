@@ -24,10 +24,23 @@ import java.util.List;
 public class ServiceRecordService {
   private final EntityManagerFactory entityManagerFactory;
 
+  /**
+   * Stvara servis koji upravlja servisnom poviješću.
+   *
+   * @param entityManagerFactory zajednička JPA tvornica
+   */
   public ServiceRecordService(EntityManagerFactory entityManagerFactory) {
     this.entityManagerFactory = entityManagerFactory;
   }
 
+  /**
+   * Sprema servis, stavke, novu kilometražu i odabrana riješena upozorenja u jednoj transakciji.
+   *
+   * @param ownerId vlasnik vozila
+   * @param vehicleId vozilo kojem servis pripada
+   * @param input uneseni datum, kilometraža, napomena, radovi i cijene
+   * @throws IllegalArgumentException ako su podaci nepotpuni ili vozilo, rad ili problem nije dostupan
+   */
   public void create(int ownerId, int vehicleId, ServiceInput input) {
     validate(input);
 
@@ -104,6 +117,13 @@ public class ServiceRecordService {
     }
   }
 
+  /**
+   * Vraća servisne zapise vozila kao retke pripremljene za prikaz.
+   *
+   * @param ownerId identifikator vlasnika
+   * @param vehicleId identifikator vozila
+   * @return servisna povijest od najnovijeg zapisa
+   */
   public List<ServiceRow> list(int ownerId, int vehicleId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
 
@@ -119,6 +139,14 @@ public class ServiceRecordService {
     }
   }
 
+  /**
+   * Vraća detalj servisa, uključujući stavke i probleme povezane s njim.
+   *
+   * @param ownerId identifikator vlasnika vozila
+   * @param serviceId identifikator servisa
+   * @return pojedinosti servisa
+   * @throws IllegalArgumentException ako servis nije pronađen ili ne pripada korisniku
+   */
   public ServiceDetail detail(int ownerId, int serviceId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
 

@@ -13,10 +13,20 @@ import java.util.List;
 public class CatalogRepository {
   private final EntityManager entityManager;
 
+  /**
+   * Stvara repozitorij za EntityManager trenutačne operacije.
+   *
+   * @param entityManager EntityManager kojim upravlja pozivajući servis
+   */
   public CatalogRepository(EntityManager entityManager) {
     this.entityManager = entityManager;
   }
 
+  /**
+   * Vraća jedinstvene marke vozila iz kataloga.
+   *
+   * @return sortirane marke
+   */
   public List<String> makes() {
     return entityManager
         .createQuery(
@@ -25,6 +35,12 @@ public class CatalogRepository {
         .getResultList();
   }
 
+  /**
+   * Vraća modele za zadanu marku.
+   *
+   * @param make marka vozila
+   * @return sortirani modeli
+   */
   public List<String> models(String make) {
     return entityManager
         .createQuery(
@@ -35,6 +51,13 @@ public class CatalogRepository {
         .getResultList();
   }
 
+  /**
+   * Sastavlja sortirani popis godina koje pokrivaju varijante marke i modela.
+   *
+   * @param make marka vozila
+   * @param model model vozila
+   * @return godine pokrivene kataloškim varijantama
+   */
   public List<Integer> years(String make, String model) {
     List<VehicleVariant> variants = entityManager
             .createQuery(
@@ -65,6 +88,14 @@ public class CatalogRepository {
     return years;
   }
 
+  /**
+   * Vraća kataloške varijante koje pokrivaju odabranu godinu.
+   *
+   * @param make marka vozila
+   * @param model model vozila
+   * @param year godina proizvodnje
+   * @return varijante koje pokrivaju godinu
+   */
   public List<VehicleVariant> variants(String make, String model, int year) {
     return entityManager
         .createQuery(
@@ -79,10 +110,22 @@ public class CatalogRepository {
         .getResultList();
   }
 
+  /**
+   * Dohvaća varijantu prema primarnom ključu.
+   *
+   * @param id primarni ključ varijante
+   * @return varijanta ili {@code null} ako nije pronađena
+   */
   public VehicleVariant findVariant(int id) {
     return entityManager.find(VehicleVariant.class, id);
   }
 
+  /**
+   * Vraća standardne radove zadane servisne kategorije.
+   *
+   * @param category servisna kategorija
+   * @return radovi poredani prema nazivu
+   */
   public List<WorkDefinition> works(WorkCategory category) {
     return entityManager
         .createQuery(
@@ -92,6 +135,11 @@ public class CatalogRepository {
         .getResultList();
   }
 
+  /**
+   * Vraća cijeli informativni katalog standardnih radova.
+   *
+   * @return radovi poredani prema kategoriji i nazivu
+   */
   public List<WorkDefinition> allWorks() {
     return entityManager
         .createQuery(
@@ -100,6 +148,12 @@ public class CatalogRepository {
         .getResultList();
   }
 
+  /**
+   * Dohvaća standardni rad prema primarnom ključu.
+   *
+   * @param id primarni ključ rada
+   * @return rad ili {@code null} ako nije pronađen
+   */
   public WorkDefinition findWork(int id) {
     return entityManager.find(WorkDefinition.class, id);
   }

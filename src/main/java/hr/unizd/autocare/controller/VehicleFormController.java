@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+/** Puni kaskadne odabire vozila na temelju kataloških podataka. */
 public class VehicleFormController {
   private final VehicleForm view;
   private final CatalogService catalogService;

@@ -12,6 +12,17 @@ public class MaintenanceCalculator {
   private final MaintenanceStrategy timeStrategy = new TimeMaintenanceStrategy();
   private final MaintenanceStrategy combinedStrategy = new CombinedMaintenanceStrategy();
 
+  /**
+   * Izračunava udio preostalog intervala prema kilometraži, vremenu ili oboma.
+   *
+   * @param intervalKm interval održavanja u kilometrima, ako postoji
+   * @param intervalMonths interval održavanja u mjesecima, ako postoji
+   * @param lastDate datum posljednjeg evidentiranog rada
+   * @param lastMileage kilometraža posljednjeg evidentiranog rada
+   * @param currentMileage trenutačna kilometraža vozila
+   * @param today datum na koji se računa preostali interval
+   * @return omjer preostalog i ukupnog intervala; manja vrijednost znači bliži rok
+   */
   public double calculate(
       Integer intervalKm,
       Integer intervalMonths,

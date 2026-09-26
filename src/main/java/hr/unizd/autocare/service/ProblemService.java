@@ -15,10 +15,22 @@ import java.util.List;
 public class ProblemService {
   private final EntityManagerFactory entityManagerFactory;
 
+  /**
+   * Stvara servis za evidentiranje problema vozila.
+   *
+   * @param entityManagerFactory zajednička JPA tvornica
+   */
   public ProblemService(EntityManagerFactory entityManagerFactory) {
     this.entityManagerFactory = entityManagerFactory;
   }
 
+  /**
+   * Vraća probleme odabranog vozila korisnika.
+   *
+   * @param ownerId identifikator vlasnika
+   * @param vehicleId identifikator vozila
+   * @return problemi vozila
+   */
   public List<Problem> list(int ownerId, int vehicleId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
@@ -28,6 +40,15 @@ public class ProblemService {
     }
   }
 
+  /**
+   * Sprema novi korisnički opis problema za vozilo u vlasništvu korisnika.
+   *
+   * @param ownerId identifikator vlasnika
+   * @param vehicleId identifikator vozila
+   * @param description opis problema
+   * @param category kategorija problema
+   * @throws IllegalArgumentException ako vozilo ne pripada korisniku ili opis nije valjan
+   */
   public void create(int ownerId, int vehicleId, String description, ProblemCategory category) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();

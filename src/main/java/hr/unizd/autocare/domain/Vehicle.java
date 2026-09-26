@@ -8,6 +8,7 @@ import jakarta.persistence.ManyToOne;
 
 /** Konkretno vozilo korisnika; trenutna kilometraža ne smije se smanjiti. */
 @Entity
+/** Konkretno vozilo korisnika povezano s vlasnikom i kataloškom varijantom. */
 public class Vehicle {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +25,15 @@ public class Vehicle {
 
   protected Vehicle() {}
 
+  /**
+   * Stvara vozilo nakon provjere vlasnika, varijante, godine i kilometraže.
+   *
+   * @param owner vlasnik vozila
+   * @param variant odabrana kataloška varijanta
+   * @param productionYear godina proizvodnje
+   * @param currentMileage trenutačna kilometraža
+   * @throws IllegalArgumentException ako su podaci nevaljani ili godina nije pokrivena varijantom
+   */
   public Vehicle(AppUser owner, VehicleVariant variant, int productionYear, int currentMileage) {
     if (owner == null) {
       throw new IllegalArgumentException("Korisnik je obavezan.");
@@ -41,6 +51,7 @@ public class Vehicle {
     this.currentMileage = Checks.mileage(currentMileage);
   }
 
+  /** Ažurira kilometražu bez dopuštanja smanjenja postojeće vrijednosti. */
   public void updateMileage(int mileage) {
     Checks.mileage(mileage);
     if (mileage < currentMileage) {

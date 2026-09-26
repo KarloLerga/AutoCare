@@ -93,6 +93,20 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.12.0</version>
+        <configuration>
+          <release>${maven.compiler.release}</release>
+          <encoding>UTF-8</encoding>
+          <docencoding>UTF-8</docencoding>
+          <charset>UTF-8</charset>
+          <doclint>all,-missing</doclint>
+          <failOnError>true</failOnError>
+          <notimestamp>true</notimestamp>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>

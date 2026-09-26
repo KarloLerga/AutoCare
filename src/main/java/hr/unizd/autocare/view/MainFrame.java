@@ -20,6 +20,7 @@ import javax.swing.WindowConstants;
 import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 import org.kordamp.ikonli.swing.FontIcon;
 
+/** Glavni prozor aplikacije i spremnik ekrana za prijavu i rad s vozilom. */
 public class MainFrame extends JFrame {
   public final LoginView login = new LoginView();
   public final RegistrationView registration = new RegistrationView();

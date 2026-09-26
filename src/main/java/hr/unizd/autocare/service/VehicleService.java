@@ -15,10 +15,21 @@ import java.util.List;
 public class VehicleService {
   private final EntityManagerFactory entityManagerFactory;
 
+  /**
+   * Stvara servis za upravljanje vozilima.
+   *
+   * @param entityManagerFactory zajednička JPA tvornica
+   */
   public VehicleService(EntityManagerFactory entityManagerFactory) {
     this.entityManagerFactory = entityManagerFactory;
   }
 
+  /**
+   * Vraća sva vozila u vlasništvu korisnika.
+   *
+   * @param ownerId identifikator vlasnika
+   * @return vozila vlasnika
+   */
   public List<Vehicle> list(int ownerId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
@@ -28,6 +39,13 @@ public class VehicleService {
     }
   }
 
+  /**
+   * Vraća trenutačno aktivno vozilo korisnika.
+   *
+   * @param ownerId identifikator vlasnika
+   * @return aktivno vozilo ili {@code null} ako nije odabrano
+   * @throws IllegalArgumentException ako korisnik ne postoji
+   */
   public Vehicle active(int ownerId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
@@ -42,6 +60,15 @@ public class VehicleService {
     }
   }
 
+  /**
+   * Dodaje vozilo i postavlja ga kao aktivno ako korisnik još nema aktivno vozilo.
+   *
+   * @param ownerId identifikator vlasnika
+   * @param variantId identifikator kataloške varijante
+   * @param year godina proizvodnje
+   * @param mileage početna kilometraža
+   * @throws IllegalArgumentException ako korisnik ili varijanta ne postoje ili podaci nisu valjani
+   */
   public void add(int ownerId, int variantId, int year, int mileage) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();
@@ -77,6 +104,14 @@ public class VehicleService {
     }
   }
 
+  /**
+   * Ažurira kilometražu vozila koje pripada navedenom korisniku.
+   *
+   * @param ownerId identifikator vlasnika
+   * @param vehicleId identifikator vozila
+   * @param mileage nova kilometraža
+   * @throws IllegalArgumentException ako vozilo ne pripada korisniku ili je kilometraža nevaljana
+   */
   public void updateMileage(int ownerId, int vehicleId, int mileage) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();
@@ -98,6 +133,13 @@ public class VehicleService {
     }
   }
 
+  /**
+   * Postavlja kao aktivno vozilo koje pripada navedenom korisniku.
+   *
+   * @param ownerId identifikator vlasnika
+   * @param vehicleId identifikator vozila
+   * @throws IllegalArgumentException ako korisnik ili njegovo vozilo ne postoje
+   */
   public void activate(int ownerId, int vehicleId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     EntityTransaction transaction = entityManager.getTransaction();

@@ -16,6 +16,12 @@ public class Data {
     private final int workId;
     private final BigDecimal actualPrice;
 
+    /**
+     * Stvara ulaznu stavku s odabranim radom i stvarnom cijenom.
+     *
+     * @param workId identifikator kataloškog rada
+     * @param actualPrice iznos stvarno plaćen za rad
+     */
     public ItemInput(int workId, BigDecimal actualPrice) {
       this.workId = workId;
       this.actualPrice = actualPrice;
@@ -38,6 +44,15 @@ public class Data {
     private final List<ItemInput> items;
     private final List<Integer> resolvedProblemIds;
 
+    /**
+     * Stvara nepromjenjivi skup podataka za unos servisa.
+     *
+     * @param date datum servisa
+     * @param mileage kilometraža na servisu
+     * @param note napomena uz servis
+     * @param items unesene stavke i njihove stvarne cijene
+     * @param resolvedProblemIds problemi koje servis rješava
+     */
     public ServiceInput(
         LocalDate date,
         int mileage,
@@ -81,6 +96,16 @@ public class Data {
     private final BigDecimal total;
     private final String note;
 
+    /**
+     * Stvara redak za prikaz servisne povijesti.
+     *
+     * @param id identifikator servisa
+     * @param date datum servisa
+     * @param mileage kilometraža na servisu
+     * @param names sažeti nazivi radova
+     * @param total zbroj stvarnih cijena
+     * @param note napomena uz servis
+     */
     public ServiceRow(int id, LocalDate date, int mileage, String names, BigDecimal total, String note) {
       this.id = id;
       this.date = date;
@@ -121,6 +146,13 @@ public class Data {
     private final List<ServiceItem> items;
     private final List<String> resolvedProblems;
 
+    /**
+     * Stvara detaljni prikaz spremljenog servisa.
+     *
+     * @param header sažetak servisa
+     * @param items spremljene servisne stavke
+     * @param resolvedProblems opisi problema riješenih tim servisom
+     */
     public ServiceDetail(ServiceRow header, List<ServiceItem> items, List<String> resolvedProblems) {
       this.header = header;
       this.items = new ArrayList<>(items);
@@ -151,6 +183,18 @@ public class Data {
     private final Long remainingDays;
     private final double remainingRatio;
 
+    /**
+     * Stvara prikaz izračunatog intervala održavanja.
+     *
+     * @param name naziv praćenog rada
+     * @param lastDate datum prethodnog održavanja
+     * @param lastMileage kilometraža prethodnog održavanja
+     * @param nextDate izračunati sljedeći datum, ako postoji
+     * @param nextMileage izračunata sljedeća kilometraža, ako postoji
+     * @param remainingKm preostala kilometraža, ako se prati
+     * @param remainingDays preostali dani, ako se prati vremenski interval
+     * @param remainingRatio udio intervala koji je ostao
+     */
     public MaintenanceRow(
         String name,
         LocalDate lastDate,
@@ -210,6 +254,14 @@ public class Data {
     private final long openProblems;
     private final MaintenanceRow nextMaintenance;
 
+    /**
+     * Stvara sažetak za aktivno vozilo.
+     *
+     * @param vehicle aktivno vozilo
+     * @param total ukupni evidentirani servisni trošak
+     * @param openProblems broj otvorenih problema
+     * @param nextMaintenance najbliže sljedeće održavanje, ako postoji
+     */
     public Dashboard(Vehicle vehicle, BigDecimal total, long openProblems, MaintenanceRow nextMaintenance) {
       this.vehicle = vehicle;
       this.total = total;

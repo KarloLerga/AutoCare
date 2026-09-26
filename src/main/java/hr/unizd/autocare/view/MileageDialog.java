@@ -9,6 +9,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/** Dijalog za unos nove kilometraže vozila. */
 public class MileageDialog extends JDialog {
   public final JTextField mileage;
   public final JButton save = new JButton("Spremi");

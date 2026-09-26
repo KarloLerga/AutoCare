@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 
 /** Jedan izvršeni zahvat i stvarno plaćena cijena. */
 @Entity
+/** Stavka evidentiranog servisa s povezanom vrstom rada i stvarnom cijenom. */
 public class ServiceItem {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -8,10 +8,22 @@ import java.util.List;
 public class VehicleRepository {
   private final EntityManager entityManager;
 
+  /**
+   * Stvara repozitorij za EntityManager trenutačne operacije.
+   *
+   * @param entityManager EntityManager kojim upravlja pozivajući servis
+   */
   public VehicleRepository(EntityManager entityManager) {
     this.entityManager = entityManager;
   }
 
+  /**
+   * Vraća vozilo samo ako pripada navedenom korisniku; inače vraća {@code null}.
+   *
+   * @param ownerId primarni ključ vlasnika
+   * @param vehicleId primarni ključ vozila
+   * @return vozilo vlasnika ili {@code null}
+   */
   public Vehicle findForOwner(int ownerId, int vehicleId) {
     List<Vehicle> vehicles = entityManager
             .createQuery(
@@ -29,6 +41,12 @@ public class VehicleRepository {
     return vehicles.get(0);
   }
 
+  /**
+   * Vraća vozila korisnika poredana prema identifikatoru.
+   *
+   * @param ownerId primarni ključ vlasnika
+   * @return vozila korisnika
+   */
   public List<Vehicle> findAllForOwner(int ownerId) {
     return entityManager
         .createQuery(
@@ -39,6 +57,11 @@ public class VehicleRepository {
         .getResultList();
   }
 
+  /**
+   * Predaje novo vozilo persistence kontekstu.
+   *
+   * @param vehicle vozilo koje treba spremiti
+   */
   public void add(Vehicle vehicle) {
     entityManager.persist(vehicle);
   }

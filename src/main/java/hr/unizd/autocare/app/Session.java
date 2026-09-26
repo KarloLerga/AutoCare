@@ -11,6 +11,7 @@ public class Session {
 
   private Session() {}
 
+  /** Vraća jedinu sesiju aplikacije. */
   public static Session getInstance() {
     if (instance == null) {
       instance = new Session();
@@ -18,24 +19,29 @@ public class Session {
     return instance;
   }
 
+  /** Bilježi prijavljenog korisnika i uklanja prethodno aktivno vozilo. */
   public void login(int ownerId) {
     this.ownerId = ownerId;
     activeVehicle = null;
   }
 
+  /** Briše korisnika i aktivno vozilo iz trenutačne sesije. */
   public void logout() {
     ownerId = 0;
     activeVehicle = null;
   }
 
+  /** Vraća identifikator prijavljenog korisnika. */
   public int getOwnerId() {
     return ownerId;
   }
 
+  /** Vraća trenutačno aktivno vozilo, ako je odabrano. */
   public Vehicle getActiveVehicle() {
     return activeVehicle;
   }
 
+  /** Postavlja vozilo koje se koristi kao kontekst glavnih ekrana. */
   public void setActiveVehicle(Vehicle activeVehicle) {
     this.activeVehicle = activeVehicle;
   }

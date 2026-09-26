@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/** Forma za izbor varijante vozila i unos godine proizvodnje i kilometraže. */
 public class VehicleForm extends JPanel {
   public final JComboBox<String> make = new JComboBox<>();
   public final JComboBox<String> model = new JComboBox<>();

@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 
 /** Kataloška varijanta vozila koju aplikacija samo čita iz baze. */
 @Entity
+/** Referentni opis marke, modela i izvedbe vozila iz kataloga. */
 public class VehicleVariant {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +26,7 @@ public class VehicleVariant {
 
   protected VehicleVariant() {}
 
+  /** Provjerava nalazi li se godina proizvodnje u rasponu ove varijante. */
   public boolean covers(int year) {
     if (year < yearFrom) {
       return false;

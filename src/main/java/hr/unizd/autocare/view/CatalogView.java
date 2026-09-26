@@ -24,6 +24,7 @@ public class CatalogView extends JPanel {
 
   private final DefaultTableModel tableModel;
 
+  /** Stvara prikaz informativnog kataloga i filtara za pretraživanje. */
   public CatalogView() {
     super(new BorderLayout(12, 12));
     setOpaque(false);
@@ -58,6 +59,7 @@ public class CatalogView extends JPanel {
         BorderLayout.SOUTH);
   }
 
+  /** Vraća odabranu kategoriju ili {@code null} kada su prikazane sve kategorije. */
   public CatalogCategory selectedCategory() {
     int index = category.getSelectedIndex();
     if (index <= 0) {
@@ -66,6 +68,7 @@ public class CatalogView extends JPanel {
     return CatalogCategory.values()[index - 1];
   }
 
+  /** Zamjenjuje retke tablice radovima dobivenima iz kataloga. */
   public void setRows(List<WorkDefinition> works) {
     tableModel.setRowCount(0);
     for (WorkDefinition work : works) {

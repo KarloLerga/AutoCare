@@ -11,6 +11,7 @@ import java.time.LocalDate;
 
 /** Problem koji korisnik primjećuje na vozilu, bez dijagnostike. */
 @Entity
+/** Bilješka o problemu vozila koja se može povezati sa servisom koji ga je riješio. */
 public class Problem {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +32,15 @@ public class Problem {
 
   protected Problem() {}
 
+  /**
+   * Stvara korisnički evidentiran problem vozila.
+   *
+   * @param vehicle vozilo na kojem je problem uočen
+   * @param description opis problema
+   * @param category kategorija; ako je {@code null}, koristi se kategorija ostalo
+   * @param createdAt datum evidentiranja
+   * @throws IllegalArgumentException ako vozilo, opis ili datum nisu valjani
+   */
   public Problem(Vehicle vehicle, String description, ProblemCategory category, LocalDate createdAt) {
     if (vehicle == null) {
       throw new IllegalArgumentException("Vozilo je obavezno.");
@@ -49,6 +59,12 @@ public class Problem {
     this.createdAt = createdAt;
   }
 
+  /**
+   * Povezuje problem sa servisom koji ga je riješio.
+   *
+   * @param serviceRecord servis istog vozila koji zatvara problem
+   * @throws IllegalArgumentException ako je problem već riješen, servis nije zadan ili pripada drugom vozilu
+   */
   public void resolve(ServiceRecord serviceRecord) {
     if (resolvedByService != null) {
       throw new IllegalArgumentException("Problem je već zatvoren.");

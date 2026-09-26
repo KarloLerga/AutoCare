@@ -14,6 +14,7 @@ import java.util.List;
 
 /** Servis i njegove stavke čine jednu cjelinu za spremanje. */
 @Entity
+/** Servisni zapis vozila, uključujući izvršene radove i napomenu. */
 public class ServiceRecord {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +32,15 @@ public class ServiceRecord {
 
   protected ServiceRecord() {}
 
+  /**
+   * Stvara servisni zapis za vozilo.
+   *
+   * @param vehicle vozilo kojem servis pripada
+   * @param serviceDate datum obavljenog servisa
+   * @param mileage kilometraža na dan servisa
+   * @param note neobavezna napomena
+   * @throws IllegalArgumentException ako vozilo, datum ili kilometraža nisu valjani
+   */
   public ServiceRecord(Vehicle vehicle, LocalDate serviceDate, int mileage, String note) {
     if (vehicle == null) {
       throw new IllegalArgumentException("Vozilo je obavezno.");
@@ -45,6 +55,7 @@ public class ServiceRecord {
     this.note = Checks.optional(note, 2000, "Napomena");
   }
 
+  /** Dodaje izvršeni rad s iznosom koji je korisnik stvarno platio. */
   public void addItem(WorkDefinition work, BigDecimal actualPrice) {
     if (work == null) {
       throw new IllegalArgumentException("Rad je obavezan.");
@@ -53,6 +64,7 @@ public class ServiceRecord {
     items.add(new ServiceItem(this, work, actualPrice));
   }
 
+  /** Vraća zbroj stvarnih cijena svih stavki servisa. */
   public BigDecimal total() {
     BigDecimal total = BigDecimal.ZERO;
     for (ServiceItem serviceItem : items) {

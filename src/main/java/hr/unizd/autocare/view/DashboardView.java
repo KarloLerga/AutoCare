@@ -14,12 +14,14 @@ import javax.swing.UIManager;
 import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 import org.kordamp.ikonli.swing.FontIcon;
 
+/** Prikazuje sažetak aktivnog vozila, troškova, problema i sljedećeg održavanja. */
 public class DashboardView extends JPanel {
   private final JLabel total = Ui.hint("-");
   private final JLabel maintenance = Ui.hint("-");
   private final JLabel problems = Ui.hint("-");
   private final JLabel mileage = Ui.hint("-");
 
+  /** Stvara prikaz sažetka aktivnog vozila. */
   public DashboardView() {
     super(new BorderLayout(16, 16));
     setOpaque(false);
@@ -67,6 +69,7 @@ public class DashboardView extends JPanel {
     return FontIcon.of(iconCode, size, color);
   }
 
+  /** Ažurira kartice i sažetak prema podacima servisa Dashboard. */
   public void showDashboard(Dashboard dashboard) {
     total.setText(Ui.money(dashboard.getTotal()));
 

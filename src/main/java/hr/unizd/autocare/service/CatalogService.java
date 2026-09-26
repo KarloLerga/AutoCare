@@ -12,10 +12,20 @@ import java.util.List;
 public class CatalogService {
   private final EntityManagerFactory entityManagerFactory;
 
+  /**
+   * Stvara servis za čitanje kataloga vozila i standardnih radova.
+   *
+   * @param entityManagerFactory zajednička JPA tvornica
+   */
   public CatalogService(EntityManagerFactory entityManagerFactory) {
     this.entityManagerFactory = entityManagerFactory;
   }
 
+  /**
+   * Vraća abecedno uređene marke dostupne u katalogu.
+   *
+   * @return popis marki
+   */
   public List<String> makes() {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
@@ -25,6 +35,12 @@ public class CatalogService {
     }
   }
 
+  /**
+   * Vraća modele odabrane marke.
+   *
+   * @param make marka vozila
+   * @return modeli marke
+   */
   public List<String> models(String make) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
@@ -34,6 +50,13 @@ public class CatalogService {
     }
   }
 
+  /**
+   * Vraća godine proizvodnje dostupne za marku i model.
+   *
+   * @param make marka vozila
+   * @param model model vozila
+   * @return sortirane godine proizvodnje
+   */
   public List<Integer> years(String make, String model) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
@@ -43,6 +66,14 @@ public class CatalogService {
     }
   }
 
+  /**
+   * Vraća varijante koje odgovaraju marki, modelu i godini.
+   *
+   * @param make marka vozila
+   * @param model model vozila
+   * @param year godina proizvodnje
+   * @return odgovarajuće varijante
+   */
   public List<VehicleVariant> variants(String make, String model, int year) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
@@ -52,6 +83,12 @@ public class CatalogService {
     }
   }
 
+  /**
+   * Vraća radove koji pripadaju zadanoj servisnoj kategoriji.
+   *
+   * @param category kategorija radova
+   * @return radovi u kategoriji
+   */
   public List<WorkDefinition> works(WorkCategory category) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
@@ -61,6 +98,11 @@ public class CatalogService {
     }
   }
 
+  /**
+   * Vraća sve standardne radove za informativni katalog.
+   *
+   * @return radovi poredani prema kategoriji kataloga i nazivu
+   */
   public List<WorkDefinition> catalog() {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
