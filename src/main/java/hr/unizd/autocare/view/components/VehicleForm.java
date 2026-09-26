@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public final class VehicleForm extends JPanel {
+public class VehicleForm extends JPanel {
   public final JComboBox<String> make = new JComboBox<>();
   public final JComboBox<String> model = new JComboBox<>();
   public final JComboBox<Integer> year = new JComboBox<>();

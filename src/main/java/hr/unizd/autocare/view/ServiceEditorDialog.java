@@ -26,7 +26,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 /** Unos stvarno plaćenih stavki servisa bez prikaza procijenjenih cijena. */
-public final class ServiceEditorDialog extends JDialog {
+public class ServiceEditorDialog extends JDialog {
   public final JTextField date = new JTextField(Ui.date(LocalDate.now()), 12);
   public final JTextField mileage;
   public final JTextArea note = new JTextArea(3, 25);

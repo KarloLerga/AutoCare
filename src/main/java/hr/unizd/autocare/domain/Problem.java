@@ -31,11 +31,7 @@ public class Problem {
 
   protected Problem() {}
 
-  public Problem(
-      Vehicle vehicle,
-      String description,
-      ProblemCategory category,
-      LocalDate createdAt) {
+  public Problem(Vehicle vehicle, String description, ProblemCategory category, LocalDate createdAt) {
     if (vehicle == null) {
       throw new IllegalArgumentException("Vozilo je obavezno.");
     }

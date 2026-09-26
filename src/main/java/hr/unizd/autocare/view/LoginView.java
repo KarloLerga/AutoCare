@@ -9,7 +9,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 /** Prijava bez sidebara. */
-public final class LoginView extends JPanel {
+public class LoginView extends JPanel {
   public final JTextField email = new JTextField(25);
   public final JPasswordField password = new JPasswordField(25);
   public final JButton login = new JButton("Prijavi se"),

@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /** Otvara EntityManagerFactory za bazu podataka. */
-public final class DatabaseConfig {
+public class DatabaseConfig {
   private static final String HOST = "auto-care.database.windows.net";
   private static final String PORT = "1433";
   private static final String DATABASE = "free-sql-db-0650603";
@@ -16,14 +16,8 @@ public final class DatabaseConfig {
   private DatabaseConfig() {}
 
   public static EntityManagerFactory open() {
-    String jdbcUrl =
-        "jdbc:sqlserver://"
-            + HOST
-            + ":"
-            + PORT
-            + ";databaseName="
-            + DATABASE
-            + ";encrypt=true;trustServerCertificate=false;";
+    String jdbcUrl = "jdbc:sqlserver://" + HOST + ":" + PORT + ";databaseName=" + DATABASE
+        + ";encrypt=true;trustServerCertificate=false;";
 
     Map<String, Object> properties = new HashMap<>();
     properties.put("jakarta.persistence.jdbc.url", jdbcUrl);

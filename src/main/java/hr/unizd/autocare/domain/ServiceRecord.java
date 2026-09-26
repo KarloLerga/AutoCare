@@ -26,7 +26,7 @@ public class ServiceRecord {
   private int mileage;
   private String note;
 
-  @OneToMany(mappedBy = "serviceRecord", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "serviceRecord", cascade = CascadeType.PERSIST)
   private List<ServiceItem> items = new ArrayList<>();
 
   protected ServiceRecord() {}

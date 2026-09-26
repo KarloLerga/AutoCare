@@ -9,7 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-public final class VehicleDialog extends JDialog {
+public class VehicleDialog extends JDialog {
   public final VehicleForm form = new VehicleForm();
   public final JButton save = new JButton("Spremi vozilo");
   public final JButton cancel = new JButton("Odustani");

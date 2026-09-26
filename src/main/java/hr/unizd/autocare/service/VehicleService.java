@@ -12,7 +12,7 @@ import jakarta.persistence.EntityTransaction;
 import java.util.List;
 
 /** Upravljanje vozilima; identitet se stvara jednom, a kasnije se mijenja samo kilometraža. */
-public final class VehicleService {
+public class VehicleService {
   private final EntityManagerFactory entityManagerFactory;
 
   public VehicleService(EntityManagerFactory entityManagerFactory) {
@@ -22,11 +22,6 @@ public final class VehicleService {
   public List<Vehicle> list(int ownerId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
-      UserRepository userRepository = new UserRepository(entityManager);
-      AppUser user = userRepository.findById(ownerId);
-      if (user == null) {
-        throw new IllegalArgumentException("Korisnik nije pronađen.");
-      }
       return new VehicleRepository(entityManager).findAllForOwner(ownerId);
     } finally {
       entityManager.close();

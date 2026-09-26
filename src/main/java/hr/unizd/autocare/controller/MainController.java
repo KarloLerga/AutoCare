@@ -18,7 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public final class MainController implements Observer {
+public class MainController implements Observer {
   private final MainFrame frame;
   private final Session session;
   private final VehicleService vehicleService;
@@ -46,9 +46,7 @@ public final class MainController implements Observer {
     this.dashboardService = dashboardService;
 
     vehicles = new VehiclesController(frame, vehicleService, catalogService, session, subject);
-    services =
-        new ServicesController(
-            frame, serviceRecordService, catalogService, problemService, session, subject);
+    services = new ServicesController(frame, serviceRecordService, catalogService, problemService, session, subject);
     maintenance = new MaintenanceController(frame, maintenanceService, session);
     catalog = new CatalogController(frame, catalogService);
     problems = new ProblemsController(frame, problemService, session);
@@ -69,61 +67,54 @@ public final class MainController implements Observer {
   }
 
   private void activateForm() {
-    frame.dashboardButton.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            navigate("Dashboard");
-          }
-        });
+    frame.dashboardButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        navigate("Dashboard");
+      }
+    });
 
-    frame.vehiclesButton.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            navigate("Vozila");
-          }
-        });
+    frame.vehiclesButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        navigate("Vozila");
+      }
+    });
 
-    frame.maintenanceButton.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            navigate("Održavanje");
-          }
-        });
+    frame.maintenanceButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        navigate("Održavanje");
+      }
+    });
 
-    frame.catalogButton.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            navigate("Katalog");
-          }
-        });
+    frame.catalogButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        navigate("Katalog");
+      }
+    });
 
-    frame.servicesButton.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            navigate("Servisi");
-          }
-        });
+    frame.servicesButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        navigate("Servisi");
+      }
+    });
 
-    frame.problemsButton.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            navigate("Problemi");
-          }
-        });
+    frame.problemsButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        navigate("Problemi");
+      }
+    });
 
-    frame.logoutButton.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            logout();
-          }
-        });
+    frame.logoutButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        logout();
+      }
+    });
   }
 
   private void enter(int ownerId) {
@@ -186,8 +177,7 @@ public final class MainController implements Observer {
 
   private void loadDashboard() {
     try {
-      frame.dashboard.showDashboard(
-          dashboardService.get(session.getOwnerId(), session.getActiveVehicle().getId()));
+      frame.dashboard.showDashboard(dashboardService.get(session.getOwnerId(), session.getActiveVehicle().getId()));
     } catch (RuntimeException exception) {
       Ui.error(frame.dashboard, exception);
     }

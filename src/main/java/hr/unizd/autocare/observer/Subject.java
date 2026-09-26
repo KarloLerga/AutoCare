@@ -3,7 +3,7 @@ package hr.unizd.autocare.observer;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class Subject {
+public class Subject {
   private final List<Observer> observers = new ArrayList<>();
 
   public void addObserver(Observer observer) {
@@ -11,9 +11,7 @@ public final class Subject {
   }
 
   public void removeObserver(Observer observer) {
-    if (observers.contains(observer)) {
-      observers.remove(observer);
-    }
+    observers.remove(observer);
   }
 
   public void notifyObservers(AppEvent event) {

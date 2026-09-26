@@ -9,7 +9,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public final class MileageDialog extends JDialog {
+public class MileageDialog extends JDialog {
   public final JTextField mileage;
   public final JButton save = new JButton("Spremi");
   public final JButton cancel = new JButton("Odustani");

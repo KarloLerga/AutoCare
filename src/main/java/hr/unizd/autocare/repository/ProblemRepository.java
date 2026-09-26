@@ -5,7 +5,7 @@ import jakarta.persistence.EntityManager;
 import java.util.List;
 
 /** JPA dohvat i spremanje problema vozila. */
-public final class ProblemRepository {
+public class ProblemRepository {
   private final EntityManager entityManager;
 
   public ProblemRepository(EntityManager entityManager) {
@@ -17,8 +17,7 @@ public final class ProblemRepository {
   }
 
   public Problem findForOwner(int ownerId, int problemId) {
-    List<Problem> problems =
-        entityManager
+    List<Problem> problems = entityManager
             .createQuery(
                 "select problem from Problem problem where problem.id=:problemId "
                     + "and problem.vehicle.owner.id=:ownerId",

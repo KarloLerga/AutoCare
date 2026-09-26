@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** Učitava i filtrira informativni katalog zahvata. */
-public final class CatalogController {
+public class CatalogController {
   private final MainFrame frame;
   private final CatalogService catalogService;
 
@@ -19,27 +19,24 @@ public final class CatalogController {
     this.frame = frame;
     this.catalogService = catalogService;
 
-    frame.catalog.searchButton.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            load();
-          }
-        });
-    frame.catalog.search.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            load();
-          }
-        });
-    frame.catalog.category.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            load();
-          }
-        });
+    frame.catalog.searchButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        load();
+      }
+    });
+    frame.catalog.search.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        load();
+      }
+    });
+    frame.catalog.category.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        load();
+      }
+    });
   }
 
   public void load() {

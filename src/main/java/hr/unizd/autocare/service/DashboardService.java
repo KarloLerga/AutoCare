@@ -12,7 +12,7 @@ import jakarta.persistence.EntityManagerFactory;
 import java.util.List;
 
 /** Podaci za četiri kartice dashboarda aktivnog vozila. */
-public final class DashboardService {
+public class DashboardService {
   private final EntityManagerFactory entityManagerFactory;
 
   public DashboardService(EntityManagerFactory entityManagerFactory) {
@@ -24,8 +24,7 @@ public final class DashboardService {
     try {
       VehicleRepository vehicleRepository = new VehicleRepository(entityManager);
       CatalogRepository catalogRepository = new CatalogRepository(entityManager);
-      ServiceRecordRepository serviceRecordRepository =
-          new ServiceRecordRepository(entityManager);
+      ServiceRecordRepository serviceRecordRepository = new ServiceRecordRepository(entityManager);
       ProblemRepository problemRepository = new ProblemRepository(entityManager);
 
       Vehicle vehicle = vehicleRepository.findForOwner(ownerId, vehicleId);
@@ -34,11 +33,7 @@ public final class DashboardService {
       }
 
       List<MaintenanceRow> maintenance =
-          MaintenanceService.calculate(
-              catalogRepository,
-              serviceRecordRepository,
-              ownerId,
-              vehicle);
+          MaintenanceService.calculate(catalogRepository, serviceRecordRepository, ownerId, vehicle);
 
       MaintenanceRow next = null;
       for (MaintenanceRow row : maintenance) {

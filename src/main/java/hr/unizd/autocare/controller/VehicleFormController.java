@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public final class VehicleFormController {
+public class VehicleFormController {
   private final VehicleForm view;
   private final CatalogService catalogService;
   private boolean updating;
@@ -17,45 +17,41 @@ public final class VehicleFormController {
     this.view = view;
     this.catalogService = catalogService;
 
-    view.make.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            if (!updating) {
-              loadModels();
-            }
-          }
-        });
+    view.make.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        if (!updating) {
+          loadModels();
+        }
+      }
+    });
 
-    view.model.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            if (!updating) {
-              loadYears();
-            }
-          }
-        });
+    view.model.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        if (!updating) {
+          loadYears();
+        }
+      }
+    });
 
-    view.year.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            if (!updating) {
-              loadVariants();
-            }
-          }
-        });
+    view.year.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        if (!updating) {
+          loadVariants();
+        }
+      }
+    });
 
-    view.variant.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent event) {
-            if (!updating) {
-              view.showDetails(view.selectedVariant());
-            }
-          }
-        });
+    view.variant.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        if (!updating) {
+          view.showDetails(view.selectedVariant());
+        }
+      }
+    });
   }
 
   public void loadMakes() {

@@ -3,7 +3,7 @@ package hr.unizd.autocare.strategy;
 import java.time.LocalDate;
 
 /** Računanje intervala koji ovisi o kilometraži. */
-public final class MileageMaintenanceStrategy implements MaintenanceStrategy {
+public class MileageMaintenanceStrategy implements MaintenanceStrategy {
   @Override
   public double calculate(
       Integer intervalKm,

@@ -13,7 +13,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 /** Upravljanje vozilima; jedino mjesto promjene aktivnog vozila. */
-public final class VehiclesView extends JPanel {
+public class VehiclesView extends JPanel {
   public final JButton add = new JButton("Dodaj vozilo");
   public final JButton edit = new JButton("Promijeni kilometražu");
   public final JButton activate = new JButton("Aktiviraj");
@@ -53,8 +53,7 @@ public final class VehiclesView extends JPanel {
       }
 
       tableModel.addRow(
-          new Object[] {
-            vehicle.getVariant().getMake() + " " + vehicle.getVariant().getModel(),
+          new Object[] {vehicle.getVariant().getMake() + " " + vehicle.getVariant().getModel(),
             vehicle.getProductionYear(),
             vehicle.getVariant().getEngineLabel(),
             Ui.km(vehicle.getCurrentMileage()),

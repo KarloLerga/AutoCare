@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 /** Problemi koje vlasnik bilježi bez automatske dijagnostike. */
-public final class ProblemService {
+public class ProblemService {
   private final EntityManagerFactory entityManagerFactory;
 
   public ProblemService(EntityManagerFactory entityManagerFactory) {
@@ -22,10 +22,6 @@ public final class ProblemService {
   public List<Problem> list(int ownerId, int vehicleId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
     try {
-      VehicleRepository vehicleRepository = new VehicleRepository(entityManager);
-      if (vehicleRepository.findForOwner(ownerId, vehicleId) == null) {
-        throw new IllegalArgumentException("Vozilo nije pronađeno.");
-      }
       return new ProblemRepository(entityManager).list(ownerId, vehicleId);
     } finally {
       entityManager.close();

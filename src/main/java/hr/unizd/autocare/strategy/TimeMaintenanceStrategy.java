@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 /** Računanje intervala koji ovisi o vremenu. */
-public final class TimeMaintenanceStrategy implements MaintenanceStrategy {
+public class TimeMaintenanceStrategy implements MaintenanceStrategy {
   @Override
   public double calculate(
       Integer intervalKm,

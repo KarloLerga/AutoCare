@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 /** Servisna povijest je izvor istine za praćene intervale održavanja. */
-public final class MaintenanceService {
+public class MaintenanceService {
   private final EntityManagerFactory entityManagerFactory;
 
   public MaintenanceService(EntityManagerFactory entityManagerFactory) {
@@ -49,8 +49,7 @@ public final class MaintenanceService {
       ServiceRecordRepository serviceRecordRepository,
       int ownerId,
       Vehicle vehicle) {
-    Map<Integer, ServiceItem> latestItems =
-        latestItems(serviceRecordRepository, ownerId, vehicle.getId());
+    Map<Integer, ServiceItem> latestItems = latestItems(serviceRecordRepository, ownerId, vehicle.getId());
     MaintenanceCalculator calculator = new MaintenanceCalculator();
     LocalDate today = LocalDate.now();
     List<MaintenanceRow> rows = new ArrayList<>();
@@ -67,8 +66,7 @@ public final class MaintenanceService {
       Integer nextMileage = nextMileage(lastMileage, work.getIntervalKm());
       Integer remainingKm = remainingKm(nextMileage, vehicle.getCurrentMileage());
       Long remainingDays = remainingDays(nextDate, today);
-      double remainingRatio =
-          calculator.calculate(
+      double remainingRatio = calculator.calculate(
               work.getIntervalKm(),
               work.getIntervalMonths(),
               lastDate,

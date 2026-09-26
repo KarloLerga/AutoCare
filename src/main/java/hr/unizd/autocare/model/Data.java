@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** Jednostavni pomoćni podaci koji nisu zasebni domenski entiteti. */
-public final class Data {
+public class Data {
   private Data() {}
 
   /** Jedna stavka unesena u formi novog servisa. */
@@ -81,8 +81,7 @@ public final class Data {
     private final BigDecimal total;
     private final String note;
 
-    public ServiceRow(
-        int id, LocalDate date, int mileage, String names, BigDecimal total, String note) {
+    public ServiceRow(int id, LocalDate date, int mileage, String names, BigDecimal total, String note) {
       this.id = id;
       this.date = date;
       this.mileage = mileage;
@@ -122,8 +121,7 @@ public final class Data {
     private final List<ServiceItem> items;
     private final List<String> resolvedProblems;
 
-    public ServiceDetail(
-        ServiceRow header, List<ServiceItem> items, List<String> resolvedProblems) {
+    public ServiceDetail(ServiceRow header, List<ServiceItem> items, List<String> resolvedProblems) {
       this.header = header;
       this.items = new ArrayList<>(items);
       this.resolvedProblems = new ArrayList<>(resolvedProblems);
@@ -212,11 +210,7 @@ public final class Data {
     private final long openProblems;
     private final MaintenanceRow nextMaintenance;
 
-    public Dashboard(
-        Vehicle vehicle,
-        BigDecimal total,
-        long openProblems,
-        MaintenanceRow nextMaintenance) {
+    public Dashboard(Vehicle vehicle, BigDecimal total, long openProblems, MaintenanceRow nextMaintenance) {
       this.vehicle = vehicle;
       this.total = total;
       this.openProblems = openProblems;

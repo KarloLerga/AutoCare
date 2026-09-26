@@ -9,7 +9,7 @@ import jakarta.persistence.EntityManagerFactory;
 import java.util.List;
 
 /** Čitanje kataloga vozila i standardnih zahvata. */
-public final class CatalogService {
+public class CatalogService {
   private final EntityManagerFactory entityManagerFactory;
 
   public CatalogService(EntityManagerFactory entityManagerFactory) {

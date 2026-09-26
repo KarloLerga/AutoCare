@@ -3,7 +3,7 @@ package hr.unizd.autocare.app;
 import hr.unizd.autocare.domain.Vehicle;
 
 /** Singleton koji čuva trenutno prijavljenog korisnika i aktivno vozilo. */
-public final class Session {
+public class Session {
   private static Session instance;
 
   private int ownerId;

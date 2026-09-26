@@ -23,9 +23,8 @@ import javax.swing.JTextField;
 import javax.swing.BoxLayout;
 
 /** Standardni Swing layouti i formatiranje, bez poslovnih pravila. */
-public final class Ui {
-  public static final DateTimeFormatter DATE =
-      DateTimeFormatter.ofPattern("dd.MM.yyyy.");
+public class Ui {
+  public static final DateTimeFormatter DATE = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
 
   private Ui() {}
 
@@ -178,7 +177,6 @@ public final class Ui {
     return "Otvoren";
   }
 
-
   public static void info(Component parent, String text) {
     JOptionPane.showMessageDialog(parent, text, "AutoCare", JOptionPane.INFORMATION_MESSAGE);
   }
@@ -190,5 +188,4 @@ public final class Ui {
     }
     JOptionPane.showMessageDialog(parent, message, "AutoCare", JOptionPane.ERROR_MESSAGE);
   }
-
 }

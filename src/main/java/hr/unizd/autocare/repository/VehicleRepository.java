@@ -5,7 +5,7 @@ import jakarta.persistence.EntityManager;
 import java.util.List;
 
 /** JPA dohvat i spremanje korisnikovih vozila. */
-public final class VehicleRepository {
+public class VehicleRepository {
   private final EntityManager entityManager;
 
   public VehicleRepository(EntityManager entityManager) {
@@ -13,8 +13,7 @@ public final class VehicleRepository {
   }
 
   public Vehicle findForOwner(int ownerId, int vehicleId) {
-    List<Vehicle> vehicles =
-        entityManager
+    List<Vehicle> vehicles = entityManager
             .createQuery(
                 "select vehicle from Vehicle vehicle "
                     + "where vehicle.id=:vehicleId and vehicle.owner.id=:ownerId",

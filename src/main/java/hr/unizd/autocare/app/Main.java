@@ -20,17 +20,16 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 /** Pokretanje aplikacije. */
-public final class Main {
+public class Main {
   private Main() {}
 
   public static void main(String[] arguments) {
-    SwingUtilities.invokeLater(
-        new Runnable() {
-          @Override
-          public void run() {
-            startApplication();
-          }
-        });
+    SwingUtilities.invokeLater(new Runnable() {
+      @Override
+      public void run() {
+        startApplication();
+      }
+    });
   }
 
   private static void startApplication() {
@@ -43,10 +42,8 @@ public final class Main {
       AuthService authService = new AuthService(entityManagerFactory);
       CatalogService catalogService = new CatalogService(entityManagerFactory);
       VehicleService vehicleService = new VehicleService(entityManagerFactory);
-      ServiceRecordService serviceRecordService =
-          new ServiceRecordService(entityManagerFactory);
-      MaintenanceService maintenanceService =
-          new MaintenanceService(entityManagerFactory);
+      ServiceRecordService serviceRecordService = new ServiceRecordService(entityManagerFactory);
+      MaintenanceService maintenanceService = new MaintenanceService(entityManagerFactory);
       ProblemService problemService = new ProblemService(entityManagerFactory);
       DashboardService dashboardService = new DashboardService(entityManagerFactory);
 
@@ -81,16 +78,14 @@ public final class Main {
     }
   }
 
-  private static void closeDatabaseWhenWindowCloses(
-      MainFrame frame, EntityManagerFactory entityManagerFactory) {
-    frame.addWindowListener(
-        new WindowAdapter() {
-          @Override
-          public void windowClosing(WindowEvent event) {
-            frame.dispose();
-            entityManagerFactory.close();
-          }
-        });
+  private static void closeDatabaseWhenWindowCloses(MainFrame frame, EntityManagerFactory entityManagerFactory) {
+    frame.addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent event) {
+        frame.dispose();
+        entityManagerFactory.close();
+      }
+    });
   }
 
   private static void initializeLookAndFeel() {
