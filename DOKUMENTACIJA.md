@@ -32,17 +32,9 @@ Glavne odgovornosti slojeva su:
 
 ## 3. GUI wireframeovi i opis korisničkog sučelja
 
-GUI wireframeovi izrađeni su u Figmi i priloženi su kao jedan PDF dokument. Time glavni Markdown dokument ostaje čitljiv i ne ponavlja deset velikih slika, dok se svi ekrani mogu pregledati u punoj kvaliteti u izvornom wireframe dokumentu.
+Wireframeovi prikazuju glavne ekrane i korisničke tokove aplikacije: prijavu, vozila, Dashboard, održavanje, katalog, servise i probleme.
 
-**[Otvori GUI wireframeove u PDF-u](assets/AutoCare_GUI_Wireframes_FINAL.pdf)**
-
-PDF prikazuje glavne korisničke tokove aplikacije: prijavu, registraciju, Dashboard, pregled vozila, dodavanje vozila, održavanje, katalog, servisnu povijest, unos novog servisa i probleme.
-
-Prijava omogućuje unos e-mail adrese i lozinke postojećeg korisnika te prijelaz na registraciju. Registracija prikuplja ime, e-mail adresu i lozinku, dok se vozila dodaju naknadno kroz ekran Vozila. Dashboard prikazuje sažetak aktivnog vozila: trenutačnu kilometražu, ukupne evidentirane servisne troškove, broj otvorenih problema i najbliže sljedeće održavanje.
-
-Ekran Vozila prikazuje sva vozila prijavljenog korisnika i omogućuje dodavanje vozila, promjenu kilometraže te izbor aktivnog vozila. Forma za dodavanje vozila vodi korisnika kroz odabir marke, modela, godine i konkretne varijante vozila. Ekran Održavanje koristi stvarnu servisnu povijest i servisne intervale kako bi prikazao sljedeća dospijeća. Katalog prikazuje standardne zahvate i informativne raspone cijena.
-
-Servisna povijest prikazuje evidentirane servise aktivnog vozila. Kod unosa novog servisa korisnik unosi datum, kilometražu, izvedene radove i stvarno plaćene cijene te može označiti probleme koji su tim servisom riješeni. Ekran Problemi služi evidenciji problema i simptoma, a problem dobiva status riješenog tek povezivanjem sa servisom koji ga je riješio.
+[Otvori GUI wireframeove (PDF)](assets/AutoCare_GUI_Wireframes_FINAL.pdf)
 
 ## 4. UML dijagram klasa i detaljan opis
 
@@ -225,25 +217,21 @@ Projekt ne koristi Hibernate kao zamjenu za vlastitu arhitekturu aplikacije. Hib
 
 ## 8. API dokumentacija - Javadoc
 
-Izvorni kod sadrži Javadoc komentare za klase, sučelja, enum tipove, konstruktore i gotovo sve metode koje imaju vlastitu odgovornost. Cilj komentara nije prepričavati Java sintaksu, nego objasniti zašto klasa ili metoda postoji, koji korak poslovnog ili GUI postupka provodi, koje parametre očekuje, što vraća i u kojim slučajevima prijavljuje pogrešku.
+Javadoc je HTML dokumentacija API-ja generirana iz komentara u Java kodu.
 
-Komentari se ne ponavljaju na privatnim atributima jer njihova imena i tipovi već jasno opisuju stanje klase. Trivijalni getteri, setteri, `toString` metode i standardni Swing overrideovi kao `isCellEditable` ne trebaju zaseban opis kada ne sadrže dodatno pravilo. Pomoćne metode koje provode stvaran korak algoritma ili GUI toka dokumentiraju se i kada su privatne.
-
-HTML Javadoc generira se Maven Javadoc Pluginom. Završna API dokumentacija nastaje iz aktualnog sourcea nakon što su svi komentari integrirani, čime dokumentacija ostaje usklađena s kodom.
+[Otvori Javadoc dokumentaciju](javadoc/index.html)
 
 ## 9. Git aciklički graf povijesti repozitorija
 
-Git povijest projekta predstavlja usmjereni aciklički graf commitova. Svaki commit pokazuje na svojeg roditelja, a kod grananja ili mergea može imati više veza. Za dokumentaciju se koristi graf generiran iz stvarne završne povijesti repozitorija, a ne ručno nacrtan popis.
-
-Slika se generira nakon završnog uređivanja poruka commitova i provjere da je sadržaj projekta ostao isti. U dokumentaciji je prikazana kao SVG kako bi tekst commitova ostao čitljiv i pri povećavanju.
+Git DAG prikazuje commitove i njihove međusobne veze u povijesti repozitorija. Generiran je iz Git povijesti i dodan u dokumentaciju kao SVG.
 
 ![Git DAG](assets/Git_DAG.svg)
 
 
 ## 10. Prilozi
 
-- `assets/UML.png` - UML dijagram klasa.
-- `assets/ERD.png` - ERD baze podataka.
-- `assets/AutoCare_GUI_Wireframes_FINAL.pdf` - originalni Figma wireframeovi u PDF obliku.
-- `assets/Git_DAG.svg` - završni Git DAG generiran iz stvarne povijesti repozitorija.
-- generirana HTML Javadoc dokumentacija iz završnog sourcea.
+- [UML dijagram klasa](assets/UML.png)
+- [ERD baze podataka](assets/ERD.png)
+- [GUI wireframeovi (PDF)](assets/AutoCare_GUI_Wireframes_FINAL.pdf)
+- [Git DAG](assets/Git_DAG.svg)
+- [Javadoc HTML dokumentacija](javadoc/index.html)
