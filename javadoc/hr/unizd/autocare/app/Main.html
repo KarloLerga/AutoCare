@@ -75,7 +75,13 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Main</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Pokreće AutoCare sučelje i sastavlja aplikacijske slojeve.</div>
+<div class="block">Ulazna točka AutoCare desktop aplikacije.
+
+<p>Klasa pokreće Swing sučelje na Event Dispatch Threadu, inicijalizira izgled aplikacije,
+otvara zajednički <code>EntityManagerFactory</code>, stvara glavne Service
+objekte i povezuje ih s glavnim prozorom, sesijom, Observer infrastrukturom i
+<code>MainControllerom</code>. Na ovom mjestu se ručno sastavlja aplikacija bez dodatnog
+dependency injection frameworka.</div>
 </div>
 </section>
 <section class="summary">

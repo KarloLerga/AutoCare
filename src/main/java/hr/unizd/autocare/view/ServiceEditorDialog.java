@@ -25,7 +25,13 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
-/** Unos stvarno plaćenih stavki servisa bez prikaza procijenjenih cijena. */
+/**
+ * Modalni editor za unos novog stvarnog servisa vozila.
+ *
+ * <p>Korisnik bira datum, kilometražu, radove i stvarne cijene te može označiti otvorene probleme
+ * koje je taj servis riješio. Dijalog ne sprema podatke izravno u bazu nego ih kroz
+ * {@link ServiceInput} predaje Controlleru.
+ */
 public class ServiceEditorDialog extends JDialog {
   public final JTextField date = new JTextField(Ui.date(LocalDate.now()), 12);
   public final JTextField mileage;
@@ -45,6 +51,13 @@ public class ServiceEditorDialog extends JDialog {
   private final List<AddedItem> items = new ArrayList<>();
   private final List<WorkDefinition> availableWorks = new ArrayList<>();
 
+  /**
+   * Stvara editor servisa s početnom kilometražom i popisom otvorenih problema.
+   *
+   * @param owner roditeljski prozor
+   * @param mileageValue trenutačna kilometraža koja se nudi kao početna vrijednost
+   * @param problems otvoreni problemi koje je moguće označiti kao riješene
+   */
   public ServiceEditorDialog(Window owner, int mileageValue, List<Problem> problems) {
     super(owner, "Novi servis", ModalityType.APPLICATION_MODAL);
     this.problems = new ArrayList<>(problems);
@@ -131,6 +144,11 @@ public class ServiceEditorDialog extends JDialog {
   }
 
 
+  /**
+   * Postavlja sve radove dostupne editoru i inicijalno prikazuje radove održavanja.
+   *
+   * @param works dostupne definicije radova
+   */
   public void setWorks(List<WorkDefinition> works) {
     availableWorks.clear();
     availableWorks.addAll(works);
@@ -138,6 +156,7 @@ public class ServiceEditorDialog extends JDialog {
     filterWorks();
   }
 
+  /** Filtrira combo box radova prema trenutno odabranoj vrsti: održavanje ili popravak. */
   public void filterWorks() {
     WorkCategory selectedCategory = WorkCategory.REPAIR;
     if (type.getSelectedIndex() == 0) {
@@ -156,10 +175,17 @@ public class ServiceEditorDialog extends JDialog {
     }
   }
 
+  /** @return trenutno odabrani standardni rad ili {@code null} */
   public WorkDefinition selectedWork() {
     return (WorkDefinition) work.getSelectedItem();
   }
 
+  /**
+   * Dodaje odabrani rad u privremeni popis stavki servisa sa stvarno plaćenom cijenom iz forme.
+   *
+   * @param selected rad koji se dodaje
+   * @throws IllegalArgumentException ako je isti rad već dodan ili cijena nije valjana
+   */
   public void addWork(WorkDefinition selected) {
     for (AddedItem item : items) {
       if (item.work.getId().equals(selected.getId())) {
@@ -175,6 +201,7 @@ public class ServiceEditorDialog extends JDialog {
     refreshItems();
   }
 
+  /** Uklanja trenutno označenu privremenu servisnu stavku iz editora. */
   public void removeSelectedItem() {
     int row = itemTable.getSelectedRow();
     if (row >= 0) {
@@ -183,6 +210,7 @@ public class ServiceEditorDialog extends JDialog {
     }
   }
 
+  /** Ponovno gradi retke tablice servisnih stavki iz internog popisa AddedItem objekata. */
   private void refreshItems() {
     itemTableModel.setRowCount(0);
     for (AddedItem item : items) {
@@ -190,6 +218,15 @@ public class ServiceEditorDialog extends JDialog {
     }
   }
 
+  /**
+   * Pretvara trenutačno stanje forme u ServiceInput za ServiceRecordService.
+   *
+   * <p>Parsira datum, kilometražu i cijene te iz označenih redaka skuplja ID-eve problema koje
+   * korisnik smatra riješenima tim servisom.
+   *
+   * @return cjeloviti ulaz za spremanje servisa
+   * @throws IllegalArgumentException ako datum, kilometraža ili neka druga parsirana vrijednost nije valjana
+   */
   public ServiceInput input() {
     List<Integer> resolvedProblemIds = new ArrayList<>();
     for (int row = 0; row < problemsTableModel.getRowCount(); row++) {
@@ -207,10 +244,15 @@ public class ServiceEditorDialog extends JDialog {
         Ui.parseDate(date.getText()), Ui.mileage(mileage), note.getText(), inputs, resolvedProblemIds);
   }
 
+  /** Privremeno povezuje odabrani rad i stvarno plaćenu cijenu prije spremanja servisa. */
   private static final class AddedItem {
     private final WorkDefinition work;
     private final BigDecimal price;
 
+    /**
+     * @param work odabrani standardni rad
+     * @param price stvarno plaćena cijena unesena u editoru
+     */
     private AddedItem(WorkDefinition work, BigDecimal price) {
       this.work = work;
       this.price = price;

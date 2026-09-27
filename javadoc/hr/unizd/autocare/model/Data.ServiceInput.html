@@ -90,7 +90,8 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public static final class </span><span class="element-name type-name-label">Data.ServiceInput</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Podaci forme za spremanje novog servisa.</div>
+<div class="block">Cjelovit skup vrijednosti koje ServiceEditorDialog predaje ServiceRecordServiceu pri spremanju
+novog servisa.</div>
 </div>
 </section>
 <section class="summary">
@@ -109,7 +110,7 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Data.ItemInput.html" title="class in hr.unizd.autocare.model">Data.ItemInput</a>&gt;&nbsp;items,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;resolvedProblemIds)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Stvara nepromjenjivi skup podataka za unos servisa.</div>
+<div class="block">Stvara ulaz servisnog use-casea i kopira predane kolekcije.</div>
 </div>
 </div>
 </section>
@@ -166,14 +167,14 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;note,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Data.ItemInput.html" title="class in hr.unizd.autocare.model">Data.ItemInput</a>&gt;&nbsp;items,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;resolvedProblemIds)</span></div>
-<div class="block">Stvara nepromjenjivi skup podataka za unos servisa.</div>
+<div class="block">Stvara ulaz servisnog use-casea i kopira predane kolekcije.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>date</code> - datum servisa</dd>
-<dd><code>mileage</code> - kilometraža na servisu</dd>
-<dd><code>note</code> - napomena uz servis</dd>
-<dd><code>items</code> - unesene stavke i njihove stvarne cijene</dd>
-<dd><code>resolvedProblemIds</code> - problemi koje servis rješava</dd>
+<dd><code>mileage</code> - kilometraža pri servisu</dd>
+<dd><code>note</code> - opcionalna napomena</dd>
+<dd><code>items</code> - unesene servisne stavke</dd>
+<dd><code>resolvedProblemIds</code> - problemi označeni kao riješeni ovim servisom</dd>
 </dl>
 </div>
 </section>

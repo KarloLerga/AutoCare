@@ -16,7 +16,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 
-/** Servisna povijest aktivnog vozila. */
+/** Swing prikaz servisne povijesti aktivnog vozila i detalja odabranog servisa. */
 public class ServicesView extends JPanel {
   public final JButton add = new JButton("Novi servis");
   public final JButton detail = new JButton("Detalj");
@@ -24,6 +24,7 @@ public class ServicesView extends JPanel {
   private final DefaultTableModel tableModel;
   private List<ServiceRow> services = new ArrayList<>();
 
+  /** Stvara tablicu servisne povijesti i gumbe za novi servis i prikaz detalja. */
   public ServicesView() {
     super(new BorderLayout(12, 12));
     setOpaque(false);
@@ -49,6 +50,11 @@ public class ServicesView extends JPanel {
     add(new JScrollPane(table), BorderLayout.CENTER);
   }
 
+  /**
+   * Zamjenjuje prikazanu servisnu povijest i internu listu objekata povezanih s recima tablice.
+   *
+   * @param values servisni retci za prikaz
+   */
   public void setRows(List<ServiceRow> values) {
     services = new ArrayList<>(values);
     tableModel.setRowCount(0);
@@ -63,6 +69,7 @@ public class ServicesView extends JPanel {
     }
   }
 
+  /** @return servisni redak označen u tablici ili {@code null} ako nema odabira */
   public ServiceRow selected() {
     int selectedRow = table.getSelectedRow();
     if (selectedRow < 0) {
@@ -71,6 +78,11 @@ public class ServicesView extends JPanel {
     return services.get(selectedRow);
   }
 
+  /**
+   * Prikazuje detalje jednog servisa, njegove stavke, ukupni stvarni trošak i riješene probleme.
+   *
+   * @param detail pripremljeni detalj servisa
+   */
   public void showServiceDetails(ServiceDetail detail) {
     String text = Ui.date(detail.getHeader().getDate());
     text += " / " + Ui.km(detail.getHeader().getMileage());

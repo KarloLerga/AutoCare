@@ -75,7 +75,11 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">DatabaseConfig</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Konfigurira i otvara JPA vezu aplikacije prema Azure SQL bazi.</div>
+<div class="block">Centralizira konfiguraciju potrebnu za otvaranje JPA persistence sloja prema Azure SQL bazi.
+
+<p>Klasa sastavlja SQL Server JDBC URL, dodaje korisničke podatke u JPA properties i vraća
+<code>EntityManagerFactory</code>. Time Service i Repository klase ne moraju poznavati detalje
+povezivanja s bazom.</div>
 </div>
 </section>
 <section class="summary">
@@ -94,7 +98,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static jakarta.persistence.EntityManagerFactory</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#open()" class="member-name-link">open</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Stvara tvornicu JPA entity managera za persistence unit aplikacije.</div>
+<div class="block">Otvara zajednički <code>EntityManagerFactory</code> za AutoCare persistence unit.</div>
 </div>
 </div>
 </div>
@@ -118,12 +122,15 @@ loadScripts(document, 'script');</script>
 <h3>open</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">jakarta.persistence.EntityManagerFactory</span>&nbsp;<span class="element-name">open</span>()</div>
-<div class="block">Stvara tvornicu JPA entity managera za persistence unit aplikacije.</div>
+<div class="block">Otvara zajednički <code>EntityManagerFactory</code> za AutoCare persistence unit.
+
+<p>Metoda sastavlja JDBC URL za Azure SQL, postavlja korisničko ime i lozinku te pokreće JPA
+bootstrap preko <code>Persistence</code>.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>otvorena tvornica koju aplikacija zatvara pri gašenju</dd>
+<dd>otvoreni EntityManagerFactory koji Service sloj koristi tijekom rada aplikacije</dd>
 <dt>Throws:</dt>
-<dd><code>jakarta.persistence.PersistenceException</code> - ako se persistence unit ne može pokrenuti</dd>
+<dd><code>jakarta.persistence.PersistenceException</code> - ako se persistence unit ne može inicijalizirati</dd>
 </dl>
 </div>
 </section>

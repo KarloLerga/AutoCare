@@ -83,7 +83,11 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ServiceRecordService</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Spremanje i čitanje servisne povijesti.</div>
+<div class="block">Provodi spremanje i čitanje servisne povijesti vozila.
+
+<p>Spremanje servisa je transakcijski use-case koji može obuhvatiti ServiceRecord, njegove
+stavke, ažuriranje kilometraže vozila i povezivanje otvorenih problema sa servisom koji ih je
+riješio.</div>
 </div>
 </section>
 <section class="summary">
@@ -98,7 +102,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(jakarta.persistence.EntityManagerFactory)" class="member-name-link">ServiceRecordService</a><wbr>(jakarta.persistence.EntityManagerFactory&nbsp;entityManagerFactory)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Stvara servis koji upravlja servisnom poviješću.</div>
+<div class="block">Stvara servis servisne povijesti.</div>
 </div>
 </div>
 </section>
@@ -119,19 +123,19 @@ loadScripts(document, 'script');</script>
  int&nbsp;vehicleId,
  <a href="../model/Data.ServiceInput.html" title="class in hr.unizd.autocare.model">Data.ServiceInput</a>&nbsp;input)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sprema servis, stavke, novu kilometražu i odabrana riješena upozorenja u jednoj transakciji.</div>
+<div class="block">Sprema novi servis i sve povezane promjene u jednoj transakciji.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../model/Data.ServiceDetail.html" title="class in hr.unizd.autocare.model">Data.ServiceDetail</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#detail(int,int)" class="member-name-link">detail</a><wbr>(int&nbsp;ownerId,
  int&nbsp;serviceId)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Vraća detalj servisa, uključujući stavke i probleme povezane s njim.</div>
+<div class="block">Dohvaća puni detalj jednog servisa koji pripada korisniku.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../model/Data.ServiceRow.html" title="class in hr.unizd.autocare.model">Data.ServiceRow</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#list(int,int)" class="member-name-link">list</a><wbr>(int&nbsp;ownerId,
  int&nbsp;vehicleId)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Vraća servisne zapise vozila kao retke pripremljene za prikaz.</div>
+<div class="block">Dohvaća servisnu povijest vozila i pretvara zapise u retke spremne za prikaz.</div>
 </div>
 </div>
 </div>
@@ -155,7 +159,7 @@ loadScripts(document, 'script');</script>
 <h3>ServiceRecordService</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ServiceRecordService</span><wbr><span class="parameters">(jakarta.persistence.EntityManagerFactory&nbsp;entityManagerFactory)</span></div>
-<div class="block">Stvara servis koji upravlja servisnom poviješću.</div>
+<div class="block">Stvara servis servisne povijesti.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>entityManagerFactory</code> - zajednička JPA tvornica</dd>
@@ -178,14 +182,18 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">create</span><wbr><span class="parameters">(int&nbsp;ownerId,
  int&nbsp;vehicleId,
  <a href="../model/Data.ServiceInput.html" title="class in hr.unizd.autocare.model">Data.ServiceInput</a>&nbsp;input)</span></div>
-<div class="block">Sprema servis, stavke, novu kilometražu i odabrana riješena upozorenja u jednoj transakciji.</div>
+<div class="block">Sprema novi servis i sve povezane promjene u jednoj transakciji.
+
+<p>Metoda validira ulaz, provjerava da vozilo pripada korisniku, pretvara odabrane katalog
+radove u ServiceItem stavke sa stvarnim cijenama, sprema servis, po potrebi povećava trenutačnu
+kilometražu vozila te odabrane probleme povezuje s tim servisom.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>ownerId</code> - vlasnik vozila</dd>
-<dd><code>vehicleId</code> - vozilo kojem servis pripada</dd>
-<dd><code>input</code> - uneseni datum, kilometraža, napomena, radovi i cijene</dd>
+<dd><code>ownerId</code> - identifikator vlasnika</dd>
+<dd><code>vehicleId</code> - identifikator servisiranog vozila</dd>
+<dd><code>input</code> - podaci uneseni kroz editor servisa</dd>
 <dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako su podaci nepotpuni ili vozilo, rad ili problem nije dostupan</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako vozilo, rad, problem ili uneseni podaci nisu valjani</dd>
 </dl>
 </div>
 </section>
@@ -196,13 +204,13 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../model/Data.ServiceRow.html" title="class in hr.unizd.autocare.model">Data.ServiceRow</a>&gt;</span>&nbsp;<span class="element-name">list</span><wbr><span class="parameters">(int&nbsp;ownerId,
  int&nbsp;vehicleId)</span></div>
-<div class="block">Vraća servisne zapise vozila kao retke pripremljene za prikaz.</div>
+<div class="block">Dohvaća servisnu povijest vozila i pretvara zapise u retke spremne za prikaz.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>ownerId</code> - identifikator vlasnika</dd>
 <dd><code>vehicleId</code> - identifikator vozila</dd>
 <dt>Returns:</dt>
-<dd>servisna povijest od najnovijeg zapisa</dd>
+<dd>servisni zapisi pripremljeni za ServicesView</dd>
 </dl>
 </div>
 </section>
@@ -213,15 +221,15 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../model/Data.ServiceDetail.html" title="class in hr.unizd.autocare.model">Data.ServiceDetail</a></span>&nbsp;<span class="element-name">detail</span><wbr><span class="parameters">(int&nbsp;ownerId,
  int&nbsp;serviceId)</span></div>
-<div class="block">Vraća detalj servisa, uključujući stavke i probleme povezane s njim.</div>
+<div class="block">Dohvaća puni detalj jednog servisa koji pripada korisniku.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>ownerId</code> - identifikator vlasnika vozila</dd>
+<dd><code>ownerId</code> - identifikator vlasnika</dd>
 <dd><code>serviceId</code> - identifikator servisa</dd>
 <dt>Returns:</dt>
-<dd>pojedinosti servisa</dd>
+<dd>zaglavlje servisa, njegove stavke i problemi riješeni tim servisom</dd>
 <dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako servis nije pronađen ili ne pripada korisniku</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako servis nije pronađen za tog korisnika</dd>
 </dl>
 </div>
 </section>

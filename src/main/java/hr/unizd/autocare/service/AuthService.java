@@ -7,26 +7,31 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 
-/** Registracija i prijava korisnika. */
+/**
+ * Provodi poslovne postupke prijave i registracije korisnika.
+ *
+ * <p>Service otvara EntityManager za pojedinu operaciju, koristi UserRepository i primjenjuje
+ * validacijska pravila prije nego rezultat vrati Controlleru.
+ */
 public class AuthService {
   private final EntityManagerFactory entityManagerFactory;
 
   /**
-   * Stvara servis za prijavu i registraciju koristeći zajedničku JPA tvornicu.
+   * Stvara servis za autentikaciju.
    *
-   * @param entityManagerFactory tvornica otvorena pri pokretanju aplikacije
+   * @param entityManagerFactory zajednička JPA tvornica iz koje se otvaraju EntityManageri
    */
   public AuthService(EntityManagerFactory entityManagerFactory) {
     this.entityManagerFactory = entityManagerFactory;
   }
 
   /**
-   * Provjerava vjerodajnice i vraća ID korisnika.
+   * Provjerava vjerodajnice i vraća identifikator pronađenog korisnika.
    *
-   * @param email adresa korisničkog računa
+   * @param email unesena e-mail adresa
    * @param password unesena lozinka
-   * @return ID prijavljenog korisnika
-   * @throws IllegalArgumentException ako podaci nisu valjani ili ne odgovaraju računu
+   * @return identifikator prijavljenog korisnika
+   * @throws IllegalArgumentException ako unos nije valjan ili korisnik/lozinka ne odgovaraju
    */
   public int login(String email, String password) {
     String cleanEmail = Checks.email(email);
@@ -47,13 +52,13 @@ public class AuthService {
   }
 
   /**
-   * Registrira novi račun i sprema ga u jednoj transakciji.
+   * Validira podatke novog računa i sprema korisnika u jednoj transakciji.
    *
    * @param name ime korisnika
-   * @param email adresa novog računa
-   * @param password lozinka novog računa
-   * @return ID stvorenog korisnika
-   * @throws IllegalArgumentException ako su podaci nevaljani ili je adresa već registrirana
+   * @param email e-mail adresa koja mora biti jedinstvena
+   * @param password lozinka koja mora zadovoljiti osnovno pravilo duljine
+   * @return identifikator novostvorenog korisnika
+   * @throws IllegalArgumentException ako su podaci nevaljani ili e-mail već postoji
    */
   public int register(String name, String email, String password) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();

@@ -7,9 +7,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import java.math.BigDecimal;
 
-/** Jedan izvršeni zahvat i stvarno plaćena cijena. */
+/**
+ * Persistentna stavka jednog servisa koja povezuje ServiceRecord sa standardnim WorkDefinitionom.
+ *
+ * <p>Za razliku od informativnog raspona u katalogu, {@code actualPrice} predstavlja stvarno
+ * plaćeni iznos konkretne izvedbe rada.
+ */
 @Entity
-/** Stavka evidentiranog servisa s povezanom vrstom rada i stvarnom cijenom. */
 public class ServiceItem {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,8 +27,17 @@ public class ServiceItem {
 
   private BigDecimal actualPrice;
 
+  /** Konstruktor bez argumenata potreban JPA provideru. */
   protected ServiceItem() {}
 
+  /**
+   * Stvara stavku koja povezuje servis, izvedeni standardni rad i stvarnu cijenu.
+   *
+   * @param serviceRecord servis kojem stavka pripada
+   * @param work izvedeni standardni rad
+   * @param actualPrice stvarno plaćeni iznos
+   * @throws IllegalArgumentException ako cijena nije zadana ili je negativna
+   */
   ServiceItem(ServiceRecord serviceRecord, WorkDefinition work, BigDecimal actualPrice) {
     this.serviceRecord = serviceRecord;
     this.work = work;

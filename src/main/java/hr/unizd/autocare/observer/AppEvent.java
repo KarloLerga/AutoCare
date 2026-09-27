@@ -1,11 +1,11 @@
 package hr.unizd.autocare.observer;
 
-/** Vrste promjena o kojima Observeri trebaju biti obaviješteni. */
+/** Događaji koji mogu zahtijevati osvježavanje zajedničkog stanja ili prikaza aplikacije. */
 public enum AppEvent {
-  /** Podaci ili popis vozila promijenili su se. */
+  /** Promijenjen je popis ili podatak vozila. */
   VEHICLE_CHANGED,
-  /** Korisnik je odabrao drugo aktivno vozilo. */
+  /** Promijenjeno je vozilo koje predstavlja aktivni kontekst. */
   ACTIVE_VEHICLE_CHANGED,
-  /** Spremljen je novi servisni zapis. */
+  /** Spremljen je novi servis i ovisni prikazi trebaju osvježavanje. */
   SERVICE_SAVED
 }

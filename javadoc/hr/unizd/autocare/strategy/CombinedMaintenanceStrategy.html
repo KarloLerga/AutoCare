@@ -86,7 +86,9 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CombinedMaintenanceStrategy</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="MaintenanceStrategy.html" title="interface in hr.unizd.autocare.strategy">MaintenanceStrategy</a></span></div>
-<div class="block">Kod kombiniranog intervala uzima se kriterij koji dolazi prije.</div>
+<div class="block">Strategy implementacija za radove koji imaju i kilometarski i vremenski servisni interval.
+
+<p>Računa oba kriterija i vraća onaj koji ranije dospijeva, odnosno manji preostali omjer.</div>
 </div>
 </section>
 <section class="summary">
@@ -123,7 +125,7 @@ implements <a href="MaintenanceStrategy.html" title="interface in hr.unizd.autoc
  int&nbsp;currentMileage,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/LocalDate.html" title="class or interface in java.time" class="external-link">LocalDate</a>&nbsp;today)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Računa preostali udio odabranog intervala održavanja.</div>
+<div class="block">Računa kilometarski i vremenski kriterij te vraća stroži od ta dva rezultata.</div>
 </div>
 </div>
 </div>
@@ -168,20 +170,19 @@ implements <a href="MaintenanceStrategy.html" title="interface in hr.unizd.autoc
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;lastMileage,
  int&nbsp;currentMileage,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/LocalDate.html" title="class or interface in java.time" class="external-link">LocalDate</a>&nbsp;today)</span></div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="MaintenanceStrategy.html#calculate(java.lang.Integer,java.lang.Integer,java.time.LocalDate,java.lang.Integer,int,java.time.LocalDate)">MaintenanceStrategy</a></code></span></div>
-<div class="block">Računa preostali udio odabranog intervala održavanja.</div>
+<div class="block">Računa kilometarski i vremenski kriterij te vraća stroži od ta dva rezultata.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="MaintenanceStrategy.html#calculate(java.lang.Integer,java.lang.Integer,java.time.LocalDate,java.lang.Integer,int,java.time.LocalDate)">calculate</a></code>&nbsp;in interface&nbsp;<code><a href="MaintenanceStrategy.html" title="interface in hr.unizd.autocare.strategy">MaintenanceStrategy</a></code></dd>
 <dt>Parameters:</dt>
-<dd><code>intervalKm</code> - kilometarski interval, ako se koristi</dd>
-<dd><code>intervalMonths</code> - vremenski interval u mjesecima, ako se koristi</dd>
-<dd><code>lastDate</code> - datum prethodnog održavanja</dd>
-<dd><code>lastMileage</code> - kilometraža prethodnog održavanja</dd>
-<dd><code>currentMileage</code> - trenutačna kilometraža</dd>
-<dd><code>today</code> - datum izračuna</dd>
+<dd><code>intervalKm</code> - kilometarski interval</dd>
+<dd><code>intervalMonths</code> - vremenski interval u mjesecima</dd>
+<dd><code>lastDate</code> - datum posljednje izvedbe rada</dd>
+<dd><code>lastMileage</code> - kilometraža posljednje izvedbe rada</dd>
+<dd><code>currentMileage</code> - trenutačna kilometraža vozila</dd>
+<dd><code>today</code> - datum na koji se izračun radi</dd>
 <dt>Returns:</dt>
-<dd>udio intervala koji je preostao; rezultat može biti manji od nule nakon dospijeća</dd>
+<dd>manji preostali omjer kilometarskog i vremenskog intervala</dd>
 </dl>
 </div>
 </section>

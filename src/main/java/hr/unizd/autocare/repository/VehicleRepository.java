@@ -4,7 +4,7 @@ import hr.unizd.autocare.domain.Vehicle;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 
-/** JPA dohvat i spremanje korisnikovih vozila. */
+/** Repository za persistence operacije nad korisnikovim vozilima. */
 public class VehicleRepository {
   private final EntityManager entityManager;
 
@@ -18,11 +18,14 @@ public class VehicleRepository {
   }
 
   /**
-   * Vraća vozilo samo ako pripada navedenom korisniku; inače vraća {@code null}.
+   * Dohvaća vozilo samo ako pripada zadanom korisniku.
    *
-   * @param ownerId primarni ključ vlasnika
-   * @param vehicleId primarni ključ vozila
-   * @return vozilo vlasnika ili {@code null}
+   * <p>Ova metoda centralizira provjeru vlasništva i sprječava da viši slojevi slučajno rade s
+   * vozilom drugog korisnika.
+   *
+   * @param ownerId identifikator vlasnika
+   * @param vehicleId identifikator vozila
+   * @return vozilo ili {@code null} ako takvo vozilo ne pripada korisniku
    */
   public Vehicle findForOwner(int ownerId, int vehicleId) {
     List<Vehicle> vehicles = entityManager
@@ -42,9 +45,9 @@ public class VehicleRepository {
   }
 
   /**
-   * Vraća vozila korisnika poredana prema identifikatoru.
+   * Dohvaća sva vozila jednog korisnika.
    *
-   * @param ownerId primarni ključ vlasnika
+   * @param ownerId identifikator vlasnika
    * @return vozila korisnika
    */
   public List<Vehicle> findAllForOwner(int ownerId) {

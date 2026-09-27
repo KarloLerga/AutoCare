@@ -18,7 +18,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-/** Povezuje glavnu navigaciju s Controllerima i osvježava aktivni kontekst. */
+/**
+ * Središnji Controller za navigaciju i zajednički kontekst AutoCare aplikacije.
+ *
+ * <p>Klasa stvara funkcionalne Controllere, povezuje navigacijske gumbe, reagira na prijavu,
+ * učitava aktivno vozilo i određuje koji ekran treba osvježiti. Implementira Observer kako bi
+ * nakon promjene vozila ili spremanja servisa mogao osvježiti zajednički aplikacijski kontekst.
+ */
 public class MainController implements Observer {
   private final MainFrame frame;
   private final Session session;
@@ -31,18 +37,22 @@ public class MainController implements Observer {
   private final ProblemsController problems;
 
   /**
-   * Povezuje glavne poglede i aplikacijske servise te registrira Observera.
+   * Povezuje glavni prozor sa svim Service objektima i Controllerima aplikacije.
+   *
+   * <p>Konstruktor stvara funkcionalne Controllere, konfigurira AuthController callback,
+   * registrira navigacijske listenere i prijavljuje MainController kao Observer na zajednički
+   * Subject. Po završetku prikazuje ekran za prijavu.
    *
    * @param frame glavni prozor aplikacije
-   * @param session trenutačni korisnički kontekst
+   * @param session zajednička korisnička sesija
    * @param authService servis prijave i registracije
    * @param catalogService servis kataloga
    * @param vehicleService servis vozila
-   * @param serviceRecordService servisne evidencije
-   * @param maintenanceService izračun održavanja
-   * @param problemService evidencija problema
-   * @param dashboardService sažetak aktivnog vozila
-   * @param subject izvor događaja promjene aplikacijskog stanja
+   * @param serviceRecordService servis za servisnu povijest
+   * @param maintenanceService servis održavanja
+   * @param problemService servis problema
+   * @param dashboardService servis Dashboard podataka
+   * @param subject Subject koji objavljuje aplikacijske događaje
    */
   public MainController(
       MainFrame frame,
@@ -81,6 +91,12 @@ public class MainController implements Observer {
     frame.auth();
   }
 
+  /**
+   * Povezuje gumbe glavne navigacije i odjave s odgovarajućim akcijama Controllera.
+   *
+   * <p>Svaki listener samo delegira na imenovanu metodu kako bi logika navigacije ostala izdvojena
+   * iz anonimnih Swing listenera.
+   */
   private void activateForm() {
     frame.dashboardButton.addActionListener(new ActionListener() {
       @Override
@@ -132,11 +148,24 @@ public class MainController implements Observer {
     });
   }
 
+  /**
+   * Otvara aplikacijski dio nakon uspješne prijave.
+   *
+   * @param ownerId identifikator prijavljenog korisnika
+   */
   private void enter(int ownerId) {
     session.login(ownerId);
     refreshContext(true);
   }
 
+  /**
+   * Ponovno učitava aktivno vozilo i zajednički kontekst glavnog prozora.
+   *
+   * <p>Ako korisnik nema vozilo, otvara ekran Vozila. Ako aktivno vozilo postoji, po potrebi
+   * otvara Dashboard i zatim učitava sadržaj trenutačno vidljivog ekrana.
+   *
+   * @param showDashboard treba li nakon osvježavanja aktivnog vozila otvoriti Dashboard
+   */
   private void refreshContext(boolean showDashboard) {
     if (session.getOwnerId() == 0) {
       return;
@@ -160,11 +189,22 @@ public class MainController implements Observer {
     }
   }
 
+  /**
+   * Mijenja aktivnu aplikacijsku stranicu i odmah učitava njezin aktualni sadržaj.
+   *
+   * @param pageName naziv stranice registriran u MainFrame CardLayoutu
+   */
   private void navigate(String pageName) {
     frame.showPage(pageName);
     loadVisible();
   }
 
+  /**
+   * Učitava podatke samo za ekran koji je trenutačno vidljiv.
+   *
+   * <p>Vozila i Katalog mogu se otvoriti bez aktivnog vozila. Dashboard, Servisi, Održavanje i
+   * Problemi učitavaju se samo ako Session sadrži aktivno vozilo.
+   */
   private void loadVisible() {
     String page = frame.page();
     if (page.equals("Vozila")) {
@@ -190,6 +230,7 @@ public class MainController implements Observer {
     }
   }
 
+  /** Dohvaća Dashboard podatke za aktivno vozilo i predaje ih DashboardViewu. */
   private void loadDashboard() {
     try {
       frame.dashboard.showDashboard(dashboardService.get(session.getOwnerId(), session.getActiveVehicle().getId()));
@@ -198,8 +239,15 @@ public class MainController implements Observer {
     }
   }
 
+  /**
+   * Reagira na događaj koji je objavio Subject.
+   *
+   * <p>Promjena aktivnog vozila zahtijeva potpuno ponovno učitavanje konteksta i otvaranje
+   * Dashboarda, dok ostale promjene osvježavaju podatke bez prisilne promjene stranice.
+   *
+   * @param event aplikacijski događaj koji je potrebno obraditi
+   */
   @Override
-  /** Osvježava prikaze koji ovise o vozilu ili servisnoj povijesti. */
   public void update(AppEvent event) {
     if (event == AppEvent.ACTIVE_VEHICLE_CHANGED) {
       refreshContext(true);
@@ -208,6 +256,12 @@ public class MainController implements Observer {
     }
   }
 
+  /**
+   * Odjavljuje korisnika i vraća aplikaciju u čisto početno stanje.
+   *
+   * <p>Čisti Session, osjetljivo polje lozinke i prikazane podatke prethodnog korisnika prije
+   * povratka na ekran prijave.
+   */
   private void logout() {
     session.logout();
     frame.login.password.setText("");

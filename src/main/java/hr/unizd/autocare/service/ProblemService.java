@@ -11,13 +11,16 @@ import jakarta.persistence.EntityTransaction;
 import java.time.LocalDate;
 import java.util.List;
 
-/** Problemi koje vlasnik bilježi bez automatske dijagnostike. */
+/**
+ * Provodi dohvat i evidentiranje problema korisnikova vozila.
+ *
+ * <p>Service ne nudi zasebno ručno zatvaranje problema. Problem postaje riješen kada ga
+ * ServiceRecordService poveže sa servisom koji ga je riješio.
+ */
 public class ProblemService {
   private final EntityManagerFactory entityManagerFactory;
 
   /**
-   * Stvara servis za evidentiranje problema vozila.
-   *
    * @param entityManagerFactory zajednička JPA tvornica
    */
   public ProblemService(EntityManagerFactory entityManagerFactory) {
@@ -25,7 +28,7 @@ public class ProblemService {
   }
 
   /**
-   * Vraća probleme odabranog vozila korisnika.
+   * Dohvaća probleme vozila koje pripada zadanom korisniku.
    *
    * @param ownerId identifikator vlasnika
    * @param vehicleId identifikator vozila
@@ -41,12 +44,12 @@ public class ProblemService {
   }
 
   /**
-   * Sprema novi korisnički opis problema za vozilo u vlasništvu korisnika.
+   * Validira i sprema novi problem aktivnog vozila.
    *
    * @param ownerId identifikator vlasnika
    * @param vehicleId identifikator vozila
-   * @param description opis problema
-   * @param category kategorija problema
+   * @param description korisnički opis problema
+   * @param category odabrana kategorija problema
    * @throws IllegalArgumentException ako vozilo ne pripada korisniku ili opis nije valjan
    */
   public void create(int ownerId, int vehicleId, String description, ProblemCategory category) {

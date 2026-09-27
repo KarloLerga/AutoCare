@@ -1,6 +1,8 @@
 package hr.unizd.autocare.domain;
 
-/** Grupe zahvata koje korisniku olakšavaju pregled kataloga. */
+/**
+ * Korisničke grupe standardnih radova koje omogućuju pregled i filtriranje informativnog kataloga.
+ */
 public enum CatalogCategory {
   REGULAR_MAINTENANCE("Redovno održavanje"),
   MAJOR_SERVICE("Veći servisi"),
@@ -17,6 +19,9 @@ public enum CatalogCategory {
 
   private final String displayName;
 
+  /**
+   * @param displayName naziv kategorije prikazan korisniku
+   */
   CatalogCategory(String displayName) {
     this.displayName = displayName;
   }

@@ -8,9 +8,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.math.BigDecimal;
 
-/** Standardni zahvat iz kataloga i, za održavanje, njegov servisni interval. */
+/**
+ * Persistentna definicija standardnog rada iz kataloga.
+ *
+ * <p>Rad ima vrstu, korisničku kategoriju, opcionalni kilometarski i vremenski interval te
+ * informativni raspon cijene. Raspon cijene nije stvarno plaćeni iznos korisnikova servisa.
+ */
 @Entity
-/** Standardni rad iz kataloga s kategorijom, intervalima i okvirnom cijenom. */
 public class WorkDefinition {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +33,7 @@ public class WorkDefinition {
   private BigDecimal minPrice;
   private BigDecimal maxPrice;
 
+  /** Konstruktor bez argumenata potreban JPA provideru. */
   protected WorkDefinition() {}
 
   public Integer getId() {

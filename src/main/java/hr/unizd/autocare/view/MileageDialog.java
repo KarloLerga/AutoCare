@@ -9,12 +9,18 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-/** Dijalog za unos nove kilometraže vozila. */
+/** Modalni dijalog za unos nove trenutačne kilometraže odabranog vozila. */
 public class MileageDialog extends JDialog {
   public final JTextField mileage;
   public final JButton save = new JButton("Spremi");
   public final JButton cancel = new JButton("Odustani");
 
+  /**
+   * Stvara dijalog i početno prikazuje trenutačnu kilometražu vozila.
+   *
+   * @param owner roditeljski prozor
+   * @param currentMileage trenutačno spremljena kilometraža
+   */
   public MileageDialog(Window owner, int currentMileage) {
     super(owner, "Promijeni kilometražu", ModalityType.APPLICATION_MODAL);
     mileage = new JTextField(Integer.toString(currentMileage), 14);

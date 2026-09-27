@@ -53,24 +53,26 @@ loadScripts(document, 'script');</script>
 <h2 class="title" id="I:A">A</h2>
 <dl class="index">
 <dt><a href="hr/unizd/autocare/view/components/Ui.html#actions(java.awt.Component...)" class="member-name-link">actions(Component...)</a> - Static method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/Ui.html" title="class in hr.unizd.autocare.view.components">Ui</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Stvara red namijenjen grupiranju akcijskih gumba pri dnu forme ili dijaloga.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/VehiclesView.html#activate" class="member-name-link">activate</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/VehiclesView.html" title="class in hr.unizd.autocare.view">VehiclesView</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/service/VehicleService.html#activate(int,int)" class="member-name-link">activate(int, int)</a> - Method in class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/VehicleService.html" title="class in hr.unizd.autocare.service">VehicleService</a></dt>
 <dd>
-<div class="block">Postavlja kao aktivno vozilo koje pripada navedenom korisniku.</div>
+<div class="block">Postavlja jedno od korisnikovih vozila kao aktivno vozilo.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/domain/AppUser.html#activate(hr.unizd.autocare.domain.Vehicle)" class="member-name-link">activate(Vehicle)</a> - Method in class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/AppUser.html" title="class in hr.unizd.autocare.domain">AppUser</a></dt>
 <dd>
-<div class="block">Postavlja aktivno vozilo korisnika.</div>
+<div class="block">Postavlja vozilo kao aktivno vozilo korisnika.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/service/VehicleService.html#active(int)" class="member-name-link">active(int)</a> - Method in class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/VehicleService.html" title="class in hr.unizd.autocare.service">VehicleService</a></dt>
 <dd>
-<div class="block">Vraća trenutačno aktivno vozilo korisnika.</div>
+<div class="block">Dohvaća trenutačno aktivno vozilo korisnika.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/observer/AppEvent.html#ACTIVE_VEHICLE_CHANGED" class="member-name-link">ACTIVE_VEHICLE_CHANGED</a> - Enum constant in enum class hr.unizd.autocare.observer.<a href="hr/unizd/autocare/observer/AppEvent.html" title="enum class in hr.unizd.autocare.observer">AppEvent</a></dt>
 <dd>
-<div class="block">Korisnik je odabrao drugo aktivno vozilo.</div>
+<div class="block">Promijenjeno je vozilo koje predstavlja aktivni kontekst.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/ServiceEditorDialog.html#actualPrice" class="member-name-link">actualPrice</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/ServiceEditorDialog.html" title="class in hr.unizd.autocare.view">ServiceEditorDialog</a></dt>
 <dd>&nbsp;</dd>
@@ -82,7 +84,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/service/VehicleService.html#add(int,int,int,int)" class="member-name-link">add(int, int, int, int)</a> - Method in class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/VehicleService.html" title="class in hr.unizd.autocare.service">VehicleService</a></dt>
 <dd>
-<div class="block">Dodaje vozilo i postavlja ga kao aktivno ako korisnik još nema aktivno vozilo.</div>
+<div class="block">Dodaje novo vozilo korisniku na temelju odabrane kataloške varijante.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/UserRepository.html#add(hr.unizd.autocare.domain.AppUser)" class="member-name-link">add(AppUser)</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/UserRepository.html" title="class in hr.unizd.autocare.repository">UserRepository</a></dt>
 <dd>
@@ -90,11 +92,12 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/ProblemRepository.html#add(hr.unizd.autocare.domain.Problem)" class="member-name-link">add(Problem)</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/ProblemRepository.html" title="class in hr.unizd.autocare.repository">ProblemRepository</a></dt>
 <dd>
-<div class="block">Predaje novi problem persistence kontekstu.</div>
+<div class="block">Dodaje novi problem u trenutačni persistence context.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/ServiceRecordRepository.html#add(hr.unizd.autocare.domain.ServiceRecord)" class="member-name-link">add(ServiceRecord)</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/ServiceRecordRepository.html" title="class in hr.unizd.autocare.repository">ServiceRecordRepository</a></dt>
 <dd>
-<div class="block">Predaje novi servis persistence kontekstu; transakcijom upravlja pozivajući servisni sloj.</div>
+<div class="block">Dodaje novi servis u persistence context; povezane nove stavke spremaju se prema JPA cascade
+postavci entiteta.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/VehicleRepository.html#add(hr.unizd.autocare.domain.Vehicle)" class="member-name-link">add(Vehicle)</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/VehicleRepository.html" title="class in hr.unizd.autocare.repository">VehicleRepository</a></dt>
 <dd>
@@ -104,55 +107,61 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/domain/ServiceRecord.html#addItem(hr.unizd.autocare.domain.WorkDefinition,java.math.BigDecimal)" class="member-name-link">addItem(WorkDefinition, BigDecimal)</a> - Method in class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/ServiceRecord.html" title="class in hr.unizd.autocare.domain">ServiceRecord</a></dt>
 <dd>
-<div class="block">Dodaje izvršeni rad s iznosom koji je korisnik stvarno platio.</div>
+<div class="block">Dodaje jednu stvarno izvedenu servisnu stavku ovom servisu.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/observer/Subject.html#addObserver(hr.unizd.autocare.observer.Observer)" class="member-name-link">addObserver(Observer)</a> - Method in class hr.unizd.autocare.observer.<a href="hr/unizd/autocare/observer/Subject.html" title="class in hr.unizd.autocare.observer">Subject</a></dt>
 <dd>
-<div class="block">Registrira Observer za buduće događaje.</div>
+<div class="block">Registrira Observer koji treba primati buduće događaje.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/ServiceEditorDialog.html#addWork(hr.unizd.autocare.domain.WorkDefinition)" class="member-name-link">addWork(WorkDefinition)</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/ServiceEditorDialog.html" title="class in hr.unizd.autocare.view">ServiceEditorDialog</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="hr/unizd/autocare/repository/CatalogRepository.html#allWorks()" class="member-name-link">allWorks()</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/CatalogRepository.html" title="class in hr.unizd.autocare.repository">CatalogRepository</a></dt>
 <dd>
-<div class="block">Vraća cijeli informativni katalog standardnih radova.</div>
+<div class="block">Dodaje odabrani rad u privremeni popis stavki servisa sa stvarno plaćenom cijenom iz forme.</div>
 </dd>
+<dt><a href="hr/unizd/autocare/repository/CatalogRepository.html#allWorks()" class="member-name-link">allWorks()</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/CatalogRepository.html" title="class in hr.unizd.autocare.repository">CatalogRepository</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/observer/AppEvent.html" class="type-name-link" title="enum class in hr.unizd.autocare.observer">AppEvent</a> - Enum Class in <a href="hr/unizd/autocare/observer/package-summary.html">hr.unizd.autocare.observer</a></dt>
 <dd>
-<div class="block">Vrste promjena o kojima Observeri trebaju biti obaviješteni.</div>
+<div class="block">Događaji koji mogu zahtijevati osvježavanje zajedničkog stanja ili prikaza aplikacije.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/MainFrame.html#application()" class="member-name-link">application()</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Prikazuje glavni aplikacijski shell s navigacijom i funkcionalnim stranicama.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/domain/AppUser.html" class="type-name-link" title="class in hr.unizd.autocare.domain">AppUser</a> - Class in <a href="hr/unizd/autocare/domain/package-summary.html">hr.unizd.autocare.domain</a></dt>
 <dd>
-<div class="block">Korisnički račun i njegovo aktivno vozilo.</div>
+<div class="block">Persistentni domenski objekt korisničkog računa.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/domain/AppUser.html#%3Cinit%3E()" class="member-name-link">AppUser()</a> - Constructor for class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/AppUser.html" title="class in hr.unizd.autocare.domain">AppUser</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Konstruktor bez argumenata potreban JPA provideru pri učitavanju entiteta.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/domain/AppUser.html#%3Cinit%3E(java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">AppUser(String, String, String)</a> - Constructor for class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/AppUser.html" title="class in hr.unizd.autocare.domain">AppUser</a></dt>
 <dd>
-<div class="block">Stvara račun nakon provjere imena, adrese e-pošte i lozinke.</div>
+<div class="block">Stvara novi korisnički račun iz već validiranih podataka.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/MainFrame.html#auth()" class="member-name-link">auth()</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Prikazuje ekran prijave i skriva aplikacijski dio.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/controller/AuthController.html" class="type-name-link" title="class in hr.unizd.autocare.controller">AuthController</a> - Class in <a href="hr/unizd/autocare/controller/package-summary.html">hr.unizd.autocare.controller</a></dt>
 <dd>
-<div class="block">Prijava i registracija korisničkog računa.</div>
+<div class="block">Upravlja korisničkim tokovima prijave i registracije.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/controller/AuthController.html#%3Cinit%3E(hr.unizd.autocare.view.MainFrame,hr.unizd.autocare.service.AuthService,hr.unizd.autocare.controller.AuthController.LoginListener)" class="member-name-link">AuthController(MainFrame, AuthService, AuthController.LoginListener)</a> - Constructor for class hr.unizd.autocare.controller.<a href="hr/unizd/autocare/controller/AuthController.html" title="class in hr.unizd.autocare.controller">AuthController</a></dt>
 <dd>
-<div class="block">Povezuje prikaze prijave i registracije s autentifikacijskim servisom.</div>
+<div class="block">Stvara Controller za prijavu i registraciju te povezuje akcije odgovarajućih Viewova.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/controller/AuthController.LoginListener.html" class="type-name-link" title="interface in hr.unizd.autocare.controller">AuthController.LoginListener</a> - Interface in <a href="hr/unizd/autocare/controller/package-summary.html">hr.unizd.autocare.controller</a></dt>
 <dd>
-<div class="block">Prima obavijest da se korisnik uspješno prijavio.</div>
+<div class="block">Callback kojim AuthController obavještava ostatak aplikacije da je prijava završila uspješno.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/service/AuthService.html" class="type-name-link" title="class in hr.unizd.autocare.service">AuthService</a> - Class in <a href="hr/unizd/autocare/service/package-summary.html">hr.unizd.autocare.service</a></dt>
 <dd>
-<div class="block">Registracija i prijava korisnika.</div>
+<div class="block">Provodi poslovne postupke prijave i registracije korisnika.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/service/AuthService.html#%3Cinit%3E(jakarta.persistence.EntityManagerFactory)" class="member-name-link">AuthService(EntityManagerFactory)</a> - Constructor for class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/AuthService.html" title="class in hr.unizd.autocare.service">AuthService</a></dt>
 <dd>
-<div class="block">Stvara servis za prijavu i registraciju koristeći zajedničku JPA tvornicu.</div>
+<div class="block">Stvara servis za autentikaciju.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:B">B</h2>
@@ -168,18 +177,24 @@ loadScripts(document, 'script');</script>
 <dl class="index">
 <dt><a href="hr/unizd/autocare/domain/MaintenanceCalculator.html#calculate(java.lang.Integer,java.lang.Integer,java.time.LocalDate,java.lang.Integer,int,java.time.LocalDate)" class="member-name-link">calculate(Integer, Integer, LocalDate, Integer, int, LocalDate)</a> - Method in class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/MaintenanceCalculator.html" title="class in hr.unizd.autocare.domain">MaintenanceCalculator</a></dt>
 <dd>
-<div class="block">Izračunava udio preostalog intervala prema kilometraži, vremenu ili oboma.</div>
+<div class="block">Računa relativni dio servisnog intervala koji je još preostao.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/strategy/CombinedMaintenanceStrategy.html#calculate(java.lang.Integer,java.lang.Integer,java.time.LocalDate,java.lang.Integer,int,java.time.LocalDate)" class="member-name-link">calculate(Integer, Integer, LocalDate, Integer, int, LocalDate)</a> - Method in class hr.unizd.autocare.strategy.<a href="hr/unizd/autocare/strategy/CombinedMaintenanceStrategy.html" title="class in hr.unizd.autocare.strategy">CombinedMaintenanceStrategy</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Računa kilometarski i vremenski kriterij te vraća stroži od ta dva rezultata.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/strategy/MaintenanceStrategy.html#calculate(java.lang.Integer,java.lang.Integer,java.time.LocalDate,java.lang.Integer,int,java.time.LocalDate)" class="member-name-link">calculate(Integer, Integer, LocalDate, Integer, int, LocalDate)</a> - Method in interface hr.unizd.autocare.strategy.<a href="hr/unizd/autocare/strategy/MaintenanceStrategy.html" title="interface in hr.unizd.autocare.strategy">MaintenanceStrategy</a></dt>
 <dd>
-<div class="block">Računa preostali udio odabranog intervala održavanja.</div>
+<div class="block">Računa relativni dio servisnog intervala koji je preostao prema pravilima konkretne strategije.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/strategy/MileageMaintenanceStrategy.html#calculate(java.lang.Integer,java.lang.Integer,java.time.LocalDate,java.lang.Integer,int,java.time.LocalDate)" class="member-name-link">calculate(Integer, Integer, LocalDate, Integer, int, LocalDate)</a> - Method in class hr.unizd.autocare.strategy.<a href="hr/unizd/autocare/strategy/MileageMaintenanceStrategy.html" title="class in hr.unizd.autocare.strategy">MileageMaintenanceStrategy</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Uspoređuje kilometražu posljednje izvedbe, kilometarski interval i trenutačnu kilometražu.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/strategy/TimeMaintenanceStrategy.html#calculate(java.lang.Integer,java.lang.Integer,java.time.LocalDate,java.lang.Integer,int,java.time.LocalDate)" class="member-name-link">calculate(Integer, Integer, LocalDate, Integer, int, LocalDate)</a> - Method in class hr.unizd.autocare.strategy.<a href="hr/unizd/autocare/strategy/TimeMaintenanceStrategy.html" title="class in hr.unizd.autocare.strategy">TimeMaintenanceStrategy</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Uspoređuje datum posljednje izvedbe, vremenski interval i datum izračuna.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/MileageDialog.html#cancel" class="member-name-link">cancel</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/MileageDialog.html" title="class in hr.unizd.autocare.view">MileageDialog</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/RegistrationView.html#cancel" class="member-name-link">cancel</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/RegistrationView.html" title="class in hr.unizd.autocare.view">RegistrationView</a></dt>
@@ -193,24 +208,24 @@ loadScripts(document, 'script');</script>
 <dt><a href="hr/unizd/autocare/view/MainFrame.html#catalog" class="member-name-link">catalog</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/service/CatalogService.html#catalog()" class="member-name-link">catalog()</a> - Method in class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/CatalogService.html" title="class in hr.unizd.autocare.service">CatalogService</a></dt>
-<dd>
-<div class="block">Vraća sve standardne radove za informativni katalog.</div>
-</dd>
+<dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/MainFrame.html#catalogButton" class="member-name-link">catalogButton</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/domain/CatalogCategory.html" class="type-name-link" title="enum class in hr.unizd.autocare.domain">CatalogCategory</a> - Enum Class in <a href="hr/unizd/autocare/domain/package-summary.html">hr.unizd.autocare.domain</a></dt>
 <dd>
-<div class="block">Grupe zahvata koje korisniku olakšavaju pregled kataloga.</div>
+<div class="block">Korisničke grupe standardnih radova koje omogućuju pregled i filtriranje informativnog kataloga.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/controller/CatalogController.html" class="type-name-link" title="class in hr.unizd.autocare.controller">CatalogController</a> - Class in <a href="hr/unizd/autocare/controller/package-summary.html">hr.unizd.autocare.controller</a></dt>
 <dd>
-<div class="block">Učitava i filtrira informativni katalog zahvata.</div>
+<div class="block">Upravlja prikazom i filtriranjem informativnog kataloga standardnih radova.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/controller/CatalogController.html#%3Cinit%3E(hr.unizd.autocare.view.MainFrame,hr.unizd.autocare.service.CatalogService)" class="member-name-link">CatalogController(MainFrame, CatalogService)</a> - Constructor for class hr.unizd.autocare.controller.<a href="hr/unizd/autocare/controller/CatalogController.html" title="class in hr.unizd.autocare.controller">CatalogController</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Povezuje CatalogView s CatalogServiceom i registrira akciju pretraživanja.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/repository/CatalogRepository.html" class="type-name-link" title="class in hr.unizd.autocare.repository">CatalogRepository</a> - Class in <a href="hr/unizd/autocare/repository/package-summary.html">hr.unizd.autocare.repository</a></dt>
 <dd>
-<div class="block">JPA dohvat kataloga vozila i standardnih zahvata.</div>
+<div class="block">Repository za čitanje kataloga varijanti vozila i standardnih radova.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/CatalogRepository.html#%3Cinit%3E(jakarta.persistence.EntityManager)" class="member-name-link">CatalogRepository(EntityManager)</a> - Constructor for class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/CatalogRepository.html" title="class in hr.unizd.autocare.repository">CatalogRepository</a></dt>
 <dd>
@@ -218,19 +233,19 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="hr/unizd/autocare/service/CatalogService.html" class="type-name-link" title="class in hr.unizd.autocare.service">CatalogService</a> - Class in <a href="hr/unizd/autocare/service/package-summary.html">hr.unizd.autocare.service</a></dt>
 <dd>
-<div class="block">Čitanje kataloga vozila i standardnih zahvata.</div>
+<div class="block">Pruža aplikacijskom sloju podatke kataloga vozila i standardnih radova.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/service/CatalogService.html#%3Cinit%3E(jakarta.persistence.EntityManagerFactory)" class="member-name-link">CatalogService(EntityManagerFactory)</a> - Constructor for class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/CatalogService.html" title="class in hr.unizd.autocare.service">CatalogService</a></dt>
 <dd>
-<div class="block">Stvara servis za čitanje kataloga vozila i standardnih radova.</div>
+<div class="block">Stvara servis kataloga.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/CatalogView.html" class="type-name-link" title="class in hr.unizd.autocare.view">CatalogView</a> - Class in <a href="hr/unizd/autocare/view/package-summary.html">hr.unizd.autocare.view</a></dt>
 <dd>
-<div class="block">Pretraživi informativni cjenik standardnih zahvata.</div>
+<div class="block">Swing prikaz informativnog kataloga standardnih radova s pretragom i filtrom kategorije.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/CatalogView.html#%3Cinit%3E()" class="member-name-link">CatalogView()</a> - Constructor for class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/CatalogView.html" title="class in hr.unizd.autocare.view">CatalogView</a></dt>
 <dd>
-<div class="block">Stvara prikaz informativnog kataloga i filtara za pretraživanje.</div>
+<div class="block">Stvara kontrolu pretrage, odabir kategorije i read-only tablicu kataloga.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/CatalogView.html#category" class="member-name-link">category</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/CatalogView.html" title="class in hr.unizd.autocare.view">CatalogView</a></dt>
 <dd>&nbsp;</dd>
@@ -238,18 +253,28 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/domain/Checks.html" class="type-name-link" title="class in hr.unizd.autocare.domain">Checks</a> - Class in <a href="hr/unizd/autocare/domain/package-summary.html">hr.unizd.autocare.domain</a></dt>
 <dd>
-<div class="block">Osnovne provjere korisničkog unosa.</div>
+<div class="block">Zajednička domenska pravila za validaciju i normalizaciju korisničkog unosa.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/components/VehicleForm.html#clearBelowMake()" class="member-name-link">clearBelowMake()</a> - Method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/VehicleForm.html" title="class in hr.unizd.autocare.view.components">VehicleForm</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Čisti model, godinu i varijantu nakon promjene ili resetiranja marke.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/components/VehicleForm.html#clearBelowModel()" class="member-name-link">clearBelowModel()</a> - Method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/VehicleForm.html" title="class in hr.unizd.autocare.view.components">VehicleForm</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Čisti godinu i varijantu nakon promjene ili resetiranja modela.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/components/VehicleForm.html#clearBelowYear()" class="member-name-link">clearBelowYear()</a> - Method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/VehicleForm.html" title="class in hr.unizd.autocare.view.components">VehicleForm</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Čisti varijantu nakon promjene ili resetiranja godine.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/ProblemsView.html#clearEditor()" class="member-name-link">clearEditor()</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/ProblemsView.html" title="class in hr.unizd.autocare.view">ProblemsView</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Čisti polja unosa nakon uspješnog spremanja problema.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/RegistrationView.html#clearPasswords()" class="member-name-link">clearPasswords()</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/RegistrationView.html" title="class in hr.unizd.autocare.view">RegistrationView</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Briše oba polja lozinke kako osjetljivi unos ne bi ostao prikazan u formi.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/domain/ProblemCategory.html#CLIMATE" class="member-name-link">CLIMATE</a> - Enum constant in enum class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/ProblemCategory.html" title="enum class in hr.unizd.autocare.domain">ProblemCategory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/domain/CatalogCategory.html#CLIMATE_COOLING" class="member-name-link">CLIMATE_COOLING</a> - Enum constant in enum class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/CatalogCategory.html" title="enum class in hr.unizd.autocare.domain">CatalogCategory</a></dt>
@@ -258,23 +283,25 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/strategy/CombinedMaintenanceStrategy.html" class="type-name-link" title="class in hr.unizd.autocare.strategy">CombinedMaintenanceStrategy</a> - Class in <a href="hr/unizd/autocare/strategy/package-summary.html">hr.unizd.autocare.strategy</a></dt>
 <dd>
-<div class="block">Kod kombiniranog intervala uzima se kriterij koji dolazi prije.</div>
+<div class="block">Strategy implementacija za radove koji imaju i kilometarski i vremenski servisni interval.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/strategy/CombinedMaintenanceStrategy.html#%3Cinit%3E()" class="member-name-link">CombinedMaintenanceStrategy()</a> - Constructor for class hr.unizd.autocare.strategy.<a href="hr/unizd/autocare/strategy/CombinedMaintenanceStrategy.html" title="class in hr.unizd.autocare.strategy">CombinedMaintenanceStrategy</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/MainFrame.html#context(hr.unizd.autocare.domain.Vehicle)" class="member-name-link">context(Vehicle)</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Ažurira zajednički prikaz aktivnog vozila u navigacijskom dijelu prozora.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/domain/VehicleVariant.html#covers(int)" class="member-name-link">covers(int)</a> - Method in class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/VehicleVariant.html" title="class in hr.unizd.autocare.domain">VehicleVariant</a></dt>
 <dd>
-<div class="block">Provjerava nalazi li se godina proizvodnje u rasponu ove varijante.</div>
+<div class="block">Provjerava nalazi li se godina unutar raspona proizvodnje ove varijante.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/service/ServiceRecordService.html#create(int,int,hr.unizd.autocare.model.Data.ServiceInput)" class="member-name-link">create(int, int, Data.ServiceInput)</a> - Method in class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/ServiceRecordService.html" title="class in hr.unizd.autocare.service">ServiceRecordService</a></dt>
 <dd>
-<div class="block">Sprema servis, stavke, novu kilometražu i odabrana riješena upozorenja u jednoj transakciji.</div>
+<div class="block">Sprema novi servis i sve povezane promjene u jednoj transakciji.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/service/ProblemService.html#create(int,int,java.lang.String,hr.unizd.autocare.domain.ProblemCategory)" class="member-name-link">create(int, int, String, ProblemCategory)</a> - Method in class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/ProblemService.html" title="class in hr.unizd.autocare.service">ProblemService</a></dt>
 <dd>
-<div class="block">Sprema novi korisnički opis problema za vozilo u vlasništvu korisnika.</div>
+<div class="block">Validira i sprema novi problem aktivnog vozila.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:D">D</h2>
@@ -283,71 +310,76 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/model/Data.Dashboard.html#%3Cinit%3E(hr.unizd.autocare.domain.Vehicle,java.math.BigDecimal,long,hr.unizd.autocare.model.Data.MaintenanceRow)" class="member-name-link">Dashboard(Vehicle, BigDecimal, long, Data.MaintenanceRow)</a> - Constructor for class hr.unizd.autocare.model.<a href="hr/unizd/autocare/model/Data.Dashboard.html" title="class in hr.unizd.autocare.model">Data.Dashboard</a></dt>
 <dd>
-<div class="block">Stvara sažetak za aktivno vozilo.</div>
+<div class="block">Stvara sažetak podataka za aktivno vozilo.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/MainFrame.html#dashboardButton" class="member-name-link">dashboardButton</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/service/DashboardService.html" class="type-name-link" title="class in hr.unizd.autocare.service">DashboardService</a> - Class in <a href="hr/unizd/autocare/service/package-summary.html">hr.unizd.autocare.service</a></dt>
 <dd>
-<div class="block">Podaci za četiri kartice dashboarda aktivnog vozila.</div>
+<div class="block">Priprema sažetak podataka koji Dashboard prikazuje za aktivno vozilo.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/service/DashboardService.html#%3Cinit%3E(jakarta.persistence.EntityManagerFactory)" class="member-name-link">DashboardService(EntityManagerFactory)</a> - Constructor for class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/DashboardService.html" title="class in hr.unizd.autocare.service">DashboardService</a></dt>
-<dd>
-<div class="block">Stvara servis koji priprema podatke za Dashboard.</div>
-</dd>
+<dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/DashboardView.html" class="type-name-link" title="class in hr.unizd.autocare.view">DashboardView</a> - Class in <a href="hr/unizd/autocare/view/package-summary.html">hr.unizd.autocare.view</a></dt>
 <dd>
-<div class="block">Prikazuje sažetak aktivnog vozila, troškova, problema i sljedećeg održavanja.</div>
+<div class="block">Prikazuje četiri sažeta pokazatelja aktivnog vozila: kilometražu, trošak, probleme i održavanje.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/DashboardView.html#%3Cinit%3E()" class="member-name-link">DashboardView()</a> - Constructor for class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/DashboardView.html" title="class in hr.unizd.autocare.view">DashboardView</a></dt>
 <dd>
-<div class="block">Stvara prikaz sažetka aktivnog vozila.</div>
+<div class="block">Stvara raspored Dashboard kartica i njihove početne vrijednosti.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/model/Data.html" class="type-name-link" title="class in hr.unizd.autocare.model">Data</a> - Class in <a href="hr/unizd/autocare/model/package-summary.html">hr.unizd.autocare.model</a></dt>
 <dd>
-<div class="block">Jednostavni pomoćni podaci koji nisu zasebni domenski entiteti.</div>
+<div class="block">Sadrži male pomoćne objekte za prijenos i prikaz podataka koji nisu zasebni persistentni
+domenski entiteti.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/model/Data.Dashboard.html" class="type-name-link" title="class in hr.unizd.autocare.model">Data.Dashboard</a> - Class in <a href="hr/unizd/autocare/model/package-summary.html">hr.unizd.autocare.model</a></dt>
 <dd>
-<div class="block">Podaci koje Dashboard prikazuje za aktivno vozilo.</div>
+<div class="block">Sažetak podataka koje DashboardView prikazuje za aktivno vozilo.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/model/Data.ItemInput.html" class="type-name-link" title="class in hr.unizd.autocare.model">Data.ItemInput</a> - Class in <a href="hr/unizd/autocare/model/package-summary.html">hr.unizd.autocare.model</a></dt>
 <dd>
-<div class="block">Jedna stavka unesena u formi novog servisa.</div>
+<div class="block">Jedna stavka unesena u formi novog servisa: odabrani rad i stvarno plaćena cijena.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/model/Data.MaintenanceRow.html" class="type-name-link" title="class in hr.unizd.autocare.model">Data.MaintenanceRow</a> - Class in <a href="hr/unizd/autocare/model/package-summary.html">hr.unizd.autocare.model</a></dt>
 <dd>
-<div class="block">Izračunati podaci jednog praćenog održavanja.</div>
+<div class="block">Prikazni rezultat izračuna jednog praćenog rada održavanja.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/model/Data.ServiceDetail.html" class="type-name-link" title="class in hr.unizd.autocare.model">Data.ServiceDetail</a> - Class in <a href="hr/unizd/autocare/model/package-summary.html">hr.unizd.autocare.model</a></dt>
 <dd>
-<div class="block">Detalj servisa koji sadrži redak servisa, njegove stavke i riješene probleme.</div>
+<div class="block">Puni prikaz jednog servisa: zaglavlje, servisne stavke i problemi riješeni servisom.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/model/Data.ServiceInput.html" class="type-name-link" title="class in hr.unizd.autocare.model">Data.ServiceInput</a> - Class in <a href="hr/unizd/autocare/model/package-summary.html">hr.unizd.autocare.model</a></dt>
 <dd>
-<div class="block">Podaci forme za spremanje novog servisa.</div>
+<div class="block">Cjelovit skup vrijednosti koje ServiceEditorDialog predaje ServiceRecordServiceu pri spremanju
+novog servisa.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/model/Data.ServiceRow.html" class="type-name-link" title="class in hr.unizd.autocare.model">Data.ServiceRow</a> - Class in <a href="hr/unizd/autocare/model/package-summary.html">hr.unizd.autocare.model</a></dt>
 <dd>
-<div class="block">Redak servisne povijesti s pripremljenim nazivima radova i ukupnim troškom.</div>
+<div class="block">Prikazni model jednog retka servisne povijesti s već pripremljenim nazivima radova i ukupnim
+stvarnim troškom.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/app/DatabaseConfig.html" class="type-name-link" title="class in hr.unizd.autocare.app">DatabaseConfig</a> - Class in <a href="hr/unizd/autocare/app/package-summary.html">hr.unizd.autocare.app</a></dt>
 <dd>
-<div class="block">Konfigurira i otvara JPA vezu aplikacije prema Azure SQL bazi.</div>
+<div class="block">Centralizira konfiguraciju potrebnu za otvaranje JPA persistence sloja prema Azure SQL bazi.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/ServiceEditorDialog.html#date" class="member-name-link">date</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/ServiceEditorDialog.html" title="class in hr.unizd.autocare.view">ServiceEditorDialog</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/components/Ui.html#date(java.time.LocalDate)" class="member-name-link">date(LocalDate)</a> - Static method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/Ui.html" title="class in hr.unizd.autocare.view.components">Ui</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Formatira LocalDate u dosljedni hrvatski prikaz datuma.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/components/Ui.html#DATE" class="member-name-link">DATE</a> - Static variable in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/Ui.html" title="class in hr.unizd.autocare.view.components">Ui</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Format datuma koji se prikazuje i prihvaća u korisničkom sučelju.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/ProblemsView.html#description" class="member-name-link">description</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/ProblemsView.html" title="class in hr.unizd.autocare.view">ProblemsView</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/ServicesView.html#detail" class="member-name-link">detail</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/ServicesView.html" title="class in hr.unizd.autocare.view">ServicesView</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/service/ServiceRecordService.html#detail(int,int)" class="member-name-link">detail(int, int)</a> - Method in class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/ServiceRecordService.html" title="class in hr.unizd.autocare.service">ServiceRecordService</a></dt>
 <dd>
-<div class="block">Vraća detalj servisa, uključujući stavke i probleme povezane s njim.</div>
+<div class="block">Dohvaća puni detalj jednog servisa koji pripada korisniku.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/components/VehicleForm.html#details" class="member-name-link">details</a> - Variable in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/VehicleForm.html" title="class in hr.unizd.autocare.view.components">VehicleForm</a></dt>
 <dd>&nbsp;</dd>
@@ -368,30 +400,36 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/domain/Checks.html#email(java.lang.String)" class="member-name-link">email(String)</a> - Static method in class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/Checks.html" title="class in hr.unizd.autocare.domain">Checks</a></dt>
 <dd>
-<div class="block">Normalizira i provjerava osnovni oblik adrese e-pošte.</div>
+<div class="block">Normalizira e-mail u mala slova i provjerava osnovni oblik adrese.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/domain/CatalogCategory.html#ENGINE" class="member-name-link">ENGINE</a> - Enum constant in enum class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/CatalogCategory.html" title="enum class in hr.unizd.autocare.domain">CatalogCategory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/domain/ProblemCategory.html#ENGINE" class="member-name-link">ENGINE</a> - Enum constant in enum class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/ProblemCategory.html" title="enum class in hr.unizd.autocare.domain">ProblemCategory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/components/Ui.html#error(java.awt.Component,java.lang.Throwable)" class="member-name-link">error(Component, Throwable)</a> - Static method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/Ui.html" title="class in hr.unizd.autocare.view.components">Ui</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Pretvara iznimku u standardnu korisničku poruku o pogrešci i prikazuje je bez rušenja GUI-a.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/domain/CatalogCategory.html#EXHAUST_EMISSIONS" class="member-name-link">EXHAUST_EMISSIONS</a> - Enum constant in enum class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/CatalogCategory.html" title="enum class in hr.unizd.autocare.domain">CatalogCategory</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:F">F</h2>
 <dl class="index">
 <dt><a href="hr/unizd/autocare/view/components/Ui.html#field(javax.swing.JPanel,int,java.lang.String,javax.swing.JComponent)" class="member-name-link">field(JPanel, int, String, JComponent)</a> - Static method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/Ui.html" title="class in hr.unizd.autocare.view.components">Ui</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Dodaje jedan naslov i pripadajuću komponentu u zadani red forme.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/ServiceEditorDialog.html#filterWorks()" class="member-name-link">filterWorks()</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/ServiceEditorDialog.html" title="class in hr.unizd.autocare.view">ServiceEditorDialog</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Filtrira combo box radova prema trenutno odabranoj vrsti: održavanje ili popravak.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/repository/VehicleRepository.html#findAllForOwner(int)" class="member-name-link">findAllForOwner(int)</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/VehicleRepository.html" title="class in hr.unizd.autocare.repository">VehicleRepository</a></dt>
 <dd>
-<div class="block">Vraća vozila korisnika poredana prema identifikatoru.</div>
+<div class="block">Dohvaća sva vozila jednog korisnika.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/UserRepository.html#findByEmail(java.lang.String)" class="member-name-link">findByEmail(String)</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/UserRepository.html" title="class in hr.unizd.autocare.repository">UserRepository</a></dt>
 <dd>
-<div class="block">Vraća korisnika s adresom e-pošte ili <code>null</code> ako ne postoji.</div>
+<div class="block">Traži korisnika prema e-mail adresi.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/UserRepository.html#findById(int)" class="member-name-link">findById(int)</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/UserRepository.html" title="class in hr.unizd.autocare.repository">UserRepository</a></dt>
 <dd>
@@ -399,24 +437,20 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/ProblemRepository.html#findForOwner(int,int)" class="member-name-link">findForOwner(int, int)</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/ProblemRepository.html" title="class in hr.unizd.autocare.repository">ProblemRepository</a></dt>
 <dd>
-<div class="block">Vraća problem samo ako pripada navedenom korisniku; inače vraća <code>null</code>.</div>
+<div class="block">Dohvaća problem samo ako pripada vozilu zadanog korisnika.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/ServiceRecordRepository.html#findForOwner(int,int)" class="member-name-link">findForOwner(int, int)</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/ServiceRecordRepository.html" title="class in hr.unizd.autocare.repository">ServiceRecordRepository</a></dt>
 <dd>
-<div class="block">Vraća servis samo ako pripada vozilu korisnika; inače vraća <code>null</code>.</div>
+<div class="block">Dohvaća jedan servis samo ako pripada vozilu zadanog korisnika.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/VehicleRepository.html#findForOwner(int,int)" class="member-name-link">findForOwner(int, int)</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/VehicleRepository.html" title="class in hr.unizd.autocare.repository">VehicleRepository</a></dt>
 <dd>
-<div class="block">Vraća vozilo samo ako pripada navedenom korisniku; inače vraća <code>null</code>.</div>
+<div class="block">Dohvaća vozilo samo ako pripada zadanom korisniku.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/CatalogRepository.html#findVariant(int)" class="member-name-link">findVariant(int)</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/CatalogRepository.html" title="class in hr.unizd.autocare.repository">CatalogRepository</a></dt>
-<dd>
-<div class="block">Dohvaća varijantu prema primarnom ključu.</div>
-</dd>
+<dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/repository/CatalogRepository.html#findWork(int)" class="member-name-link">findWork(int)</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/CatalogRepository.html" title="class in hr.unizd.autocare.repository">CatalogRepository</a></dt>
-<dd>
-<div class="block">Dohvaća standardni rad prema primarnom ključu.</div>
-</dd>
+<dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/RegistrationView.html#finish" class="member-name-link">finish</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/RegistrationView.html" title="class in hr.unizd.autocare.view">RegistrationView</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/VehicleDialog.html#form" class="member-name-link">form</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/VehicleDialog.html" title="class in hr.unizd.autocare.view">VehicleDialog</a></dt>
@@ -428,7 +462,7 @@ loadScripts(document, 'script');</script>
 <dl class="index">
 <dt><a href="hr/unizd/autocare/service/DashboardService.html#get(int,int)" class="member-name-link">get(int, int)</a> - Method in class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/DashboardService.html" title="class in hr.unizd.autocare.service">DashboardService</a></dt>
 <dd>
-<div class="block">Vraća sažetak vozila, ukupnog troška, otvorenih problema i sljedećeg održavanja.</div>
+<div class="block">Dohvaća sva četiri glavna Dashboard pokazatelja za vozilo.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/app/Session.html#getActiveVehicle()" class="member-name-link">getActiveVehicle()</a> - Method in class hr.unizd.autocare.app.<a href="hr/unizd/autocare/app/Session.html" title="class in hr.unizd.autocare.app">Session</a></dt>
 <dd>
@@ -484,7 +518,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/app/Session.html#getInstance()" class="member-name-link">getInstance()</a> - Static method in class hr.unizd.autocare.app.<a href="hr/unizd/autocare/app/Session.html" title="class in hr.unizd.autocare.app">Session</a></dt>
 <dd>
-<div class="block">Vraća jedinu sesiju aplikacije.</div>
+<div class="block">Vraća jedinu instancu aplikacijske sesije.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/domain/WorkDefinition.html#getIntervalKm()" class="member-name-link">getIntervalKm()</a> - Method in class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a></dt>
 <dd>&nbsp;</dd>
@@ -511,7 +545,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="hr/unizd/autocare/model/Data.ServiceRow.html#getMileage()" class="member-name-link">getMileage()</a> - Method in class hr.unizd.autocare.model.<a href="hr/unizd/autocare/model/Data.ServiceRow.html" title="class in hr.unizd.autocare.model">Data.ServiceRow</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/components/VehicleForm.html#getMileage()" class="member-name-link">getMileage()</a> - Method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/VehicleForm.html" title="class in hr.unizd.autocare.view.components">VehicleForm</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Parsira i validira kilometražu unesenu u formu.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/domain/WorkDefinition.html#getMinPrice()" class="member-name-link">getMinPrice()</a> - Method in class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/domain/VehicleVariant.html#getModel()" class="member-name-link">getModel()</a> - Method in class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/VehicleVariant.html" title="class in hr.unizd.autocare.domain">VehicleVariant</a></dt>
@@ -559,7 +595,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="hr/unizd/autocare/model/Data.ServiceDetail.html#getResolvedProblems()" class="member-name-link">getResolvedProblems()</a> - Method in class hr.unizd.autocare.model.<a href="hr/unizd/autocare/model/Data.ServiceDetail.html" title="class in hr.unizd.autocare.model">Data.ServiceDetail</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/components/VehicleForm.html#getSelectedYear()" class="member-name-link">getSelectedYear()</a> - Method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/VehicleForm.html" title="class in hr.unizd.autocare.view.components">VehicleForm</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Vraća odabranu godinu proizvodnje.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/domain/ServiceRecord.html#getServiceDate()" class="member-name-link">getServiceDate()</a> - Method in class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/ServiceRecord.html" title="class in hr.unizd.autocare.domain">ServiceRecord</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/domain/ServiceItem.html#getServiceRecord()" class="member-name-link">getServiceRecord()</a> - Method in class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/ServiceItem.html" title="class in hr.unizd.autocare.domain">ServiceItem</a></dt>
@@ -588,12 +626,16 @@ loadScripts(document, 'script');</script>
 <h2 class="title" id="I:H">H</h2>
 <dl class="index">
 <dt><a href="hr/unizd/autocare/view/components/Ui.html#heading(java.lang.String)" class="member-name-link">heading(String)</a> - Static method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/Ui.html" title="class in hr.unizd.autocare.view.components">Ui</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Stvara labelu formatiranu kao glavni naslov sekcije.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/components/Ui.html#hint(java.lang.String)" class="member-name-link">hint(String)</a> - Static method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/Ui.html" title="class in hr.unizd.autocare.view.components">Ui</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Stvara labelu stiliziranu kao sekundarnu napomenu.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/repository/ServiceRecordRepository.html#historyItems(int,int)" class="member-name-link">historyItems(int, int)</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/ServiceRecordRepository.html" title="class in hr.unizd.autocare.repository">ServiceRecordRepository</a></dt>
 <dd>
-<div class="block">Vraća servisne stavke vozila od najnovije prema najstarijoj.</div>
+<div class="block">Dohvaća servisne stavke potrebne za analizu povijesti održavanja vozila.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/app/package-summary.html">hr.unizd.autocare.app</a> - package hr.unizd.autocare.app</dt>
 <dd>&nbsp;</dd>
@@ -619,16 +661,24 @@ loadScripts(document, 'script');</script>
 <h2 class="title" id="I:I">I</h2>
 <dl class="index">
 <dt><a href="hr/unizd/autocare/view/components/Ui.html#info(java.awt.Component,java.lang.String)" class="member-name-link">info(Component, String)</a> - Static method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/Ui.html" title="class in hr.unizd.autocare.view.components">Ui</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Prikazuje standardnu informativnu poruku vezanu uz zadanu Swing komponentu.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/ServiceEditorDialog.html#input()" class="member-name-link">input()</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/ServiceEditorDialog.html" title="class in hr.unizd.autocare.view">ServiceEditorDialog</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Pretvara trenutačno stanje forme u ServiceInput za ServiceRecordService.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/components/Ui.html#integer(javax.swing.JTextField)" class="member-name-link">integer(JTextField)</a> - Static method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/Ui.html" title="class in hr.unizd.autocare.view.components">Ui</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Parsira cijeli broj iz tekstualnog polja.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/domain/Problem.html#isResolved()" class="member-name-link">isResolved()</a> - Method in class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/Problem.html" title="class in hr.unizd.autocare.domain">Problem</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Provjerava postoji li servis povezan kao rješenje problema.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/model/Data.ItemInput.html#%3Cinit%3E(int,java.math.BigDecimal)" class="member-name-link">ItemInput(int, BigDecimal)</a> - Constructor for class hr.unizd.autocare.model.<a href="hr/unizd/autocare/model/Data.ItemInput.html" title="class in hr.unizd.autocare.model">Data.ItemInput</a></dt>
 <dd>
-<div class="block">Stvara ulaznu stavku s odabranim radom i stvarnom cijenom.</div>
+<div class="block">Stvara podatke jedne servisne stavke.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/ServiceEditorDialog.html#itemTable" class="member-name-link">itemTable</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/ServiceEditorDialog.html" title="class in hr.unizd.autocare.view">ServiceEditorDialog</a></dt>
 <dd>&nbsp;</dd>
@@ -636,49 +686,63 @@ loadScripts(document, 'script');</script>
 <h2 class="title" id="I:K">K</h2>
 <dl class="index">
 <dt><a href="hr/unizd/autocare/view/components/Ui.html#km(java.lang.Integer)" class="member-name-link">km(Integer)</a> - Static method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/Ui.html" title="class in hr.unizd.autocare.view.components">Ui</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Formatira kilometražu s jedinicom mjere.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:L">L</h2>
 <dl class="index">
 <dt><a href="hr/unizd/autocare/service/VehicleService.html#list(int)" class="member-name-link">list(int)</a> - Method in class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/VehicleService.html" title="class in hr.unizd.autocare.service">VehicleService</a></dt>
 <dd>
-<div class="block">Vraća sva vozila u vlasništvu korisnika.</div>
+<div class="block">Dohvaća sva vozila koja pripadaju korisniku.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/ProblemRepository.html#list(int,int)" class="member-name-link">list(int, int)</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/ProblemRepository.html" title="class in hr.unizd.autocare.repository">ProblemRepository</a></dt>
 <dd>
-<div class="block">Vraća probleme vozila poredane od najnovijeg prema najstarijem.</div>
+<div class="block">Dohvaća probleme vozila.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/ServiceRecordRepository.html#list(int,int)" class="member-name-link">list(int, int)</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/ServiceRecordRepository.html" title="class in hr.unizd.autocare.repository">ServiceRecordRepository</a></dt>
 <dd>
-<div class="block">Vraća povijest servisa vozila ako ono pripada korisniku.</div>
+<div class="block">Dohvaća servisnu povijest vozila samo unutar vlasničkog konteksta korisnika.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/service/MaintenanceService.html#list(int,int)" class="member-name-link">list(int, int)</a> - Method in class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/MaintenanceService.html" title="class in hr.unizd.autocare.service">MaintenanceService</a></dt>
 <dd>
-<div class="block">Vraća intervale održavanja za vozilo na temelju posljednjih evidentiranih radova.</div>
+<div class="block">Dohvaća vozilo i vraća izračunate intervale održavanja na temelju njegove servisne povijesti.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/service/ProblemService.html#list(int,int)" class="member-name-link">list(int, int)</a> - Method in class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/ProblemService.html" title="class in hr.unizd.autocare.service">ProblemService</a></dt>
 <dd>
-<div class="block">Vraća probleme odabranog vozila korisnika.</div>
+<div class="block">Dohvaća probleme vozila koje pripada zadanom korisniku.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/service/ServiceRecordService.html#list(int,int)" class="member-name-link">list(int, int)</a> - Method in class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/ServiceRecordService.html" title="class in hr.unizd.autocare.service">ServiceRecordService</a></dt>
 <dd>
-<div class="block">Vraća servisne zapise vozila kao retke pripremljene za prikaz.</div>
+<div class="block">Dohvaća servisnu povijest vozila i pretvara zapise u retke spremne za prikaz.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/controller/CatalogController.html#load()" class="member-name-link">load()</a> - Method in class hr.unizd.autocare.controller.<a href="hr/unizd/autocare/controller/CatalogController.html" title="class in hr.unizd.autocare.controller">CatalogController</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Dohvaća cijeli katalog i primjenjuje trenutačni tekstualni i kategorijski filter Viewa.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/controller/MaintenanceController.html#load()" class="member-name-link">load()</a> - Method in class hr.unizd.autocare.controller.<a href="hr/unizd/autocare/controller/MaintenanceController.html" title="class in hr.unizd.autocare.controller">MaintenanceController</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Dohvaća održavanja za aktivno vozilo i prikazuje ih u MaintenanceViewu.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/controller/ProblemsController.html#load()" class="member-name-link">load()</a> - Method in class hr.unizd.autocare.controller.<a href="hr/unizd/autocare/controller/ProblemsController.html" title="class in hr.unizd.autocare.controller">ProblemsController</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Učitava probleme aktivnog vozila i prikazuje njihovo aktualno stanje.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/controller/ServicesController.html#load()" class="member-name-link">load()</a> - Method in class hr.unizd.autocare.controller.<a href="hr/unizd/autocare/controller/ServicesController.html" title="class in hr.unizd.autocare.controller">ServicesController</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Učitava servisnu povijest trenutačno aktivnog vozila i predaje retke ServicesViewu.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/controller/VehiclesController.html#load()" class="member-name-link">load()</a> - Method in class hr.unizd.autocare.controller.<a href="hr/unizd/autocare/controller/VehiclesController.html" title="class in hr.unizd.autocare.controller">VehiclesController</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Učitava sva vozila prijavljenog korisnika i označava trenutačno aktivno vozilo u Viewu.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/controller/VehicleFormController.html#loadMakes()" class="member-name-link">loadMakes()</a> - Method in class hr.unizd.autocare.controller.<a href="hr/unizd/autocare/controller/VehicleFormController.html" title="class in hr.unizd.autocare.controller">VehicleFormController</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Učitava početni popis marki i čisti sve ovisne odabire ispod marke.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/controller/AuthController.LoginListener.html#loggedIn(int)" class="member-name-link">loggedIn(int)</a> - Method in interface hr.unizd.autocare.controller.<a href="hr/unizd/autocare/controller/AuthController.LoginListener.html" title="interface in hr.unizd.autocare.controller">AuthController.LoginListener</a></dt>
 <dd>
-<div class="block">Obavještava glavnu navigaciju o uspješnoj prijavi.</div>
+<div class="block">Prima identifikator upravo prijavljenog korisnika.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/LoginView.html#login" class="member-name-link">login</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/LoginView.html" title="class in hr.unizd.autocare.view">LoginView</a></dt>
 <dd>&nbsp;</dd>
@@ -686,21 +750,23 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/app/Session.html#login(int)" class="member-name-link">login(int)</a> - Method in class hr.unizd.autocare.app.<a href="hr/unizd/autocare/app/Session.html" title="class in hr.unizd.autocare.app">Session</a></dt>
 <dd>
-<div class="block">Bilježi prijavljenog korisnika i uklanja prethodno aktivno vozilo.</div>
+<div class="block">Otvara korisnički kontekst nakon uspješne prijave.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/service/AuthService.html#login(java.lang.String,java.lang.String)" class="member-name-link">login(String, String)</a> - Method in class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/AuthService.html" title="class in hr.unizd.autocare.service">AuthService</a></dt>
 <dd>
-<div class="block">Provjerava vjerodajnice i vraća ID korisnika.</div>
+<div class="block">Provjerava vjerodajnice i vraća identifikator pronađenog korisnika.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/LoginView.html" class="type-name-link" title="class in hr.unizd.autocare.view">LoginView</a> - Class in <a href="hr/unizd/autocare/view/package-summary.html">hr.unizd.autocare.view</a></dt>
 <dd>
-<div class="block">Prijava bez sidebara.</div>
+<div class="block">Swing forma za unos vjerodajnica postojećeg korisnika i prelazak na registraciju.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/LoginView.html#%3Cinit%3E()" class="member-name-link">LoginView()</a> - Constructor for class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/LoginView.html" title="class in hr.unizd.autocare.view">LoginView</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Stvara i raspoređuje polja e-maila, lozinke i akcijske gumbe prijave.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/app/Session.html#logout()" class="member-name-link">logout()</a> - Method in class hr.unizd.autocare.app.<a href="hr/unizd/autocare/app/Session.html" title="class in hr.unizd.autocare.app">Session</a></dt>
 <dd>
-<div class="block">Briše korisnika i aktivno vozilo iz trenutačne sesije.</div>
+<div class="block">Briše podatke prijavljene sesije pri odjavi korisnika.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/MainFrame.html#logoutButton" class="member-name-link">logoutButton</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a></dt>
 <dd>&nbsp;</dd>
@@ -713,22 +779,24 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="hr/unizd/autocare/app/Main.html" class="type-name-link" title="class in hr.unizd.autocare.app">Main</a> - Class in <a href="hr/unizd/autocare/app/package-summary.html">hr.unizd.autocare.app</a></dt>
 <dd>
-<div class="block">Pokreće AutoCare sučelje i sastavlja aplikacijske slojeve.</div>
+<div class="block">Ulazna točka AutoCare desktop aplikacije.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/controller/MainController.html" class="type-name-link" title="class in hr.unizd.autocare.controller">MainController</a> - Class in <a href="hr/unizd/autocare/controller/package-summary.html">hr.unizd.autocare.controller</a></dt>
 <dd>
-<div class="block">Povezuje glavnu navigaciju s Controllerima i osvježava aktivni kontekst.</div>
+<div class="block">Središnji Controller za navigaciju i zajednički kontekst AutoCare aplikacije.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/controller/MainController.html#%3Cinit%3E(hr.unizd.autocare.view.MainFrame,hr.unizd.autocare.app.Session,hr.unizd.autocare.service.AuthService,hr.unizd.autocare.service.CatalogService,hr.unizd.autocare.service.VehicleService,hr.unizd.autocare.service.ServiceRecordService,hr.unizd.autocare.service.MaintenanceService,hr.unizd.autocare.service.ProblemService,hr.unizd.autocare.service.DashboardService,hr.unizd.autocare.observer.Subject)" class="member-name-link">MainController(MainFrame, Session, AuthService, CatalogService, VehicleService, ServiceRecordService, MaintenanceService, ProblemService, DashboardService, Subject)</a> - Constructor for class hr.unizd.autocare.controller.<a href="hr/unizd/autocare/controller/MainController.html" title="class in hr.unizd.autocare.controller">MainController</a></dt>
 <dd>
-<div class="block">Povezuje glavne poglede i aplikacijske servise te registrira Observera.</div>
+<div class="block">Povezuje glavni prozor sa svim Service objektima i Controllerima aplikacije.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/MainFrame.html" class="type-name-link" title="class in hr.unizd.autocare.view">MainFrame</a> - Class in <a href="hr/unizd/autocare/view/package-summary.html">hr.unizd.autocare.view</a></dt>
 <dd>
-<div class="block">Glavni prozor aplikacije i spremnik ekrana za prijavu i rad s vozilom.</div>
+<div class="block">Glavni Swing prozor AutoCare aplikacije.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/MainFrame.html#%3Cinit%3E()" class="member-name-link">MainFrame()</a> - Constructor for class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Stvara glavni prozor, njegove View panele, bočnu navigaciju i CardLayout strukturu.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/MainFrame.html#maintenance" class="member-name-link">maintenance</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/domain/WorkCategory.html#MAINTENANCE" class="member-name-link">MAINTENANCE</a> - Enum constant in enum class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/WorkCategory.html" title="enum class in hr.unizd.autocare.domain">WorkCategory</a></dt>
@@ -737,50 +805,50 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/domain/MaintenanceCalculator.html" class="type-name-link" title="class in hr.unizd.autocare.domain">MaintenanceCalculator</a> - Class in <a href="hr/unizd/autocare/domain/package-summary.html">hr.unizd.autocare.domain</a></dt>
 <dd>
-<div class="block">Odabire strategiju prema vrsti servisnog intervala.</div>
+<div class="block">Domenski kalkulator koji odabire odgovarajuću Strategy implementaciju za servisni interval.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/domain/MaintenanceCalculator.html#%3Cinit%3E()" class="member-name-link">MaintenanceCalculator()</a> - Constructor for class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/MaintenanceCalculator.html" title="class in hr.unizd.autocare.domain">MaintenanceCalculator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/controller/MaintenanceController.html" class="type-name-link" title="class in hr.unizd.autocare.controller">MaintenanceController</a> - Class in <a href="hr/unizd/autocare/controller/package-summary.html">hr.unizd.autocare.controller</a></dt>
 <dd>
-<div class="block">Učitava održavanje koje se prati iz servisne povijesti aktivnog vozila.</div>
+<div class="block">Upravlja prikazom izračunatih intervala održavanja aktivnog vozila.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/controller/MaintenanceController.html#%3Cinit%3E(hr.unizd.autocare.view.MainFrame,hr.unizd.autocare.service.MaintenanceService,hr.unizd.autocare.app.Session)" class="member-name-link">MaintenanceController(MainFrame, MaintenanceService, Session)</a> - Constructor for class hr.unizd.autocare.controller.<a href="hr/unizd/autocare/controller/MaintenanceController.html" title="class in hr.unizd.autocare.controller">MaintenanceController</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Povezuje MaintenanceView s MaintenanceServiceom i korisničkom sesijom.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/model/Data.MaintenanceRow.html#%3Cinit%3E(java.lang.String,java.time.LocalDate,java.lang.Integer,java.time.LocalDate,java.lang.Integer,java.lang.Integer,java.lang.Long,double)" class="member-name-link">MaintenanceRow(String, LocalDate, Integer, LocalDate, Integer, Integer, Long, double)</a> - Constructor for class hr.unizd.autocare.model.<a href="hr/unizd/autocare/model/Data.MaintenanceRow.html" title="class in hr.unizd.autocare.model">Data.MaintenanceRow</a></dt>
 <dd>
-<div class="block">Stvara prikaz izračunatog intervala održavanja.</div>
+<div class="block">Stvara rezultat izračunatog intervala održavanja.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/service/MaintenanceService.html" class="type-name-link" title="class in hr.unizd.autocare.service">MaintenanceService</a> - Class in <a href="hr/unizd/autocare/service/package-summary.html">hr.unizd.autocare.service</a></dt>
 <dd>
-<div class="block">Servisna povijest je izvor istine za praćene intervale održavanja.</div>
+<div class="block">Iz servisne povijesti izvodi aktualno stanje planiranog održavanja vozila.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/service/MaintenanceService.html#%3Cinit%3E(jakarta.persistence.EntityManagerFactory)" class="member-name-link">MaintenanceService(EntityManagerFactory)</a> - Constructor for class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/MaintenanceService.html" title="class in hr.unizd.autocare.service">MaintenanceService</a></dt>
 <dd>
-<div class="block">Stvara servis koji iz servisne povijesti izvodi plan održavanja.</div>
+<div class="block">Stvara servis za izračun održavanja.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/strategy/MaintenanceStrategy.html" class="type-name-link" title="interface in hr.unizd.autocare.strategy">MaintenanceStrategy</a> - Interface in <a href="hr/unizd/autocare/strategy/package-summary.html">hr.unizd.autocare.strategy</a></dt>
 <dd>
-<div class="block">Način računanja koliko je servisnog intervala još preostalo.</div>
+<div class="block">Strategy sučelje za različite načine računanja preostalog servisnog intervala.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/MaintenanceView.html" class="type-name-link" title="class in hr.unizd.autocare.view">MaintenanceView</a> - Class in <a href="hr/unizd/autocare/view/package-summary.html">hr.unizd.autocare.view</a></dt>
 <dd>
-<div class="block">Pregled održavanja koje se već prati iz stvarne servisne povijesti.</div>
+<div class="block">Swing tablični prikaz izračunatih intervala održavanja aktivnog vozila.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/MaintenanceView.html#%3Cinit%3E()" class="member-name-link">MaintenanceView()</a> - Constructor for class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/MaintenanceView.html" title="class in hr.unizd.autocare.view">MaintenanceView</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Stvara read-only tablicu održavanja i njezine stupce.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/domain/CatalogCategory.html#MAJOR_SERVICE" class="member-name-link">MAJOR_SERVICE</a> - Enum constant in enum class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/CatalogCategory.html" title="enum class in hr.unizd.autocare.domain">CatalogCategory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/components/VehicleForm.html#make" class="member-name-link">make</a> - Variable in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/VehicleForm.html" title="class in hr.unizd.autocare.view.components">VehicleForm</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/repository/CatalogRepository.html#makes()" class="member-name-link">makes()</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/CatalogRepository.html" title="class in hr.unizd.autocare.repository">CatalogRepository</a></dt>
-<dd>
-<div class="block">Vraća jedinstvene marke vozila iz kataloga.</div>
-</dd>
+<dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/service/CatalogService.html#makes()" class="member-name-link">makes()</a> - Method in class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/CatalogService.html" title="class in hr.unizd.autocare.service">CatalogService</a></dt>
-<dd>
-<div class="block">Vraća abecedno uređene marke dostupne u katalogu.</div>
-</dd>
+<dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/components/VehicleForm.html#mileage" class="member-name-link">mileage</a> - Variable in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/VehicleForm.html" title="class in hr.unizd.autocare.view.components">VehicleForm</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/MileageDialog.html#mileage" class="member-name-link">mileage</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/MileageDialog.html" title="class in hr.unizd.autocare.view">MileageDialog</a></dt>
@@ -792,35 +860,39 @@ loadScripts(document, 'script');</script>
 <div class="block">Provjerava da kilometraža nije negativna.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/components/Ui.html#mileage(javax.swing.JTextField)" class="member-name-link">mileage(JTextField)</a> - Static method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/Ui.html" title="class in hr.unizd.autocare.view.components">Ui</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Parsira kilometražu iz tekstualnog polja i provjerava je kroz domensko pravilo Checks.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/MileageDialog.html" class="type-name-link" title="class in hr.unizd.autocare.view">MileageDialog</a> - Class in <a href="hr/unizd/autocare/view/package-summary.html">hr.unizd.autocare.view</a></dt>
 <dd>
-<div class="block">Dijalog za unos nove kilometraže vozila.</div>
+<div class="block">Modalni dijalog za unos nove trenutačne kilometraže odabranog vozila.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/MileageDialog.html#%3Cinit%3E(java.awt.Window,int)" class="member-name-link">MileageDialog(Window, int)</a> - Constructor for class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/MileageDialog.html" title="class in hr.unizd.autocare.view">MileageDialog</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Stvara dijalog i početno prikazuje trenutačnu kilometražu vozila.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/strategy/MileageMaintenanceStrategy.html" class="type-name-link" title="class in hr.unizd.autocare.strategy">MileageMaintenanceStrategy</a> - Class in <a href="hr/unizd/autocare/strategy/package-summary.html">hr.unizd.autocare.strategy</a></dt>
 <dd>
-<div class="block">Računanje intervala koji ovisi o kilometraži.</div>
+<div class="block">Strategy implementacija koja stanje održavanja računa isključivo prema prijeđenoj kilometraži.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/strategy/MileageMaintenanceStrategy.html#%3Cinit%3E()" class="member-name-link">MileageMaintenanceStrategy()</a> - Constructor for class hr.unizd.autocare.strategy.<a href="hr/unizd/autocare/strategy/MileageMaintenanceStrategy.html" title="class in hr.unizd.autocare.strategy">MileageMaintenanceStrategy</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/components/VehicleForm.html#model" class="member-name-link">model</a> - Variable in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/VehicleForm.html" title="class in hr.unizd.autocare.view.components">VehicleForm</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/repository/CatalogRepository.html#models(java.lang.String)" class="member-name-link">models(String)</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/CatalogRepository.html" title="class in hr.unizd.autocare.repository">CatalogRepository</a></dt>
-<dd>
-<div class="block">Vraća modele za zadanu marku.</div>
-</dd>
+<dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/service/CatalogService.html#models(java.lang.String)" class="member-name-link">models(String)</a> - Method in class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/CatalogService.html" title="class in hr.unizd.autocare.service">CatalogService</a></dt>
 <dd>
-<div class="block">Vraća modele odabrane marke.</div>
+<div class="block">Dohvaća modele dostupne za odabranu marku.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/domain/Checks.html#money(java.math.BigDecimal)" class="member-name-link">money(BigDecimal)</a> - Static method in class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/Checks.html" title="class in hr.unizd.autocare.domain">Checks</a></dt>
 <dd>
-<div class="block">Provjerava da je stvarna cijena zadana i nenegativna.</div>
+<div class="block">Provjerava stvarno plaćenu cijenu servisne stavke.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/components/Ui.html#money(java.math.BigDecimal)" class="member-name-link">money(BigDecimal)</a> - Static method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/Ui.html" title="class in hr.unizd.autocare.view.components">Ui</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Formatira stvarni novčani iznos za prikaz u eurima.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:N">N</h2>
 <dl class="index">
@@ -830,26 +902,26 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/observer/Subject.html#notifyObservers(hr.unizd.autocare.observer.AppEvent)" class="member-name-link">notifyObservers(AppEvent)</a> - Method in class hr.unizd.autocare.observer.<a href="hr/unizd/autocare/observer/Subject.html" title="class in hr.unizd.autocare.observer">Subject</a></dt>
 <dd>
-<div class="block">Šalje događaj svim trenutačno registriranim Observerima.</div>
+<div class="block">Šalje isti događaj svim trenutno registriranim Observerima.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:O">O</h2>
 <dl class="index">
 <dt><a href="hr/unizd/autocare/observer/Observer.html" class="type-name-link" title="interface in hr.unizd.autocare.observer">Observer</a> - Interface in <a href="hr/unizd/autocare/observer/package-summary.html">hr.unizd.autocare.observer</a></dt>
 <dd>
-<div class="block">Observer prima obavijest kada se promijeni stanje aplikacije.</div>
+<div class="block">Sudionik Observer obrasca koji prima obavijest nakon promjene važnog stanja aplikacije.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/app/DatabaseConfig.html#open()" class="member-name-link">open()</a> - Static method in class hr.unizd.autocare.app.<a href="hr/unizd/autocare/app/DatabaseConfig.html" title="class in hr.unizd.autocare.app">DatabaseConfig</a></dt>
 <dd>
-<div class="block">Stvara tvornicu JPA entity managera za persistence unit aplikacije.</div>
+<div class="block">Otvara zajednički <code>EntityManagerFactory</code> za AutoCare persistence unit.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/ProblemRepository.html#openCount(int,int)" class="member-name-link">openCount(int, int)</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/ProblemRepository.html" title="class in hr.unizd.autocare.repository">ProblemRepository</a></dt>
 <dd>
-<div class="block">Broji neriješene probleme vozila.</div>
+<div class="block">Broji probleme vozila koji još nemaju povezan servis rješenja.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/domain/Checks.html#optional(java.lang.String,int,java.lang.String)" class="member-name-link">optional(String, int, String)</a> - Static method in class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/Checks.html" title="class in hr.unizd.autocare.domain">Checks</a></dt>
 <dd>
-<div class="block">Provjerava neobavezni tekst i vraća <code>null</code> za prazan unos.</div>
+<div class="block">Validira neobavezni tekst istim pravilima kao obavezni tekst kada je vrijednost unesena.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/domain/ProblemCategory.html#OTHER" class="member-name-link">OTHER</a> - Enum constant in enum class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/ProblemCategory.html" title="enum class in hr.unizd.autocare.domain">ProblemCategory</a></dt>
 <dd>&nbsp;</dd>
@@ -859,36 +931,44 @@ loadScripts(document, 'script');</script>
 <dt><a href="hr/unizd/autocare/view/MainFrame.html#page()" class="member-name-link">page()</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/components/Ui.html#parseDate(java.lang.String)" class="member-name-link">parseDate(String)</a> - Static method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/Ui.html" title="class in hr.unizd.autocare.view.components">Ui</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Parsira korisnički datum u formatu koji aplikacija prikazuje.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/components/Ui.html#parseMoney(java.lang.String)" class="member-name-link">parseMoney(String)</a> - Static method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/Ui.html" title="class in hr.unizd.autocare.view.components">Ui</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Parsira decimalni novčani iznos iz korisničkog unosa i provjerava da iznos nije negativan.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/LoginView.html#password" class="member-name-link">password</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/LoginView.html" title="class in hr.unizd.autocare.view">LoginView</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/RegistrationView.html#password" class="member-name-link">password</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/RegistrationView.html" title="class in hr.unizd.autocare.view">RegistrationView</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/domain/Checks.html#password(java.lang.String)" class="member-name-link">password(String)</a> - Static method in class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/Checks.html" title="class in hr.unizd.autocare.domain">Checks</a></dt>
 <dd>
-<div class="block">Provjerava minimalnu duljinu lozinke.</div>
+<div class="block">Provjerava minimalnu dopuštenu duljinu lozinke.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/components/Ui.html#priceRange(java.math.BigDecimal,java.math.BigDecimal)" class="member-name-link">priceRange(BigDecimal, BigDecimal)</a> - Static method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/Ui.html" title="class in hr.unizd.autocare.view.components">Ui</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Formatira informativni raspon cijena iz kataloga.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/domain/Problem.html" class="type-name-link" title="class in hr.unizd.autocare.domain">Problem</a> - Class in <a href="hr/unizd/autocare/domain/package-summary.html">hr.unizd.autocare.domain</a></dt>
 <dd>
-<div class="block">Problem koji korisnik primjećuje na vozilu, bez dijagnostike.</div>
+<div class="block">Persistentni domenski objekt korisnički evidentiranog problema vozila.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/domain/Problem.html#%3Cinit%3E()" class="member-name-link">Problem()</a> - Constructor for class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/Problem.html" title="class in hr.unizd.autocare.domain">Problem</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Konstruktor bez argumenata potreban JPA provideru.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/domain/Problem.html#%3Cinit%3E(hr.unizd.autocare.domain.Vehicle,java.lang.String,hr.unizd.autocare.domain.ProblemCategory,java.time.LocalDate)" class="member-name-link">Problem(Vehicle, String, ProblemCategory, LocalDate)</a> - Constructor for class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/Problem.html" title="class in hr.unizd.autocare.domain">Problem</a></dt>
 <dd>
-<div class="block">Stvara korisnički evidentiran problem vozila.</div>
+<div class="block">Stvara novi otvoreni problem vozila.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/domain/ProblemCategory.html" class="type-name-link" title="enum class in hr.unizd.autocare.domain">ProblemCategory</a> - Enum Class in <a href="hr/unizd/autocare/domain/package-summary.html">hr.unizd.autocare.domain</a></dt>
 <dd>
-<div class="block">Gruba kategorija korisnikovog problema, bez pokušaja dijagnostike kvara.</div>
+<div class="block">Gruba korisnička kategorija evidentiranog problema bez pokušaja automatske dijagnoze kvara.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/ProblemRepository.html" class="type-name-link" title="class in hr.unizd.autocare.repository">ProblemRepository</a> - Class in <a href="hr/unizd/autocare/repository/package-summary.html">hr.unizd.autocare.repository</a></dt>
 <dd>
-<div class="block">JPA dohvat i spremanje problema vozila.</div>
+<div class="block">Repository za persistence operacije nad problemima vozila.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/ProblemRepository.html#%3Cinit%3E(jakarta.persistence.EntityManager)" class="member-name-link">ProblemRepository(EntityManager)</a> - Constructor for class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/ProblemRepository.html" title="class in hr.unizd.autocare.repository">ProblemRepository</a></dt>
 <dd>
@@ -900,26 +980,30 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/controller/ProblemsController.html" class="type-name-link" title="class in hr.unizd.autocare.controller">ProblemsController</a> - Class in <a href="hr/unizd/autocare/controller/package-summary.html">hr.unizd.autocare.controller</a></dt>
 <dd>
-<div class="block">Spremanje i prikaz korisnikovih problema za aktivno vozilo.</div>
+<div class="block">Upravlja pregledom i unosom problema aktivnog vozila.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/controller/ProblemsController.html#%3Cinit%3E(hr.unizd.autocare.view.MainFrame,hr.unizd.autocare.service.ProblemService,hr.unizd.autocare.app.Session)" class="member-name-link">ProblemsController(MainFrame, ProblemService, Session)</a> - Constructor for class hr.unizd.autocare.controller.<a href="hr/unizd/autocare/controller/ProblemsController.html" title="class in hr.unizd.autocare.controller">ProblemsController</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Povezuje ProblemsView s ProblemServiceom i Sessionom.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/service/ProblemService.html" class="type-name-link" title="class in hr.unizd.autocare.service">ProblemService</a> - Class in <a href="hr/unizd/autocare/service/package-summary.html">hr.unizd.autocare.service</a></dt>
 <dd>
-<div class="block">Problemi koje vlasnik bilježi bez automatske dijagnostike.</div>
+<div class="block">Provodi dohvat i evidentiranje problema korisnikova vozila.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/service/ProblemService.html#%3Cinit%3E(jakarta.persistence.EntityManagerFactory)" class="member-name-link">ProblemService(EntityManagerFactory)</a> - Constructor for class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/ProblemService.html" title="class in hr.unizd.autocare.service">ProblemService</a></dt>
-<dd>
-<div class="block">Stvara servis za evidentiranje problema vozila.</div>
-</dd>
-<dt><a href="hr/unizd/autocare/view/components/Ui.html#problemStatus(boolean)" class="member-name-link">problemStatus(boolean)</a> - Static method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/Ui.html" title="class in hr.unizd.autocare.view.components">Ui</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="hr/unizd/autocare/view/components/Ui.html#problemStatus(boolean)" class="member-name-link">problemStatus(boolean)</a> - Static method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/Ui.html" title="class in hr.unizd.autocare.view.components">Ui</a></dt>
+<dd>
+<div class="block">Pretvara logičko stanje problema u korisnički tekst.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/ProblemsView.html" class="type-name-link" title="class in hr.unizd.autocare.view">ProblemsView</a> - Class in <a href="hr/unizd/autocare/view/package-summary.html">hr.unizd.autocare.view</a></dt>
 <dd>
-<div class="block">Problemi koje vlasnik želi zapamtiti za mehaničara.</div>
+<div class="block">Swing prikaz za evidentiranje problema i pregled njihovog otvorenog ili riješenog stanja.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/ProblemsView.html#%3Cinit%3E()" class="member-name-link">ProblemsView()</a> - Constructor for class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/ProblemsView.html" title="class in hr.unizd.autocare.view">ProblemsView</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Stvara formu opisa i kategorije problema te read-only tablicu evidentiranih problema.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:R">R</h2>
 <dl class="index">
@@ -927,48 +1011,62 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/service/AuthService.html#register(java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">register(String, String, String)</a> - Method in class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/AuthService.html" title="class in hr.unizd.autocare.service">AuthService</a></dt>
 <dd>
-<div class="block">Registrira novi račun i sprema ga u jednoj transakciji.</div>
+<div class="block">Validira podatke novog računa i sprema korisnika u jednoj transakciji.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/MainFrame.html#registration" class="member-name-link">registration</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/MainFrame.html#registration()" class="member-name-link">registration()</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Prikazuje ekran registracije.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/RegistrationView.html" class="type-name-link" title="class in hr.unizd.autocare.view">RegistrationView</a> - Class in <a href="hr/unizd/autocare/view/package-summary.html">hr.unizd.autocare.view</a></dt>
 <dd>
-<div class="block">Jednostavna registracija korisničkog računa.</div>
+<div class="block">Swing forma za izradu novog korisničkog računa.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/RegistrationView.html#%3Cinit%3E()" class="member-name-link">RegistrationView()</a> - Constructor for class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/RegistrationView.html" title="class in hr.unizd.autocare.view">RegistrationView</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Stvara polja registracije i gumbe za potvrdu ili odustajanje.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/domain/CatalogCategory.html#REGULAR_MAINTENANCE" class="member-name-link">REGULAR_MAINTENANCE</a> - Enum constant in enum class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/CatalogCategory.html" title="enum class in hr.unizd.autocare.domain">CatalogCategory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/ServiceEditorDialog.html#remove" class="member-name-link">remove</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/ServiceEditorDialog.html" title="class in hr.unizd.autocare.view">ServiceEditorDialog</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/observer/Subject.html#removeObserver(hr.unizd.autocare.observer.Observer)" class="member-name-link">removeObserver(Observer)</a> - Method in class hr.unizd.autocare.observer.<a href="hr/unizd/autocare/observer/Subject.html" title="class in hr.unizd.autocare.observer">Subject</a></dt>
 <dd>
-<div class="block">Uklanja Observer iz registriranih primatelja.</div>
+<div class="block">Uklanja Observer iz popisa primatelja događaja.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/ServiceEditorDialog.html#removeSelectedItem()" class="member-name-link">removeSelectedItem()</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/ServiceEditorDialog.html" title="class in hr.unizd.autocare.view">ServiceEditorDialog</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Uklanja trenutno označenu privremenu servisnu stavku iz editora.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/domain/WorkCategory.html#REPAIR" class="member-name-link">REPAIR</a> - Enum constant in enum class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/WorkCategory.html" title="enum class in hr.unizd.autocare.domain">WorkCategory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/RegistrationView.html#repeat" class="member-name-link">repeat</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/RegistrationView.html" title="class in hr.unizd.autocare.view">RegistrationView</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/controller/VehicleFormController.html#reset()" class="member-name-link">reset()</a> - Method in class hr.unizd.autocare.controller.<a href="hr/unizd/autocare/controller/VehicleFormController.html" title="class in hr.unizd.autocare.controller">VehicleFormController</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Vraća cijelu formu vozila u početno stanje i ponovno učitava marke.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/components/VehicleForm.html#reset()" class="member-name-link">reset()</a> - Method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/VehicleForm.html" title="class in hr.unizd.autocare.view.components">VehicleForm</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Vraća odabire, kilometražu i pomoćni tekst forme u početno stanje.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/RegistrationView.html#reset()" class="member-name-link">reset()</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/RegistrationView.html" title="class in hr.unizd.autocare.view">RegistrationView</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Vraća registracijsku formu u početno prazno stanje.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/domain/Problem.html#resolve(hr.unizd.autocare.domain.ServiceRecord)" class="member-name-link">resolve(ServiceRecord)</a> - Method in class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/Problem.html" title="class in hr.unizd.autocare.domain">Problem</a></dt>
 <dd>
-<div class="block">Povezuje problem sa servisom koji ga je riješio.</div>
+<div class="block">Označava problem riješenim povezivanjem sa servisom koji ga je riješio.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/ProblemRepository.html#resolvedDescriptions(int,int)" class="member-name-link">resolvedDescriptions(int, int)</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/ProblemRepository.html" title="class in hr.unizd.autocare.repository">ProblemRepository</a></dt>
 <dd>
-<div class="block">Vraća opise problema koje je riješio zadani servis.</div>
+<div class="block">Dohvaća tekstualne opise problema koji su riješeni određenim servisom.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/components/Ui.html#row(java.awt.Component...)" class="member-name-link">row(Component...)</a> - Static method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/Ui.html" title="class in hr.unizd.autocare.view.components">Ui</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Stvara vodoravni red i u njega dodaje zadane komponente s ujednačenim razmacima.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
@@ -987,9 +1085,7 @@ loadScripts(document, 'script');</script>
 <dt><a href="hr/unizd/autocare/view/VehiclesView.html#selected()" class="member-name-link">selected()</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/VehiclesView.html" title="class in hr.unizd.autocare.view">VehiclesView</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/CatalogView.html#selectedCategory()" class="member-name-link">selectedCategory()</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/CatalogView.html" title="class in hr.unizd.autocare.view">CatalogView</a></dt>
-<dd>
-<div class="block">Vraća odabranu kategoriju ili <code>null</code> kada su prikazane sve kategorije.</div>
-</dd>
+<dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/ProblemsView.html#selectedCategory()" class="member-name-link">selectedCategory()</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/ProblemsView.html" title="class in hr.unizd.autocare.view">ProblemsView</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/components/VehicleForm.html#selectedVariant()" class="member-name-link">selectedVariant()</a> - Method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/VehicleForm.html" title="class in hr.unizd.autocare.view.components">VehicleForm</a></dt>
@@ -998,41 +1094,47 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/observer/AppEvent.html#SERVICE_SAVED" class="member-name-link">SERVICE_SAVED</a> - Enum constant in enum class hr.unizd.autocare.observer.<a href="hr/unizd/autocare/observer/AppEvent.html" title="enum class in hr.unizd.autocare.observer">AppEvent</a></dt>
 <dd>
-<div class="block">Spremljen je novi servisni zapis.</div>
+<div class="block">Spremljen je novi servis i ovisni prikazi trebaju osvježavanje.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/model/Data.ServiceDetail.html#%3Cinit%3E(hr.unizd.autocare.model.Data.ServiceRow,java.util.List,java.util.List)" class="member-name-link">ServiceDetail(Data.ServiceRow, List, List)</a> - Constructor for class hr.unizd.autocare.model.<a href="hr/unizd/autocare/model/Data.ServiceDetail.html" title="class in hr.unizd.autocare.model">Data.ServiceDetail</a></dt>
 <dd>
-<div class="block">Stvara detaljni prikaz spremljenog servisa.</div>
+<div class="block">Stvara prikazni model detalja spremljenog servisa.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/ServiceEditorDialog.html" class="type-name-link" title="class in hr.unizd.autocare.view">ServiceEditorDialog</a> - Class in <a href="hr/unizd/autocare/view/package-summary.html">hr.unizd.autocare.view</a></dt>
 <dd>
-<div class="block">Unos stvarno plaćenih stavki servisa bez prikaza procijenjenih cijena.</div>
+<div class="block">Modalni editor za unos novog stvarnog servisa vozila.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/ServiceEditorDialog.html#%3Cinit%3E(java.awt.Window,int,java.util.List)" class="member-name-link">ServiceEditorDialog(Window, int, List)</a> - Constructor for class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/ServiceEditorDialog.html" title="class in hr.unizd.autocare.view">ServiceEditorDialog</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Stvara editor servisa s početnom kilometražom i popisom otvorenih problema.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/model/Data.ServiceInput.html#%3Cinit%3E(java.time.LocalDate,int,java.lang.String,java.util.List,java.util.List)" class="member-name-link">ServiceInput(LocalDate, int, String, List, List)</a> - Constructor for class hr.unizd.autocare.model.<a href="hr/unizd/autocare/model/Data.ServiceInput.html" title="class in hr.unizd.autocare.model">Data.ServiceInput</a></dt>
 <dd>
-<div class="block">Stvara nepromjenjivi skup podataka za unos servisa.</div>
+<div class="block">Stvara ulaz servisnog use-casea i kopira predane kolekcije.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/domain/ServiceItem.html" class="type-name-link" title="class in hr.unizd.autocare.domain">ServiceItem</a> - Class in <a href="hr/unizd/autocare/domain/package-summary.html">hr.unizd.autocare.domain</a></dt>
 <dd>
-<div class="block">Jedan izvršeni zahvat i stvarno plaćena cijena.</div>
+<div class="block">Persistentna stavka jednog servisa koja povezuje ServiceRecord sa standardnim WorkDefinitionom.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/domain/ServiceItem.html#%3Cinit%3E()" class="member-name-link">ServiceItem()</a> - Constructor for class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/ServiceItem.html" title="class in hr.unizd.autocare.domain">ServiceItem</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Konstruktor bez argumenata potreban JPA provideru.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/domain/ServiceRecord.html" class="type-name-link" title="class in hr.unizd.autocare.domain">ServiceRecord</a> - Class in <a href="hr/unizd/autocare/domain/package-summary.html">hr.unizd.autocare.domain</a></dt>
 <dd>
-<div class="block">Servis i njegove stavke čine jednu cjelinu za spremanje.</div>
+<div class="block">Persistentni domenski zapis jednog stvarno evidentiranog servisa vozila.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/domain/ServiceRecord.html#%3Cinit%3E()" class="member-name-link">ServiceRecord()</a> - Constructor for class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/ServiceRecord.html" title="class in hr.unizd.autocare.domain">ServiceRecord</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Konstruktor bez argumenata potreban JPA provideru.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/domain/ServiceRecord.html#%3Cinit%3E(hr.unizd.autocare.domain.Vehicle,java.time.LocalDate,int,java.lang.String)" class="member-name-link">ServiceRecord(Vehicle, LocalDate, int, String)</a> - Constructor for class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/ServiceRecord.html" title="class in hr.unizd.autocare.domain">ServiceRecord</a></dt>
 <dd>
-<div class="block">Stvara servisni zapis za vozilo.</div>
+<div class="block">Stvara novi servisni zapis prije dodavanja njegovih stavki.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/ServiceRecordRepository.html" class="type-name-link" title="class in hr.unizd.autocare.repository">ServiceRecordRepository</a> - Class in <a href="hr/unizd/autocare/repository/package-summary.html">hr.unizd.autocare.repository</a></dt>
 <dd>
-<div class="block">JPA dohvat i spremanje servisne povijesti.</div>
+<div class="block">Repository za spremanje i čitanje servisne povijesti.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/ServiceRecordRepository.html#%3Cinit%3E(jakarta.persistence.EntityManager)" class="member-name-link">ServiceRecordRepository(EntityManager)</a> - Constructor for class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/ServiceRecordRepository.html" title="class in hr.unizd.autocare.repository">ServiceRecordRepository</a></dt>
 <dd>
@@ -1040,15 +1142,15 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="hr/unizd/autocare/service/ServiceRecordService.html" class="type-name-link" title="class in hr.unizd.autocare.service">ServiceRecordService</a> - Class in <a href="hr/unizd/autocare/service/package-summary.html">hr.unizd.autocare.service</a></dt>
 <dd>
-<div class="block">Spremanje i čitanje servisne povijesti.</div>
+<div class="block">Provodi spremanje i čitanje servisne povijesti vozila.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/service/ServiceRecordService.html#%3Cinit%3E(jakarta.persistence.EntityManagerFactory)" class="member-name-link">ServiceRecordService(EntityManagerFactory)</a> - Constructor for class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/ServiceRecordService.html" title="class in hr.unizd.autocare.service">ServiceRecordService</a></dt>
 <dd>
-<div class="block">Stvara servis koji upravlja servisnom poviješću.</div>
+<div class="block">Stvara servis servisne povijesti.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/model/Data.ServiceRow.html#%3Cinit%3E(int,java.time.LocalDate,int,java.lang.String,java.math.BigDecimal,java.lang.String)" class="member-name-link">ServiceRow(int, LocalDate, int, String, BigDecimal, String)</a> - Constructor for class hr.unizd.autocare.model.<a href="hr/unizd/autocare/model/Data.ServiceRow.html" title="class in hr.unizd.autocare.model">Data.ServiceRow</a></dt>
 <dd>
-<div class="block">Stvara redak za prikaz servisne povijesti.</div>
+<div class="block">Stvara redak spreman za prikaz servisne povijesti.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/MainFrame.html#services" class="member-name-link">services</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a></dt>
 <dd>&nbsp;</dd>
@@ -1056,61 +1158,89 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/controller/ServicesController.html" class="type-name-link" title="class in hr.unizd.autocare.controller">ServicesController</a> - Class in <a href="hr/unizd/autocare/controller/package-summary.html">hr.unizd.autocare.controller</a></dt>
 <dd>
-<div class="block">Servisna povijest, detalj servisa i unos novog servisa.</div>
+<div class="block">Upravlja servisnom poviješću, detaljem servisa i unosom novog servisa aktivnog vozila.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/controller/ServicesController.html#%3Cinit%3E(hr.unizd.autocare.view.MainFrame,hr.unizd.autocare.service.ServiceRecordService,hr.unizd.autocare.service.CatalogService,hr.unizd.autocare.service.ProblemService,hr.unizd.autocare.app.Session,hr.unizd.autocare.observer.Subject)" class="member-name-link">ServicesController(MainFrame, ServiceRecordService, CatalogService, ProblemService, Session, Subject)</a> - Constructor for class hr.unizd.autocare.controller.<a href="hr/unizd/autocare/controller/ServicesController.html" title="class in hr.unizd.autocare.controller">ServicesController</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Povezuje ServicesView sa servisima potrebnim za servisnu povijest i unos novog servisa.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/ServicesView.html" class="type-name-link" title="class in hr.unizd.autocare.view">ServicesView</a> - Class in <a href="hr/unizd/autocare/view/package-summary.html">hr.unizd.autocare.view</a></dt>
 <dd>
-<div class="block">Servisna povijest aktivnog vozila.</div>
+<div class="block">Swing prikaz servisne povijesti aktivnog vozila i detalja odabranog servisa.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/ServicesView.html#%3Cinit%3E()" class="member-name-link">ServicesView()</a> - Constructor for class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/ServicesView.html" title="class in hr.unizd.autocare.view">ServicesView</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Stvara tablicu servisne povijesti i gumbe za novi servis i prikaz detalja.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/app/Session.html" class="type-name-link" title="class in hr.unizd.autocare.app">Session</a> - Class in <a href="hr/unizd/autocare/app/package-summary.html">hr.unizd.autocare.app</a></dt>
 <dd>
-<div class="block">Singleton koji čuva trenutno prijavljenog korisnika i aktivno vozilo.</div>
+<div class="block">Singleton koji čuva zajednički korisnički kontekst tijekom rada aplikacije.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/app/Session.html#setActiveVehicle(hr.unizd.autocare.domain.Vehicle)" class="member-name-link">setActiveVehicle(Vehicle)</a> - Method in class hr.unizd.autocare.app.<a href="hr/unizd/autocare/app/Session.html" title="class in hr.unizd.autocare.app">Session</a></dt>
 <dd>
-<div class="block">Postavlja vozilo koje se koristi kao kontekst glavnih ekrana.</div>
+<div class="block">Postavlja vozilo koje predstavlja trenutačni kontekst aplikacije.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/components/VehicleForm.html#setMakes(java.util.List)" class="member-name-link">setMakes(List)</a> - Method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/VehicleForm.html" title="class in hr.unizd.autocare.view.components">VehicleForm</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Zamjenjuje vrijednosti odabira marke novim vrijednostima iz kataloga.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/components/VehicleForm.html#setModels(java.util.List)" class="member-name-link">setModels(List)</a> - Method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/VehicleForm.html" title="class in hr.unizd.autocare.view.components">VehicleForm</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Zamjenjuje vrijednosti odabira modela novim vrijednostima iz kataloga.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/ProblemsView.html#setRows(java.util.List)" class="member-name-link">setRows(List)</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/ProblemsView.html" title="class in hr.unizd.autocare.view">ProblemsView</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Zamjenjuje prikazane probleme aktualnim podacima vozila.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/VehiclesView.html#setRows(java.util.List,java.lang.Integer)" class="member-name-link">setRows(List, Integer)</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/VehiclesView.html" title="class in hr.unizd.autocare.view">VehiclesView</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Zamjenjuje prikazane retke aktualnim vozilima i označava koje je vozilo aktivno.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/CatalogView.html#setRows(java.util.List)" class="member-name-link">setRows(List)</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/CatalogView.html" title="class in hr.unizd.autocare.view">CatalogView</a></dt>
 <dd>
-<div class="block">Zamjenjuje retke tablice radovima dobivenima iz kataloga.</div>
+<div class="block">Prikazuje zadani skup standardnih radova u tablici kataloga.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/MaintenanceView.html#setRows(java.util.List)" class="member-name-link">setRows(List)</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/MaintenanceView.html" title="class in hr.unizd.autocare.view">MaintenanceView</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Zamjenjuje sadržaj tablice aktualnim izračunima održavanja.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/ServicesView.html#setRows(java.util.List)" class="member-name-link">setRows(List)</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/ServicesView.html" title="class in hr.unizd.autocare.view">ServicesView</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Zamjenjuje prikazanu servisnu povijest i internu listu objekata povezanih s recima tablice.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/components/VehicleForm.html#setVariants(java.util.List)" class="member-name-link">setVariants(List)</a> - Method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/VehicleForm.html" title="class in hr.unizd.autocare.view.components">VehicleForm</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Zamjenjuje vrijednosti odabira varijante novim vrijednostima iz kataloga.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/ServiceEditorDialog.html#setWorks(java.util.List)" class="member-name-link">setWorks(List)</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/ServiceEditorDialog.html" title="class in hr.unizd.autocare.view">ServiceEditorDialog</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Postavlja sve radove dostupne editoru i inicijalno prikazuje radove održavanja.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/components/VehicleForm.html#setYears(java.util.List)" class="member-name-link">setYears(List)</a> - Method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/VehicleForm.html" title="class in hr.unizd.autocare.view.components">VehicleForm</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Zamjenjuje vrijednosti odabira godine novim vrijednostima iz kataloga.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/DashboardView.html#showDashboard(hr.unizd.autocare.model.Data.Dashboard)" class="member-name-link">showDashboard(Data.Dashboard)</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/DashboardView.html" title="class in hr.unizd.autocare.view">DashboardView</a></dt>
 <dd>
-<div class="block">Ažurira kartice i sažetak prema podacima servisa Dashboard.</div>
+<div class="block">Popunjava Dashboard vrijednostima iz pripremljenog modela.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/components/VehicleForm.html#showDetails(hr.unizd.autocare.domain.VehicleVariant)" class="member-name-link">showDetails(VehicleVariant)</a> - Method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/VehicleForm.html" title="class in hr.unizd.autocare.view.components">VehicleForm</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Prikazuje sažetak motora, goriva, snage i mjenjača odabrane varijante.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/MainFrame.html#showPage(java.lang.String)" class="member-name-link">showPage(String)</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Prikazuje imenovanu funkcionalnu stranicu i ažurira označenu navigacijsku stavku.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/ServicesView.html#showServiceDetails(hr.unizd.autocare.model.Data.ServiceDetail)" class="member-name-link">showServiceDetails(Data.ServiceDetail)</a> - Method in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/ServicesView.html" title="class in hr.unizd.autocare.view">ServicesView</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Prikazuje detalje jednog servisa, njegove stavke, ukupni stvarni trošak i riješene probleme.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/components/VehicleForm.html#state" class="member-name-link">state</a> - Variable in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/VehicleForm.html" title="class in hr.unizd.autocare.view.components">VehicleForm</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/observer/Subject.html" class="type-name-link" title="class in hr.unizd.autocare.observer">Subject</a> - Class in <a href="hr/unizd/autocare/observer/package-summary.html">hr.unizd.autocare.observer</a></dt>
 <dd>
-<div class="block">Čuva Observere i obavještava ih o promjenama stanja aplikacije.</div>
+<div class="block">Izdavač Observer događaja u aplikaciji.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/observer/Subject.html#%3Cinit%3E()" class="member-name-link">Subject()</a> - Constructor for class hr.unizd.autocare.observer.<a href="hr/unizd/autocare/observer/Subject.html" title="class in hr.unizd.autocare.observer">Subject</a></dt>
 <dd>&nbsp;</dd>
@@ -1133,11 +1263,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/domain/Checks.html#text(java.lang.String,int,java.lang.String)" class="member-name-link">text(String, int, String)</a> - Static method in class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/Checks.html" title="class in hr.unizd.autocare.domain">Checks</a></dt>
 <dd>
-<div class="block">Provjerava obavezni tekst, uklanja rubne razmake i ograničava duljinu.</div>
+<div class="block">Provjerava obavezni tekst, uklanja rubne razmake i ograničava najveću duljinu.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/strategy/TimeMaintenanceStrategy.html" class="type-name-link" title="class in hr.unizd.autocare.strategy">TimeMaintenanceStrategy</a> - Class in <a href="hr/unizd/autocare/strategy/package-summary.html">hr.unizd.autocare.strategy</a></dt>
 <dd>
-<div class="block">Računanje intervala koji ovisi o vremenu.</div>
+<div class="block">Strategy implementacija koja stanje održavanja računa prema proteklom vremenu.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/strategy/TimeMaintenanceStrategy.html#%3Cinit%3E()" class="member-name-link">TimeMaintenanceStrategy()</a> - Constructor for class hr.unizd.autocare.strategy.<a href="hr/unizd/autocare/strategy/TimeMaintenanceStrategy.html" title="class in hr.unizd.autocare.strategy">TimeMaintenanceStrategy</a></dt>
 <dd>&nbsp;</dd>
@@ -1151,11 +1281,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/domain/ServiceRecord.html#total()" class="member-name-link">total()</a> - Method in class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/ServiceRecord.html" title="class in hr.unizd.autocare.domain">ServiceRecord</a></dt>
 <dd>
-<div class="block">Vraća zbroj stvarnih cijena svih stavki servisa.</div>
+<div class="block">Računa ukupni stvarni trošak servisa zbrajanjem cijena svih stavki.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/ServiceRecordRepository.html#total(int,int)" class="member-name-link">total(int, int)</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/ServiceRecordRepository.html" title="class in hr.unizd.autocare.repository">ServiceRecordRepository</a></dt>
 <dd>
-<div class="block">Vraća zbroj stvarno plaćenih cijena servisnih stavki vozila.</div>
+<div class="block">Računa zbroj stvarno plaćenih servisnih stavki za vozilo.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/domain/CatalogCategory.html#TRANSMISSION" class="member-name-link">TRANSMISSION</a> - Enum constant in enum class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/CatalogCategory.html" title="enum class in hr.unizd.autocare.domain">CatalogCategory</a></dt>
 <dd>&nbsp;</dd>
@@ -1168,25 +1298,27 @@ loadScripts(document, 'script');</script>
 <dl class="index">
 <dt><a href="hr/unizd/autocare/view/components/Ui.html" class="type-name-link" title="class in hr.unizd.autocare.view.components">Ui</a> - Class in <a href="hr/unizd/autocare/view/components/package-summary.html">hr.unizd.autocare.view.components</a></dt>
 <dd>
-<div class="block">Standardni Swing layouti i formatiranje, bez poslovnih pravila.</div>
+<div class="block">Zajednički Swing helper za ponavljajuće layout obrasce, formatiranje, parsiranje i poruke.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/controller/MainController.html#update(hr.unizd.autocare.observer.AppEvent)" class="member-name-link">update(AppEvent)</a> - Method in class hr.unizd.autocare.controller.<a href="hr/unizd/autocare/controller/MainController.html" title="class in hr.unizd.autocare.controller">MainController</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Reagira na događaj koji je objavio Subject.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/observer/Observer.html#update(hr.unizd.autocare.observer.AppEvent)" class="member-name-link">update(AppEvent)</a> - Method in interface hr.unizd.autocare.observer.<a href="hr/unizd/autocare/observer/Observer.html" title="interface in hr.unizd.autocare.observer">Observer</a></dt>
 <dd>
 <div class="block">Reagira na događaj koji je objavio Subject.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/domain/Vehicle.html#updateMileage(int)" class="member-name-link">updateMileage(int)</a> - Method in class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/Vehicle.html" title="class in hr.unizd.autocare.domain">Vehicle</a></dt>
 <dd>
-<div class="block">Ažurira kilometražu bez dopuštanja smanjenja postojeće vrijednosti.</div>
+<div class="block">Ažurira trenutačnu kilometražu vozila uz domensku provjeru vrijednosti.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/service/VehicleService.html#updateMileage(int,int,int)" class="member-name-link">updateMileage(int, int, int)</a> - Method in class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/VehicleService.html" title="class in hr.unizd.autocare.service">VehicleService</a></dt>
 <dd>
-<div class="block">Ažurira kilometražu vozila koje pripada navedenom korisniku.</div>
+<div class="block">Mijenja kilometražu vozila koje pripada zadanom korisniku.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/UserRepository.html" class="type-name-link" title="class in hr.unizd.autocare.repository">UserRepository</a> - Class in <a href="hr/unizd/autocare/repository/package-summary.html">hr.unizd.autocare.repository</a></dt>
 <dd>
-<div class="block">JPA dohvat i spremanje korisnika.</div>
+<div class="block">Repository za persistence operacije nad korisničkim računima.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/UserRepository.html#%3Cinit%3E(jakarta.persistence.EntityManager)" class="member-name-link">UserRepository(EntityManager)</a> - Constructor for class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/UserRepository.html" title="class in hr.unizd.autocare.repository">UserRepository</a></dt>
 <dd>
@@ -1235,47 +1367,55 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/repository/CatalogRepository.html#variants(java.lang.String,java.lang.String,int)" class="member-name-link">variants(String, String, int)</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/CatalogRepository.html" title="class in hr.unizd.autocare.repository">CatalogRepository</a></dt>
 <dd>
-<div class="block">Vraća kataloške varijante koje pokrivaju odabranu godinu.</div>
+<div class="block">Dohvaća varijante koje pokrivaju odabranu godinu.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/service/CatalogService.html#variants(java.lang.String,java.lang.String,int)" class="member-name-link">variants(String, String, int)</a> - Method in class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/CatalogService.html" title="class in hr.unizd.autocare.service">CatalogService</a></dt>
 <dd>
-<div class="block">Vraća varijante koje odgovaraju marki, modelu i godini.</div>
+<div class="block">Dohvaća varijante vozila koje odgovaraju odabranoj marki, modelu i godini.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/domain/Vehicle.html" class="type-name-link" title="class in hr.unizd.autocare.domain">Vehicle</a> - Class in <a href="hr/unizd/autocare/domain/package-summary.html">hr.unizd.autocare.domain</a></dt>
 <dd>
-<div class="block">Konkretno vozilo korisnika; trenutna kilometraža ne smije se smanjiti.</div>
+<div class="block">Persistentni domenski objekt konkretnog vozila koje pripada korisniku.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/domain/Vehicle.html#%3Cinit%3E()" class="member-name-link">Vehicle()</a> - Constructor for class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/Vehicle.html" title="class in hr.unizd.autocare.domain">Vehicle</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Konstruktor bez argumenata potreban JPA provideru.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/domain/Vehicle.html#%3Cinit%3E(hr.unizd.autocare.domain.AppUser,hr.unizd.autocare.domain.VehicleVariant,int,int)" class="member-name-link">Vehicle(AppUser, VehicleVariant, int, int)</a> - Constructor for class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/Vehicle.html" title="class in hr.unizd.autocare.domain">Vehicle</a></dt>
 <dd>
-<div class="block">Stvara vozilo nakon provjere vlasnika, varijante, godine i kilometraže.</div>
+<div class="block">Stvara novo korisničko vozilo.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/observer/AppEvent.html#VEHICLE_CHANGED" class="member-name-link">VEHICLE_CHANGED</a> - Enum constant in enum class hr.unizd.autocare.observer.<a href="hr/unizd/autocare/observer/AppEvent.html" title="enum class in hr.unizd.autocare.observer">AppEvent</a></dt>
 <dd>
-<div class="block">Podaci ili popis vozila promijenili su se.</div>
+<div class="block">Promijenjen je popis ili podatak vozila.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/VehicleDialog.html" class="type-name-link" title="class in hr.unizd.autocare.view">VehicleDialog</a> - Class in <a href="hr/unizd/autocare/view/package-summary.html">hr.unizd.autocare.view</a></dt>
 <dd>
-<div class="block">Dijalog koji prikuplja podatke za dodavanje korisnikova vozila.</div>
+<div class="block">Modalni dijalog za dodavanje novog vozila pomoću zajedničke VehicleForm komponente.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/VehicleDialog.html#%3Cinit%3E(java.awt.Window)" class="member-name-link">VehicleDialog(Window)</a> - Constructor for class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/VehicleDialog.html" title="class in hr.unizd.autocare.view">VehicleDialog</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Stvara modalni dijalog i raspoređuje VehicleForm s gumbima za spremanje i odustajanje.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/view/components/VehicleForm.html" class="type-name-link" title="class in hr.unizd.autocare.view.components">VehicleForm</a> - Class in <a href="hr/unizd/autocare/view/components/package-summary.html">hr.unizd.autocare.view.components</a></dt>
 <dd>
-<div class="block">Forma za izbor varijante vozila i unos godine proizvodnje i kilometraže.</div>
+<div class="block">Ponovno upotrebljiva Swing forma za izbor marke, modela, godine i kataloške varijante vozila.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/components/VehicleForm.html#%3Cinit%3E()" class="member-name-link">VehicleForm()</a> - Constructor for class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/VehicleForm.html" title="class in hr.unizd.autocare.view.components">VehicleForm</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Stvara sva polja forme, detalj odabrane varijante i početne pomoćne poruke.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/controller/VehicleFormController.html" class="type-name-link" title="class in hr.unizd.autocare.controller">VehicleFormController</a> - Class in <a href="hr/unizd/autocare/controller/package-summary.html">hr.unizd.autocare.controller</a></dt>
 <dd>
-<div class="block">Puni kaskadne odabire vozila na temelju kataloških podataka.</div>
+<div class="block">Upravlja ovisnim izborima u VehicleForm komponenti.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/controller/VehicleFormController.html#%3Cinit%3E(hr.unizd.autocare.view.components.VehicleForm,hr.unizd.autocare.service.CatalogService)" class="member-name-link">VehicleFormController(VehicleForm, CatalogService)</a> - Constructor for class hr.unizd.autocare.controller.<a href="hr/unizd/autocare/controller/VehicleFormController.html" title="class in hr.unizd.autocare.controller">VehicleFormController</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Povezuje VehicleForm s CatalogServiceom i registrira listenere ovisnih odabira.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/repository/VehicleRepository.html" class="type-name-link" title="class in hr.unizd.autocare.repository">VehicleRepository</a> - Class in <a href="hr/unizd/autocare/repository/package-summary.html">hr.unizd.autocare.repository</a></dt>
 <dd>
-<div class="block">JPA dohvat i spremanje korisnikovih vozila.</div>
+<div class="block">Repository za persistence operacije nad korisnikovim vozilima.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/repository/VehicleRepository.html#%3Cinit%3E(jakarta.persistence.EntityManager)" class="member-name-link">VehicleRepository(EntityManager)</a> - Constructor for class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/VehicleRepository.html" title="class in hr.unizd.autocare.repository">VehicleRepository</a></dt>
 <dd>
@@ -1287,54 +1427,64 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/controller/VehiclesController.html" class="type-name-link" title="class in hr.unizd.autocare.controller">VehiclesController</a> - Class in <a href="hr/unizd/autocare/controller/package-summary.html">hr.unizd.autocare.controller</a></dt>
 <dd>
-<div class="block">Upravlja prikazom, dodavanjem i odabirom korisnikovih vozila.</div>
+<div class="block">Upravlja pregledom, dodavanjem, promjenom kilometraže i aktiviranjem korisnikovih vozila.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/controller/VehiclesController.html#%3Cinit%3E(hr.unizd.autocare.view.MainFrame,hr.unizd.autocare.service.VehicleService,hr.unizd.autocare.service.CatalogService,hr.unizd.autocare.app.Session,hr.unizd.autocare.observer.Subject)" class="member-name-link">VehiclesController(MainFrame, VehicleService, CatalogService, Session, Subject)</a> - Constructor for class hr.unizd.autocare.controller.<a href="hr/unizd/autocare/controller/VehiclesController.html" title="class in hr.unizd.autocare.controller">VehiclesController</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Stvara Controller vozila i povezuje ga s Viewom, servisima, sesijom i Observer Subjectom.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/service/VehicleService.html" class="type-name-link" title="class in hr.unizd.autocare.service">VehicleService</a> - Class in <a href="hr/unizd/autocare/service/package-summary.html">hr.unizd.autocare.service</a></dt>
 <dd>
-<div class="block">Upravljanje vozilima; identitet se stvara jednom, a kasnije se mijenja samo kilometraža.</div>
+<div class="block">Provodi use-caseove vezane uz korisnikova vozila i aktivno vozilo.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/service/VehicleService.html#%3Cinit%3E(jakarta.persistence.EntityManagerFactory)" class="member-name-link">VehicleService(EntityManagerFactory)</a> - Constructor for class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/VehicleService.html" title="class in hr.unizd.autocare.service">VehicleService</a></dt>
 <dd>
-<div class="block">Stvara servis za upravljanje vozilima.</div>
+<div class="block">Stvara servis vozila.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/VehiclesView.html" class="type-name-link" title="class in hr.unizd.autocare.view">VehiclesView</a> - Class in <a href="hr/unizd/autocare/view/package-summary.html">hr.unizd.autocare.view</a></dt>
 <dd>
-<div class="block">Upravljanje vozilima; jedino mjesto promjene aktivnog vozila.</div>
+<div class="block">Swing prikaz svih vozila prijavljenog korisnika i osnovnih akcija nad odabranim vozilom.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/view/VehiclesView.html#%3Cinit%3E()" class="member-name-link">VehiclesView()</a> - Constructor for class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/VehiclesView.html" title="class in hr.unizd.autocare.view">VehiclesView</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Stvara tablicu vozila i gumbe za dodavanje, promjenu kilometraže i aktiviranje.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/domain/VehicleVariant.html" class="type-name-link" title="class in hr.unizd.autocare.domain">VehicleVariant</a> - Class in <a href="hr/unizd/autocare/domain/package-summary.html">hr.unizd.autocare.domain</a></dt>
 <dd>
-<div class="block">Kataloška varijanta vozila koju aplikacija samo čita iz baze.</div>
+<div class="block">Persistentna kataloška definicija jedne varijante vozila.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/domain/VehicleVariant.html#%3Cinit%3E()" class="member-name-link">VehicleVariant()</a> - Constructor for class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/VehicleVariant.html" title="class in hr.unizd.autocare.domain">VehicleVariant</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Konstruktor bez argumenata potreban JPA provideru.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:W">W</h2>
 <dl class="index">
 <dt><a href="hr/unizd/autocare/view/ServiceEditorDialog.html#work" class="member-name-link">work</a> - Variable in class hr.unizd.autocare.view.<a href="hr/unizd/autocare/view/ServiceEditorDialog.html" title="class in hr.unizd.autocare.view">ServiceEditorDialog</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/view/components/Ui.html#workCategory(hr.unizd.autocare.domain.WorkCategory)" class="member-name-link">workCategory(WorkCategory)</a> - Static method in class hr.unizd.autocare.view.components.<a href="hr/unizd/autocare/view/components/Ui.html" title="class in hr.unizd.autocare.view.components">Ui</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Pretvara internu kategoriju rada u naziv prikladan za korisničko sučelje.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/domain/WorkCategory.html" class="type-name-link" title="enum class in hr.unizd.autocare.domain">WorkCategory</a> - Enum Class in <a href="hr/unizd/autocare/domain/package-summary.html">hr.unizd.autocare.domain</a></dt>
 <dd>
-<div class="block">Razlikuje održavanje i popravak.</div>
+<div class="block">Razlikuje standardne radove održavanja od popravaka u katalogu i servisnom unosu.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/domain/WorkDefinition.html" class="type-name-link" title="class in hr.unizd.autocare.domain">WorkDefinition</a> - Class in <a href="hr/unizd/autocare/domain/package-summary.html">hr.unizd.autocare.domain</a></dt>
 <dd>
-<div class="block">Standardni zahvat iz kataloga i, za održavanje, njegov servisni interval.</div>
+<div class="block">Persistentna definicija standardnog rada iz kataloga.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/domain/WorkDefinition.html#%3Cinit%3E()" class="member-name-link">WorkDefinition()</a> - Constructor for class hr.unizd.autocare.domain.<a href="hr/unizd/autocare/domain/WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Konstruktor bez argumenata potreban JPA provideru.</div>
+</dd>
 <dt><a href="hr/unizd/autocare/repository/CatalogRepository.html#works(hr.unizd.autocare.domain.WorkCategory)" class="member-name-link">works(WorkCategory)</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/CatalogRepository.html" title="class in hr.unizd.autocare.repository">CatalogRepository</a></dt>
 <dd>
-<div class="block">Vraća standardne radove zadane servisne kategorije.</div>
+<div class="block">Dohvaća radove određene vrste, primjerice samo radove održavanja.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/service/CatalogService.html#works(hr.unizd.autocare.domain.WorkCategory)" class="member-name-link">works(WorkCategory)</a> - Method in class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/CatalogService.html" title="class in hr.unizd.autocare.service">CatalogService</a></dt>
 <dd>
-<div class="block">Vraća radove koji pripadaju zadanoj servisnoj kategoriji.</div>
+<div class="block">Dohvaća standardne radove određene vrste.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:Y">Y</h2>
@@ -1343,11 +1493,11 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><a href="hr/unizd/autocare/repository/CatalogRepository.html#years(java.lang.String,java.lang.String)" class="member-name-link">years(String, String)</a> - Method in class hr.unizd.autocare.repository.<a href="hr/unizd/autocare/repository/CatalogRepository.html" title="class in hr.unizd.autocare.repository">CatalogRepository</a></dt>
 <dd>
-<div class="block">Sastavlja sortirani popis godina koje pokrivaju varijante marke i modela.</div>
+<div class="block">Iz raspona godina kataloških varijanti izvodi godine dostupne za odabrani model.</div>
 </dd>
 <dt><a href="hr/unizd/autocare/service/CatalogService.html#years(java.lang.String,java.lang.String)" class="member-name-link">years(String, String)</a> - Method in class hr.unizd.autocare.service.<a href="hr/unizd/autocare/service/CatalogService.html" title="class in hr.unizd.autocare.service">CatalogService</a></dt>
 <dd>
-<div class="block">Vraća godine proizvodnje dostupne za marku i model.</div>
+<div class="block">Dohvaća godine za koje postoji barem jedna kataloška varijanta odabranog modela.</div>
 </dd>
 </dl>
 <a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<a href="#I:Y">Y</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="serialized-form.html">Serialized&nbsp;Form</a>

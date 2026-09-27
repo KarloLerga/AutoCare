@@ -15,7 +15,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-/** Pretraživi informativni cjenik standardnih zahvata. */
+/** Swing prikaz informativnog kataloga standardnih radova s pretragom i filtrom kategorije. */
 public class CatalogView extends JPanel {
   public final JTextField search = new JTextField(24);
   public final JComboBox<String> category = new JComboBox<>();
@@ -24,7 +24,7 @@ public class CatalogView extends JPanel {
 
   private final DefaultTableModel tableModel;
 
-  /** Stvara prikaz informativnog kataloga i filtara za pretraživanje. */
+  /** Stvara kontrolu pretrage, odabir kategorije i read-only tablicu kataloga. */
   public CatalogView() {
     super(new BorderLayout(12, 12));
     setOpaque(false);
@@ -59,7 +59,7 @@ public class CatalogView extends JPanel {
         BorderLayout.SOUTH);
   }
 
-  /** Vraća odabranu kategoriju ili {@code null} kada su prikazane sve kategorije. */
+  /** @return trenutno odabrana kategorija kataloga ili {@code null} kada se prikazuju sve kategorije */
   public CatalogCategory selectedCategory() {
     int index = category.getSelectedIndex();
     if (index <= 0) {
@@ -68,7 +68,11 @@ public class CatalogView extends JPanel {
     return CatalogCategory.values()[index - 1];
   }
 
-  /** Zamjenjuje retke tablice radovima dobivenima iz kataloga. */
+  /**
+   * Prikazuje zadani skup standardnih radova u tablici kataloga.
+   *
+   * @param works radovi nakon primjene filtra
+   */
   public void setRows(List<WorkDefinition> works) {
     tableModel.setRowCount(0);
     for (WorkDefinition work : works) {
@@ -82,6 +86,12 @@ public class CatalogView extends JPanel {
     }
   }
 
+  /**
+   * Pretvara kilometarski i vremenski interval rada u kratki tekst za tablicu.
+   *
+   * @param work definicija rada
+   * @return formatirani interval ili oznaka da interval nije definiran
+   */
   private static String interval(WorkDefinition work) {
     if (work.getCategory() == WorkCategory.REPAIR) {
       return "-";

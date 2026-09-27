@@ -81,7 +81,11 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">MaintenanceService</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Servisna povijest je izvor istine za praćene intervale održavanja.</div>
+<div class="block">Iz servisne povijesti izvodi aktualno stanje planiranog održavanja vozila.
+
+<p>Servisna povijest je izvor istine: održavanje se prati tek kada za standardni rad postoji
+stvarno evidentirana servisna stavka. Service priprema podatke, a izračun preostalog intervala
+delegira domenskom <code>MaintenanceCalculatoru</code>.</div>
 </div>
 </section>
 <section class="summary">
@@ -96,7 +100,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(jakarta.persistence.EntityManagerFactory)" class="member-name-link">MaintenanceService</a><wbr>(jakarta.persistence.EntityManagerFactory&nbsp;entityManagerFactory)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Stvara servis koji iz servisne povijesti izvodi plan održavanja.</div>
+<div class="block">Stvara servis za izračun održavanja.</div>
 </div>
 </div>
 </section>
@@ -116,7 +120,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#list(int,int)" class="member-name-link">list</a><wbr>(int&nbsp;ownerId,
  int&nbsp;vehicleId)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Vraća intervale održavanja za vozilo na temelju posljednjih evidentiranih radova.</div>
+<div class="block">Dohvaća vozilo i vraća izračunate intervale održavanja na temelju njegove servisne povijesti.</div>
 </div>
 </div>
 </div>
@@ -140,7 +144,7 @@ loadScripts(document, 'script');</script>
 <h3>MaintenanceService</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">MaintenanceService</span><wbr><span class="parameters">(jakarta.persistence.EntityManagerFactory&nbsp;entityManagerFactory)</span></div>
-<div class="block">Stvara servis koji iz servisne povijesti izvodi plan održavanja.</div>
+<div class="block">Stvara servis za izračun održavanja.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>entityManagerFactory</code> - zajednička JPA tvornica</dd>
@@ -162,13 +166,13 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../model/Data.MaintenanceRow.html" title="class in hr.unizd.autocare.model">Data.MaintenanceRow</a>&gt;</span>&nbsp;<span class="element-name">list</span><wbr><span class="parameters">(int&nbsp;ownerId,
  int&nbsp;vehicleId)</span></div>
-<div class="block">Vraća intervale održavanja za vozilo na temelju posljednjih evidentiranih radova.</div>
+<div class="block">Dohvaća vozilo i vraća izračunate intervale održavanja na temelju njegove servisne povijesti.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>ownerId</code> - identifikator vlasnika</dd>
 <dd><code>vehicleId</code> - identifikator vozila</dd>
 <dt>Returns:</dt>
-<dd>izračunati intervali održavanja</dd>
+<dd>retci održavanja spremni za prikaz</dd>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako vozilo ne pripada korisniku</dd>
 </dl>

@@ -85,7 +85,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>void</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Problem.</span><code><a href="../Problem.html#resolve(hr.unizd.autocare.domain.ServiceRecord)" class="member-name-link">resolve</a><wbr>(<a href="../ServiceRecord.html" title="class in hr.unizd.autocare.domain">ServiceRecord</a>&nbsp;serviceRecord)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Povezuje problem sa servisom koji ga je riješio.</div>
+<div class="block">Označava problem riješenim povezivanjem sa servisom koji ga je riješio.</div>
 </div>
 </div>
 </section>
@@ -102,7 +102,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><span class="type-name-label">ServiceRecordRepository.</span><code><a href="../../repository/ServiceRecordRepository.html#findForOwner(int,int)" class="member-name-link">findForOwner</a><wbr>(int&nbsp;ownerId,
  int&nbsp;serviceId)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Vraća servis samo ako pripada vozilu korisnika; inače vraća <code>null</code>.</div>
+<div class="block">Dohvaća jedan servis samo ako pripada vozilu zadanog korisnika.</div>
 </div>
 </div>
 <div class="caption"><span>Methods in <a href="../../repository/package-summary.html">hr.unizd.autocare.repository</a> that return types with arguments of type <a href="../ServiceRecord.html" title="class in hr.unizd.autocare.domain">ServiceRecord</a></span></div>
@@ -114,7 +114,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><span class="type-name-label">ServiceRecordRepository.</span><code><a href="../../repository/ServiceRecordRepository.html#list(int,int)" class="member-name-link">list</a><wbr>(int&nbsp;ownerId,
  int&nbsp;vehicleId)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Vraća povijest servisa vozila ako ono pripada korisniku.</div>
+<div class="block">Dohvaća servisnu povijest vozila samo unutar vlasničkog konteksta korisnika.</div>
 </div>
 </div>
 <div class="caption"><span>Methods in <a href="../../repository/package-summary.html">hr.unizd.autocare.repository</a> with parameters of type <a href="../ServiceRecord.html" title="class in hr.unizd.autocare.domain">ServiceRecord</a></span></div>
@@ -125,7 +125,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>void</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ServiceRecordRepository.</span><code><a href="../../repository/ServiceRecordRepository.html#add(hr.unizd.autocare.domain.ServiceRecord)" class="member-name-link">add</a><wbr>(<a href="../ServiceRecord.html" title="class in hr.unizd.autocare.domain">ServiceRecord</a>&nbsp;serviceRecord)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Predaje novi servis persistence kontekstu; transakcijom upravlja pozivajući servisni sloj.</div>
+<div class="block">Dodaje novi servis u persistence context; povezane nove stavke spremaju se prema JPA cascade
+postavci entiteta.</div>
 </div>
 </div>
 </section>

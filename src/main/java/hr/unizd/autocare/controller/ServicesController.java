@@ -19,7 +19,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Servisna povijest, detalj servisa i unos novog servisa. */
+/** Upravlja servisnom poviješću, detaljem servisa i unosom novog servisa aktivnog vozila. */
 public class ServicesController {
   private final MainFrame frame;
   private final ServiceRecordService serviceRecordService;
@@ -28,6 +28,16 @@ public class ServicesController {
   private final Session session;
   private final Subject subject;
 
+  /**
+   * Povezuje ServicesView sa servisima potrebnim za servisnu povijest i unos novog servisa.
+   *
+   * @param frame glavni prozor
+   * @param serviceRecordService servis za spremanje i čitanje servisa
+   * @param catalogService servis za radove koji se mogu dodati u servis
+   * @param problemService servis za otvorene probleme vozila
+   * @param session zajednički korisnički kontekst
+   * @param subject Subject za objavu događaja nakon spremanja servisa
+   */
   public ServicesController(
       MainFrame frame,
       ServiceRecordService serviceRecordService,
@@ -57,6 +67,7 @@ public class ServicesController {
     });
   }
 
+  /** Učitava servisnu povijest trenutačno aktivnog vozila i predaje retke ServicesViewu. */
   public void load() {
     try {
       frame.services.setRows(serviceRecordService.list(session.getOwnerId(), session.getActiveVehicle().getId()));
@@ -65,6 +76,7 @@ public class ServicesController {
     }
   }
 
+  /** Dohvaća detalj odabranog servisa i prikazuje njegove stavke, ukupni trošak i riješene probleme. */
   private void detail() {
     ServiceRow selectedService = frame.services.selected();
     if (selectedService == null) {
@@ -80,6 +92,13 @@ public class ServicesController {
     }
   }
 
+  /**
+   * Pokreće unos novog servisa za aktivno vozilo.
+   *
+   * <p>Učitava katalog radova i otvorene probleme, otvara ServiceEditorDialog te nakon potvrde
+   * sprema jedan ServiceInput kroz ServiceRecordService. Nakon uspjeha osvježava servisnu povijest
+   * i objavljuje SERVICE_SAVED događaj.
+   */
   private void create() {
     int ownerId = session.getOwnerId();
     int vehicleId = session.getActiveVehicle().getId();
@@ -99,12 +118,29 @@ public class ServicesController {
     }
   }
 
+  /**
+   * Dohvaća skup radova koji se mogu odabrati u editoru servisa.
+   *
+   * @return dostupne definicije radova
+   */
   private List<WorkDefinition> loadEditorWorks() {
     List<WorkDefinition> works = new ArrayList<>(catalogService.works(WorkCategory.MAINTENANCE));
     works.addAll(catalogService.works(WorkCategory.REPAIR));
     return works;
   }
 
+  /**
+   * Stvara i konfigurira modalni editor novog servisa.
+   *
+   * <p>Metoda povezuje promjenu vrste rada, dodavanje i uklanjanje stavki, odustajanje i završno
+   * spremanje sa ServiceEditorDialogom.
+   *
+   * @param ownerId identifikator prijavljenog korisnika
+   * @param vehicleId identifikator aktivnog vozila
+   * @param currentMileage trenutačna kilometraža vozila koja se nudi kao početna vrijednost
+   * @param works radovi dostupni za unos
+   * @param openProblems otvoreni problemi koje je moguće označiti kao riješene
+   */
   private void openEditor(
       final int ownerId,
       final int vehicleId,

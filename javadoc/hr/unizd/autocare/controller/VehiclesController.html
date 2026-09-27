@@ -81,7 +81,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">VehiclesController</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Upravlja prikazom, dodavanjem i odabirom korisnikovih vozila.</div>
+<div class="block">Upravlja pregledom, dodavanjem, promjenom kilometraže i aktiviranjem korisnikovih vozila.</div>
 </div>
 </section>
 <section class="summary">
@@ -99,7 +99,9 @@ loadScripts(document, 'script');</script>
  <a href="../service/CatalogService.html" title="class in hr.unizd.autocare.service">CatalogService</a>&nbsp;catalogService,
  <a href="../app/Session.html" title="class in hr.unizd.autocare.app">Session</a>&nbsp;session,
  <a href="../observer/Subject.html" title="class in hr.unizd.autocare.observer">Subject</a>&nbsp;subject)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Stvara Controller vozila i povezuje ga s Viewom, servisima, sesijom i Observer Subjectom.</div>
+</div>
 </div>
 </section>
 </li>
@@ -116,7 +118,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#load()" class="member-name-link">load</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Učitava sva vozila prijavljenog korisnika i označava trenutačno aktivno vozilo u Viewu.</div>
+</div>
 </div>
 </div>
 </div>
@@ -143,6 +147,15 @@ loadScripts(document, 'script');</script>
  <a href="../service/CatalogService.html" title="class in hr.unizd.autocare.service">CatalogService</a>&nbsp;catalogService,
  <a href="../app/Session.html" title="class in hr.unizd.autocare.app">Session</a>&nbsp;session,
  <a href="../observer/Subject.html" title="class in hr.unizd.autocare.observer">Subject</a>&nbsp;subject)</span></div>
+<div class="block">Stvara Controller vozila i povezuje ga s Viewom, servisima, sesijom i Observer Subjectom.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>frame</code> - glavni prozor koji sadrži VehiclesView</dd>
+<dd><code>vehicleService</code> - servis za rad s korisnikovim vozilima</dd>
+<dd><code>catalogService</code> - servis kataloga potreban pri dodavanju vozila</dd>
+<dd><code>session</code> - zajednički korisnički kontekst</dd>
+<dd><code>subject</code> - Subject preko kojeg se objavljuju promjene vozila</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -159,6 +172,7 @@ loadScripts(document, 'script');</script>
 <h3>load</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">load</span>()</div>
+<div class="block">Učitava sva vozila prijavljenog korisnika i označava trenutačno aktivno vozilo u Viewu.</div>
 </div>
 </section>
 </li>

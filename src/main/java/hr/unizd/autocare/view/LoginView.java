@@ -8,13 +8,14 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-/** Prijava bez sidebara. */
+/** Swing forma za unos vjerodajnica postojećeg korisnika i prelazak na registraciju. */
 public class LoginView extends JPanel {
   public final JTextField email = new JTextField(25);
   public final JPasswordField password = new JPasswordField(25);
   public final JButton login = new JButton("Prijavi se"),
       register = new JButton("Kreiraj račun");
 
+  /** Stvara i raspoređuje polja e-maila, lozinke i akcijske gumbe prijave. */
   public LoginView() {
     super(new GridBagLayout());
     JPanel card = Ui.card(), form = Ui.form();

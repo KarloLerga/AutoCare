@@ -12,9 +12,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Servis i njegove stavke čine jednu cjelinu za spremanje. */
+/**
+ * Persistentni domenski zapis jednog stvarno evidentiranog servisa vozila.
+ *
+ * <p>ServiceRecord čuva datum, kilometražu, napomenu i kolekciju stvarnih ServiceItem stavki.
+ * Zbroj stvarnih cijena stavki predstavlja stvarni trošak tog servisa.
+ */
 @Entity
-/** Servisni zapis vozila, uključujući izvršene radove i napomenu. */
 public class ServiceRecord {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,16 +34,17 @@ public class ServiceRecord {
   @OneToMany(mappedBy = "serviceRecord", cascade = CascadeType.PERSIST)
   private List<ServiceItem> items = new ArrayList<>();
 
+  /** Konstruktor bez argumenata potreban JPA provideru. */
   protected ServiceRecord() {}
 
   /**
-   * Stvara servisni zapis za vozilo.
+   * Stvara novi servisni zapis prije dodavanja njegovih stavki.
    *
-   * @param vehicle vozilo kojem servis pripada
-   * @param serviceDate datum obavljenog servisa
-   * @param mileage kilometraža na dan servisa
-   * @param note neobavezna napomena
-   * @throws IllegalArgumentException ako vozilo, datum ili kilometraža nisu valjani
+   * @param vehicle servisirano vozilo
+   * @param serviceDate datum servisa
+   * @param mileage kilometraža vozila pri servisu
+   * @param note opcionalna napomena
+   * @throws IllegalArgumentException ako vozilo ili datum nisu zadani ili kilometraža nije valjana
    */
   public ServiceRecord(Vehicle vehicle, LocalDate serviceDate, int mileage, String note) {
     if (vehicle == null) {
@@ -55,7 +60,15 @@ public class ServiceRecord {
     this.note = Checks.optional(note, 2000, "Napomena");
   }
 
-  /** Dodaje izvršeni rad s iznosom koji je korisnik stvarno platio. */
+  /**
+   * Dodaje jednu stvarno izvedenu servisnu stavku ovom servisu.
+   *
+   * <p>Nova stavka povezuje servis sa standardnim radom i sprema stvarno plaćenu cijenu.
+   *
+   * @param work izvedeni standardni rad
+   * @param actualPrice stvarno plaćeni iznos za taj rad
+   * @throws IllegalArgumentException ako rad nije zadan ili cijena nije valjana
+   */
   public void addItem(WorkDefinition work, BigDecimal actualPrice) {
     if (work == null) {
       throw new IllegalArgumentException("Rad je obavezan.");
@@ -64,7 +77,11 @@ public class ServiceRecord {
     items.add(new ServiceItem(this, work, actualPrice));
   }
 
-  /** Vraća zbroj stvarnih cijena svih stavki servisa. */
+  /**
+   * Računa ukupni stvarni trošak servisa zbrajanjem cijena svih stavki.
+   *
+   * @return ukupni stvarni trošak servisa
+   */
   public BigDecimal total() {
     BigDecimal total = BigDecimal.ZERO;
     for (ServiceItem serviceItem : items) {

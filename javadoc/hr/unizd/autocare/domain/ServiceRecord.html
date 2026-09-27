@@ -90,7 +90,10 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="annotations">@Entity
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">ServiceRecord</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Servis i njegove stavke čine jednu cjelinu za spremanje.</div>
+<div class="block">Persistentni domenski zapis jednog stvarno evidentiranog servisa vozila.
+
+<p>ServiceRecord čuva datum, kilometražu, napomenu i kolekciju stvarnih ServiceItem stavki.
+Zbroj stvarnih cijena stavki predstavlja stvarni trošak tog servisa.</div>
 </div>
 </section>
 <section class="summary">
@@ -106,14 +109,16 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>protected </code></div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">ServiceRecord</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Konstruktor bez argumenata potreban JPA provideru.</div>
+</div>
 <div class="col-first odd-row-color"><code>&nbsp;</code></div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(hr.unizd.autocare.domain.Vehicle,java.time.LocalDate,int,java.lang.String)" class="member-name-link">ServiceRecord</a><wbr>(<a href="Vehicle.html" title="class in hr.unizd.autocare.domain">Vehicle</a>&nbsp;vehicle,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/LocalDate.html" title="class or interface in java.time" class="external-link">LocalDate</a>&nbsp;serviceDate,
  int&nbsp;mileage,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;note)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Stvara servisni zapis za vozilo.</div>
+<div class="block">Stvara novi servisni zapis prije dodavanja njegovih stavki.</div>
 </div>
 </div>
 </section>
@@ -133,7 +138,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addItem(hr.unizd.autocare.domain.WorkDefinition,java.math.BigDecimal)" class="member-name-link">addItem</a><wbr>(<a href="WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a>&nbsp;work,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a>&nbsp;actualPrice)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Dodaje izvršeni rad s iznosom koji je korisnik stvarno platio.</div>
+<div class="block">Dodaje jednu stvarno izvedenu servisnu stavku ovom servisu.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getId()" class="member-name-link">getId</a>()</code></div>
@@ -156,7 +161,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#total()" class="member-name-link">total</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Vraća zbroj stvarnih cijena svih stavki servisa.</div>
+<div class="block">Računa ukupni stvarni trošak servisa zbrajanjem cijena svih stavki.</div>
 </div>
 </div>
 </div>
@@ -180,6 +185,7 @@ loadScripts(document, 'script');</script>
 <h3>ServiceRecord</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="element-name">ServiceRecord</span>()</div>
+<div class="block">Konstruktor bez argumenata potreban JPA provideru.</div>
 </div>
 </section>
 </li>
@@ -191,15 +197,15 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/LocalDate.html" title="class or interface in java.time" class="external-link">LocalDate</a>&nbsp;serviceDate,
  int&nbsp;mileage,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;note)</span></div>
-<div class="block">Stvara servisni zapis za vozilo.</div>
+<div class="block">Stvara novi servisni zapis prije dodavanja njegovih stavki.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>vehicle</code> - vozilo kojem servis pripada</dd>
-<dd><code>serviceDate</code> - datum obavljenog servisa</dd>
-<dd><code>mileage</code> - kilometraža na dan servisa</dd>
-<dd><code>note</code> - neobavezna napomena</dd>
+<dd><code>vehicle</code> - servisirano vozilo</dd>
+<dd><code>serviceDate</code> - datum servisa</dd>
+<dd><code>mileage</code> - kilometraža vozila pri servisu</dd>
+<dd><code>note</code> - opcionalna napomena</dd>
 <dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako vozilo, datum ili kilometraža nisu valjani</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako vozilo ili datum nisu zadani ili kilometraža nije valjana</dd>
 </dl>
 </div>
 </section>
@@ -218,7 +224,16 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addItem</span><wbr><span class="parameters">(<a href="WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a>&nbsp;work,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a>&nbsp;actualPrice)</span></div>
-<div class="block">Dodaje izvršeni rad s iznosom koji je korisnik stvarno platio.</div>
+<div class="block">Dodaje jednu stvarno izvedenu servisnu stavku ovom servisu.
+
+<p>Nova stavka povezuje servis sa standardnim radom i sprema stvarno plaćenu cijenu.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>work</code> - izvedeni standardni rad</dd>
+<dd><code>actualPrice</code> - stvarno plaćeni iznos za taj rad</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako rad nije zadan ili cijena nije valjana</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -227,7 +242,11 @@ loadScripts(document, 'script');</script>
 <h3>total</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a></span>&nbsp;<span class="element-name">total</span>()</div>
-<div class="block">Vraća zbroj stvarnih cijena svih stavki servisa.</div>
+<div class="block">Računa ukupni stvarni trošak servisa zbrajanjem cijena svih stavki.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>ukupni stvarni trošak servisa</dd>
+</dl>
 </div>
 </section>
 </li>

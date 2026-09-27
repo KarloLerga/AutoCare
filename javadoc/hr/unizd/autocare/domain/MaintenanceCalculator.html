@@ -81,7 +81,11 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">MaintenanceCalculator</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Odabire strategiju prema vrsti servisnog intervala.</div>
+<div class="block">Domenski kalkulator koji odabire odgovarajuću Strategy implementaciju za servisni interval.
+
+<p>Kalkulator ne dohvaća podatke iz baze i ne poznaje Swing. Dobiva sve potrebne vrijednosti
+kroz parametre i odlučuje treba li računati prema kilometraži, vremenu ili kombinaciji oba
+kriterija.</div>
 </div>
 </section>
 <section class="summary">
@@ -118,7 +122,7 @@ loadScripts(document, 'script');</script>
  int&nbsp;currentMileage,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/LocalDate.html" title="class or interface in java.time" class="external-link">LocalDate</a>&nbsp;today)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Izračunava udio preostalog intervala prema kilometraži, vremenu ili oboma.</div>
+<div class="block">Računa relativni dio servisnog intervala koji je još preostao.</div>
 </div>
 </div>
 </div>
@@ -163,17 +167,17 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;lastMileage,
  int&nbsp;currentMileage,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/LocalDate.html" title="class or interface in java.time" class="external-link">LocalDate</a>&nbsp;today)</span></div>
-<div class="block">Izračunava udio preostalog intervala prema kilometraži, vremenu ili oboma.</div>
+<div class="block">Računa relativni dio servisnog intervala koji je još preostao.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>intervalKm</code> - interval održavanja u kilometrima, ako postoji</dd>
-<dd><code>intervalMonths</code> - interval održavanja u mjesecima, ako postoji</dd>
-<dd><code>lastDate</code> - datum posljednjeg evidentiranog rada</dd>
-<dd><code>lastMileage</code> - kilometraža posljednjeg evidentiranog rada</dd>
+<dd><code>intervalKm</code> - kilometarski interval ili <code>null</code> ako se ne koristi</dd>
+<dd><code>intervalMonths</code> - vremenski interval u mjesecima ili <code>null</code> ako se ne koristi</dd>
+<dd><code>lastDate</code> - datum posljednje izvedbe rada</dd>
+<dd><code>lastMileage</code> - kilometraža posljednje izvedbe rada</dd>
 <dd><code>currentMileage</code> - trenutačna kilometraža vozila</dd>
-<dd><code>today</code> - datum na koji se računa preostali interval</dd>
+<dd><code>today</code> - datum na koji se račun radi</dd>
 <dt>Returns:</dt>
-<dd>omjer preostalog i ukupnog intervala; manja vrijednost znači bliži rok</dd>
+<dd>relativni preostali interval; vrijednost može pasti ispod nule kada je interval prošao</dd>
 </dl>
 </div>
 </section>

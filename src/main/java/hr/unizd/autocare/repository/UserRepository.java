@@ -4,7 +4,11 @@ import hr.unizd.autocare.domain.AppUser;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 
-/** JPA dohvat i spremanje korisnika. */
+/**
+ * Repository za persistence operacije nad korisničkim računima.
+ *
+ * <p>Klasa radi s EntityManagerom koji joj predaje Service, pa ne otvara vlastite transakcije.
+ */
 public class UserRepository {
   private final EntityManager entityManager;
 
@@ -18,10 +22,10 @@ public class UserRepository {
   }
 
   /**
-   * Vraća korisnika s adresom e-pošte ili {@code null} ako ne postoji.
+   * Traži korisnika prema e-mail adresi.
    *
-   * @param email adresa korisničkog računa
-   * @return pronađeni korisnik ili {@code null}
+   * @param email e-mail adresa
+   * @return pronađeni korisnik ili {@code null} ako račun ne postoji
    */
   public AppUser findByEmail(String email) {
     List<AppUser> users = entityManager

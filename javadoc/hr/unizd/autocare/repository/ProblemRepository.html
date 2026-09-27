@@ -85,7 +85,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ProblemRepository</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">JPA dohvat i spremanje problema vozila.</div>
+<div class="block">Repository za persistence operacije nad problemima vozila.</div>
 </div>
 </section>
 <section class="summary">
@@ -119,31 +119,31 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#add(hr.unizd.autocare.domain.Problem)" class="member-name-link">add</a><wbr>(<a href="../domain/Problem.html" title="class in hr.unizd.autocare.domain">Problem</a>&nbsp;problem)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Predaje novi problem persistence kontekstu.</div>
+<div class="block">Dodaje novi problem u trenutačni persistence context.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../domain/Problem.html" title="class in hr.unizd.autocare.domain">Problem</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findForOwner(int,int)" class="member-name-link">findForOwner</a><wbr>(int&nbsp;ownerId,
  int&nbsp;problemId)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Vraća problem samo ako pripada navedenom korisniku; inače vraća <code>null</code>.</div>
+<div class="block">Dohvaća problem samo ako pripada vozilu zadanog korisnika.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../domain/Problem.html" title="class in hr.unizd.autocare.domain">Problem</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#list(int,int)" class="member-name-link">list</a><wbr>(int&nbsp;ownerId,
  int&nbsp;vehicleId)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Vraća probleme vozila poredane od najnovijeg prema najstarijem.</div>
+<div class="block">Dohvaća probleme vozila.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#openCount(int,int)" class="member-name-link">openCount</a><wbr>(int&nbsp;ownerId,
  int&nbsp;vehicleId)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Broji neriješene probleme vozila.</div>
+<div class="block">Broji probleme vozila koji još nemaju povezan servis rješenja.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolvedDescriptions(int,int)" class="member-name-link">resolvedDescriptions</a><wbr>(int&nbsp;ownerId,
  int&nbsp;serviceId)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Vraća opise problema koje je riješio zadani servis.</div>
+<div class="block">Dohvaća tekstualne opise problema koji su riješeni određenim servisom.</div>
 </div>
 </div>
 </div>
@@ -188,10 +188,10 @@ loadScripts(document, 'script');</script>
 <h3>add</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">add</span><wbr><span class="parameters">(<a href="../domain/Problem.html" title="class in hr.unizd.autocare.domain">Problem</a>&nbsp;problem)</span></div>
-<div class="block">Predaje novi problem persistence kontekstu.</div>
+<div class="block">Dodaje novi problem u trenutačni persistence context.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>problem</code> - problem koji treba spremiti</dd>
+<dd><code>problem</code> - novi problem koji se dodaje u persistence context</dd>
 </dl>
 </div>
 </section>
@@ -202,13 +202,13 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../domain/Problem.html" title="class in hr.unizd.autocare.domain">Problem</a></span>&nbsp;<span class="element-name">findForOwner</span><wbr><span class="parameters">(int&nbsp;ownerId,
  int&nbsp;problemId)</span></div>
-<div class="block">Vraća problem samo ako pripada navedenom korisniku; inače vraća <code>null</code>.</div>
+<div class="block">Dohvaća problem samo ako pripada vozilu zadanog korisnika.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>ownerId</code> - primarni ključ vlasnika</dd>
-<dd><code>problemId</code> - primarni ključ problema</dd>
+<dd><code>ownerId</code> - identifikator vlasnika</dd>
+<dd><code>problemId</code> - identifikator problema</dd>
 <dt>Returns:</dt>
-<dd>problem vlasnika ili <code>null</code></dd>
+<dd>problem ili <code>null</code> ako nije pronađen u korisničkom kontekstu</dd>
 </dl>
 </div>
 </section>
@@ -219,11 +219,11 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../domain/Problem.html" title="class in hr.unizd.autocare.domain">Problem</a>&gt;</span>&nbsp;<span class="element-name">list</span><wbr><span class="parameters">(int&nbsp;ownerId,
  int&nbsp;vehicleId)</span></div>
-<div class="block">Vraća probleme vozila poredane od najnovijeg prema najstarijem.</div>
+<div class="block">Dohvaća probleme vozila.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>ownerId</code> - primarni ključ vlasnika</dd>
-<dd><code>vehicleId</code> - primarni ključ vozila</dd>
+<dd><code>ownerId</code> - identifikator vlasnika</dd>
+<dd><code>vehicleId</code> - identifikator vozila</dd>
 <dt>Returns:</dt>
 <dd>evidentirani problemi</dd>
 </dl>
@@ -236,13 +236,13 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">resolvedDescriptions</span><wbr><span class="parameters">(int&nbsp;ownerId,
  int&nbsp;serviceId)</span></div>
-<div class="block">Vraća opise problema koje je riješio zadani servis.</div>
+<div class="block">Dohvaća tekstualne opise problema koji su riješeni određenim servisom.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>ownerId</code> - primarni ključ vlasnika</dd>
-<dd><code>serviceId</code> - primarni ključ servisa</dd>
+<dd><code>ownerId</code> - identifikator vlasnika</dd>
+<dd><code>serviceId</code> - identifikator servisa</dd>
 <dt>Returns:</dt>
-<dd>opisi povezanih riješenih problema</dd>
+<dd>opisi problema riješenih tim servisom</dd>
 </dl>
 </div>
 </section>
@@ -253,13 +253,13 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">openCount</span><wbr><span class="parameters">(int&nbsp;ownerId,
  int&nbsp;vehicleId)</span></div>
-<div class="block">Broji neriješene probleme vozila.</div>
+<div class="block">Broji probleme vozila koji još nemaju povezan servis rješenja.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>ownerId</code> - primarni ključ vlasnika</dd>
-<dd><code>vehicleId</code> - primarni ključ vozila</dd>
+<dd><code>ownerId</code> - identifikator vlasnika</dd>
+<dd><code>vehicleId</code> - identifikator vozila</dd>
 <dt>Returns:</dt>
-<dd>broj neriješenih problema</dd>
+<dd>broj otvorenih problema</dd>
 </dl>
 </div>
 </section>

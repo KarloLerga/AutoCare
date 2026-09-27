@@ -84,7 +84,10 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="annotations">@Entity
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">ServiceItem</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Jedan izvršeni zahvat i stvarno plaćena cijena.</div>
+<div class="block">Persistentna stavka jednog servisa koja povezuje ServiceRecord sa standardnim WorkDefinitionom.
+
+<p>Za razliku od informativnog raspona u katalogu, <code>actualPrice</code> predstavlja stvarno
+plaćeni iznos konkretne izvedbe rada.</div>
 </div>
 </section>
 <section class="summary">
@@ -100,7 +103,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>protected </code></div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">ServiceItem</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Konstruktor bez argumenata potreban JPA provideru.</div>
+</div>
 </div>
 </section>
 </li>
@@ -146,6 +151,7 @@ loadScripts(document, 'script');</script>
 <h3>ServiceItem</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="element-name">ServiceItem</span>()</div>
+<div class="block">Konstruktor bez argumenata potreban JPA provideru.</div>
 </div>
 </section>
 </li>

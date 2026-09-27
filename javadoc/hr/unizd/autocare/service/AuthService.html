@@ -82,7 +82,10 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">AuthService</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Registracija i prijava korisnika.</div>
+<div class="block">Provodi poslovne postupke prijave i registracije korisnika.
+
+<p>Service otvara EntityManager za pojedinu operaciju, koristi UserRepository i primjenjuje
+validacijska pravila prije nego rezultat vrati Controlleru.</div>
 </div>
 </section>
 <section class="summary">
@@ -97,7 +100,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(jakarta.persistence.EntityManagerFactory)" class="member-name-link">AuthService</a><wbr>(jakarta.persistence.EntityManagerFactory&nbsp;entityManagerFactory)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Stvara servis za prijavu i registraciju koristeći zajedničku JPA tvornicu.</div>
+<div class="block">Stvara servis za autentikaciju.</div>
 </div>
 </div>
 </section>
@@ -117,14 +120,14 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#login(java.lang.String,java.lang.String)" class="member-name-link">login</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;email,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;password)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Provjerava vjerodajnice i vraća ID korisnika.</div>
+<div class="block">Provjerava vjerodajnice i vraća identifikator pronađenog korisnika.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#register(java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">register</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;email,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;password)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Registrira novi račun i sprema ga u jednoj transakciji.</div>
+<div class="block">Validira podatke novog računa i sprema korisnika u jednoj transakciji.</div>
 </div>
 </div>
 </div>
@@ -148,10 +151,10 @@ loadScripts(document, 'script');</script>
 <h3>AuthService</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">AuthService</span><wbr><span class="parameters">(jakarta.persistence.EntityManagerFactory&nbsp;entityManagerFactory)</span></div>
-<div class="block">Stvara servis za prijavu i registraciju koristeći zajedničku JPA tvornicu.</div>
+<div class="block">Stvara servis za autentikaciju.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>entityManagerFactory</code> - tvornica otvorena pri pokretanju aplikacije</dd>
+<dd><code>entityManagerFactory</code> - zajednička JPA tvornica iz koje se otvaraju EntityManageri</dd>
 </dl>
 </div>
 </section>
@@ -170,15 +173,15 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">login</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;email,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;password)</span></div>
-<div class="block">Provjerava vjerodajnice i vraća ID korisnika.</div>
+<div class="block">Provjerava vjerodajnice i vraća identifikator pronađenog korisnika.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>email</code> - adresa korisničkog računa</dd>
+<dd><code>email</code> - unesena e-mail adresa</dd>
 <dd><code>password</code> - unesena lozinka</dd>
 <dt>Returns:</dt>
-<dd>ID prijavljenog korisnika</dd>
+<dd>identifikator prijavljenog korisnika</dd>
 <dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako podaci nisu valjani ili ne odgovaraju računu</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako unos nije valjan ili korisnik/lozinka ne odgovaraju</dd>
 </dl>
 </div>
 </section>
@@ -190,16 +193,16 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">register</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;email,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;password)</span></div>
-<div class="block">Registrira novi račun i sprema ga u jednoj transakciji.</div>
+<div class="block">Validira podatke novog računa i sprema korisnika u jednoj transakciji.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>name</code> - ime korisnika</dd>
-<dd><code>email</code> - adresa novog računa</dd>
-<dd><code>password</code> - lozinka novog računa</dd>
+<dd><code>email</code> - e-mail adresa koja mora biti jedinstvena</dd>
+<dd><code>password</code> - lozinka koja mora zadovoljiti osnovno pravilo duljine</dd>
 <dt>Returns:</dt>
-<dd>ID stvorenog korisnika</dd>
+<dd>identifikator novostvorenog korisnika</dd>
 <dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako su podaci nevaljani ili je adresa već registrirana</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako su podaci nevaljani ili e-mail već postoji</dd>
 </dl>
 </div>
 </section>

@@ -6,7 +6,7 @@ import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.util.List;
 
-/** JPA dohvat i spremanje servisne povijesti. */
+/** Repository za spremanje i čitanje servisne povijesti. */
 public class ServiceRecordRepository {
   private final EntityManager entityManager;
 
@@ -20,20 +20,21 @@ public class ServiceRecordRepository {
   }
 
   /**
-   * Predaje novi servis persistence kontekstu; transakcijom upravlja pozivajući servisni sloj.
+   * Dodaje novi servis u persistence context; povezane nove stavke spremaju se prema JPA cascade
+   * postavci entiteta.
    *
-   * @param serviceRecord zapis koji treba spremiti
+   * @param serviceRecord novi servisni zapis
    */
   public void add(ServiceRecord serviceRecord) {
     entityManager.persist(serviceRecord);
   }
 
   /**
-   * Vraća povijest servisa vozila ako ono pripada korisniku.
+   * Dohvaća servisnu povijest vozila samo unutar vlasničkog konteksta korisnika.
    *
-   * @param ownerId primarni ključ vlasnika
-   * @param vehicleId primarni ključ vozila
-   * @return servisni zapisi od najnovijeg prema najstarijem
+   * @param ownerId identifikator vlasnika
+   * @param vehicleId identifikator vozila
+   * @return servisni zapisi vozila
    */
   public List<ServiceRecord> list(int ownerId, int vehicleId) {
     return entityManager
@@ -50,11 +51,11 @@ public class ServiceRecordRepository {
   }
 
   /**
-   * Vraća servis samo ako pripada vozilu korisnika; inače vraća {@code null}.
+   * Dohvaća jedan servis samo ako pripada vozilu zadanog korisnika.
    *
-   * @param ownerId primarni ključ vlasnika
-   * @param serviceId primarni ključ servisa
-   * @return servis vlasnika ili {@code null}
+   * @param ownerId identifikator vlasnika
+   * @param serviceId identifikator servisa
+   * @return servis ili {@code null} ako nije pronađen u korisničkom kontekstu
    */
   public ServiceRecord findForOwner(int ownerId, int serviceId) {
     List<ServiceRecord> serviceRecords = entityManager
@@ -75,11 +76,11 @@ public class ServiceRecordRepository {
   }
 
   /**
-   * Vraća servisne stavke vozila od najnovije prema najstarijoj.
+   * Dohvaća servisne stavke potrebne za analizu povijesti održavanja vozila.
    *
-   * @param ownerId primarni ključ vlasnika
-   * @param vehicleId primarni ključ vozila
-   * @return stavke iz servisne povijesti
+   * @param ownerId identifikator vlasnika
+   * @param vehicleId identifikator vozila
+   * @return povijesne servisne stavke sortirane tako da se najnovija izvedba rada može prepoznati
    */
   public List<ServiceItem> historyItems(int ownerId, int vehicleId) {
     return entityManager
@@ -97,11 +98,11 @@ public class ServiceRecordRepository {
   }
 
   /**
-   * Vraća zbroj stvarno plaćenih cijena servisnih stavki vozila.
+   * Računa zbroj stvarno plaćenih servisnih stavki za vozilo.
    *
-   * @param ownerId primarni ključ vlasnika
-   * @param vehicleId primarni ključ vozila
-   * @return ukupno evidentirani stvarni trošak ili nula
+   * @param ownerId identifikator vlasnika
+   * @param vehicleId identifikator vozila
+   * @return ukupni evidentirani stvarni servisni trošak
    */
   public BigDecimal total(int ownerId, int vehicleId) {
     BigDecimal total = entityManager

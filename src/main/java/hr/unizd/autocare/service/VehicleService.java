@@ -11,12 +11,12 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import java.util.List;
 
-/** Upravljanje vozilima; identitet se stvara jednom, a kasnije se mijenja samo kilometraža. */
+/** Provodi use-caseove vezane uz korisnikova vozila i aktivno vozilo. */
 public class VehicleService {
   private final EntityManagerFactory entityManagerFactory;
 
   /**
-   * Stvara servis za upravljanje vozilima.
+   * Stvara servis vozila.
    *
    * @param entityManagerFactory zajednička JPA tvornica
    */
@@ -25,7 +25,7 @@ public class VehicleService {
   }
 
   /**
-   * Vraća sva vozila u vlasništvu korisnika.
+   * Dohvaća sva vozila koja pripadaju korisniku.
    *
    * @param ownerId identifikator vlasnika
    * @return vozila vlasnika
@@ -40,7 +40,9 @@ public class VehicleService {
   }
 
   /**
-   * Vraća trenutačno aktivno vozilo korisnika.
+   * Dohvaća trenutačno aktivno vozilo korisnika.
+   *
+   * <p>Metoda vraća {@code null} ako korisnik još nema postavljeno aktivno vozilo.
    *
    * @param ownerId identifikator vlasnika
    * @return aktivno vozilo ili {@code null} ako nije odabrano
@@ -61,12 +63,15 @@ public class VehicleService {
   }
 
   /**
-   * Dodaje vozilo i postavlja ga kao aktivno ako korisnik još nema aktivno vozilo.
+   * Dodaje novo vozilo korisniku na temelju odabrane kataloške varijante.
+   *
+   * <p>Provjerava postojanje korisnika i varijante, valjanost godine za odabranu varijantu te
+   * kilometražu. Novo vozilo sprema se u transakciji.
    *
    * @param ownerId identifikator vlasnika
    * @param variantId identifikator kataloške varijante
-   * @param year godina proizvodnje
-   * @param mileage početna kilometraža
+   * @param year godina proizvodnje konkretnog vozila
+   * @param mileage trenutačna kilometraža
    * @throws IllegalArgumentException ako korisnik ili varijanta ne postoje ili podaci nisu valjani
    */
   public void add(int ownerId, int variantId, int year, int mileage) {
@@ -105,12 +110,12 @@ public class VehicleService {
   }
 
   /**
-   * Ažurira kilometražu vozila koje pripada navedenom korisniku.
+   * Mijenja kilometražu vozila koje pripada zadanom korisniku.
    *
    * @param ownerId identifikator vlasnika
    * @param vehicleId identifikator vozila
    * @param mileage nova kilometraža
-   * @throws IllegalArgumentException ako vozilo ne pripada korisniku ili je kilometraža nevaljana
+   * @throws IllegalArgumentException ako vozilo nije pronađeno ili kilometraža nije dopuštena
    */
   public void updateMileage(int ownerId, int vehicleId, int mileage) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -134,11 +139,11 @@ public class VehicleService {
   }
 
   /**
-   * Postavlja kao aktivno vozilo koje pripada navedenom korisniku.
+   * Postavlja jedno od korisnikovih vozila kao aktivno vozilo.
    *
    * @param ownerId identifikator vlasnika
    * @param vehicleId identifikator vozila
-   * @throws IllegalArgumentException ako korisnik ili njegovo vozilo ne postoje
+   * @throws IllegalArgumentException ako vozilo ne pripada korisniku
    */
   public void activate(int ownerId, int vehicleId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();

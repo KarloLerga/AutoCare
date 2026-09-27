@@ -87,7 +87,10 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="annotations">@Entity
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">AppUser</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Korisnički račun i njegovo aktivno vozilo.</div>
+<div class="block">Persistentni domenski objekt korisničkog računa.
+
+<p>Korisnik može posjedovati više vozila, a aktivno vozilo predstavlja trenutačno odabrani
+kontekst aplikacije i nije isto što i samo vlasništvo nad vozilom.</div>
 </div>
 </section>
 <section class="summary">
@@ -103,13 +106,15 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>protected </code></div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">AppUser</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Konstruktor bez argumenata potreban JPA provideru pri učitavanju entiteta.</div>
+</div>
 <div class="col-first odd-row-color"><code>&nbsp;</code></div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">AppUser</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;email,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;password)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Stvara račun nakon provjere imena, adrese e-pošte i lozinke.</div>
+<div class="block">Stvara novi korisnički račun iz već validiranih podataka.</div>
 </div>
 </div>
 </section>
@@ -128,7 +133,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#activate(hr.unizd.autocare.domain.Vehicle)" class="member-name-link">activate</a><wbr>(<a href="Vehicle.html" title="class in hr.unizd.autocare.domain">Vehicle</a>&nbsp;vehicle)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Postavlja aktivno vozilo korisnika.</div>
+<div class="block">Postavlja vozilo kao aktivno vozilo korisnika.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Vehicle.html" title="class in hr.unizd.autocare.domain">Vehicle</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getActiveVehicle()" class="member-name-link">getActiveVehicle</a>()</code></div>
@@ -164,6 +169,7 @@ loadScripts(document, 'script');</script>
 <h3>AppUser</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="element-name">AppUser</span>()</div>
+<div class="block">Konstruktor bez argumenata potreban JPA provideru pri učitavanju entiteta.</div>
 </div>
 </section>
 </li>
@@ -174,14 +180,14 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">AppUser</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;email,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;password)</span></div>
-<div class="block">Stvara račun nakon provjere imena, adrese e-pošte i lozinke.</div>
+<div class="block">Stvara novi korisnički račun iz već validiranih podataka.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>name</code> - ime korisnika</dd>
-<dd><code>email</code> - adresa korisničkog računa</dd>
-<dd><code>password</code> - lozinka korisničkog računa</dd>
+<dd><code>email</code> - normalizirana e-mail adresa</dd>
+<dd><code>password</code> - lozinka korisnika</dd>
 <dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako je neko od podataka nevaljano</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako neki podatak nije valjan</dd>
 </dl>
 </div>
 </section>
@@ -199,7 +205,9 @@ loadScripts(document, 'script');</script>
 <h3>activate</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">activate</span><wbr><span class="parameters">(<a href="Vehicle.html" title="class in hr.unizd.autocare.domain">Vehicle</a>&nbsp;vehicle)</span></div>
-<div class="block">Postavlja aktivno vozilo korisnika.</div>
+<div class="block">Postavlja vozilo kao aktivno vozilo korisnika.
+
+<p>Service prije poziva provjerava da odabrano vozilo stvarno pripada tom korisniku.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>vehicle</code> - vozilo koje postaje aktivno</dd>

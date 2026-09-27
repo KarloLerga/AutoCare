@@ -88,7 +88,10 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="annotations">@Entity
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">Problem</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Problem koji korisnik primjećuje na vozilu, bez dijagnostike.</div>
+<div class="block">Persistentni domenski objekt korisnički evidentiranog problema vozila.
+
+<p>Problem nema zaseban ručno postavljen status. Otvoren je dok nije povezan sa
+ServiceRecordom kroz koji je riješen.</div>
 </div>
 </section>
 <section class="summary">
@@ -104,14 +107,16 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>protected </code></div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">Problem</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Konstruktor bez argumenata potreban JPA provideru.</div>
+</div>
 <div class="col-first odd-row-color"><code>&nbsp;</code></div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(hr.unizd.autocare.domain.Vehicle,java.lang.String,hr.unizd.autocare.domain.ProblemCategory,java.time.LocalDate)" class="member-name-link">Problem</a><wbr>(<a href="Vehicle.html" title="class in hr.unizd.autocare.domain">Vehicle</a>&nbsp;vehicle,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;description,
  <a href="ProblemCategory.html" title="enum class in hr.unizd.autocare.domain">ProblemCategory</a>&nbsp;category,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/LocalDate.html" title="class or interface in java.time" class="external-link">LocalDate</a>&nbsp;createdAt)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Stvara korisnički evidentiran problem vozila.</div>
+<div class="block">Stvara novi otvoreni problem vozila.</div>
 </div>
 </div>
 </section>
@@ -141,11 +146,13 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isResolved()" class="member-name-link">isResolved</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Provjerava postoji li servis povezan kao rješenje problema.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolve(hr.unizd.autocare.domain.ServiceRecord)" class="member-name-link">resolve</a><wbr>(<a href="ServiceRecord.html" title="class in hr.unizd.autocare.domain">ServiceRecord</a>&nbsp;serviceRecord)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Povezuje problem sa servisom koji ga je riješio.</div>
+<div class="block">Označava problem riješenim povezivanjem sa servisom koji ga je riješio.</div>
 </div>
 </div>
 </div>
@@ -169,6 +176,7 @@ loadScripts(document, 'script');</script>
 <h3>Problem</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="element-name">Problem</span>()</div>
+<div class="block">Konstruktor bez argumenata potreban JPA provideru.</div>
 </div>
 </section>
 </li>
@@ -180,12 +188,12 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;description,
  <a href="ProblemCategory.html" title="enum class in hr.unizd.autocare.domain">ProblemCategory</a>&nbsp;category,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/LocalDate.html" title="class or interface in java.time" class="external-link">LocalDate</a>&nbsp;createdAt)</span></div>
-<div class="block">Stvara korisnički evidentiran problem vozila.</div>
+<div class="block">Stvara novi otvoreni problem vozila.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>vehicle</code> - vozilo na kojem je problem uočen</dd>
-<dd><code>description</code> - opis problema</dd>
-<dd><code>category</code> - kategorija; ako je <code>null</code>, koristi se kategorija ostalo</dd>
+<dd><code>vehicle</code> - vozilo na koje se problem odnosi</dd>
+<dd><code>description</code> - korisnički opis problema</dd>
+<dd><code>category</code> - gruba kategorija problema</dd>
 <dd><code>createdAt</code> - datum evidentiranja</dd>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako vozilo, opis ili datum nisu valjani</dd>
@@ -206,10 +214,10 @@ loadScripts(document, 'script');</script>
 <h3>resolve</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resolve</span><wbr><span class="parameters">(<a href="ServiceRecord.html" title="class in hr.unizd.autocare.domain">ServiceRecord</a>&nbsp;serviceRecord)</span></div>
-<div class="block">Povezuje problem sa servisom koji ga je riješio.</div>
+<div class="block">Označava problem riješenim povezivanjem sa servisom koji ga je riješio.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>serviceRecord</code> - servis istog vozila koji zatvara problem</dd>
+<dd><code>serviceRecord</code> - servis istog vozila kojim je problem riješen</dd>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako je problem već riješen, servis nije zadan ili pripada drugom vozilu</dd>
 </dl>
@@ -253,6 +261,11 @@ loadScripts(document, 'script');</script>
 <h3>isResolved</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isResolved</span>()</div>
+<div class="block">Provjerava postoji li servis povezan kao rješenje problema.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd><code>true</code> ako je problem riješen konkretnim servisom</dd>
+</dl>
 </div>
 </section>
 </li>

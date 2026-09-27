@@ -104,7 +104,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ServicesView</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JPanel.html" title="class or interface in javax.swing" class="external-link">JPanel</a></span></div>
-<div class="block">Servisna povijest aktivnog vozila.</div>
+<div class="block">Swing prikaz servisne povijesti aktivnog vozila i detalja odabranog servisa.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -174,7 +174,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">ServicesView</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Stvara tablicu servisne povijesti i gumbe za novi servis i prikaz detalja.</div>
+</div>
 </div>
 </section>
 </li>
@@ -194,10 +196,14 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRows(java.util.List)" class="member-name-link">setRows</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../model/Data.ServiceRow.html" title="class in hr.unizd.autocare.model">Data.ServiceRow</a>&gt;&nbsp;values)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Zamjenjuje prikazanu servisnu povijest i internu listu objekata povezanih s recima tablice.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#showServiceDetails(hr.unizd.autocare.model.Data.ServiceDetail)" class="member-name-link">showServiceDetails</a><wbr>(<a href="../model/Data.ServiceDetail.html" title="class in hr.unizd.autocare.model">Data.ServiceDetail</a>&nbsp;detail)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Prikazuje detalje jednog servisa, njegove stavke, ukupni stvarni trošak i riješene probleme.</div>
+</div>
 </div>
 </div>
 </div>
@@ -264,6 +270,7 @@ loadScripts(document, 'script');</script>
 <h3>ServicesView</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ServicesView</span>()</div>
+<div class="block">Stvara tablicu servisne povijesti i gumbe za novi servis i prikaz detalja.</div>
 </div>
 </section>
 </li>
@@ -280,6 +287,11 @@ loadScripts(document, 'script');</script>
 <h3>setRows</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRows</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../model/Data.ServiceRow.html" title="class in hr.unizd.autocare.model">Data.ServiceRow</a>&gt;&nbsp;values)</span></div>
+<div class="block">Zamjenjuje prikazanu servisnu povijest i internu listu objekata povezanih s recima tablice.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>values</code> - servisni retci za prikaz</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -288,6 +300,10 @@ loadScripts(document, 'script');</script>
 <h3>selected</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../model/Data.ServiceRow.html" title="class in hr.unizd.autocare.model">Data.ServiceRow</a></span>&nbsp;<span class="element-name">selected</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>servisni redak označen u tablici ili <code>null</code> ako nema odabira</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -296,6 +312,11 @@ loadScripts(document, 'script');</script>
 <h3>showServiceDetails</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">showServiceDetails</span><wbr><span class="parameters">(<a href="../model/Data.ServiceDetail.html" title="class in hr.unizd.autocare.model">Data.ServiceDetail</a>&nbsp;detail)</span></div>
+<div class="block">Prikazuje detalje jednog servisa, njegove stavke, ukupni stvarni trošak i riješene probleme.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>detail</code> - pripremljeni detalj servisa</dd>
+</dl>
 </div>
 </section>
 </li>

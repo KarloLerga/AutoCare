@@ -12,7 +12,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
-/** Upravljanje vozilima; jedino mjesto promjene aktivnog vozila. */
+/** Swing prikaz svih vozila prijavljenog korisnika i osnovnih akcija nad odabranim vozilom. */
 public class VehiclesView extends JPanel {
   public final JButton add = new JButton("Dodaj vozilo");
   public final JButton edit = new JButton("Promijeni kilometražu");
@@ -21,6 +21,7 @@ public class VehiclesView extends JPanel {
   private final DefaultTableModel tableModel;
   private List<Vehicle> vehicles = new ArrayList<>();
 
+  /** Stvara tablicu vozila i gumbe za dodavanje, promjenu kilometraže i aktiviranje. */
   public VehiclesView() {
     super(new BorderLayout(12, 12));
     setOpaque(false);
@@ -42,6 +43,12 @@ public class VehiclesView extends JPanel {
     add(new JScrollPane(table), BorderLayout.CENTER);
   }
 
+  /**
+   * Zamjenjuje prikazane retke aktualnim vozilima i označava koje je vozilo aktivno.
+   *
+   * @param values vozila korisnika
+   * @param activeVehicleId ID aktivnog vozila ili {@code null}
+   */
   public void setRows(List<Vehicle> values, Integer activeVehicleId) {
     vehicles = new ArrayList<>(values);
     tableModel.setRowCount(0);
@@ -62,6 +69,7 @@ public class VehiclesView extends JPanel {
     }
   }
 
+  /** @return vozilo označeno u tablici ili {@code null} ako nema odabira */
   public Vehicle selected() {
     int selectedRow = table.getSelectedRow();
     if (selectedRow < 0) {
@@ -70,6 +78,11 @@ public class VehiclesView extends JPanel {
     return vehicles.get(selectedRow);
   }
 
+  /**
+   * Primjenjuje zajedničke postavke čitljivosti i odabira na tablicu vozila.
+   *
+   * @param table tablica koju treba konfigurirati
+   */
   private static void configureTable(JTable table) {
     table.setRowHeight(32);
     table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

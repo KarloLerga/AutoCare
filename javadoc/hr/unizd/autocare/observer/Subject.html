@@ -83,7 +83,10 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Subject</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Čuva Observere i obavještava ih o promjenama stanja aplikacije.</div>
+<div class="block">Izdavač Observer događaja u aplikaciji.
+
+<p>Čuva registrirane Observere i omogućuje Controllerima koji naprave promjenu da pošalju
+događaj bez izravnog poznavanja Controllera koji se nakon toga trebaju osvježiti.</div>
 </div>
 </section>
 <section class="summary">
@@ -115,17 +118,17 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addObserver(hr.unizd.autocare.observer.Observer)" class="member-name-link">addObserver</a><wbr>(<a href="Observer.html" title="interface in hr.unizd.autocare.observer">Observer</a>&nbsp;observer)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Registrira Observer za buduće događaje.</div>
+<div class="block">Registrira Observer koji treba primati buduće događaje.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#notifyObservers(hr.unizd.autocare.observer.AppEvent)" class="member-name-link">notifyObservers</a><wbr>(<a href="AppEvent.html" title="enum class in hr.unizd.autocare.observer">AppEvent</a>&nbsp;event)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Šalje događaj svim trenutačno registriranim Observerima.</div>
+<div class="block">Šalje isti događaj svim trenutno registriranim Observerima.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeObserver(hr.unizd.autocare.observer.Observer)" class="member-name-link">removeObserver</a><wbr>(<a href="Observer.html" title="interface in hr.unizd.autocare.observer">Observer</a>&nbsp;observer)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Uklanja Observer iz registriranih primatelja.</div>
+<div class="block">Uklanja Observer iz popisa primatelja događaja.</div>
 </div>
 </div>
 </div>
@@ -165,7 +168,11 @@ loadScripts(document, 'script');</script>
 <h3>addObserver</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addObserver</span><wbr><span class="parameters">(<a href="Observer.html" title="interface in hr.unizd.autocare.observer">Observer</a>&nbsp;observer)</span></div>
-<div class="block">Registrira Observer za buduće događaje.</div>
+<div class="block">Registrira Observer koji treba primati buduće događaje.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>observer</code> - observer koji se dodaje</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -174,7 +181,11 @@ loadScripts(document, 'script');</script>
 <h3>removeObserver</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">removeObserver</span><wbr><span class="parameters">(<a href="Observer.html" title="interface in hr.unizd.autocare.observer">Observer</a>&nbsp;observer)</span></div>
-<div class="block">Uklanja Observer iz registriranih primatelja.</div>
+<div class="block">Uklanja Observer iz popisa primatelja događaja.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>observer</code> - observer koji se uklanja</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -183,7 +194,11 @@ loadScripts(document, 'script');</script>
 <h3>notifyObservers</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">notifyObservers</span><wbr><span class="parameters">(<a href="AppEvent.html" title="enum class in hr.unizd.autocare.observer">AppEvent</a>&nbsp;event)</span></div>
-<div class="block">Šalje događaj svim trenutačno registriranim Observerima.</div>
+<div class="block">Šalje isti događaj svim trenutno registriranim Observerima.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>event</code> - događaj koji opisuje promjenu stanja</dd>
+</dl>
 </div>
 </section>
 </li>

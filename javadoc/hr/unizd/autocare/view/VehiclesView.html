@@ -104,7 +104,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">VehiclesView</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JPanel.html" title="class or interface in javax.swing" class="external-link">JPanel</a></span></div>
-<div class="block">Upravljanje vozilima; jedino mjesto promjene aktivnog vozila.</div>
+<div class="block">Swing prikaz svih vozila prijavljenog korisnika i osnovnih akcija nad odabranim vozilom.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -177,7 +177,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">VehiclesView</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Stvara tablicu vozila i gumbe za dodavanje, promjenu kilometraže i aktiviranje.</div>
+</div>
 </div>
 </section>
 </li>
@@ -198,7 +200,9 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRows(java.util.List,java.lang.Integer)" class="member-name-link">setRows</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../domain/Vehicle.html" title="class in hr.unizd.autocare.domain">Vehicle</a>&gt;&nbsp;values,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;activeVehicleId)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Zamjenjuje prikazane retke aktualnim vozilima i označava koje je vozilo aktivno.</div>
+</div>
 </div>
 </div>
 </div>
@@ -273,6 +277,7 @@ loadScripts(document, 'script');</script>
 <h3>VehiclesView</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">VehiclesView</span>()</div>
+<div class="block">Stvara tablicu vozila i gumbe za dodavanje, promjenu kilometraže i aktiviranje.</div>
 </div>
 </section>
 </li>
@@ -290,6 +295,12 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRows</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../domain/Vehicle.html" title="class in hr.unizd.autocare.domain">Vehicle</a>&gt;&nbsp;values,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;activeVehicleId)</span></div>
+<div class="block">Zamjenjuje prikazane retke aktualnim vozilima i označava koje je vozilo aktivno.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>values</code> - vozila korisnika</dd>
+<dd><code>activeVehicleId</code> - ID aktivnog vozila ili <code>null</code></dd>
+</dl>
 </div>
 </section>
 </li>
@@ -298,6 +309,10 @@ loadScripts(document, 'script');</script>
 <h3>selected</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../domain/Vehicle.html" title="class in hr.unizd.autocare.domain">Vehicle</a></span>&nbsp;<span class="element-name">selected</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>vozilo označeno u tablici ili <code>null</code> ako nema odabira</dd>
+</dl>
 </div>
 </section>
 </li>

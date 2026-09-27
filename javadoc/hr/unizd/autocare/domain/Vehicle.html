@@ -88,7 +88,10 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="annotations">@Entity
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">Vehicle</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Konkretno vozilo korisnika; trenutna kilometraža ne smije se smanjiti.</div>
+<div class="block">Persistentni domenski objekt konkretnog vozila koje pripada korisniku.
+
+<p>Vozilo je povezano s kataloškom VehicleVariant, ali dodatno čuva podatke specifične za
+korisnikov primjerak: godinu proizvodnje i trenutačnu kilometražu.</div>
 </div>
 </section>
 <section class="summary">
@@ -104,14 +107,16 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>protected </code></div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">Vehicle</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Konstruktor bez argumenata potreban JPA provideru.</div>
+</div>
 <div class="col-first odd-row-color"><code>&nbsp;</code></div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(hr.unizd.autocare.domain.AppUser,hr.unizd.autocare.domain.VehicleVariant,int,int)" class="member-name-link">Vehicle</a><wbr>(<a href="AppUser.html" title="class in hr.unizd.autocare.domain">AppUser</a>&nbsp;owner,
  <a href="VehicleVariant.html" title="class in hr.unizd.autocare.domain">VehicleVariant</a>&nbsp;variant,
  int&nbsp;productionYear,
  int&nbsp;currentMileage)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Stvara vozilo nakon provjere vlasnika, varijante, godine i kilometraže.</div>
+<div class="block">Stvara novo korisničko vozilo.</div>
 </div>
 </div>
 </section>
@@ -145,7 +150,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateMileage(int)" class="member-name-link">updateMileage</a><wbr>(int&nbsp;mileage)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Ažurira kilometražu bez dopuštanja smanjenja postojeće vrijednosti.</div>
+<div class="block">Ažurira trenutačnu kilometražu vozila uz domensku provjeru vrijednosti.</div>
 </div>
 </div>
 </div>
@@ -169,6 +174,7 @@ loadScripts(document, 'script');</script>
 <h3>Vehicle</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="element-name">Vehicle</span>()</div>
+<div class="block">Konstruktor bez argumenata potreban JPA provideru.</div>
 </div>
 </section>
 </li>
@@ -180,12 +186,12 @@ loadScripts(document, 'script');</script>
  <a href="VehicleVariant.html" title="class in hr.unizd.autocare.domain">VehicleVariant</a>&nbsp;variant,
  int&nbsp;productionYear,
  int&nbsp;currentMileage)</span></div>
-<div class="block">Stvara vozilo nakon provjere vlasnika, varijante, godine i kilometraže.</div>
+<div class="block">Stvara novo korisničko vozilo.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>owner</code> - vlasnik vozila</dd>
 <dd><code>variant</code> - odabrana kataloška varijanta</dd>
-<dd><code>productionYear</code> - godina proizvodnje</dd>
+<dd><code>productionYear</code> - godina proizvodnje konkretnog vozila</dd>
 <dd><code>currentMileage</code> - trenutačna kilometraža</dd>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako su podaci nevaljani ili godina nije pokrivena varijantom</dd>
@@ -206,7 +212,13 @@ loadScripts(document, 'script');</script>
 <h3>updateMileage</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateMileage</span><wbr><span class="parameters">(int&nbsp;mileage)</span></div>
-<div class="block">Ažurira kilometražu bez dopuštanja smanjenja postojeće vrijednosti.</div>
+<div class="block">Ažurira trenutačnu kilometražu vozila uz domensku provjeru vrijednosti.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>mileage</code> - nova kilometraža</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako je kilometraža negativna ili manja od postojeće</dd>
+</dl>
 </div>
 </section>
 </li>

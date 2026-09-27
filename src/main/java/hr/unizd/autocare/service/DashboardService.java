@@ -11,13 +11,16 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import java.util.List;
 
-/** Podaci za četiri kartice dashboarda aktivnog vozila. */
+/**
+ * Priprema sažetak podataka koji Dashboard prikazuje za aktivno vozilo.
+ *
+ * <p>Service spaja podatke iz vozila, servisne povijesti, problema i izračuna održavanja u jedan
+ * jednostavan Dashboard objekt spreman za prikaz.
+ */
 public class DashboardService {
   private final EntityManagerFactory entityManagerFactory;
 
   /**
-   * Stvara servis koji priprema podatke za Dashboard.
-   *
    * @param entityManagerFactory zajednička JPA tvornica
    */
   public DashboardService(EntityManagerFactory entityManagerFactory) {
@@ -25,11 +28,11 @@ public class DashboardService {
   }
 
   /**
-   * Vraća sažetak vozila, ukupnog troška, otvorenih problema i sljedećeg održavanja.
+   * Dohvaća sva četiri glavna Dashboard pokazatelja za vozilo.
    *
    * @param ownerId identifikator vlasnika
    * @param vehicleId identifikator vozila
-   * @return podaci za kartice Dashboarda
+   * @return sažetak vozila, stvarnih troškova, otvorenih problema i najbližeg održavanja
    * @throws IllegalArgumentException ako vozilo ne pripada korisniku
    */
   public Dashboard get(int ownerId, int vehicleId) {
@@ -65,6 +68,16 @@ public class DashboardService {
     }
   }
 
+  /**
+   * Određuje koji od dva MaintenanceRow zapisa predstavlja bliže održavanje.
+   *
+   * <p>Primarno uspoređuje relativni preostali interval, a naziv koristi kao stabilan sekundarni
+   * kriterij kada su vrijednosti jednake.
+   *
+   * @param first prvi kandidat
+   * @param second drugi kandidat
+   * @return {@code true} ako prvi kandidat treba biti prikazan kao bliže održavanje
+   */
   private static boolean comesBefore(MaintenanceRow first, MaintenanceRow second) {
     if (first.getRemainingRatio() != second.getRemainingRatio()) {
       return first.getRemainingRatio() < second.getRemainingRatio();

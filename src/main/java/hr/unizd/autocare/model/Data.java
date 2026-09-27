@@ -7,20 +7,27 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Jednostavni pomoćni podaci koji nisu zasebni domenski entiteti. */
+/**
+ * Sadrži male pomoćne objekte za prijenos i prikaz podataka koji nisu zasebni persistentni
+ * domenski entiteti.
+ *
+ * <p>Tipovi ove klase razdvajaju GUI podatke od JPA entiteta i sprječavaju prosljeđivanje velikog
+ * broja nepovezanih vrijednosti kroz Controller i Service potpise.
+ */
 public class Data {
+  /** Sprječava stvaranje instance spremnika pomoćnih tipova. */
   private Data() {}
 
-  /** Jedna stavka unesena u formi novog servisa. */
+  /** Jedna stavka unesena u formi novog servisa: odabrani rad i stvarno plaćena cijena. */
   public static final class ItemInput {
     private final int workId;
     private final BigDecimal actualPrice;
 
     /**
-     * Stvara ulaznu stavku s odabranim radom i stvarnom cijenom.
+     * Stvara podatke jedne servisne stavke.
      *
-     * @param workId identifikator kataloškog rada
-     * @param actualPrice iznos stvarno plaćen za rad
+     * @param workId identifikator odabranog standardnog rada
+     * @param actualPrice stvarno plaćena cijena te servisne stavke
      */
     public ItemInput(int workId, BigDecimal actualPrice) {
       this.workId = workId;
@@ -36,7 +43,10 @@ public class Data {
     }
   }
 
-  /** Podaci forme za spremanje novog servisa. */
+  /**
+   * Cjelovit skup vrijednosti koje ServiceEditorDialog predaje ServiceRecordServiceu pri spremanju
+   * novog servisa.
+   */
   public static final class ServiceInput {
     private final LocalDate date;
     private final int mileage;
@@ -45,13 +55,13 @@ public class Data {
     private final List<Integer> resolvedProblemIds;
 
     /**
-     * Stvara nepromjenjivi skup podataka za unos servisa.
+     * Stvara ulaz servisnog use-casea i kopira predane kolekcije.
      *
      * @param date datum servisa
-     * @param mileage kilometraža na servisu
-     * @param note napomena uz servis
-     * @param items unesene stavke i njihove stvarne cijene
-     * @param resolvedProblemIds problemi koje servis rješava
+     * @param mileage kilometraža pri servisu
+     * @param note opcionalna napomena
+     * @param items unesene servisne stavke
+     * @param resolvedProblemIds problemi označeni kao riješeni ovim servisom
      */
     public ServiceInput(
         LocalDate date,
@@ -87,7 +97,10 @@ public class Data {
     }
   }
 
-  /** Redak servisne povijesti s pripremljenim nazivima radova i ukupnim troškom. */
+  /**
+   * Prikazni model jednog retka servisne povijesti s već pripremljenim nazivima radova i ukupnim
+   * stvarnim troškom.
+   */
   public static final class ServiceRow {
     private final int id;
     private final LocalDate date;
@@ -97,13 +110,13 @@ public class Data {
     private final String note;
 
     /**
-     * Stvara redak za prikaz servisne povijesti.
+     * Stvara redak spreman za prikaz servisne povijesti.
      *
      * @param id identifikator servisa
      * @param date datum servisa
      * @param mileage kilometraža na servisu
      * @param names sažeti nazivi radova
-     * @param total zbroj stvarnih cijena
+     * @param total ukupni stvarni trošak
      * @param note napomena uz servis
      */
     public ServiceRow(int id, LocalDate date, int mileage, String names, BigDecimal total, String note) {
@@ -140,17 +153,17 @@ public class Data {
     }
   }
 
-  /** Detalj servisa koji sadrži redak servisa, njegove stavke i riješene probleme. */
+  /** Puni prikaz jednog servisa: zaglavlje, servisne stavke i problemi riješeni servisom. */
   public static final class ServiceDetail {
     private final ServiceRow header;
     private final List<ServiceItem> items;
     private final List<String> resolvedProblems;
 
     /**
-     * Stvara detaljni prikaz spremljenog servisa.
+     * Stvara prikazni model detalja spremljenog servisa.
      *
      * @param header sažetak servisa
-     * @param items spremljene servisne stavke
+     * @param items stavke spremljene u servisu
      * @param resolvedProblems opisi problema riješenih tim servisom
      */
     public ServiceDetail(ServiceRow header, List<ServiceItem> items, List<String> resolvedProblems) {
@@ -172,7 +185,12 @@ public class Data {
     }
   }
 
-  /** Izračunati podaci jednog praćenog održavanja. */
+  /**
+   * Prikazni rezultat izračuna jednog praćenog rada održavanja.
+   *
+   * <p>Sadrži podatke posljednje izvedbe, izračun sljedećeg dospijeća i preostali interval u
+   * kilometrima, danima i relativnom omjeru.
+   */
   public static final class MaintenanceRow {
     private final String name;
     private final LocalDate lastDate;
@@ -184,16 +202,16 @@ public class Data {
     private final double remainingRatio;
 
     /**
-     * Stvara prikaz izračunatog intervala održavanja.
+     * Stvara rezultat izračunatog intervala održavanja.
      *
-     * @param name naziv praćenog rada
-     * @param lastDate datum prethodnog održavanja
-     * @param lastMileage kilometraža prethodnog održavanja
-     * @param nextDate izračunati sljedeći datum, ako postoji
-     * @param nextMileage izračunata sljedeća kilometraža, ako postoji
-     * @param remainingKm preostala kilometraža, ako se prati
-     * @param remainingDays preostali dani, ako se prati vremenski interval
-     * @param remainingRatio udio intervala koji je ostao
+     * @param name naziv standardnog rada
+     * @param lastDate datum posljednje izvedbe
+     * @param lastMileage kilometraža posljednje izvedbe
+     * @param nextDate sljedeći ciljani datum ili {@code null}
+     * @param nextMileage sljedeća ciljana kilometraža ili {@code null}
+     * @param remainingKm preostali kilometri ili {@code null}
+     * @param remainingDays preostali kalendarski dani ili {@code null}
+     * @param remainingRatio relativni dio intervala koji je ostao
      */
     public MaintenanceRow(
         String name,
@@ -247,7 +265,7 @@ public class Data {
     }
   }
 
-  /** Podaci koje Dashboard prikazuje za aktivno vozilo. */
+  /** Sažetak podataka koje DashboardView prikazuje za aktivno vozilo. */
   public static final class Dashboard {
     private final Vehicle vehicle;
     private final BigDecimal total;
@@ -255,7 +273,7 @@ public class Data {
     private final MaintenanceRow nextMaintenance;
 
     /**
-     * Stvara sažetak za aktivno vozilo.
+     * Stvara sažetak podataka za aktivno vozilo.
      *
      * @param vehicle aktivno vozilo
      * @param total ukupni evidentirani servisni trošak

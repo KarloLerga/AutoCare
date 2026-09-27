@@ -1,7 +1,13 @@
 package hr.unizd.autocare.observer;
 
-/** Observer prima obavijest kada se promijeni stanje aplikacije. */
+/**
+ * Sudionik Observer obrasca koji prima obavijest nakon promjene važnog stanja aplikacije.
+ */
 public interface Observer {
-  /** Reagira na događaj koji je objavio Subject. */
+  /**
+   * Reagira na događaj koji je objavio Subject.
+   *
+   * @param event događaj koji opisuje što se u aplikaciji promijenilo
+   */
   void update(AppEvent event);
 }

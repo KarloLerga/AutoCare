@@ -19,8 +19,17 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-/** Pokreće AutoCare sučelje i sastavlja aplikacijske slojeve. */
+/**
+ * Ulazna točka AutoCare desktop aplikacije.
+ *
+ * <p>Klasa pokreće Swing sučelje na Event Dispatch Threadu, inicijalizira izgled aplikacije,
+ * otvara zajednički {@link jakarta.persistence.EntityManagerFactory}, stvara glavne Service
+ * objekte i povezuje ih s glavnim prozorom, sesijom, Observer infrastrukturom i
+ * {@code MainControllerom}. Na ovom mjestu se ručno sastavlja aplikacija bez dodatnog
+ * dependency injection frameworka.
+ */
 public class Main {
+  /** Sprječava stvaranje instance jer klasa služi samo za pokretanje aplikacije. */
   private Main() {}
 
   /**
@@ -37,6 +46,14 @@ public class Main {
     });
   }
 
+  /**
+   * Sastavlja i prikazuje cijelu aplikaciju.
+   *
+   * <p>Metoda postavlja izgled, otvara vezu prema persistence sloju, stvara Service objekte,
+   * glavni prozor, zajedničku sesiju i Subject te ih predaje {@code MainControlleru}. Ako
+   * inicijalizacija baze ne uspije, zatvara eventualno otvoreni {@code EntityManagerFactory}
+   * i korisniku prikazuje razumljivu poruku o pogrešci.
+   */
   private static void startApplication() {
     initializeLookAndFeel();
     EntityManagerFactory entityManagerFactory = null;
@@ -83,6 +100,12 @@ public class Main {
     }
   }
 
+  /**
+   * Registrira zatvaranje persistence resursa zajedno s glavnim prozorom aplikacije.
+   *
+   * @param frame glavni Swing prozor
+   * @param entityManagerFactory zajednička JPA tvornica koju treba zatvoriti pri izlasku
+   */
   private static void closeDatabaseWhenWindowCloses(MainFrame frame, EntityManagerFactory entityManagerFactory) {
     frame.addWindowListener(new WindowAdapter() {
       @Override
@@ -93,6 +116,12 @@ public class Main {
     });
   }
 
+  /**
+   * Postavlja FlatLaf temu i zajedničke Swing vrijednosti izgleda.
+   *
+   * <p>Na jednom mjestu definira osnovni font, zaobljenja komponenti i visinu redaka tablica
+   * kako bi svi ekrani imali dosljedan izgled.
+   */
   private static void initializeLookAndFeel() {
     FlatDarkLaf.setup();
     UIManager.put("defaultFont", new Font("Segoe UI", Font.PLAIN, 14));

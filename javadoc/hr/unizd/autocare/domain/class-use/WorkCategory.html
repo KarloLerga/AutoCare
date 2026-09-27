@@ -80,7 +80,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>enum&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../WorkCategory.html" class="type-name-link" title="enum class in hr.unizd.autocare.domain">WorkCategory</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Razlikuje održavanje i popravak.</div>
+<div class="block">Razlikuje standardne radove održavanja od popravaka u katalogu i servisnom unosu.</div>
 </div>
 </div>
 <div class="caption"><span>Methods in <a href="../package-summary.html">hr.unizd.autocare.domain</a> that return <a href="../WorkCategory.html" title="enum class in hr.unizd.autocare.domain">WorkCategory</a></span></div>
@@ -116,7 +116,7 @@ the order they are declared.</div>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">CatalogRepository.</span><code><a href="../../repository/CatalogRepository.html#works(hr.unizd.autocare.domain.WorkCategory)" class="member-name-link">works</a><wbr>(<a href="../WorkCategory.html" title="enum class in hr.unizd.autocare.domain">WorkCategory</a>&nbsp;category)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Vraća standardne radove zadane servisne kategorije.</div>
+<div class="block">Dohvaća radove određene vrste, primjerice samo radove održavanja.</div>
 </div>
 </div>
 </section>
@@ -132,7 +132,7 @@ the order they are declared.</div>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">CatalogService.</span><code><a href="../../service/CatalogService.html#works(hr.unizd.autocare.domain.WorkCategory)" class="member-name-link">works</a><wbr>(<a href="../WorkCategory.html" title="enum class in hr.unizd.autocare.domain">WorkCategory</a>&nbsp;category)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Vraća radove koji pripadaju zadanoj servisnoj kategoriji.</div>
+<div class="block">Dohvaća standardne radove određene vrste.</div>
 </div>
 </div>
 </section>
@@ -147,7 +147,9 @@ the order they are declared.</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Ui.</span><code><a href="../../view/components/Ui.html#workCategory(hr.unizd.autocare.domain.WorkCategory)" class="member-name-link">workCategory</a><wbr>(<a href="../WorkCategory.html" title="enum class in hr.unizd.autocare.domain">WorkCategory</a>&nbsp;category)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Pretvara internu kategoriju rada u naziv prikladan za korisničko sučelje.</div>
+</div>
 </div>
 </section>
 </li>

@@ -92,7 +92,7 @@ loadScripts(document, 'script');</script>
  int&nbsp;productionYear,
  int&nbsp;currentMileage)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Stvara vozilo nakon provjere vlasnika, varijante, godine i kilometraže.</div>
+<div class="block">Stvara novo korisničko vozilo.</div>
 </div>
 </div>
 </section>
@@ -107,9 +107,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code><a href="../VehicleVariant.html" title="class in hr.unizd.autocare.domain">VehicleVariant</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">CatalogRepository.</span><code><a href="../../repository/CatalogRepository.html#findVariant(int)" class="member-name-link">findVariant</a><wbr>(int&nbsp;id)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Dohvaća varijantu prema primarnom ključu.</div>
-</div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 <div class="caption"><span>Methods in <a href="../../repository/package-summary.html">hr.unizd.autocare.repository</a> that return types with arguments of type <a href="../VehicleVariant.html" title="class in hr.unizd.autocare.domain">VehicleVariant</a></span></div>
 <div class="summary-table three-column-summary">
@@ -121,7 +119,7 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;model,
  int&nbsp;year)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Vraća kataloške varijante koje pokrivaju odabranu godinu.</div>
+<div class="block">Dohvaća varijante koje pokrivaju odabranu godinu.</div>
 </div>
 </div>
 </section>
@@ -139,7 +137,7 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;model,
  int&nbsp;year)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Vraća varijante koje odgovaraju marki, modelu i godini.</div>
+<div class="block">Dohvaća varijante vozila koje odgovaraju odabranoj marki, modelu i godini.</div>
 </div>
 </div>
 </section>
@@ -172,7 +170,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>void</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">VehicleForm.</span><code><a href="../../view/components/VehicleForm.html#showDetails(hr.unizd.autocare.domain.VehicleVariant)" class="member-name-link">showDetails</a><wbr>(<a href="../VehicleVariant.html" title="class in hr.unizd.autocare.domain">VehicleVariant</a>&nbsp;selected)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Prikazuje sažetak motora, goriva, snage i mjenjača odabrane varijante.</div>
+</div>
 </div>
 <div class="caption"><span>Method parameters in <a href="../../view/components/package-summary.html">hr.unizd.autocare.view.components</a> with type arguments of type <a href="../VehicleVariant.html" title="class in hr.unizd.autocare.domain">VehicleVariant</a></span></div>
 <div class="summary-table three-column-summary">
@@ -181,7 +181,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>void</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">VehicleForm.</span><code><a href="../../view/components/VehicleForm.html#setVariants(java.util.List)" class="member-name-link">setVariants</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../VehicleVariant.html" title="class in hr.unizd.autocare.domain">VehicleVariant</a>&gt;&nbsp;values)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Zamjenjuje vrijednosti odabira varijante novim vrijednostima iz kataloga.</div>
+</div>
 </div>
 </section>
 </li>

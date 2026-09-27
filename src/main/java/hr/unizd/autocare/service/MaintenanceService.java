@@ -18,12 +18,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Servisna povijest je izvor istine za praćene intervale održavanja. */
+/**
+ * Iz servisne povijesti izvodi aktualno stanje planiranog održavanja vozila.
+ *
+ * <p>Servisna povijest je izvor istine: održavanje se prati tek kada za standardni rad postoji
+ * stvarno evidentirana servisna stavka. Service priprema podatke, a izračun preostalog intervala
+ * delegira domenskom {@code MaintenanceCalculatoru}.
+ */
 public class MaintenanceService {
   private final EntityManagerFactory entityManagerFactory;
 
   /**
-   * Stvara servis koji iz servisne povijesti izvodi plan održavanja.
+   * Stvara servis za izračun održavanja.
    *
    * @param entityManagerFactory zajednička JPA tvornica
    */
@@ -32,11 +38,11 @@ public class MaintenanceService {
   }
 
   /**
-   * Vraća intervale održavanja za vozilo na temelju posljednjih evidentiranih radova.
+   * Dohvaća vozilo i vraća izračunate intervale održavanja na temelju njegove servisne povijesti.
    *
    * @param ownerId identifikator vlasnika
    * @param vehicleId identifikator vozila
-   * @return izračunati intervali održavanja
+   * @return retci održavanja spremni za prikaz
    * @throws IllegalArgumentException ako vozilo ne pripada korisniku
    */
   public List<MaintenanceRow> list(int ownerId, int vehicleId) {
@@ -57,6 +63,19 @@ public class MaintenanceService {
     }
   }
 
+  /**
+   * Računa MaintenanceRow rezultate koristeći katalog održavanja i povijesne servisne stavke.
+   *
+   * <p>Za svaki rad održavanja pronalazi posljednju izvedenu stavku, računa sljedeći datum i/ili
+   * kilometražu, preostale dane i kilometre te relativni preostali interval. Radovi bez prethodno
+   * evidentirane izvedbe ne prikazuju se kao praćeno održavanje.
+   *
+   * @param catalogRepository repository standardnih radova
+   * @param serviceRecordRepository repository servisne povijesti
+   * @param ownerId identifikator vlasnika
+   * @param vehicle vozilo za koje se računa održavanje
+   * @return izračunati retci održavanja
+   */
   static List<MaintenanceRow> calculate(
       CatalogRepository catalogRepository,
       ServiceRecordRepository serviceRecordRepository,
@@ -101,6 +120,14 @@ public class MaintenanceService {
     return rows;
   }
 
+  /**
+   * Za svaki kataloški rad pronalazi najnoviju servisnu stavku u povijesti vozila.
+   *
+   * @param serviceRecordRepository repository servisne povijesti
+   * @param ownerId identifikator vlasnika
+   * @param vehicleId identifikator vozila
+   * @return mapa work ID-a na posljednju evidentiranu stavku tog rada
+   */
   private static Map<Integer, ServiceItem> latestItems(
       ServiceRecordRepository serviceRecordRepository, int ownerId, int vehicleId) {
     Map<Integer, ServiceItem> latest = new HashMap<>();
@@ -113,6 +140,13 @@ public class MaintenanceService {
   }
 
 
+  /**
+   * Računa koliko kilometara preostaje do sljedećeg kilometarskog intervala.
+   *
+   * @param nextMileage sljedeća ciljana kilometraža ili {@code null} ako se kilometri ne prate
+   * @param currentMileage trenutačna kilometraža vozila
+   * @return preostali kilometri, nula ako je interval dospio ili {@code null} ako nije primjenjivo
+   */
   private static Integer remainingKm(Integer nextMileage, int currentMileage) {
     if (nextMileage == null) {
       return null;
@@ -125,6 +159,13 @@ public class MaintenanceService {
     return remaining;
   }
 
+  /**
+   * Računa koliko kalendarskih dana preostaje do sljedećeg vremenskog intervala.
+   *
+   * @param nextDate sljedeći ciljani datum ili {@code null} ako se vrijeme ne prati
+   * @param today datum na koji se izračun radi
+   * @return preostali dani, nula ako je interval dospio ili {@code null} ako nije primjenjivo
+   */
   private static Long remainingDays(LocalDate nextDate, LocalDate today) {
     if (nextDate == null) {
       return null;
@@ -137,6 +178,13 @@ public class MaintenanceService {
     return remaining;
   }
 
+  /**
+   * Iz posljednjeg datuma i intervala u mjesecima izračunava sljedeći datum održavanja.
+   *
+   * @param lastDate datum posljednjeg rada
+   * @param months interval u mjesecima ili {@code null}
+   * @return sljedeći datum ili {@code null} ako rad nema vremenski interval
+   */
   private static LocalDate nextDate(LocalDate lastDate, Integer months) {
     if (months == null) {
       return null;
@@ -144,6 +192,13 @@ public class MaintenanceService {
     return lastDate.plusMonths(months);
   }
 
+  /**
+   * Iz posljednje kilometraže i kilometarskog intervala izračunava sljedeću ciljanu kilometražu.
+   *
+   * @param lastMileage kilometraža posljednjeg rada
+   * @param intervalKm interval u kilometrima ili {@code null}
+   * @return sljedeća kilometraža ili {@code null} ako rad nema kilometarski interval
+   */
   private static Integer nextMileage(Integer lastMileage, Integer intervalKm) {
     if (intervalKm == null) {
       return null;

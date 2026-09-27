@@ -9,7 +9,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-/** Forma za izbor varijante vozila i unos godine proizvodnje i kilometraže. */
+/**
+ * Ponovno upotrebljiva Swing forma za izbor marke, modela, godine i kataloške varijante vozila.
+ *
+ * <p>Forma sama ne dohvaća podatke iz baze; VehicleFormController puni njezine combo boxove i
+ * reagira na promjene odabira.
+ */
 public class VehicleForm extends JPanel {
   public final JComboBox<String> make = new JComboBox<>();
   public final JComboBox<String> model = new JComboBox<>();
@@ -19,6 +24,7 @@ public class VehicleForm extends JPanel {
   public final JLabel details = Ui.hint("Odaberite točnu varijantu.");
   public final JLabel state = Ui.hint("Odaberite marku, model, godinu i varijantu.");
 
+  /** Stvara sva polja forme, detalj odabrane varijante i početne pomoćne poruke. */
   public VehicleForm() {
     super(new BorderLayout(12, 12));
     setOpaque(false);
@@ -44,6 +50,12 @@ public class VehicleForm extends JPanel {
     variant.setMaximumRowCount(18);
   }
 
+  /**
+   * Vraća odabranu godinu proizvodnje.
+   *
+   * @return odabrana godina
+   * @throws IllegalArgumentException ako godina nije odabrana
+   */
   public int getSelectedYear() {
     Integer selectedYear = (Integer) year.getSelectedItem();
     if (selectedYear == null) {
@@ -52,10 +64,21 @@ public class VehicleForm extends JPanel {
     return selectedYear;
   }
 
+  /**
+   * Parsira i validira kilometražu unesenu u formu.
+   *
+   * @return valjana kilometraža
+   * @throws IllegalArgumentException ako kilometraža nije valjan nenegativan cijeli broj
+   */
   public int getMileage() {
     return Ui.mileage(mileage);
   }
 
+  /**
+   * Zamjenjuje vrijednosti odabira marke novim vrijednostima iz kataloga.
+   *
+   * @param values marke koje treba prikazati
+   */
   public void setMakes(List<String> values) {
     make.removeAllItems();
     for (String value : values) {
@@ -64,6 +87,11 @@ public class VehicleForm extends JPanel {
     make.setSelectedIndex(-1);
   }
 
+  /**
+   * Zamjenjuje vrijednosti odabira modela novim vrijednostima iz kataloga.
+   *
+   * @param values modeli koje treba prikazati
+   */
   public void setModels(List<String> values) {
     model.removeAllItems();
     for (String value : values) {
@@ -72,6 +100,11 @@ public class VehicleForm extends JPanel {
     model.setSelectedIndex(-1);
   }
 
+  /**
+   * Zamjenjuje vrijednosti odabira godine novim vrijednostima iz kataloga.
+   *
+   * @param values godine koje treba prikazati
+   */
   public void setYears(List<Integer> values) {
     year.removeAllItems();
     for (Integer value : values) {
@@ -80,6 +113,11 @@ public class VehicleForm extends JPanel {
     year.setSelectedIndex(-1);
   }
 
+  /**
+   * Zamjenjuje vrijednosti odabira varijante novim vrijednostima iz kataloga.
+   *
+   * @param values varijante koje treba prikazati
+   */
   public void setVariants(List<VehicleVariant> values) {
     variant.removeAllItems();
     for (VehicleVariant value : values) {
@@ -89,10 +127,12 @@ public class VehicleForm extends JPanel {
     details.setText("Odaberite točnu varijantu.");
   }
 
+  /** @return trenutno odabrana kataloška varijanta ili {@code null} */
   public VehicleVariant selectedVariant() {
     return (VehicleVariant) variant.getSelectedItem();
   }
 
+  /** Čisti model, godinu i varijantu nakon promjene ili resetiranja marke. */
   public void clearBelowMake() {
     model.removeAllItems();
     year.removeAllItems();
@@ -100,17 +140,20 @@ public class VehicleForm extends JPanel {
     details.setText("Odaberite točnu varijantu.");
   }
 
+  /** Čisti godinu i varijantu nakon promjene ili resetiranja modela. */
   public void clearBelowModel() {
     year.removeAllItems();
     variant.removeAllItems();
     details.setText("Odaberite točnu varijantu.");
   }
 
+  /** Čisti varijantu nakon promjene ili resetiranja godine. */
   public void clearBelowYear() {
     variant.removeAllItems();
     details.setText("Odaberite točnu varijantu.");
   }
 
+  /** Vraća odabire, kilometražu i pomoćni tekst forme u početno stanje. */
   public void reset() {
     make.removeAllItems();
     model.removeAllItems();
@@ -121,6 +164,11 @@ public class VehicleForm extends JPanel {
     state.setText("Odaberite marku, model, godinu i varijantu.");
   }
 
+  /**
+   * Prikazuje sažetak motora, goriva, snage i mjenjača odabrane varijante.
+   *
+   * @param selected varijanta čije detalje treba prikazati ili {@code null}
+   */
   public void showDetails(VehicleVariant selected) {
     if (selected == null) {
       details.setText("Odaberite točnu varijantu.");

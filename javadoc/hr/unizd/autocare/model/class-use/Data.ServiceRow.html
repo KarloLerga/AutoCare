@@ -90,7 +90,7 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../domain/ServiceItem.html" title="class in hr.unizd.autocare.domain">ServiceItem</a>&gt;&nbsp;items,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;resolvedProblems)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Stvara detaljni prikaz spremljenog servisa.</div>
+<div class="block">Stvara prikazni model detalja spremljenog servisa.</div>
 </div>
 </div>
 </section>
@@ -107,7 +107,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><span class="type-name-label">ServiceRecordService.</span><code><a href="../../service/ServiceRecordService.html#list(int,int)" class="member-name-link">list</a><wbr>(int&nbsp;ownerId,
  int&nbsp;vehicleId)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Vraća servisne zapise vozila kao retke pripremljene za prikaz.</div>
+<div class="block">Dohvaća servisnu povijest vozila i pretvara zapise u retke spremne za prikaz.</div>
 </div>
 </div>
 </section>
@@ -131,7 +131,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>void</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ServicesView.</span><code><a href="../../view/ServicesView.html#setRows(java.util.List)" class="member-name-link">setRows</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../Data.ServiceRow.html" title="class in hr.unizd.autocare.model">Data.ServiceRow</a>&gt;&nbsp;values)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Zamjenjuje prikazanu servisnu povijest i internu listu objekata povezanih s recima tablice.</div>
+</div>
 </div>
 </section>
 </li>

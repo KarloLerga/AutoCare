@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-/** Jednostavna registracija korisničkog računa. */
+/** Swing forma za izradu novog korisničkog računa. */
 public class RegistrationView extends JPanel {
   public final JTextField name = new JTextField(25);
   public final JTextField email = new JTextField(25);
@@ -17,6 +17,7 @@ public class RegistrationView extends JPanel {
   public final JButton finish = new JButton("Kreiraj račun");
   public final JButton cancel = new JButton("Odustani");
 
+  /** Stvara polja registracije i gumbe za potvrdu ili odustajanje. */
   public RegistrationView() {
     super(new GridBagLayout());
 
@@ -32,11 +33,13 @@ public class RegistrationView extends JPanel {
     add(card);
   }
 
+  /** Briše oba polja lozinke kako osjetljivi unos ne bi ostao prikazan u formi. */
   public void clearPasswords() {
     password.setText("");
     repeat.setText("");
   }
 
+  /** Vraća registracijsku formu u početno prazno stanje. */
   public void reset() {
     name.setText("");
     email.setText("");

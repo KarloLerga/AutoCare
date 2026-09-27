@@ -5,18 +5,26 @@ import hr.unizd.autocare.service.MaintenanceService;
 import hr.unizd.autocare.view.MainFrame;
 import hr.unizd.autocare.view.components.Ui;
 
-/** Učitava održavanje koje se prati iz servisne povijesti aktivnog vozila. */
+/** Upravlja prikazom izračunatih intervala održavanja aktivnog vozila. */
 public class MaintenanceController {
   private final MainFrame frame;
   private final MaintenanceService maintenanceService;
   private final Session session;
 
+  /**
+   * Povezuje MaintenanceView s MaintenanceServiceom i korisničkom sesijom.
+   *
+   * @param frame glavni prozor
+   * @param maintenanceService servis koji računa stanje održavanja
+   * @param session zajednički korisnički kontekst
+   */
   public MaintenanceController(MainFrame frame, MaintenanceService maintenanceService, Session session) {
     this.frame = frame;
     this.maintenanceService = maintenanceService;
     this.session = session;
   }
 
+  /** Dohvaća održavanja za aktivno vozilo i prikazuje ih u MaintenanceViewu. */
   public void load() {
     try {
       frame.maintenance.setRows(maintenanceService.list(session.getOwnerId(), session.getActiveVehicle().getId()));

@@ -20,12 +20,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Spremanje i čitanje servisne povijesti. */
+/**
+ * Provodi spremanje i čitanje servisne povijesti vozila.
+ *
+ * <p>Spremanje servisa je transakcijski use-case koji može obuhvatiti ServiceRecord, njegove
+ * stavke, ažuriranje kilometraže vozila i povezivanje otvorenih problema sa servisom koji ih je
+ * riješio.
+ */
 public class ServiceRecordService {
   private final EntityManagerFactory entityManagerFactory;
 
   /**
-   * Stvara servis koji upravlja servisnom poviješću.
+   * Stvara servis servisne povijesti.
    *
    * @param entityManagerFactory zajednička JPA tvornica
    */
@@ -34,12 +40,16 @@ public class ServiceRecordService {
   }
 
   /**
-   * Sprema servis, stavke, novu kilometražu i odabrana riješena upozorenja u jednoj transakciji.
+   * Sprema novi servis i sve povezane promjene u jednoj transakciji.
    *
-   * @param ownerId vlasnik vozila
-   * @param vehicleId vozilo kojem servis pripada
-   * @param input uneseni datum, kilometraža, napomena, radovi i cijene
-   * @throws IllegalArgumentException ako su podaci nepotpuni ili vozilo, rad ili problem nije dostupan
+   * <p>Metoda validira ulaz, provjerava da vozilo pripada korisniku, pretvara odabrane katalog
+   * radove u ServiceItem stavke sa stvarnim cijenama, sprema servis, po potrebi povećava trenutačnu
+   * kilometražu vozila te odabrane probleme povezuje s tim servisom.
+   *
+   * @param ownerId identifikator vlasnika
+   * @param vehicleId identifikator servisiranog vozila
+   * @param input podaci uneseni kroz editor servisa
+   * @throws IllegalArgumentException ako vozilo, rad, problem ili uneseni podaci nisu valjani
    */
   public void create(int ownerId, int vehicleId, ServiceInput input) {
     validate(input);
@@ -91,6 +101,17 @@ public class ServiceRecordService {
     }
   }
 
+  /**
+   * Povezuje odabrane otvorene probleme s upravo spremljenim servisom.
+   *
+   * <p>Za svaki ID provjerava da problem pripada istom korisniku i vozilu prije poziva domenske
+   * metode {@code Problem.resolve}.
+   *
+   * @param problemRepository repository za dohvat problema
+   * @param vehicle vozilo na kojem je servis izveden
+   * @param serviceRecord servis koji rješava probleme
+   * @param problemIds identifikatori problema označenih u editoru
+   */
   private static void resolveSelectedProblems(
       ProblemRepository problemRepository,
       Vehicle vehicle,
@@ -105,6 +126,15 @@ public class ServiceRecordService {
     }
   }
 
+  /**
+   * Provjerava osnovnu konzistentnost podataka novog servisa prije početka persistence operacija.
+   *
+   * <p>Provjerava datum, zabranu budućeg datuma i postojanje barem jedne servisne stavke. Ostala
+   * pravila provode konstruktori ulaznih i domenskih objekata.
+   *
+   * @param input podaci servisa
+   * @throws IllegalArgumentException ako podaci nisu valjani
+   */
   private static void validate(ServiceInput input) {
     if (input == null || input.getDate() == null) {
       throw new IllegalArgumentException("Unesite datum servisa.");
@@ -118,11 +148,11 @@ public class ServiceRecordService {
   }
 
   /**
-   * Vraća servisne zapise vozila kao retke pripremljene za prikaz.
+   * Dohvaća servisnu povijest vozila i pretvara zapise u retke spremne za prikaz.
    *
    * @param ownerId identifikator vlasnika
    * @param vehicleId identifikator vozila
-   * @return servisna povijest od najnovijeg zapisa
+   * @return servisni zapisi pripremljeni za ServicesView
    */
   public List<ServiceRow> list(int ownerId, int vehicleId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -140,12 +170,12 @@ public class ServiceRecordService {
   }
 
   /**
-   * Vraća detalj servisa, uključujući stavke i probleme povezane s njim.
+   * Dohvaća puni detalj jednog servisa koji pripada korisniku.
    *
-   * @param ownerId identifikator vlasnika vozila
+   * @param ownerId identifikator vlasnika
    * @param serviceId identifikator servisa
-   * @return pojedinosti servisa
-   * @throws IllegalArgumentException ako servis nije pronađen ili ne pripada korisniku
+   * @return zaglavlje servisa, njegove stavke i problemi riješeni tim servisom
+   * @throws IllegalArgumentException ako servis nije pronađen za tog korisnika
    */
   public ServiceDetail detail(int ownerId, int serviceId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -173,6 +203,14 @@ public class ServiceRecordService {
     }
   }
 
+  /**
+   * Pretvara persistentni ServiceRecord u jednostavan prikazni ServiceRow.
+   *
+   * <p>Sažima nazive radova i računa ukupni stvarni trošak preko domenskog zapisa.
+   *
+   * @param serviceRecord servisni zapis iz baze
+   * @return redak spreman za prikaz
+   */
   private static ServiceRow serviceRow(ServiceRecord serviceRecord) {
     String names = "";
     for (ServiceItem serviceItem : serviceRecord.getItems()) {

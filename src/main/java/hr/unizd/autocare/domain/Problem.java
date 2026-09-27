@@ -9,9 +9,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
 
-/** Problem koji korisnik primjećuje na vozilu, bez dijagnostike. */
+/**
+ * Persistentni domenski objekt korisnički evidentiranog problema vozila.
+ *
+ * <p>Problem nema zaseban ručno postavljen status. Otvoren je dok nije povezan sa
+ * ServiceRecordom kroz koji je riješen.
+ */
 @Entity
-/** Bilješka o problemu vozila koja se može povezati sa servisom koji ga je riješio. */
 public class Problem {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,14 +34,15 @@ public class Problem {
   @ManyToOne
   private ServiceRecord resolvedByService;
 
+  /** Konstruktor bez argumenata potreban JPA provideru. */
   protected Problem() {}
 
   /**
-   * Stvara korisnički evidentiran problem vozila.
+   * Stvara novi otvoreni problem vozila.
    *
-   * @param vehicle vozilo na kojem je problem uočen
-   * @param description opis problema
-   * @param category kategorija; ako je {@code null}, koristi se kategorija ostalo
+   * @param vehicle vozilo na koje se problem odnosi
+   * @param description korisnički opis problema
+   * @param category gruba kategorija problema
    * @param createdAt datum evidentiranja
    * @throws IllegalArgumentException ako vozilo, opis ili datum nisu valjani
    */
@@ -60,9 +65,9 @@ public class Problem {
   }
 
   /**
-   * Povezuje problem sa servisom koji ga je riješio.
+   * Označava problem riješenim povezivanjem sa servisom koji ga je riješio.
    *
-   * @param serviceRecord servis istog vozila koji zatvara problem
+   * @param serviceRecord servis istog vozila kojim je problem riješen
    * @throws IllegalArgumentException ako je problem već riješen, servis nije zadan ili pripada drugom vozilu
    */
   public void resolve(ServiceRecord serviceRecord) {
@@ -95,6 +100,11 @@ public class Problem {
     return createdAt;
   }
 
+  /**
+   * Provjerava postoji li servis povezan kao rješenje problema.
+   *
+   * @return {@code true} ako je problem riješen konkretnim servisom
+   */
   public boolean isResolved() {
     return resolvedByService != null;
   }

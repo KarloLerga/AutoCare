@@ -90,7 +90,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><span class="type-name-label">ServiceRecord.</span><code><a href="../ServiceRecord.html#addItem(hr.unizd.autocare.domain.WorkDefinition,java.math.BigDecimal)" class="member-name-link">addItem</a><wbr>(<a href="../WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a>&nbsp;work,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a>&nbsp;actualPrice)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Dodaje izvršeni rad s iznosom koji je korisnik stvarno platio.</div>
+<div class="block">Dodaje jednu stvarno izvedenu servisnu stavku ovom servisu.</div>
 </div>
 </div>
 </section>
@@ -105,9 +105,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code><a href="../WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">CatalogRepository.</span><code><a href="../../repository/CatalogRepository.html#findWork(int)" class="member-name-link">findWork</a><wbr>(int&nbsp;id)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Dohvaća standardni rad prema primarnom ključu.</div>
-</div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 <div class="caption"><span>Methods in <a href="../../repository/package-summary.html">hr.unizd.autocare.repository</a> that return types with arguments of type <a href="../WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a></span></div>
 <div class="summary-table three-column-summary">
@@ -116,13 +114,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">CatalogRepository.</span><code><a href="../../repository/CatalogRepository.html#allWorks()" class="member-name-link">allWorks</a>()</code></div>
-<div class="col-last even-row-color">
-<div class="block">Vraća cijeli informativni katalog standardnih radova.</div>
-</div>
+<div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a>&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">CatalogRepository.</span><code><a href="../../repository/CatalogRepository.html#works(hr.unizd.autocare.domain.WorkCategory)" class="member-name-link">works</a><wbr>(<a href="../WorkCategory.html" title="enum class in hr.unizd.autocare.domain">WorkCategory</a>&nbsp;category)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Vraća standardne radove zadane servisne kategorije.</div>
+<div class="block">Dohvaća radove određene vrste, primjerice samo radove održavanja.</div>
 </div>
 </div>
 </section>
@@ -137,13 +133,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">CatalogService.</span><code><a href="../../service/CatalogService.html#catalog()" class="member-name-link">catalog</a>()</code></div>
-<div class="col-last even-row-color">
-<div class="block">Vraća sve standardne radove za informativni katalog.</div>
-</div>
+<div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a>&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">CatalogService.</span><code><a href="../../service/CatalogService.html#works(hr.unizd.autocare.domain.WorkCategory)" class="member-name-link">works</a><wbr>(<a href="../WorkCategory.html" title="enum class in hr.unizd.autocare.domain">WorkCategory</a>&nbsp;category)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Vraća radove koji pripadaju zadanoj servisnoj kategoriji.</div>
+<div class="block">Dohvaća standardne radove određene vrste.</div>
 </div>
 </div>
 </section>
@@ -176,7 +170,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>void</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ServiceEditorDialog.</span><code><a href="../../view/ServiceEditorDialog.html#addWork(hr.unizd.autocare.domain.WorkDefinition)" class="member-name-link">addWork</a><wbr>(<a href="../WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a>&nbsp;selected)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Dodaje odabrani rad u privremeni popis stavki servisa sa stvarno plaćenom cijenom iz forme.</div>
+</div>
 </div>
 <div class="caption"><span>Method parameters in <a href="../../view/package-summary.html">hr.unizd.autocare.view</a> with type arguments of type <a href="../WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a></span></div>
 <div class="summary-table three-column-summary">
@@ -186,11 +182,13 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>void</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">CatalogView.</span><code><a href="../../view/CatalogView.html#setRows(java.util.List)" class="member-name-link">setRows</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a>&gt;&nbsp;works)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Zamjenjuje retke tablice radovima dobivenima iz kataloga.</div>
+<div class="block">Prikazuje zadani skup standardnih radova u tablici kataloga.</div>
 </div>
 <div class="col-first odd-row-color"><code>void</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">ServiceEditorDialog.</span><code><a href="../../view/ServiceEditorDialog.html#setWorks(java.util.List)" class="member-name-link">setWorks</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a>&gt;&nbsp;works)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Postavlja sve radove dostupne editoru i inicijalno prikazuje radove održavanja.</div>
+</div>
 </div>
 </section>
 </li>

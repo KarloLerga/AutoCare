@@ -9,12 +9,17 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-/** Dijalog koji prikuplja podatke za dodavanje korisnikova vozila. */
+/** Modalni dijalog za dodavanje novog vozila pomoću zajedničke VehicleForm komponente. */
 public class VehicleDialog extends JDialog {
   public final VehicleForm form = new VehicleForm();
   public final JButton save = new JButton("Spremi vozilo");
   public final JButton cancel = new JButton("Odustani");
 
+  /**
+   * Stvara modalni dijalog i raspoređuje VehicleForm s gumbima za spremanje i odustajanje.
+   *
+   * @param owner roditeljski prozor
+   */
   public VehicleDialog(Window owner) {
     super(owner, "Dodaj vozilo", ModalityType.APPLICATION_MODAL);
 

@@ -80,7 +80,11 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Session</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Singleton koji čuva trenutno prijavljenog korisnika i aktivno vozilo.</div>
+<div class="block">Singleton koji čuva zajednički korisnički kontekst tijekom rada aplikacije.
+
+<p>Session pamti identifikator prijavljenog korisnika i vozilo koje je trenutačno aktivno.
+Controlleri koriste istu instancu kako se korisnički kontekst ne bi ručno prosljeđivao između
+svih ekrana.</div>
 </div>
 </section>
 <section class="summary">
@@ -104,7 +108,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Session.html" title="class in hr.unizd.autocare.app">Session</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getInstance()" class="member-name-link">getInstance</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Vraća jedinu sesiju aplikacije.</div>
+<div class="block">Vraća jedinu instancu aplikacijske sesije.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getOwnerId()" class="member-name-link">getOwnerId</a>()</code></div>
@@ -114,17 +118,17 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#login(int)" class="member-name-link">login</a><wbr>(int&nbsp;ownerId)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Bilježi prijavljenog korisnika i uklanja prethodno aktivno vozilo.</div>
+<div class="block">Otvara korisnički kontekst nakon uspješne prijave.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#logout()" class="member-name-link">logout</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Briše korisnika i aktivno vozilo iz trenutačne sesije.</div>
+<div class="block">Briše podatke prijavljene sesije pri odjavi korisnika.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setActiveVehicle(hr.unizd.autocare.domain.Vehicle)" class="member-name-link">setActiveVehicle</a><wbr>(<a href="../domain/Vehicle.html" title="class in hr.unizd.autocare.domain">Vehicle</a>&nbsp;activeVehicle)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Postavlja vozilo koje se koristi kao kontekst glavnih ekrana.</div>
+<div class="block">Postavlja vozilo koje predstavlja trenutačni kontekst aplikacije.</div>
 </div>
 </div>
 </div>
@@ -148,7 +152,11 @@ loadScripts(document, 'script');</script>
 <h3>getInstance</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Session.html" title="class in hr.unizd.autocare.app">Session</a></span>&nbsp;<span class="element-name">getInstance</span>()</div>
-<div class="block">Vraća jedinu sesiju aplikacije.</div>
+<div class="block">Vraća jedinu instancu aplikacijske sesije.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>zajednička Session instanca</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -157,7 +165,14 @@ loadScripts(document, 'script');</script>
 <h3>login</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">login</span><wbr><span class="parameters">(int&nbsp;ownerId)</span></div>
-<div class="block">Bilježi prijavljenog korisnika i uklanja prethodno aktivno vozilo.</div>
+<div class="block">Otvara korisnički kontekst nakon uspješne prijave.
+
+<p>Postavlja identifikator prijavljenog korisnika i čisti prethodno aktivno vozilo kako bi ga
+aplikacija ponovno učitala iz podataka tog korisnika.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>ownerId</code> - identifikator prijavljenog korisnika</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -166,7 +181,9 @@ loadScripts(document, 'script');</script>
 <h3>logout</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">logout</span>()</div>
-<div class="block">Briše korisnika i aktivno vozilo iz trenutačne sesije.</div>
+<div class="block">Briše podatke prijavljene sesije pri odjavi korisnika.
+
+<p>Nakon odjave nema aktivnog korisnika ni aktivnog vozila.</div>
 </div>
 </section>
 </li>
@@ -193,7 +210,11 @@ loadScripts(document, 'script');</script>
 <h3>setActiveVehicle</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setActiveVehicle</span><wbr><span class="parameters">(<a href="../domain/Vehicle.html" title="class in hr.unizd.autocare.domain">Vehicle</a>&nbsp;activeVehicle)</span></div>
-<div class="block">Postavlja vozilo koje se koristi kao kontekst glavnih ekrana.</div>
+<div class="block">Postavlja vozilo koje predstavlja trenutačni kontekst aplikacije.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>activeVehicle</code> - trenutno aktivno vozilo ili <code>null</code> ako korisnik nema aktivno vozilo</dd>
+</dl>
 </div>
 </section>
 </li>

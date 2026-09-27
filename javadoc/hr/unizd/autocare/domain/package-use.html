@@ -82,7 +82,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><a href="class-use/Vehicle.html#hr.unizd.autocare.app">Vehicle</a></div>
 <div class="col-last even-row-color">
-<div class="block">Konkretno vozilo korisnika; trenutna kilometraža ne smije se smanjiti.</div>
+<div class="block">Persistentni domenski objekt konkretnog vozila koje pripada korisniku.</div>
 </div>
 </div>
 </section>
@@ -95,39 +95,39 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><a href="class-use/AppUser.html#hr.unizd.autocare.domain">AppUser</a></div>
 <div class="col-last even-row-color">
-<div class="block">Korisnički račun i njegovo aktivno vozilo.</div>
+<div class="block">Persistentni domenski objekt korisničkog računa.</div>
 </div>
 <div class="col-first odd-row-color"><a href="class-use/CatalogCategory.html#hr.unizd.autocare.domain">CatalogCategory</a></div>
 <div class="col-last odd-row-color">
-<div class="block">Grupe zahvata koje korisniku olakšavaju pregled kataloga.</div>
+<div class="block">Korisničke grupe standardnih radova koje omogućuju pregled i filtriranje informativnog kataloga.</div>
 </div>
 <div class="col-first even-row-color"><a href="class-use/ProblemCategory.html#hr.unizd.autocare.domain">ProblemCategory</a></div>
 <div class="col-last even-row-color">
-<div class="block">Gruba kategorija korisnikovog problema, bez pokušaja dijagnostike kvara.</div>
+<div class="block">Gruba korisnička kategorija evidentiranog problema bez pokušaja automatske dijagnoze kvara.</div>
 </div>
 <div class="col-first odd-row-color"><a href="class-use/ServiceItem.html#hr.unizd.autocare.domain">ServiceItem</a></div>
 <div class="col-last odd-row-color">
-<div class="block">Jedan izvršeni zahvat i stvarno plaćena cijena.</div>
+<div class="block">Persistentna stavka jednog servisa koja povezuje ServiceRecord sa standardnim WorkDefinitionom.</div>
 </div>
 <div class="col-first even-row-color"><a href="class-use/ServiceRecord.html#hr.unizd.autocare.domain">ServiceRecord</a></div>
 <div class="col-last even-row-color">
-<div class="block">Servis i njegove stavke čine jednu cjelinu za spremanje.</div>
+<div class="block">Persistentni domenski zapis jednog stvarno evidentiranog servisa vozila.</div>
 </div>
 <div class="col-first odd-row-color"><a href="class-use/Vehicle.html#hr.unizd.autocare.domain">Vehicle</a></div>
 <div class="col-last odd-row-color">
-<div class="block">Konkretno vozilo korisnika; trenutna kilometraža ne smije se smanjiti.</div>
+<div class="block">Persistentni domenski objekt konkretnog vozila koje pripada korisniku.</div>
 </div>
 <div class="col-first even-row-color"><a href="class-use/VehicleVariant.html#hr.unizd.autocare.domain">VehicleVariant</a></div>
 <div class="col-last even-row-color">
-<div class="block">Kataloška varijanta vozila koju aplikacija samo čita iz baze.</div>
+<div class="block">Persistentna kataloška definicija jedne varijante vozila.</div>
 </div>
 <div class="col-first odd-row-color"><a href="class-use/WorkCategory.html#hr.unizd.autocare.domain">WorkCategory</a></div>
 <div class="col-last odd-row-color">
-<div class="block">Razlikuje održavanje i popravak.</div>
+<div class="block">Razlikuje standardne radove održavanja od popravaka u katalogu i servisnom unosu.</div>
 </div>
 <div class="col-first even-row-color"><a href="class-use/WorkDefinition.html#hr.unizd.autocare.domain">WorkDefinition</a></div>
 <div class="col-last even-row-color">
-<div class="block">Standardni zahvat iz kataloga i, za održavanje, njegov servisni interval.</div>
+<div class="block">Persistentna definicija standardnog rada iz kataloga.</div>
 </div>
 </div>
 </section>
@@ -140,11 +140,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><a href="class-use/ServiceItem.html#hr.unizd.autocare.model">ServiceItem</a></div>
 <div class="col-last even-row-color">
-<div class="block">Jedan izvršeni zahvat i stvarno plaćena cijena.</div>
+<div class="block">Persistentna stavka jednog servisa koja povezuje ServiceRecord sa standardnim WorkDefinitionom.</div>
 </div>
 <div class="col-first odd-row-color"><a href="class-use/Vehicle.html#hr.unizd.autocare.model">Vehicle</a></div>
 <div class="col-last odd-row-color">
-<div class="block">Konkretno vozilo korisnika; trenutna kilometraža ne smije se smanjiti.</div>
+<div class="block">Persistentni domenski objekt konkretnog vozila koje pripada korisniku.</div>
 </div>
 </div>
 </section>
@@ -157,35 +157,35 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><a href="class-use/AppUser.html#hr.unizd.autocare.repository">AppUser</a></div>
 <div class="col-last even-row-color">
-<div class="block">Korisnički račun i njegovo aktivno vozilo.</div>
+<div class="block">Persistentni domenski objekt korisničkog računa.</div>
 </div>
 <div class="col-first odd-row-color"><a href="class-use/Problem.html#hr.unizd.autocare.repository">Problem</a></div>
 <div class="col-last odd-row-color">
-<div class="block">Problem koji korisnik primjećuje na vozilu, bez dijagnostike.</div>
+<div class="block">Persistentni domenski objekt korisnički evidentiranog problema vozila.</div>
 </div>
 <div class="col-first even-row-color"><a href="class-use/ServiceItem.html#hr.unizd.autocare.repository">ServiceItem</a></div>
 <div class="col-last even-row-color">
-<div class="block">Jedan izvršeni zahvat i stvarno plaćena cijena.</div>
+<div class="block">Persistentna stavka jednog servisa koja povezuje ServiceRecord sa standardnim WorkDefinitionom.</div>
 </div>
 <div class="col-first odd-row-color"><a href="class-use/ServiceRecord.html#hr.unizd.autocare.repository">ServiceRecord</a></div>
 <div class="col-last odd-row-color">
-<div class="block">Servis i njegove stavke čine jednu cjelinu za spremanje.</div>
+<div class="block">Persistentni domenski zapis jednog stvarno evidentiranog servisa vozila.</div>
 </div>
 <div class="col-first even-row-color"><a href="class-use/Vehicle.html#hr.unizd.autocare.repository">Vehicle</a></div>
 <div class="col-last even-row-color">
-<div class="block">Konkretno vozilo korisnika; trenutna kilometraža ne smije se smanjiti.</div>
+<div class="block">Persistentni domenski objekt konkretnog vozila koje pripada korisniku.</div>
 </div>
 <div class="col-first odd-row-color"><a href="class-use/VehicleVariant.html#hr.unizd.autocare.repository">VehicleVariant</a></div>
 <div class="col-last odd-row-color">
-<div class="block">Kataloška varijanta vozila koju aplikacija samo čita iz baze.</div>
+<div class="block">Persistentna kataloška definicija jedne varijante vozila.</div>
 </div>
 <div class="col-first even-row-color"><a href="class-use/WorkCategory.html#hr.unizd.autocare.repository">WorkCategory</a></div>
 <div class="col-last even-row-color">
-<div class="block">Razlikuje održavanje i popravak.</div>
+<div class="block">Razlikuje standardne radove održavanja od popravaka u katalogu i servisnom unosu.</div>
 </div>
 <div class="col-first odd-row-color"><a href="class-use/WorkDefinition.html#hr.unizd.autocare.repository">WorkDefinition</a></div>
 <div class="col-last odd-row-color">
-<div class="block">Standardni zahvat iz kataloga i, za održavanje, njegov servisni interval.</div>
+<div class="block">Persistentna definicija standardnog rada iz kataloga.</div>
 </div>
 </div>
 </section>
@@ -198,27 +198,27 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><a href="class-use/Problem.html#hr.unizd.autocare.service">Problem</a></div>
 <div class="col-last even-row-color">
-<div class="block">Problem koji korisnik primjećuje na vozilu, bez dijagnostike.</div>
+<div class="block">Persistentni domenski objekt korisnički evidentiranog problema vozila.</div>
 </div>
 <div class="col-first odd-row-color"><a href="class-use/ProblemCategory.html#hr.unizd.autocare.service">ProblemCategory</a></div>
 <div class="col-last odd-row-color">
-<div class="block">Gruba kategorija korisnikovog problema, bez pokušaja dijagnostike kvara.</div>
+<div class="block">Gruba korisnička kategorija evidentiranog problema bez pokušaja automatske dijagnoze kvara.</div>
 </div>
 <div class="col-first even-row-color"><a href="class-use/Vehicle.html#hr.unizd.autocare.service">Vehicle</a></div>
 <div class="col-last even-row-color">
-<div class="block">Konkretno vozilo korisnika; trenutna kilometraža ne smije se smanjiti.</div>
+<div class="block">Persistentni domenski objekt konkretnog vozila koje pripada korisniku.</div>
 </div>
 <div class="col-first odd-row-color"><a href="class-use/VehicleVariant.html#hr.unizd.autocare.service">VehicleVariant</a></div>
 <div class="col-last odd-row-color">
-<div class="block">Kataloška varijanta vozila koju aplikacija samo čita iz baze.</div>
+<div class="block">Persistentna kataloška definicija jedne varijante vozila.</div>
 </div>
 <div class="col-first even-row-color"><a href="class-use/WorkCategory.html#hr.unizd.autocare.service">WorkCategory</a></div>
 <div class="col-last even-row-color">
-<div class="block">Razlikuje održavanje i popravak.</div>
+<div class="block">Razlikuje standardne radove održavanja od popravaka u katalogu i servisnom unosu.</div>
 </div>
 <div class="col-first odd-row-color"><a href="class-use/WorkDefinition.html#hr.unizd.autocare.service">WorkDefinition</a></div>
 <div class="col-last odd-row-color">
-<div class="block">Standardni zahvat iz kataloga i, za održavanje, njegov servisni interval.</div>
+<div class="block">Persistentna definicija standardnog rada iz kataloga.</div>
 </div>
 </div>
 </section>
@@ -231,23 +231,23 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><a href="class-use/CatalogCategory.html#hr.unizd.autocare.view">CatalogCategory</a></div>
 <div class="col-last even-row-color">
-<div class="block">Grupe zahvata koje korisniku olakšavaju pregled kataloga.</div>
+<div class="block">Korisničke grupe standardnih radova koje omogućuju pregled i filtriranje informativnog kataloga.</div>
 </div>
 <div class="col-first odd-row-color"><a href="class-use/Problem.html#hr.unizd.autocare.view">Problem</a></div>
 <div class="col-last odd-row-color">
-<div class="block">Problem koji korisnik primjećuje na vozilu, bez dijagnostike.</div>
+<div class="block">Persistentni domenski objekt korisnički evidentiranog problema vozila.</div>
 </div>
 <div class="col-first even-row-color"><a href="class-use/ProblemCategory.html#hr.unizd.autocare.view">ProblemCategory</a></div>
 <div class="col-last even-row-color">
-<div class="block">Gruba kategorija korisnikovog problema, bez pokušaja dijagnostike kvara.</div>
+<div class="block">Gruba korisnička kategorija evidentiranog problema bez pokušaja automatske dijagnoze kvara.</div>
 </div>
 <div class="col-first odd-row-color"><a href="class-use/Vehicle.html#hr.unizd.autocare.view">Vehicle</a></div>
 <div class="col-last odd-row-color">
-<div class="block">Konkretno vozilo korisnika; trenutna kilometraža ne smije se smanjiti.</div>
+<div class="block">Persistentni domenski objekt konkretnog vozila koje pripada korisniku.</div>
 </div>
 <div class="col-first even-row-color"><a href="class-use/WorkDefinition.html#hr.unizd.autocare.view">WorkDefinition</a></div>
 <div class="col-last even-row-color">
-<div class="block">Standardni zahvat iz kataloga i, za održavanje, njegov servisni interval.</div>
+<div class="block">Persistentna definicija standardnog rada iz kataloga.</div>
 </div>
 </div>
 </section>
@@ -260,11 +260,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><a href="class-use/VehicleVariant.html#hr.unizd.autocare.view.components">VehicleVariant</a></div>
 <div class="col-last even-row-color">
-<div class="block">Kataloška varijanta vozila koju aplikacija samo čita iz baze.</div>
+<div class="block">Persistentna kataloška definicija jedne varijante vozila.</div>
 </div>
 <div class="col-first odd-row-color"><a href="class-use/WorkCategory.html#hr.unizd.autocare.view.components">WorkCategory</a></div>
 <div class="col-last odd-row-color">
-<div class="block">Razlikuje održavanje i popravak.</div>
+<div class="block">Razlikuje standardne radove održavanja od popravaka u katalogu i servisnom unosu.</div>
 </div>
 </div>
 </section>

@@ -79,7 +79,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><span class="type-name-label">ProblemRepository.</span><code><a href="../../repository/ProblemRepository.html#findForOwner(int,int)" class="member-name-link">findForOwner</a><wbr>(int&nbsp;ownerId,
  int&nbsp;problemId)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Vraća problem samo ako pripada navedenom korisniku; inače vraća <code>null</code>.</div>
+<div class="block">Dohvaća problem samo ako pripada vozilu zadanog korisnika.</div>
 </div>
 </div>
 <div class="caption"><span>Methods in <a href="../../repository/package-summary.html">hr.unizd.autocare.repository</a> that return types with arguments of type <a href="../Problem.html" title="class in hr.unizd.autocare.domain">Problem</a></span></div>
@@ -91,7 +91,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><span class="type-name-label">ProblemRepository.</span><code><a href="../../repository/ProblemRepository.html#list(int,int)" class="member-name-link">list</a><wbr>(int&nbsp;ownerId,
  int&nbsp;vehicleId)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Vraća probleme vozila poredane od najnovijeg prema najstarijem.</div>
+<div class="block">Dohvaća probleme vozila.</div>
 </div>
 </div>
 <div class="caption"><span>Methods in <a href="../../repository/package-summary.html">hr.unizd.autocare.repository</a> with parameters of type <a href="../Problem.html" title="class in hr.unizd.autocare.domain">Problem</a></span></div>
@@ -102,7 +102,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>void</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ProblemRepository.</span><code><a href="../../repository/ProblemRepository.html#add(hr.unizd.autocare.domain.Problem)" class="member-name-link">add</a><wbr>(<a href="../Problem.html" title="class in hr.unizd.autocare.domain">Problem</a>&nbsp;problem)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Predaje novi problem persistence kontekstu.</div>
+<div class="block">Dodaje novi problem u trenutačni persistence context.</div>
 </div>
 </div>
 </section>
@@ -119,7 +119,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><span class="type-name-label">ProblemService.</span><code><a href="../../service/ProblemService.html#list(int,int)" class="member-name-link">list</a><wbr>(int&nbsp;ownerId,
  int&nbsp;vehicleId)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Vraća probleme odabranog vozila korisnika.</div>
+<div class="block">Dohvaća probleme vozila koje pripada zadanom korisniku.</div>
 </div>
 </div>
 </section>
@@ -134,7 +134,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>void</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ProblemsView.</span><code><a href="../../view/ProblemsView.html#setRows(java.util.List)" class="member-name-link">setRows</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../Problem.html" title="class in hr.unizd.autocare.domain">Problem</a>&gt;&nbsp;values)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Zamjenjuje prikazane probleme aktualnim podacima vozila.</div>
+</div>
 </div>
 <div class="caption"><span>Constructor parameters in <a href="../../view/package-summary.html">hr.unizd.autocare.view</a> with type arguments of type <a href="../Problem.html" title="class in hr.unizd.autocare.domain">Problem</a></span></div>
 <div class="summary-table three-column-summary">
@@ -145,7 +147,9 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../../view/ServiceEditorDialog.html#%3Cinit%3E(java.awt.Window,int,java.util.List)" class="member-name-link">ServiceEditorDialog</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/java/awt/Window.html" title="class or interface in java.awt" class="external-link">Window</a>&nbsp;owner,
  int&nbsp;mileageValue,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../Problem.html" title="class in hr.unizd.autocare.domain">Problem</a>&gt;&nbsp;problems)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Stvara editor servisa s početnom kilometražom i popisom otvorenih problema.</div>
+</div>
 </div>
 </section>
 </li>

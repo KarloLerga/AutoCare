@@ -1,6 +1,6 @@
 package hr.unizd.autocare.domain;
 
-/** Razlikuje održavanje i popravak. */
+/** Razlikuje standardne radove održavanja od popravaka u katalogu i servisnom unosu. */
 public enum WorkCategory {
   MAINTENANCE,
   REPAIR

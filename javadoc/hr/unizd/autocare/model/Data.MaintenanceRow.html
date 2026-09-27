@@ -93,7 +93,10 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public static final class </span><span class="element-name type-name-label">Data.MaintenanceRow</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Izračunati podaci jednog praćenog održavanja.</div>
+<div class="block">Prikazni rezultat izračuna jednog praćenog rada održavanja.
+
+<p>Sadrži podatke posljednje izvedbe, izračun sljedećeg dospijeća i preostali interval u
+kilometrima, danima i relativnom omjeru.</div>
 </div>
 </section>
 <section class="summary">
@@ -115,7 +118,7 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;remainingDays,
  double&nbsp;remainingRatio)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Stvara prikaz izračunatog intervala održavanja.</div>
+<div class="block">Stvara rezultat izračunatog intervala održavanja.</div>
 </div>
 </div>
 </section>
@@ -184,17 +187,17 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;remainingKm,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;remainingDays,
  double&nbsp;remainingRatio)</span></div>
-<div class="block">Stvara prikaz izračunatog intervala održavanja.</div>
+<div class="block">Stvara rezultat izračunatog intervala održavanja.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>name</code> - naziv praćenog rada</dd>
-<dd><code>lastDate</code> - datum prethodnog održavanja</dd>
-<dd><code>lastMileage</code> - kilometraža prethodnog održavanja</dd>
-<dd><code>nextDate</code> - izračunati sljedeći datum, ako postoji</dd>
-<dd><code>nextMileage</code> - izračunata sljedeća kilometraža, ako postoji</dd>
-<dd><code>remainingKm</code> - preostala kilometraža, ako se prati</dd>
-<dd><code>remainingDays</code> - preostali dani, ako se prati vremenski interval</dd>
-<dd><code>remainingRatio</code> - udio intervala koji je ostao</dd>
+<dd><code>name</code> - naziv standardnog rada</dd>
+<dd><code>lastDate</code> - datum posljednje izvedbe</dd>
+<dd><code>lastMileage</code> - kilometraža posljednje izvedbe</dd>
+<dd><code>nextDate</code> - sljedeći ciljani datum ili <code>null</code></dd>
+<dd><code>nextMileage</code> - sljedeća ciljana kilometraža ili <code>null</code></dd>
+<dd><code>remainingKm</code> - preostali kilometri ili <code>null</code></dd>
+<dd><code>remainingDays</code> - preostali kalendarski dani ili <code>null</code></dd>
+<dd><code>remainingRatio</code> - relativni dio intervala koji je ostao</dd>
 </dl>
 </div>
 </section>

@@ -75,7 +75,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">MaintenanceStrategy</span></div>
-<div class="block">Način računanja koliko je servisnog intervala još preostalo.</div>
+<div class="block">Strategy sučelje za različite načine računanja preostalog servisnog intervala.</div>
 </div>
 </section>
 <section class="summary">
@@ -99,7 +99,7 @@ loadScripts(document, 'script');</script>
  int&nbsp;currentMileage,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/LocalDate.html" title="class or interface in java.time" class="external-link">LocalDate</a>&nbsp;today)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Računa preostali udio odabranog intervala održavanja.</div>
+<div class="block">Računa relativni dio servisnog intervala koji je preostao prema pravilima konkretne strategije.</div>
 </div>
 </div>
 </div>
@@ -125,17 +125,17 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;lastMileage,
  int&nbsp;currentMileage,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/LocalDate.html" title="class or interface in java.time" class="external-link">LocalDate</a>&nbsp;today)</span></div>
-<div class="block">Računa preostali udio odabranog intervala održavanja.</div>
+<div class="block">Računa relativni dio servisnog intervala koji je preostao prema pravilima konkretne strategije.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>intervalKm</code> - kilometarski interval, ako se koristi</dd>
 <dd><code>intervalMonths</code> - vremenski interval u mjesecima, ako se koristi</dd>
-<dd><code>lastDate</code> - datum prethodnog održavanja</dd>
-<dd><code>lastMileage</code> - kilometraža prethodnog održavanja</dd>
-<dd><code>currentMileage</code> - trenutačna kilometraža</dd>
+<dd><code>lastDate</code> - datum prethodne izvedbe rada</dd>
+<dd><code>lastMileage</code> - kilometraža prethodne izvedbe rada</dd>
+<dd><code>currentMileage</code> - trenutačna kilometraža vozila</dd>
 <dd><code>today</code> - datum izračuna</dd>
 <dt>Returns:</dt>
-<dd>udio intervala koji je preostao; rezultat može biti manji od nule nakon dospijeća</dd>
+<dd>relativni preostali interval; vrijednost može biti negativna nakon dospijeća</dd>
 </dl>
 </div>
 </section>

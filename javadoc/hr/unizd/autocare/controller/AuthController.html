@@ -77,7 +77,11 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">AuthController</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Prijava i registracija korisničkog računa.</div>
+<div class="block">Upravlja korisničkim tokovima prijave i registracije.
+
+<p>Controller čita vrijednosti iz Login i Registration Viewova, poziva <code>AuthService</code>,
+prikazuje validacijske pogreške preko zajedničkog UI helpera te nakon uspješne prijave javlja
+<code>LoginListeneru</code> identifikator prijavljenog korisnika.</div>
 </div>
 </section>
 <section class="summary">
@@ -94,7 +98,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="AuthController.LoginListener.html" class="type-name-link" title="interface in hr.unizd.autocare.controller">AuthController.LoginListener</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Prima obavijest da se korisnik uspješno prijavio.</div>
+<div class="block">Callback kojim AuthController obavještava ostatak aplikacije da je prijava završila uspješno.</div>
 </div>
 </div>
 </section>
@@ -111,7 +115,7 @@ loadScripts(document, 'script');</script>
  <a href="../service/AuthService.html" title="class in hr.unizd.autocare.service">AuthService</a>&nbsp;authService,
  <a href="AuthController.LoginListener.html" title="interface in hr.unizd.autocare.controller">AuthController.LoginListener</a>&nbsp;loginListener)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Povezuje prikaze prijave i registracije s autentifikacijskim servisom.</div>
+<div class="block">Stvara Controller za prijavu i registraciju te povezuje akcije odgovarajućih Viewova.</div>
 </div>
 </div>
 </section>
@@ -141,12 +145,12 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">AuthController</span><wbr><span class="parameters">(<a href="../view/MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a>&nbsp;frame,
  <a href="../service/AuthService.html" title="class in hr.unizd.autocare.service">AuthService</a>&nbsp;authService,
  <a href="AuthController.LoginListener.html" title="interface in hr.unizd.autocare.controller">AuthController.LoginListener</a>&nbsp;loginListener)</span></div>
-<div class="block">Povezuje prikaze prijave i registracije s autentifikacijskim servisom.</div>
+<div class="block">Stvara Controller za prijavu i registraciju te povezuje akcije odgovarajućih Viewova.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>frame</code> - glavni prozor</dd>
-<dd><code>authService</code> - servis prijave i registracije</dd>
-<dd><code>loginListener</code> - primatelj obavijesti o uspješnoj prijavi</dd>
+<dd><code>frame</code> - glavni prozor koji sadrži login i registration prikaze</dd>
+<dd><code>authService</code> - servis koji provodi prijavu i registraciju</dd>
+<dd><code>loginListener</code> - callback koji preuzima kontrolu nakon uspješne prijave</dd>
 </dl>
 </div>
 </section>

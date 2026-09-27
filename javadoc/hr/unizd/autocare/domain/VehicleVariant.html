@@ -93,7 +93,10 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="annotations">@Entity
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">VehicleVariant</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Kataloška varijanta vozila koju aplikacija samo čita iz baze.</div>
+<div class="block">Persistentna kataloška definicija jedne varijante vozila.
+
+<p>Varijanta opisuje marku, model, generaciju, motor, gorivo, snagu, mjenjač i raspon godina
+u kojima se ta varijanta nudila.</div>
 </div>
 </section>
 <section class="summary">
@@ -109,7 +112,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>protected </code></div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">VehicleVariant</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Konstruktor bez argumenata potreban JPA provideru.</div>
+</div>
 </div>
 </section>
 </li>
@@ -127,7 +132,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#covers(int)" class="member-name-link">covers</a><wbr>(int&nbsp;year)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Provjerava nalazi li se godina proizvodnje u rasponu ove varijante.</div>
+<div class="block">Provjerava nalazi li se godina unutar raspona proizvodnje ove varijante.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEngineLabel()" class="member-name-link">getEngineLabel</a>()</code></div>
@@ -184,6 +189,7 @@ loadScripts(document, 'script');</script>
 <h3>VehicleVariant</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="element-name">VehicleVariant</span>()</div>
+<div class="block">Konstruktor bez argumenata potreban JPA provideru.</div>
 </div>
 </section>
 </li>
@@ -200,7 +206,13 @@ loadScripts(document, 'script');</script>
 <h3>covers</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">covers</span><wbr><span class="parameters">(int&nbsp;year)</span></div>
-<div class="block">Provjerava nalazi li se godina proizvodnje u rasponu ove varijante.</div>
+<div class="block">Provjerava nalazi li se godina unutar raspona proizvodnje ove varijante.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>year</code> - godina koju treba provjeriti</dd>
+<dt>Returns:</dt>
+<dd><code>true</code> ako varijanta pokriva zadanu godinu</dd>
+</dl>
 </div>
 </section>
 </li>

@@ -2,18 +2,24 @@ package hr.unizd.autocare.domain;
 
 import java.math.BigDecimal;
 
-/** Osnovne provjere korisničkog unosa. */
+/**
+ * Zajednička domenska pravila za validaciju i normalizaciju korisničkog unosa.
+ *
+ * <p>Metode vraćaju očišćenu vrijednost kada je unos valjan ili bacaju
+ * {@link IllegalArgumentException} s porukom prikladnom za korisničko sučelje.
+ */
 public class Checks {
+  /** Sprječava stvaranje instance utility klase. */
   private Checks() {}
 
   /**
-   * Provjerava obavezni tekst, uklanja rubne razmake i ograničava duljinu.
+   * Provjerava obavezni tekst, uklanja rubne razmake i ograničava najveću duljinu.
    *
    * @param value uneseni tekst
    * @param max najveći dopušteni broj znakova
-   * @param label naziv polja za poruku o pogrešci
+   * @param label naziv polja koji se koristi u poruci o pogrešci
    * @return očišćeni tekst
-   * @throws IllegalArgumentException ako je tekst prazan ili predug
+   * @throws IllegalArgumentException ako je vrijednost prazna ili preduga
    */
   public static String text(String value, int max, String label) {
     if (value == null || value.strip().isEmpty()) {
@@ -29,7 +35,15 @@ public class Checks {
     return cleanValue;
   }
 
-  /** Provjerava neobavezni tekst i vraća {@code null} za prazan unos. */
+  /**
+   * Validira neobavezni tekst istim pravilima kao obavezni tekst kada je vrijednost unesena.
+   *
+   * @param value uneseni tekst
+   * @param max najveći dopušteni broj znakova
+   * @param label naziv polja
+   * @return očišćeni tekst ili {@code null} za prazan unos
+   * @throws IllegalArgumentException ako uneseni neprazni tekst prelazi dopuštenu duljinu
+   */
   public static String optional(String value, int max, String label) {
     if (value == null || value.isBlank()) {
       return null;
@@ -38,7 +52,13 @@ public class Checks {
     return text(value, max, label);
   }
 
-  /** Normalizira i provjerava osnovni oblik adrese e-pošte. */
+  /**
+   * Normalizira e-mail u mala slova i provjerava osnovni oblik adrese.
+   *
+   * @param value unesena e-mail adresa
+   * @return normalizirana e-mail adresa
+   * @throws IllegalArgumentException ako adresa nije u prihvatljivom obliku
+   */
   public static String email(String value) {
     String email = text(value, 254, "E-mail").toLowerCase();
     int at = email.indexOf('@');
@@ -51,7 +71,13 @@ public class Checks {
     return email;
   }
 
-  /** Provjerava da kilometraža nije negativna. */
+  /**
+   * Provjerava da kilometraža nije negativna.
+   *
+   * @param value kilometraža
+   * @return ista vrijednost kada je valjana
+   * @throws IllegalArgumentException ako je kilometraža negativna
+   */
   public static int mileage(int value) {
     if (value < 0) {
       throw new IllegalArgumentException("Kilometraža ne može biti negativna.");
@@ -60,7 +86,13 @@ public class Checks {
     return value;
   }
 
-  /** Provjerava da je stvarna cijena zadana i nenegativna. */
+  /**
+   * Provjerava stvarno plaćenu cijenu servisne stavke.
+   *
+   * @param value uneseni iznos
+   * @return isti iznos kada je valjan
+   * @throws IllegalArgumentException ako iznos nije zadan ili je negativan
+   */
   public static BigDecimal money(BigDecimal value) {
     if (value == null) {
       throw new IllegalArgumentException("Unesite stvarno plaćenu cijenu.");
@@ -71,7 +103,13 @@ public class Checks {
     return value;
   }
 
-  /** Provjerava minimalnu duljinu lozinke. */
+  /**
+   * Provjerava minimalnu dopuštenu duljinu lozinke.
+   *
+   * @param value unesena lozinka
+   * @return ista lozinka kada zadovoljava pravilo
+   * @throws IllegalArgumentException ako je lozinka prekratka ili nije zadana
+   */
   public static String password(String value) {
     if (value == null || value.length() < 6) {
       throw new IllegalArgumentException("Lozinka treba imati najmanje 6 znakova.");

@@ -121,7 +121,11 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">MainFrame</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JFrame.html" title="class or interface in javax.swing" class="external-link">JFrame</a></span></div>
-<div class="block">Glavni prozor aplikacije i spremnik ekrana za prijavu i rad s vozilom.</div>
+<div class="block">Glavni Swing prozor AutoCare aplikacije.
+
+<p>Sadrži autentikacijske prikaze, aplikacijsku navigaciju i glavne funkcionalne View panele.
+CardLayoutom mijenja korijenski prikaz i aktivnu aplikacijsku stranicu, dok podatke aktivnog
+vozila prikazuje u zajedničkom kontekstu navigacije.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -236,7 +240,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">MainFrame</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Stvara glavni prozor, njegove View panele, bočnu navigaciju i CardLayout strukturu.</div>
+</div>
 </div>
 </section>
 </li>
@@ -253,22 +259,32 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#application()" class="member-name-link">application</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Prikazuje glavni aplikacijski shell s navigacijom i funkcionalnim stranicama.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#auth()" class="member-name-link">auth</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Prikazuje ekran prijave i skriva aplikacijski dio.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#context(hr.unizd.autocare.domain.Vehicle)" class="member-name-link">context</a><wbr>(<a href="../domain/Vehicle.html" title="class in hr.unizd.autocare.domain">Vehicle</a>&nbsp;vehicle)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Ažurira zajednički prikaz aktivnog vozila u navigacijskom dijelu prozora.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#page()" class="member-name-link">page</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#registration()" class="member-name-link">registration</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Prikazuje ekran registracije.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#showPage(java.lang.String)" class="member-name-link">showPage</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Prikazuje imenovanu funkcionalnu stranicu i ažurira označenu navigacijsku stavku.</div>
+</div>
 </div>
 </div>
 </div>
@@ -437,6 +453,7 @@ loadScripts(document, 'script');</script>
 <h3>MainFrame</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">MainFrame</span>()</div>
+<div class="block">Stvara glavni prozor, njegove View panele, bočnu navigaciju i CardLayout strukturu.</div>
 </div>
 </section>
 </li>
@@ -453,6 +470,7 @@ loadScripts(document, 'script');</script>
 <h3>auth</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">auth</span>()</div>
+<div class="block">Prikazuje ekran prijave i skriva aplikacijski dio.</div>
 </div>
 </section>
 </li>
@@ -461,6 +479,7 @@ loadScripts(document, 'script');</script>
 <h3>registration</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registration</span>()</div>
+<div class="block">Prikazuje ekran registracije.</div>
 </div>
 </section>
 </li>
@@ -469,6 +488,7 @@ loadScripts(document, 'script');</script>
 <h3>application</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">application</span>()</div>
+<div class="block">Prikazuje glavni aplikacijski shell s navigacijom i funkcionalnim stranicama.</div>
 </div>
 </section>
 </li>
@@ -477,6 +497,11 @@ loadScripts(document, 'script');</script>
 <h3>showPage</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">showPage</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</span></div>
+<div class="block">Prikazuje imenovanu funkcionalnu stranicu i ažurira označenu navigacijsku stavku.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>name</code> - naziv stranice registriran u CardLayoutu</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -485,6 +510,10 @@ loadScripts(document, 'script');</script>
 <h3>page</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">page</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>naziv trenutačno aktivne aplikacijske stranice</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -493,6 +522,11 @@ loadScripts(document, 'script');</script>
 <h3>context</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">context</span><wbr><span class="parameters">(<a href="../domain/Vehicle.html" title="class in hr.unizd.autocare.domain">Vehicle</a>&nbsp;vehicle)</span></div>
+<div class="block">Ažurira zajednički prikaz aktivnog vozila u navigacijskom dijelu prozora.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>vehicle</code> - aktivno vozilo ili <code>null</code> ako vozilo nije odabrano</dd>
+</dl>
 </div>
 </section>
 </li>

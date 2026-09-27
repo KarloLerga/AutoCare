@@ -5,9 +5,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-/** Kataloška varijanta vozila koju aplikacija samo čita iz baze. */
+/**
+ * Persistentna kataloška definicija jedne varijante vozila.
+ *
+ * <p>Varijanta opisuje marku, model, generaciju, motor, gorivo, snagu, mjenjač i raspon godina
+ * u kojima se ta varijanta nudila.
+ */
 @Entity
-/** Referentni opis marke, modela i izvedbe vozila iz kataloga. */
 public class VehicleVariant {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,9 +28,15 @@ public class VehicleVariant {
   private Integer yearTo;
 
 
+  /** Konstruktor bez argumenata potreban JPA provideru. */
   protected VehicleVariant() {}
 
-  /** Provjerava nalazi li se godina proizvodnje u rasponu ove varijante. */
+  /**
+   * Provjerava nalazi li se godina unutar raspona proizvodnje ove varijante.
+   *
+   * @param year godina koju treba provjeriti
+   * @return {@code true} ako varijanta pokriva zadanu godinu
+   */
   public boolean covers(int year) {
     if (year < yearFrom) {
       return false;

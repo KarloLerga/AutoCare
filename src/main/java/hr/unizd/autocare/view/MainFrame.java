@@ -20,7 +20,13 @@ import javax.swing.WindowConstants;
 import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 import org.kordamp.ikonli.swing.FontIcon;
 
-/** Glavni prozor aplikacije i spremnik ekrana za prijavu i rad s vozilom. */
+/**
+ * Glavni Swing prozor AutoCare aplikacije.
+ *
+ * <p>Sadrži autentikacijske prikaze, aplikacijsku navigaciju i glavne funkcionalne View panele.
+ * CardLayoutom mijenja korijenski prikaz i aktivnu aplikacijsku stranicu, dok podatke aktivnog
+ * vozila prikazuje u zajedničkom kontekstu navigacije.
+ */
 public class MainFrame extends JFrame {
   public final LoginView login = new LoginView();
   public final RegistrationView registration = new RegistrationView();
@@ -47,6 +53,7 @@ public class MainFrame extends JFrame {
   private final JLabel vehicleDetails = new JLabel(" ");
   private String page = "Dashboard";
 
+  /** Stvara glavni prozor, njegove View panele, bočnu navigaciju i CardLayout strukturu. */
   public MainFrame() {
     super("AutoCare");
     setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -90,6 +97,14 @@ public class MainFrame extends JFrame {
     setContentPane(root);
   }
 
+  /**
+   * Dodaje jednu navigacijsku stavku i pripadajući panel u glavni aplikacijski prikaz.
+   *
+   * @param sidebar panel bočne navigacije
+   * @param button gumb kojim se stranica otvara
+   * @param panel sadržaj stranice
+   * @param iconCode ikona navigacijske stavke
+   */
   private void addNavigation(JPanel sidebar, JButton button, JPanel panel, FontAwesomeSolid iconCode) {
     button.setIcon(icon(iconCode, 17));
     button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
@@ -99,6 +114,13 @@ public class MainFrame extends JFrame {
     content.add(panel, button.getText());
   }
 
+  /**
+   * Stvara FontAwesome ikonu u veličini i stilu koji koristi glavna navigacija.
+   *
+   * @param iconCode kod ikone
+   * @param size veličina ikone
+   * @return pripremljena Swing ikona
+   */
   private FontIcon icon(FontAwesomeSolid iconCode, int size) {
     Color color = UIManager.getColor("Label.foreground");
     if (color == null) {
@@ -107,21 +129,29 @@ public class MainFrame extends JFrame {
     return FontIcon.of(iconCode, size, color);
   }
 
+  /** Prikazuje ekran prijave i skriva aplikacijski dio. */
   public void auth() {
     roots.show(root, "LOGIN");
     getRootPane().setDefaultButton(login.login);
   }
 
+  /** Prikazuje ekran registracije. */
   public void registration() {
     roots.show(root, "REGISTER");
     getRootPane().setDefaultButton(registration.finish);
   }
 
+  /** Prikazuje glavni aplikacijski shell s navigacijom i funkcionalnim stranicama. */
   public void application() {
     roots.show(root, "APP");
     getRootPane().setDefaultButton(null);
   }
 
+  /**
+   * Prikazuje imenovanu funkcionalnu stranicu i ažurira označenu navigacijsku stavku.
+   *
+   * @param name naziv stranice registriran u CardLayoutu
+   */
   public void showPage(String name) {
     page = name;
     pages.show(content, name);
@@ -134,6 +164,12 @@ public class MainFrame extends JFrame {
     setSelected(problemsButton, name.equals("Problemi"));
   }
 
+  /**
+   * Vizualno označava ili poništava označavanje jednog navigacijskog gumba.
+   *
+   * @param button navigacijski gumb
+   * @param selected treba li gumb izgledati aktivno
+   */
   private void setSelected(JButton button, boolean selected) {
     int style = Font.PLAIN;
     if (selected) {
@@ -142,10 +178,16 @@ public class MainFrame extends JFrame {
     button.setFont(button.getFont().deriveFont(style));
   }
 
+  /** @return naziv trenutačno aktivne aplikacijske stranice */
   public String page() {
     return page;
   }
 
+  /**
+   * Ažurira zajednički prikaz aktivnog vozila u navigacijskom dijelu prozora.
+   *
+   * @param vehicle aktivno vozilo ili {@code null} ako vozilo nije odabrano
+   */
   public void context(Vehicle vehicle) {
     boolean hasVehicle = vehicle != null;
     dashboardButton.setEnabled(hasVehicle);

@@ -117,7 +117,11 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ServiceEditorDialog</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JDialog.html" title="class or interface in javax.swing" class="external-link">JDialog</a></span></div>
-<div class="block">Unos stvarno plaćenih stavki servisa bez prikaza procijenjenih cijena.</div>
+<div class="block">Modalni editor za unos novog stvarnog servisa vozila.
+
+<p>Korisnik bira datum, kilometražu, radove i stvarne cijene te može označiti otvorene probleme
+koje je taj servis riješio. Dijalog ne sprema podatke izravno u bazu nego ih kroz
+<a href="../model/Data.ServiceInput.html" title="class in hr.unizd.autocare.model"><code>Data.ServiceInput</code></a> predaje Controlleru.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -222,7 +226,9 @@ loadScripts(document, 'script');</script>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.awt.Window,int,java.util.List)" class="member-name-link">ServiceEditorDialog</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/java/awt/Window.html" title="class or interface in java.awt" class="external-link">Window</a>&nbsp;owner,
  int&nbsp;mileageValue,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../domain/Problem.html" title="class in hr.unizd.autocare.domain">Problem</a>&gt;&nbsp;problems)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Stvara editor servisa s početnom kilometražom i popisom otvorenih problema.</div>
+</div>
 </div>
 </section>
 </li>
@@ -239,22 +245,32 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addWork(hr.unizd.autocare.domain.WorkDefinition)" class="member-name-link">addWork</a><wbr>(<a href="../domain/WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a>&nbsp;selected)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Dodaje odabrani rad u privremeni popis stavki servisa sa stvarno plaćenom cijenom iz forme.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#filterWorks()" class="member-name-link">filterWorks</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Filtrira combo box radova prema trenutno odabranoj vrsti: održavanje ili popravak.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../model/Data.ServiceInput.html" title="class in hr.unizd.autocare.model">Data.ServiceInput</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#input()" class="member-name-link">input</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Pretvara trenutačno stanje forme u ServiceInput za ServiceRecordService.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeSelectedItem()" class="member-name-link">removeSelectedItem</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Uklanja trenutno označenu privremenu servisnu stavku iz editora.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../domain/WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#selectedWork()" class="member-name-link">selectedWork</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setWorks(java.util.List)" class="member-name-link">setWorks</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../domain/WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a>&gt;&nbsp;works)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Postavlja sve radove dostupne editoru i inicijalno prikazuje radove održavanja.</div>
+</div>
 </div>
 </div>
 </div>
@@ -390,6 +406,13 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ServiceEditorDialog</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/java/awt/Window.html" title="class or interface in java.awt" class="external-link">Window</a>&nbsp;owner,
  int&nbsp;mileageValue,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../domain/Problem.html" title="class in hr.unizd.autocare.domain">Problem</a>&gt;&nbsp;problems)</span></div>
+<div class="block">Stvara editor servisa s početnom kilometražom i popisom otvorenih problema.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>owner</code> - roditeljski prozor</dd>
+<dd><code>mileageValue</code> - trenutačna kilometraža koja se nudi kao početna vrijednost</dd>
+<dd><code>problems</code> - otvoreni problemi koje je moguće označiti kao riješene</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -406,6 +429,11 @@ loadScripts(document, 'script');</script>
 <h3>setWorks</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setWorks</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../domain/WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a>&gt;&nbsp;works)</span></div>
+<div class="block">Postavlja sve radove dostupne editoru i inicijalno prikazuje radove održavanja.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>works</code> - dostupne definicije radova</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -414,6 +442,7 @@ loadScripts(document, 'script');</script>
 <h3>filterWorks</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">filterWorks</span>()</div>
+<div class="block">Filtrira combo box radova prema trenutno odabranoj vrsti: održavanje ili popravak.</div>
 </div>
 </section>
 </li>
@@ -422,6 +451,10 @@ loadScripts(document, 'script');</script>
 <h3>selectedWork</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../domain/WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a></span>&nbsp;<span class="element-name">selectedWork</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>trenutno odabrani standardni rad ili <code>null</code></dd>
+</dl>
 </div>
 </section>
 </li>
@@ -430,6 +463,13 @@ loadScripts(document, 'script');</script>
 <h3>addWork</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addWork</span><wbr><span class="parameters">(<a href="../domain/WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a>&nbsp;selected)</span></div>
+<div class="block">Dodaje odabrani rad u privremeni popis stavki servisa sa stvarno plaćenom cijenom iz forme.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>selected</code> - rad koji se dodaje</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako je isti rad već dodan ili cijena nije valjana</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -438,6 +478,7 @@ loadScripts(document, 'script');</script>
 <h3>removeSelectedItem</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">removeSelectedItem</span>()</div>
+<div class="block">Uklanja trenutno označenu privremenu servisnu stavku iz editora.</div>
 </div>
 </section>
 </li>
@@ -446,6 +487,16 @@ loadScripts(document, 'script');</script>
 <h3>input</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../model/Data.ServiceInput.html" title="class in hr.unizd.autocare.model">Data.ServiceInput</a></span>&nbsp;<span class="element-name">input</span>()</div>
+<div class="block">Pretvara trenutačno stanje forme u ServiceInput za ServiceRecordService.
+
+<p>Parsira datum, kilometražu i cijene te iz označenih redaka skuplja ID-eve problema koje
+korisnik smatra riješenima tim servisom.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>cjeloviti ulaz za spremanje servisa</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako datum, kilometraža ili neka druga parsirana vrijednost nije valjana</dd>
+</dl>
 </div>
 </section>
 </li>

@@ -117,7 +117,10 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">VehicleForm</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JPanel.html" title="class or interface in javax.swing" class="external-link">JPanel</a></span></div>
-<div class="block">Forma za izbor varijante vozila i unos godine proizvodnje i kilometraže.</div>
+<div class="block">Ponovno upotrebljiva Swing forma za izbor marke, modela, godine i kataloške varijante vozila.
+
+<p>Forma sama ne dohvaća podatke iz baze; VehicleFormController puni njezine combo boxove i
+reagira na promjene odabira.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -199,7 +202,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">VehicleForm</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Stvara sva polja forme, detalj odabrane varijante i početne pomoćne poruke.</div>
+</div>
 </div>
 </section>
 </li>
@@ -216,40 +221,62 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearBelowMake()" class="member-name-link">clearBelowMake</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Čisti model, godinu i varijantu nakon promjene ili resetiranja marke.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearBelowModel()" class="member-name-link">clearBelowModel</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Čisti godinu i varijantu nakon promjene ili resetiranja modela.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearBelowYear()" class="member-name-link">clearBelowYear</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Čisti varijantu nakon promjene ili resetiranja godine.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMileage()" class="member-name-link">getMileage</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Parsira i validira kilometražu unesenu u formu.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSelectedYear()" class="member-name-link">getSelectedYear</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Vraća odabranu godinu proizvodnje.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reset()" class="member-name-link">reset</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Vraća odabire, kilometražu i pomoćni tekst forme u početno stanje.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../domain/VehicleVariant.html" title="class in hr.unizd.autocare.domain">VehicleVariant</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#selectedVariant()" class="member-name-link">selectedVariant</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMakes(java.util.List)" class="member-name-link">setMakes</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;values)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Zamjenjuje vrijednosti odabira marke novim vrijednostima iz kataloga.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setModels(java.util.List)" class="member-name-link">setModels</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;values)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Zamjenjuje vrijednosti odabira modela novim vrijednostima iz kataloga.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setVariants(java.util.List)" class="member-name-link">setVariants</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../domain/VehicleVariant.html" title="class in hr.unizd.autocare.domain">VehicleVariant</a>&gt;&nbsp;values)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Zamjenjuje vrijednosti odabira varijante novim vrijednostima iz kataloga.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setYears(java.util.List)" class="member-name-link">setYears</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;values)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Zamjenjuje vrijednosti odabira godine novim vrijednostima iz kataloga.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#showDetails(hr.unizd.autocare.domain.VehicleVariant)" class="member-name-link">showDetails</a><wbr>(<a href="../../domain/VehicleVariant.html" title="class in hr.unizd.autocare.domain">VehicleVariant</a>&nbsp;selected)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Prikazuje sažetak motora, goriva, snage i mjenjača odabrane varijante.</div>
+</div>
 </div>
 </div>
 </div>
@@ -348,6 +375,7 @@ loadScripts(document, 'script');</script>
 <h3>VehicleForm</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">VehicleForm</span>()</div>
+<div class="block">Stvara sva polja forme, detalj odabrane varijante i početne pomoćne poruke.</div>
 </div>
 </section>
 </li>
@@ -364,6 +392,13 @@ loadScripts(document, 'script');</script>
 <h3>getSelectedYear</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getSelectedYear</span>()</div>
+<div class="block">Vraća odabranu godinu proizvodnje.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>odabrana godina</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako godina nije odabrana</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -372,6 +407,13 @@ loadScripts(document, 'script');</script>
 <h3>getMileage</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getMileage</span>()</div>
+<div class="block">Parsira i validira kilometražu unesenu u formu.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>valjana kilometraža</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako kilometraža nije valjan nenegativan cijeli broj</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -380,6 +422,11 @@ loadScripts(document, 'script');</script>
 <h3>setMakes</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setMakes</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;values)</span></div>
+<div class="block">Zamjenjuje vrijednosti odabira marke novim vrijednostima iz kataloga.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>values</code> - marke koje treba prikazati</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -388,6 +435,11 @@ loadScripts(document, 'script');</script>
 <h3>setModels</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setModels</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;values)</span></div>
+<div class="block">Zamjenjuje vrijednosti odabira modela novim vrijednostima iz kataloga.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>values</code> - modeli koje treba prikazati</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -396,6 +448,11 @@ loadScripts(document, 'script');</script>
 <h3>setYears</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setYears</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;values)</span></div>
+<div class="block">Zamjenjuje vrijednosti odabira godine novim vrijednostima iz kataloga.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>values</code> - godine koje treba prikazati</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -404,6 +461,11 @@ loadScripts(document, 'script');</script>
 <h3>setVariants</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setVariants</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../domain/VehicleVariant.html" title="class in hr.unizd.autocare.domain">VehicleVariant</a>&gt;&nbsp;values)</span></div>
+<div class="block">Zamjenjuje vrijednosti odabira varijante novim vrijednostima iz kataloga.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>values</code> - varijante koje treba prikazati</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -412,6 +474,10 @@ loadScripts(document, 'script');</script>
 <h3>selectedVariant</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../domain/VehicleVariant.html" title="class in hr.unizd.autocare.domain">VehicleVariant</a></span>&nbsp;<span class="element-name">selectedVariant</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>trenutno odabrana kataloška varijanta ili <code>null</code></dd>
+</dl>
 </div>
 </section>
 </li>
@@ -420,6 +486,7 @@ loadScripts(document, 'script');</script>
 <h3>clearBelowMake</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearBelowMake</span>()</div>
+<div class="block">Čisti model, godinu i varijantu nakon promjene ili resetiranja marke.</div>
 </div>
 </section>
 </li>
@@ -428,6 +495,7 @@ loadScripts(document, 'script');</script>
 <h3>clearBelowModel</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearBelowModel</span>()</div>
+<div class="block">Čisti godinu i varijantu nakon promjene ili resetiranja modela.</div>
 </div>
 </section>
 </li>
@@ -436,6 +504,7 @@ loadScripts(document, 'script');</script>
 <h3>clearBelowYear</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearBelowYear</span>()</div>
+<div class="block">Čisti varijantu nakon promjene ili resetiranja godine.</div>
 </div>
 </section>
 </li>
@@ -444,6 +513,7 @@ loadScripts(document, 'script');</script>
 <h3>reset</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">reset</span>()</div>
+<div class="block">Vraća odabire, kilometražu i pomoćni tekst forme u početno stanje.</div>
 </div>
 </section>
 </li>
@@ -452,6 +522,11 @@ loadScripts(document, 'script');</script>
 <h3>showDetails</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">showDetails</span><wbr><span class="parameters">(<a href="../../domain/VehicleVariant.html" title="class in hr.unizd.autocare.domain">VehicleVariant</a>&nbsp;selected)</span></div>
+<div class="block">Prikazuje sažetak motora, goriva, snage i mjenjača odabrane varijante.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>selected</code> - varijanta čije detalje treba prikazati ili <code>null</code></dd>
+</dl>
 </div>
 </section>
 </li>

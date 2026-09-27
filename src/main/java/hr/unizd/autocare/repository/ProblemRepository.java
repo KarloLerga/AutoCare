@@ -4,7 +4,7 @@ import hr.unizd.autocare.domain.Problem;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 
-/** JPA dohvat i spremanje problema vozila. */
+/** Repository za persistence operacije nad problemima vozila. */
 public class ProblemRepository {
   private final EntityManager entityManager;
 
@@ -18,20 +18,20 @@ public class ProblemRepository {
   }
 
   /**
-   * Predaje novi problem persistence kontekstu.
+   * Dodaje novi problem u trenutačni persistence context.
    *
-   * @param problem problem koji treba spremiti
+   * @param problem novi problem koji se dodaje u persistence context
    */
   public void add(Problem problem) {
     entityManager.persist(problem);
   }
 
   /**
-   * Vraća problem samo ako pripada navedenom korisniku; inače vraća {@code null}.
+   * Dohvaća problem samo ako pripada vozilu zadanog korisnika.
    *
-   * @param ownerId primarni ključ vlasnika
-   * @param problemId primarni ključ problema
-   * @return problem vlasnika ili {@code null}
+   * @param ownerId identifikator vlasnika
+   * @param problemId identifikator problema
+   * @return problem ili {@code null} ako nije pronađen u korisničkom kontekstu
    */
   public Problem findForOwner(int ownerId, int problemId) {
     List<Problem> problems = entityManager
@@ -51,10 +51,10 @@ public class ProblemRepository {
   }
 
   /**
-   * Vraća probleme vozila poredane od najnovijeg prema najstarijem.
+   * Dohvaća probleme vozila.
    *
-   * @param ownerId primarni ključ vlasnika
-   * @param vehicleId primarni ključ vozila
+   * @param ownerId identifikator vlasnika
+   * @param vehicleId identifikator vozila
    * @return evidentirani problemi
    */
   public List<Problem> list(int ownerId, int vehicleId) {
@@ -71,11 +71,11 @@ public class ProblemRepository {
   }
 
   /**
-   * Vraća opise problema koje je riješio zadani servis.
+   * Dohvaća tekstualne opise problema koji su riješeni određenim servisom.
    *
-   * @param ownerId primarni ključ vlasnika
-   * @param serviceId primarni ključ servisa
-   * @return opisi povezanih riješenih problema
+   * @param ownerId identifikator vlasnika
+   * @param serviceId identifikator servisa
+   * @return opisi problema riješenih tim servisom
    */
   public List<String> resolvedDescriptions(int ownerId, int serviceId) {
     return entityManager
@@ -90,11 +90,11 @@ public class ProblemRepository {
   }
 
   /**
-   * Broji neriješene probleme vozila.
+   * Broji probleme vozila koji još nemaju povezan servis rješenja.
    *
-   * @param ownerId primarni ključ vlasnika
-   * @param vehicleId primarni ključ vozila
-   * @return broj neriješenih problema
+   * @param ownerId identifikator vlasnika
+   * @param vehicleId identifikator vozila
+   * @return broj otvorenih problema
    */
   public long openCount(int ownerId, int vehicleId) {
     return entityManager

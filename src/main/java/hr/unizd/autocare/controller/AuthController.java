@@ -7,12 +7,18 @@ import hr.unizd.autocare.view.components.Ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/** Prijava i registracija korisničkog računa. */
+/**
+ * Upravlja korisničkim tokovima prijave i registracije.
+ *
+ * <p>Controller čita vrijednosti iz Login i Registration Viewova, poziva {@code AuthService},
+ * prikazuje validacijske pogreške preko zajedničkog UI helpera te nakon uspješne prijave javlja
+ * {@code LoginListeneru} identifikator prijavljenog korisnika.
+ */
 public class AuthController {
-  /** Prima obavijest da se korisnik uspješno prijavio. */
+  /** Callback kojim AuthController obavještava ostatak aplikacije da je prijava završila uspješno. */
   public interface LoginListener {
     /**
-     * Obavještava glavnu navigaciju o uspješnoj prijavi.
+     * Prima identifikator upravo prijavljenog korisnika.
      *
      * @param ownerId identifikator prijavljenog korisnika
      */
@@ -25,11 +31,11 @@ public class AuthController {
   private final RegistrationView registrationView;
 
   /**
-   * Povezuje prikaze prijave i registracije s autentifikacijskim servisom.
+   * Stvara Controller za prijavu i registraciju te povezuje akcije odgovarajućih Viewova.
    *
-   * @param frame glavni prozor
-   * @param authService servis prijave i registracije
-   * @param loginListener primatelj obavijesti o uspješnoj prijavi
+   * @param frame glavni prozor koji sadrži login i registration prikaze
+   * @param authService servis koji provodi prijavu i registraciju
+   * @param loginListener callback koji preuzima kontrolu nakon uspješne prijave
    */
   public AuthController(MainFrame frame, AuthService authService, LoginListener loginListener) {
     this.frame = frame;
@@ -66,6 +72,13 @@ public class AuthController {
     });
   }
 
+  /**
+   * Pokušava prijaviti korisnika podacima iz LoginViewa.
+   *
+   * <p>Lozinku čita neposredno prije poziva Servicea. Nakon uspješne prijave čisti polje lozinke
+   * i prosljeđuje ID korisnika LoginListeneru. Validacijska ili persistence pogreška prikazuje se
+   * korisniku bez rušenja aplikacije.
+   */
   private void login() {
     try {
       int ownerId = authService.login(frame.login.email.getText(), new String(frame.login.password.getPassword()));
@@ -76,11 +89,18 @@ public class AuthController {
     }
   }
 
+  /** Priprema praznu registracijsku formu i prebacuje glavni prozor na registraciju. */
   private void openRegistration() {
     registrationView.reset();
     frame.registration();
   }
 
+  /**
+   * Provjerava podatke registracijske forme i stvara novi korisnički račun.
+   *
+   * <p>Controller dodatno provjerava podudaranje unesene i ponovljene lozinke, zatim poziva
+   * AuthService. Nakon uspješne registracije vraća korisnika na prijavu.
+   */
   private void finishRegistration() {
     try {
       String password = new String(registrationView.password.getPassword());
@@ -96,6 +116,7 @@ public class AuthController {
     }
   }
 
+  /** Odustaje od registracije, briše osjetljive vrijednosti forme i vraća prikaz prijave. */
   private void cancelRegistration() {
     registrationView.clearPasswords();
     frame.auth();

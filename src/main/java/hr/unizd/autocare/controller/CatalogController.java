@@ -10,11 +10,17 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Učitava i filtrira informativni katalog zahvata. */
+/** Upravlja prikazom i filtriranjem informativnog kataloga standardnih radova. */
 public class CatalogController {
   private final MainFrame frame;
   private final CatalogService catalogService;
 
+  /**
+   * Povezuje CatalogView s CatalogServiceom i registrira akciju pretraživanja.
+   *
+   * @param frame glavni prozor koji sadrži CatalogView
+   * @param catalogService servis za dohvat kataloških radova
+   */
   public CatalogController(MainFrame frame, CatalogService catalogService) {
     this.frame = frame;
     this.catalogService = catalogService;
@@ -39,6 +45,7 @@ public class CatalogController {
     });
   }
 
+  /** Dohvaća cijeli katalog i primjenjuje trenutačni tekstualni i kategorijski filter Viewa. */
   public void load() {
     try {
       filterRows(catalogService.catalog());
@@ -47,6 +54,11 @@ public class CatalogController {
     }
   }
 
+  /**
+   * Filtrira dohvaćene radove prema tekstu pretrage i odabranoj kategoriji.
+   *
+   * @param allWorks svi radovi dohvaćeni iz kataloga
+   */
   private void filterRows(List<WorkDefinition> allWorks) {
     String search = frame.catalog.search.getText();
     if (search == null) {

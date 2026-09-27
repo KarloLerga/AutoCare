@@ -81,7 +81,10 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">DashboardService</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Podaci za četiri kartice dashboarda aktivnog vozila.</div>
+<div class="block">Priprema sažetak podataka koji Dashboard prikazuje za aktivno vozilo.
+
+<p>Service spaja podatke iz vozila, servisne povijesti, problema i izračuna održavanja u jedan
+jednostavan Dashboard objekt spreman za prikaz.</div>
 </div>
 </section>
 <section class="summary">
@@ -95,9 +98,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(jakarta.persistence.EntityManagerFactory)" class="member-name-link">DashboardService</a><wbr>(jakarta.persistence.EntityManagerFactory&nbsp;entityManagerFactory)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Stvara servis koji priprema podatke za Dashboard.</div>
-</div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -116,7 +117,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#get(int,int)" class="member-name-link">get</a><wbr>(int&nbsp;ownerId,
  int&nbsp;vehicleId)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Vraća sažetak vozila, ukupnog troška, otvorenih problema i sljedećeg održavanja.</div>
+<div class="block">Dohvaća sva četiri glavna Dashboard pokazatelja za vozilo.</div>
 </div>
 </div>
 </div>
@@ -140,7 +141,6 @@ loadScripts(document, 'script');</script>
 <h3>DashboardService</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DashboardService</span><wbr><span class="parameters">(jakarta.persistence.EntityManagerFactory&nbsp;entityManagerFactory)</span></div>
-<div class="block">Stvara servis koji priprema podatke za Dashboard.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>entityManagerFactory</code> - zajednička JPA tvornica</dd>
@@ -162,13 +162,13 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../model/Data.Dashboard.html" title="class in hr.unizd.autocare.model">Data.Dashboard</a></span>&nbsp;<span class="element-name">get</span><wbr><span class="parameters">(int&nbsp;ownerId,
  int&nbsp;vehicleId)</span></div>
-<div class="block">Vraća sažetak vozila, ukupnog troška, otvorenih problema i sljedećeg održavanja.</div>
+<div class="block">Dohvaća sva četiri glavna Dashboard pokazatelja za vozilo.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>ownerId</code> - identifikator vlasnika</dd>
 <dd><code>vehicleId</code> - identifikator vozila</dd>
 <dt>Returns:</dt>
-<dd>podaci za kartice Dashboarda</dd>
+<dd>sažetak vozila, stvarnih troškova, otvorenih problema i najbližeg održavanja</dd>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako vozilo ne pripada korisniku</dd>
 </dl>

@@ -100,7 +100,10 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Ui</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Standardni Swing layouti i formatiranje, bez poslovnih pravila.</div>
+<div class="block">Zajednički Swing helper za ponavljajuće layout obrasce, formatiranje, parsiranje i poruke.
+
+<p>Klasa nema poslovno stanje. Cilj joj je ukloniti dupliciranje jednostavnog UI koda između
+Viewova i zadržati jednako formatiranje datuma, kilometraže, cijena i poruka.</div>
 </div>
 </section>
 <section class="summary">
@@ -116,7 +119,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/format/DateTimeFormatter.html" title="class or interface in java.time.format" class="external-link">DateTimeFormatter</a></code></div>
 <div class="col-second even-row-color"><code><a href="#DATE" class="member-name-link">DATE</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Format datuma koji se prikazuje i prihvaća u korisničkom sučelju.</div>
+</div>
 </div>
 </section>
 </li>
@@ -133,7 +138,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JPanel.html" title="class or interface in javax.swing" class="external-link">JPanel</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#actions(java.awt.Component...)" class="member-name-link">actions</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/java/awt/Component.html" title="class or interface in java.awt" class="external-link">Component</a>...&nbsp;controls)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Stvara red namijenjen grupiranju akcijskih gumba pri dnu forme ili dijaloga.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JPanel.html" title="class or interface in javax.swing" class="external-link">JPanel</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#card()" class="member-name-link">card</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
@@ -142,61 +149,93 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#date(java.time.LocalDate)" class="member-name-link">date</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/LocalDate.html" title="class or interface in java.time" class="external-link">LocalDate</a>&nbsp;date)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Formatira LocalDate u dosljedni hrvatski prikaz datuma.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#error(java.awt.Component,java.lang.Throwable)" class="member-name-link">error</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/java/awt/Component.html" title="class or interface in java.awt" class="external-link">Component</a>&nbsp;parent,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a>&nbsp;error)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Pretvara iznimku u standardnu korisničku poruku o pogrešci i prikazuje je bez rušenja GUI-a.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#field(javax.swing.JPanel,int,java.lang.String,javax.swing.JComponent)" class="member-name-link">field</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JPanel.html" title="class or interface in javax.swing" class="external-link">JPanel</a>&nbsp;form,
  int&nbsp;row,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;title,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JComponent.html" title="class or interface in javax.swing" class="external-link">JComponent</a>&nbsp;component)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Dodaje jedan naslov i pripadajuću komponentu u zadani red forme.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JPanel.html" title="class or interface in javax.swing" class="external-link">JPanel</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#form()" class="member-name-link">form</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JLabel.html" title="class or interface in javax.swing" class="external-link">JLabel</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#heading(java.lang.String)" class="member-name-link">heading</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;title)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Stvara labelu formatiranu kao glavni naslov sekcije.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JLabel.html" title="class or interface in javax.swing" class="external-link">JLabel</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#hint(java.lang.String)" class="member-name-link">hint</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;text)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Stvara labelu stiliziranu kao sekundarnu napomenu.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#info(java.awt.Component,java.lang.String)" class="member-name-link">info</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/java/awt/Component.html" title="class or interface in java.awt" class="external-link">Component</a>&nbsp;parent,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;text)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Prikazuje standardnu informativnu poruku vezanu uz zadanu Swing komponentu.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#integer(javax.swing.JTextField)" class="member-name-link">integer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JTextField.html" title="class or interface in javax.swing" class="external-link">JTextField</a>&nbsp;field)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Parsira cijeli broj iz tekstualnog polja.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#km(java.lang.Integer)" class="member-name-link">km</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;mileage)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Formatira kilometražu s jedinicom mjere.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mileage(javax.swing.JTextField)" class="member-name-link">mileage</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JTextField.html" title="class or interface in javax.swing" class="external-link">JTextField</a>&nbsp;field)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Parsira kilometražu iz tekstualnog polja i provjerava je kroz domensko pravilo Checks.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#money(java.math.BigDecimal)" class="member-name-link">money</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a>&nbsp;value)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Formatira stvarni novčani iznos za prikaz u eurima.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/LocalDate.html" title="class or interface in java.time" class="external-link">LocalDate</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#parseDate(java.lang.String)" class="member-name-link">parseDate</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;text)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Parsira korisnički datum u formatu koji aplikacija prikazuje.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#parseMoney(java.lang.String)" class="member-name-link">parseMoney</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;text)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Parsira decimalni novčani iznos iz korisničkog unosa i provjerava da iznos nije negativan.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#priceRange(java.math.BigDecimal,java.math.BigDecimal)" class="member-name-link">priceRange</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a>&nbsp;minPrice,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a>&nbsp;maxPrice)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Formatira informativni raspon cijena iz kataloga.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#problemStatus(boolean)" class="member-name-link">problemStatus</a><wbr>(boolean&nbsp;resolved)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Pretvara logičko stanje problema u korisnički tekst.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JPanel.html" title="class or interface in javax.swing" class="external-link">JPanel</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#row(java.awt.Component...)" class="member-name-link">row</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/java/awt/Component.html" title="class or interface in java.awt" class="external-link">Component</a>...&nbsp;controls)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Stvara vodoravni red i u njega dodaje zadane komponente s ujednačenim razmacima.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#workCategory(hr.unizd.autocare.domain.WorkCategory)" class="member-name-link">workCategory</a><wbr>(<a href="../../domain/WorkCategory.html" title="enum class in hr.unizd.autocare.domain">WorkCategory</a>&nbsp;category)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Pretvara internu kategoriju rada u naziv prikladan za korisničko sučelje.</div>
+</div>
 </div>
 </div>
 </div>
@@ -219,6 +258,7 @@ loadScripts(document, 'script');</script>
 <h3>DATE</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/format/DateTimeFormatter.html" title="class or interface in java.time.format" class="external-link">DateTimeFormatter</a></span>&nbsp;<span class="element-name">DATE</span></div>
+<div class="block">Format datuma koji se prikazuje i prihvaća u korisničkom sučelju.</div>
 </div>
 </section>
 </li>
@@ -235,6 +275,10 @@ loadScripts(document, 'script');</script>
 <h3>column</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JPanel.html" title="class or interface in javax.swing" class="external-link">JPanel</a></span>&nbsp;<span class="element-name">column</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>panel konfiguriran za vertikalno slaganje komponenti</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -243,6 +287,13 @@ loadScripts(document, 'script');</script>
 <h3>row</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JPanel.html" title="class or interface in javax.swing" class="external-link">JPanel</a></span>&nbsp;<span class="element-name">row</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/java/awt/Component.html" title="class or interface in java.awt" class="external-link">Component</a>...&nbsp;controls)</span></div>
+<div class="block">Stvara vodoravni red i u njega dodaje zadane komponente s ujednačenim razmacima.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>controls</code> - komponente reda</dd>
+<dt>Returns:</dt>
+<dd>pripremljeni panel reda</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -251,6 +302,13 @@ loadScripts(document, 'script');</script>
 <h3>actions</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JPanel.html" title="class or interface in javax.swing" class="external-link">JPanel</a></span>&nbsp;<span class="element-name">actions</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/java/awt/Component.html" title="class or interface in java.awt" class="external-link">Component</a>...&nbsp;controls)</span></div>
+<div class="block">Stvara red namijenjen grupiranju akcijskih gumba pri dnu forme ili dijaloga.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>controls</code> - akcijske komponente</dd>
+<dt>Returns:</dt>
+<dd>panel akcija</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -259,6 +317,10 @@ loadScripts(document, 'script');</script>
 <h3>card</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JPanel.html" title="class or interface in javax.swing" class="external-link">JPanel</a></span>&nbsp;<span class="element-name">card</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>panel stiliziran kao sadržajna kartica aplikacije</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -267,6 +329,13 @@ loadScripts(document, 'script');</script>
 <h3>heading</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JLabel.html" title="class or interface in javax.swing" class="external-link">JLabel</a></span>&nbsp;<span class="element-name">heading</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;title)</span></div>
+<div class="block">Stvara labelu formatiranu kao glavni naslov sekcije.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>title</code> - tekst naslova</dd>
+<dt>Returns:</dt>
+<dd>formatirana naslovna labela</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -275,6 +344,13 @@ loadScripts(document, 'script');</script>
 <h3>hint</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JLabel.html" title="class or interface in javax.swing" class="external-link">JLabel</a></span>&nbsp;<span class="element-name">hint</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;text)</span></div>
+<div class="block">Stvara labelu stiliziranu kao sekundarnu napomenu.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>text</code> - pomoćni tekst</dd>
+<dt>Returns:</dt>
+<dd>formatirana labela napomene</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -283,6 +359,10 @@ loadScripts(document, 'script');</script>
 <h3>form</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JPanel.html" title="class or interface in javax.swing" class="external-link">JPanel</a></span>&nbsp;<span class="element-name">form</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>panel s GridBagLayoutom pripremljen za labela-polje raspored forme</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -294,6 +374,14 @@ loadScripts(document, 'script');</script>
  int&nbsp;row,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;title,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JComponent.html" title="class or interface in javax.swing" class="external-link">JComponent</a>&nbsp;component)</span></div>
+<div class="block">Dodaje jedan naslov i pripadajuću komponentu u zadani red forme.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>form</code> - panel forme</dd>
+<dd><code>row</code> - indeks retka</dd>
+<dd><code>title</code> - naziv polja</dd>
+<dd><code>component</code> - Swing komponenta za unos ili prikaz</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -302,6 +390,15 @@ loadScripts(document, 'script');</script>
 <h3>integer</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">integer</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JTextField.html" title="class or interface in javax.swing" class="external-link">JTextField</a>&nbsp;field)</span></div>
+<div class="block">Parsira cijeli broj iz tekstualnog polja.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>field</code> - polje s brojčanom vrijednošću</dd>
+<dt>Returns:</dt>
+<dd>parsirani cijeli broj</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako vrijednost nije valjan cijeli broj</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -310,6 +407,15 @@ loadScripts(document, 'script');</script>
 <h3>mileage</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">mileage</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JTextField.html" title="class or interface in javax.swing" class="external-link">JTextField</a>&nbsp;field)</span></div>
+<div class="block">Parsira kilometražu iz tekstualnog polja i provjerava je kroz domensko pravilo Checks.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>field</code> - polje kilometraže</dd>
+<dt>Returns:</dt>
+<dd>valjana kilometraža</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako unos nije cijeli broj ili je kilometraža nedopuštena</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -318,6 +424,15 @@ loadScripts(document, 'script');</script>
 <h3>parseDate</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/LocalDate.html" title="class or interface in java.time" class="external-link">LocalDate</a></span>&nbsp;<span class="element-name">parseDate</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;text)</span></div>
+<div class="block">Parsira korisnički datum u formatu koji aplikacija prikazuje.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>text</code> - tekst datuma</dd>
+<dt>Returns:</dt>
+<dd>parsirani LocalDate</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako tekst nije valjan datum očekivanog formata</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -326,6 +441,15 @@ loadScripts(document, 'script');</script>
 <h3>parseMoney</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a></span>&nbsp;<span class="element-name">parseMoney</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;text)</span></div>
+<div class="block">Parsira decimalni novčani iznos iz korisničkog unosa i provjerava da iznos nije negativan.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>text</code> - tekstualni iznos</dd>
+<dt>Returns:</dt>
+<dd>valjani BigDecimal iznos</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako iznos nije valjan broj ili je negativan</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -334,6 +458,13 @@ loadScripts(document, 'script');</script>
 <h3>money</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">money</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a>&nbsp;value)</span></div>
+<div class="block">Formatira stvarni novčani iznos za prikaz u eurima.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - iznos</dd>
+<dt>Returns:</dt>
+<dd>korisnički formatirana vrijednost</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -343,6 +474,14 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">priceRange</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a>&nbsp;minPrice,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a>&nbsp;maxPrice)</span></div>
+<div class="block">Formatira informativni raspon cijena iz kataloga.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>minPrice</code> - donja granica procjene</dd>
+<dd><code>maxPrice</code> - gornja granica procjene</dd>
+<dt>Returns:</dt>
+<dd>tekst raspona prikladan za katalog</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -351,6 +490,13 @@ loadScripts(document, 'script');</script>
 <h3>workCategory</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">workCategory</span><wbr><span class="parameters">(<a href="../../domain/WorkCategory.html" title="enum class in hr.unizd.autocare.domain">WorkCategory</a>&nbsp;category)</span></div>
+<div class="block">Pretvara internu kategoriju rada u naziv prikladan za korisničko sučelje.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>category</code> - vrsta rada</dd>
+<dt>Returns:</dt>
+<dd>lokalizirani naziv vrste rada</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -359,6 +505,13 @@ loadScripts(document, 'script');</script>
 <h3>date</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">date</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/time/LocalDate.html" title="class or interface in java.time" class="external-link">LocalDate</a>&nbsp;date)</span></div>
+<div class="block">Formatira LocalDate u dosljedni hrvatski prikaz datuma.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>date</code> - datum ili <code>null</code></dd>
+<dt>Returns:</dt>
+<dd>formatirani datum ili oznaka za nedostupnu vrijednost</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -367,6 +520,13 @@ loadScripts(document, 'script');</script>
 <h3>km</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">km</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;mileage)</span></div>
+<div class="block">Formatira kilometražu s jedinicom mjere.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>mileage</code> - kilometraža ili <code>null</code></dd>
+<dt>Returns:</dt>
+<dd>formatirana kilometraža ili oznaka za nedostupnu vrijednost</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -375,6 +535,13 @@ loadScripts(document, 'script');</script>
 <h3>problemStatus</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">problemStatus</span><wbr><span class="parameters">(boolean&nbsp;resolved)</span></div>
+<div class="block">Pretvara logičko stanje problema u korisnički tekst.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>resolved</code> - je li problem povezan sa servisom rješenja</dd>
+<dt>Returns:</dt>
+<dd>tekst otvorenog ili riješenog statusa</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -384,6 +551,12 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">info</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/java/awt/Component.html" title="class or interface in java.awt" class="external-link">Component</a>&nbsp;parent,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;text)</span></div>
+<div class="block">Prikazuje standardnu informativnu poruku vezanu uz zadanu Swing komponentu.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>parent</code> - roditeljska komponenta dijaloga</dd>
+<dd><code>text</code> - tekst poruke</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -393,6 +566,12 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">error</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/java/awt/Component.html" title="class or interface in java.awt" class="external-link">Component</a>&nbsp;parent,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a>&nbsp;error)</span></div>
+<div class="block">Pretvara iznimku u standardnu korisničku poruku o pogrešci i prikazuje je bez rušenja GUI-a.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>parent</code> - roditeljska komponenta dijaloga</dd>
+<dd><code>error</code> - iznimka nastala tijekom korisničke akcije</dd>
+</dl>
 </div>
 </section>
 </li>

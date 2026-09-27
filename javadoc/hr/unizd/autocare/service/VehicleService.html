@@ -85,7 +85,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">VehicleService</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Upravljanje vozilima; identitet se stvara jednom, a kasnije se mijenja samo kilometraža.</div>
+<div class="block">Provodi use-caseove vezane uz korisnikova vozila i aktivno vozilo.</div>
 </div>
 </section>
 <section class="summary">
@@ -100,7 +100,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(jakarta.persistence.EntityManagerFactory)" class="member-name-link">VehicleService</a><wbr>(jakarta.persistence.EntityManagerFactory&nbsp;entityManagerFactory)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Stvara servis za upravljanje vozilima.</div>
+<div class="block">Stvara servis vozila.</div>
 </div>
 </div>
 </section>
@@ -120,12 +120,12 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#activate(int,int)" class="member-name-link">activate</a><wbr>(int&nbsp;ownerId,
  int&nbsp;vehicleId)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Postavlja kao aktivno vozilo koje pripada navedenom korisniku.</div>
+<div class="block">Postavlja jedno od korisnikovih vozila kao aktivno vozilo.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../domain/Vehicle.html" title="class in hr.unizd.autocare.domain">Vehicle</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#active(int)" class="member-name-link">active</a><wbr>(int&nbsp;ownerId)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Vraća trenutačno aktivno vozilo korisnika.</div>
+<div class="block">Dohvaća trenutačno aktivno vozilo korisnika.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#add(int,int,int,int)" class="member-name-link">add</a><wbr>(int&nbsp;ownerId,
@@ -133,19 +133,19 @@ loadScripts(document, 'script');</script>
  int&nbsp;year,
  int&nbsp;mileage)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Dodaje vozilo i postavlja ga kao aktivno ako korisnik još nema aktivno vozilo.</div>
+<div class="block">Dodaje novo vozilo korisniku na temelju odabrane kataloške varijante.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../domain/Vehicle.html" title="class in hr.unizd.autocare.domain">Vehicle</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#list(int)" class="member-name-link">list</a><wbr>(int&nbsp;ownerId)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Vraća sva vozila u vlasništvu korisnika.</div>
+<div class="block">Dohvaća sva vozila koja pripadaju korisniku.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateMileage(int,int,int)" class="member-name-link">updateMileage</a><wbr>(int&nbsp;ownerId,
  int&nbsp;vehicleId,
  int&nbsp;mileage)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Ažurira kilometražu vozila koje pripada navedenom korisniku.</div>
+<div class="block">Mijenja kilometražu vozila koje pripada zadanom korisniku.</div>
 </div>
 </div>
 </div>
@@ -169,7 +169,7 @@ loadScripts(document, 'script');</script>
 <h3>VehicleService</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">VehicleService</span><wbr><span class="parameters">(jakarta.persistence.EntityManagerFactory&nbsp;entityManagerFactory)</span></div>
-<div class="block">Stvara servis za upravljanje vozilima.</div>
+<div class="block">Stvara servis vozila.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>entityManagerFactory</code> - zajednička JPA tvornica</dd>
@@ -190,7 +190,7 @@ loadScripts(document, 'script');</script>
 <h3>list</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../domain/Vehicle.html" title="class in hr.unizd.autocare.domain">Vehicle</a>&gt;</span>&nbsp;<span class="element-name">list</span><wbr><span class="parameters">(int&nbsp;ownerId)</span></div>
-<div class="block">Vraća sva vozila u vlasništvu korisnika.</div>
+<div class="block">Dohvaća sva vozila koja pripadaju korisniku.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>ownerId</code> - identifikator vlasnika</dd>
@@ -205,7 +205,9 @@ loadScripts(document, 'script');</script>
 <h3>active</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../domain/Vehicle.html" title="class in hr.unizd.autocare.domain">Vehicle</a></span>&nbsp;<span class="element-name">active</span><wbr><span class="parameters">(int&nbsp;ownerId)</span></div>
-<div class="block">Vraća trenutačno aktivno vozilo korisnika.</div>
+<div class="block">Dohvaća trenutačno aktivno vozilo korisnika.
+
+<p>Metoda vraća <code>null</code> ako korisnik još nema postavljeno aktivno vozilo.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>ownerId</code> - identifikator vlasnika</dd>
@@ -225,13 +227,16 @@ loadScripts(document, 'script');</script>
  int&nbsp;variantId,
  int&nbsp;year,
  int&nbsp;mileage)</span></div>
-<div class="block">Dodaje vozilo i postavlja ga kao aktivno ako korisnik još nema aktivno vozilo.</div>
+<div class="block">Dodaje novo vozilo korisniku na temelju odabrane kataloške varijante.
+
+<p>Provjerava postojanje korisnika i varijante, valjanost godine za odabranu varijantu te
+kilometražu. Novo vozilo sprema se u transakciji.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>ownerId</code> - identifikator vlasnika</dd>
 <dd><code>variantId</code> - identifikator kataloške varijante</dd>
-<dd><code>year</code> - godina proizvodnje</dd>
-<dd><code>mileage</code> - početna kilometraža</dd>
+<dd><code>year</code> - godina proizvodnje konkretnog vozila</dd>
+<dd><code>mileage</code> - trenutačna kilometraža</dd>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako korisnik ili varijanta ne postoje ili podaci nisu valjani</dd>
 </dl>
@@ -245,14 +250,14 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateMileage</span><wbr><span class="parameters">(int&nbsp;ownerId,
  int&nbsp;vehicleId,
  int&nbsp;mileage)</span></div>
-<div class="block">Ažurira kilometražu vozila koje pripada navedenom korisniku.</div>
+<div class="block">Mijenja kilometražu vozila koje pripada zadanom korisniku.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>ownerId</code> - identifikator vlasnika</dd>
 <dd><code>vehicleId</code> - identifikator vozila</dd>
 <dd><code>mileage</code> - nova kilometraža</dd>
 <dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako vozilo ne pripada korisniku ili je kilometraža nevaljana</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako vozilo nije pronađeno ili kilometraža nije dopuštena</dd>
 </dl>
 </div>
 </section>
@@ -263,13 +268,13 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">activate</span><wbr><span class="parameters">(int&nbsp;ownerId,
  int&nbsp;vehicleId)</span></div>
-<div class="block">Postavlja kao aktivno vozilo koje pripada navedenom korisniku.</div>
+<div class="block">Postavlja jedno od korisnikovih vozila kao aktivno vozilo.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>ownerId</code> - identifikator vlasnika</dd>
 <dd><code>vehicleId</code> - identifikator vozila</dd>
 <dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako korisnik ili njegovo vozilo ne postoje</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako vozilo ne pripada korisniku</dd>
 </dl>
 </div>
 </section>

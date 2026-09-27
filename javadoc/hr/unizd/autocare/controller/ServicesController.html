@@ -81,7 +81,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ServicesController</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Servisna povijest, detalj servisa i unos novog servisa.</div>
+<div class="block">Upravlja servisnom poviješću, detaljem servisa i unosom novog servisa aktivnog vozila.</div>
 </div>
 </section>
 <section class="summary">
@@ -100,7 +100,9 @@ loadScripts(document, 'script');</script>
  <a href="../service/ProblemService.html" title="class in hr.unizd.autocare.service">ProblemService</a>&nbsp;problemService,
  <a href="../app/Session.html" title="class in hr.unizd.autocare.app">Session</a>&nbsp;session,
  <a href="../observer/Subject.html" title="class in hr.unizd.autocare.observer">Subject</a>&nbsp;subject)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Povezuje ServicesView sa servisima potrebnim za servisnu povijest i unos novog servisa.</div>
+</div>
 </div>
 </section>
 </li>
@@ -117,7 +119,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#load()" class="member-name-link">load</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Učitava servisnu povijest trenutačno aktivnog vozila i predaje retke ServicesViewu.</div>
+</div>
 </div>
 </div>
 </div>
@@ -145,6 +149,16 @@ loadScripts(document, 'script');</script>
  <a href="../service/ProblemService.html" title="class in hr.unizd.autocare.service">ProblemService</a>&nbsp;problemService,
  <a href="../app/Session.html" title="class in hr.unizd.autocare.app">Session</a>&nbsp;session,
  <a href="../observer/Subject.html" title="class in hr.unizd.autocare.observer">Subject</a>&nbsp;subject)</span></div>
+<div class="block">Povezuje ServicesView sa servisima potrebnim za servisnu povijest i unos novog servisa.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>frame</code> - glavni prozor</dd>
+<dd><code>serviceRecordService</code> - servis za spremanje i čitanje servisa</dd>
+<dd><code>catalogService</code> - servis za radove koji se mogu dodati u servis</dd>
+<dd><code>problemService</code> - servis za otvorene probleme vozila</dd>
+<dd><code>session</code> - zajednički korisnički kontekst</dd>
+<dd><code>subject</code> - Subject za objavu događaja nakon spremanja servisa</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -161,6 +175,7 @@ loadScripts(document, 'script');</script>
 <h3>load</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">load</span>()</div>
+<div class="block">Učitava servisnu povijest trenutačno aktivnog vozila i predaje retke ServicesViewu.</div>
 </div>
 </section>
 </li>

@@ -76,12 +76,14 @@ loadScripts(document, 'script');</script>
  <a href="../../service/AuthService.html" title="class in hr.unizd.autocare.service">AuthService</a>&nbsp;authService,
  <a href="../../controller/AuthController.LoginListener.html" title="interface in hr.unizd.autocare.controller">AuthController.LoginListener</a>&nbsp;loginListener)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Povezuje prikaze prijave i registracije s autentifikacijskim servisom.</div>
+<div class="block">Stvara Controller za prijavu i registraciju te povezuje akcije odgovarajućih Viewova.</div>
 </div>
 <div class="col-first odd-row-color"><code>&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../../controller/CatalogController.html#%3Cinit%3E(hr.unizd.autocare.view.MainFrame,hr.unizd.autocare.service.CatalogService)" class="member-name-link">CatalogController</a><wbr>(<a href="../MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a>&nbsp;frame,
  <a href="../../service/CatalogService.html" title="class in hr.unizd.autocare.service">CatalogService</a>&nbsp;catalogService)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Povezuje CatalogView s CatalogServiceom i registrira akciju pretraživanja.</div>
+</div>
 <div class="col-first even-row-color"><code>&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../../controller/MainController.html#%3Cinit%3E(hr.unizd.autocare.view.MainFrame,hr.unizd.autocare.app.Session,hr.unizd.autocare.service.AuthService,hr.unizd.autocare.service.CatalogService,hr.unizd.autocare.service.VehicleService,hr.unizd.autocare.service.ServiceRecordService,hr.unizd.autocare.service.MaintenanceService,hr.unizd.autocare.service.ProblemService,hr.unizd.autocare.service.DashboardService,hr.unizd.autocare.observer.Subject)" class="member-name-link">MainController</a><wbr>(<a href="../MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a>&nbsp;frame,
  <a href="../../app/Session.html" title="class in hr.unizd.autocare.app">Session</a>&nbsp;session,
@@ -94,18 +96,22 @@ loadScripts(document, 'script');</script>
  <a href="../../service/DashboardService.html" title="class in hr.unizd.autocare.service">DashboardService</a>&nbsp;dashboardService,
  <a href="../../observer/Subject.html" title="class in hr.unizd.autocare.observer">Subject</a>&nbsp;subject)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Povezuje glavne poglede i aplikacijske servise te registrira Observera.</div>
+<div class="block">Povezuje glavni prozor sa svim Service objektima i Controllerima aplikacije.</div>
 </div>
 <div class="col-first odd-row-color"><code>&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../../controller/MaintenanceController.html#%3Cinit%3E(hr.unizd.autocare.view.MainFrame,hr.unizd.autocare.service.MaintenanceService,hr.unizd.autocare.app.Session)" class="member-name-link">MaintenanceController</a><wbr>(<a href="../MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a>&nbsp;frame,
  <a href="../../service/MaintenanceService.html" title="class in hr.unizd.autocare.service">MaintenanceService</a>&nbsp;maintenanceService,
  <a href="../../app/Session.html" title="class in hr.unizd.autocare.app">Session</a>&nbsp;session)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Povezuje MaintenanceView s MaintenanceServiceom i korisničkom sesijom.</div>
+</div>
 <div class="col-first even-row-color"><code>&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../../controller/ProblemsController.html#%3Cinit%3E(hr.unizd.autocare.view.MainFrame,hr.unizd.autocare.service.ProblemService,hr.unizd.autocare.app.Session)" class="member-name-link">ProblemsController</a><wbr>(<a href="../MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a>&nbsp;frame,
  <a href="../../service/ProblemService.html" title="class in hr.unizd.autocare.service">ProblemService</a>&nbsp;problemService,
  <a href="../../app/Session.html" title="class in hr.unizd.autocare.app">Session</a>&nbsp;session)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Povezuje ProblemsView s ProblemServiceom i Sessionom.</div>
+</div>
 <div class="col-first odd-row-color"><code>&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../../controller/ServicesController.html#%3Cinit%3E(hr.unizd.autocare.view.MainFrame,hr.unizd.autocare.service.ServiceRecordService,hr.unizd.autocare.service.CatalogService,hr.unizd.autocare.service.ProblemService,hr.unizd.autocare.app.Session,hr.unizd.autocare.observer.Subject)" class="member-name-link">ServicesController</a><wbr>(<a href="../MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a>&nbsp;frame,
  <a href="../../service/ServiceRecordService.html" title="class in hr.unizd.autocare.service">ServiceRecordService</a>&nbsp;serviceRecordService,
@@ -113,14 +119,18 @@ loadScripts(document, 'script');</script>
  <a href="../../service/ProblemService.html" title="class in hr.unizd.autocare.service">ProblemService</a>&nbsp;problemService,
  <a href="../../app/Session.html" title="class in hr.unizd.autocare.app">Session</a>&nbsp;session,
  <a href="../../observer/Subject.html" title="class in hr.unizd.autocare.observer">Subject</a>&nbsp;subject)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Povezuje ServicesView sa servisima potrebnim za servisnu povijest i unos novog servisa.</div>
+</div>
 <div class="col-first even-row-color"><code>&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../../controller/VehiclesController.html#%3Cinit%3E(hr.unizd.autocare.view.MainFrame,hr.unizd.autocare.service.VehicleService,hr.unizd.autocare.service.CatalogService,hr.unizd.autocare.app.Session,hr.unizd.autocare.observer.Subject)" class="member-name-link">VehiclesController</a><wbr>(<a href="../MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a>&nbsp;frame,
  <a href="../../service/VehicleService.html" title="class in hr.unizd.autocare.service">VehicleService</a>&nbsp;vehicleService,
  <a href="../../service/CatalogService.html" title="class in hr.unizd.autocare.service">CatalogService</a>&nbsp;catalogService,
  <a href="../../app/Session.html" title="class in hr.unizd.autocare.app">Session</a>&nbsp;session,
  <a href="../../observer/Subject.html" title="class in hr.unizd.autocare.observer">Subject</a>&nbsp;subject)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Stvara Controller vozila i povezuje ga s Viewom, servisima, sesijom i Observer Subjectom.</div>
+</div>
 </div>
 </section>
 </li>

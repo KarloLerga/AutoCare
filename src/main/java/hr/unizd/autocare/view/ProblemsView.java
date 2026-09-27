@@ -14,7 +14,7 @@ import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
-/** Problemi koje vlasnik želi zapamtiti za mehaničara. */
+/** Swing prikaz za evidentiranje problema i pregled njihovog otvorenog ili riješenog stanja. */
 public class ProblemsView extends JPanel {
   public final JComboBox<ProblemCategory> category = new JComboBox<>(ProblemCategory.values());
   public final JTextArea description = new JTextArea(3, 36);
@@ -23,6 +23,7 @@ public class ProblemsView extends JPanel {
 
   private final DefaultTableModel tableModel;
 
+  /** Stvara formu opisa i kategorije problema te read-only tablicu evidentiranih problema. */
   public ProblemsView() {
     super(new BorderLayout(12, 12));
     setOpaque(false);
@@ -59,10 +60,16 @@ public class ProblemsView extends JPanel {
     add(new JScrollPane(table), BorderLayout.CENTER);
   }
 
+  /** @return kategorija problema trenutno odabrana u formi */
   public ProblemCategory selectedCategory() {
     return (ProblemCategory) category.getSelectedItem();
   }
 
+  /**
+   * Zamjenjuje prikazane probleme aktualnim podacima vozila.
+   *
+   * @param values problemi aktivnog vozila
+   */
   public void setRows(List<Problem> values) {
     tableModel.setRowCount(0);
     for (Problem problem : values) {
@@ -75,6 +82,7 @@ public class ProblemsView extends JPanel {
     }
   }
 
+  /** Čisti polja unosa nakon uspješnog spremanja problema. */
   public void clearEditor() {
     category.setSelectedItem(ProblemCategory.OTHER);
     description.setText("");

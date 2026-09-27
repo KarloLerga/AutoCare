@@ -86,7 +86,11 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">MainController</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="../observer/Observer.html" title="interface in hr.unizd.autocare.observer">Observer</a></span></div>
-<div class="block">Povezuje glavnu navigaciju s Controllerima i osvježava aktivni kontekst.</div>
+<div class="block">Središnji Controller za navigaciju i zajednički kontekst AutoCare aplikacije.
+
+<p>Klasa stvara funkcionalne Controllere, povezuje navigacijske gumbe, reagira na prijavu,
+učitava aktivno vozilo i određuje koji ekran treba osvježiti. Implementira Observer kako bi
+nakon promjene vozila ili spremanja servisa mogao osvježiti zajednički aplikacijski kontekst.</div>
 </div>
 </section>
 <section class="summary">
@@ -110,7 +114,7 @@ implements <a href="../observer/Observer.html" title="interface in hr.unizd.auto
  <a href="../service/DashboardService.html" title="class in hr.unizd.autocare.service">DashboardService</a>&nbsp;dashboardService,
  <a href="../observer/Subject.html" title="class in hr.unizd.autocare.observer">Subject</a>&nbsp;subject)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Povezuje glavne poglede i aplikacijske servise te registrira Observera.</div>
+<div class="block">Povezuje glavni prozor sa svim Service objektima i Controllerima aplikacije.</div>
 </div>
 </div>
 </section>
@@ -162,19 +166,23 @@ implements <a href="../observer/Observer.html" title="interface in hr.unizd.auto
  <a href="../service/ProblemService.html" title="class in hr.unizd.autocare.service">ProblemService</a>&nbsp;problemService,
  <a href="../service/DashboardService.html" title="class in hr.unizd.autocare.service">DashboardService</a>&nbsp;dashboardService,
  <a href="../observer/Subject.html" title="class in hr.unizd.autocare.observer">Subject</a>&nbsp;subject)</span></div>
-<div class="block">Povezuje glavne poglede i aplikacijske servise te registrira Observera.</div>
+<div class="block">Povezuje glavni prozor sa svim Service objektima i Controllerima aplikacije.
+
+<p>Konstruktor stvara funkcionalne Controllere, konfigurira AuthController callback,
+registrira navigacijske listenere i prijavljuje MainController kao Observer na zajednički
+Subject. Po završetku prikazuje ekran za prijavu.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>frame</code> - glavni prozor aplikacije</dd>
-<dd><code>session</code> - trenutačni korisnički kontekst</dd>
+<dd><code>session</code> - zajednička korisnička sesija</dd>
 <dd><code>authService</code> - servis prijave i registracije</dd>
 <dd><code>catalogService</code> - servis kataloga</dd>
 <dd><code>vehicleService</code> - servis vozila</dd>
-<dd><code>serviceRecordService</code> - servisne evidencije</dd>
-<dd><code>maintenanceService</code> - izračun održavanja</dd>
-<dd><code>problemService</code> - evidencija problema</dd>
-<dd><code>dashboardService</code> - sažetak aktivnog vozila</dd>
-<dd><code>subject</code> - izvor događaja promjene aplikacijskog stanja</dd>
+<dd><code>serviceRecordService</code> - servis za servisnu povijest</dd>
+<dd><code>maintenanceService</code> - servis održavanja</dd>
+<dd><code>problemService</code> - servis problema</dd>
+<dd><code>dashboardService</code> - servis Dashboard podataka</dd>
+<dd><code>subject</code> - Subject koji objavljuje aplikacijske događaje</dd>
 </dl>
 </div>
 </section>
@@ -192,11 +200,15 @@ implements <a href="../observer/Observer.html" title="interface in hr.unizd.auto
 <h3>update</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">update</span><wbr><span class="parameters">(<a href="../observer/AppEvent.html" title="enum class in hr.unizd.autocare.observer">AppEvent</a>&nbsp;event)</span></div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../observer/Observer.html#update(hr.unizd.autocare.observer.AppEvent)">Observer</a></code></span></div>
-<div class="block">Reagira na događaj koji je objavio Subject.</div>
+<div class="block">Reagira na događaj koji je objavio Subject.
+
+<p>Promjena aktivnog vozila zahtijeva potpuno ponovno učitavanje konteksta i otvaranje
+Dashboarda, dok ostale promjene osvježavaju podatke bez prisilne promjene stranice.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../observer/Observer.html#update(hr.unizd.autocare.observer.AppEvent)">update</a></code>&nbsp;in interface&nbsp;<code><a href="../observer/Observer.html" title="interface in hr.unizd.autocare.observer">Observer</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>event</code> - aplikacijski događaj koji je potrebno obraditi</dd>
 </dl>
 </div>
 </section>

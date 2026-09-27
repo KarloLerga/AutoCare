@@ -8,12 +8,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-/** Puni kaskadne odabire vozila na temelju kataloških podataka. */
+/**
+ * Upravlja ovisnim izborima u VehicleForm komponenti.
+ *
+ * <p>Promjena marke ponovno učitava modele, promjena modela godine, a promjena godine dostupne
+ * varijante. Time View prikazuje samo kombinacije koje postoje u katalogu vozila.
+ */
 public class VehicleFormController {
   private final VehicleForm view;
   private final CatalogService catalogService;
   private boolean updating;
 
+  /**
+   * Povezuje VehicleForm s CatalogServiceom i registrira listenere ovisnih odabira.
+   *
+   * @param view forma za izbor vozila
+   * @param catalogService servis iz kojeg se dohvaćaju kataloške vrijednosti
+   */
   public VehicleFormController(VehicleForm view, CatalogService catalogService) {
     this.view = view;
     this.catalogService = catalogService;
@@ -55,6 +66,7 @@ public class VehicleFormController {
     });
   }
 
+  /** Učitava početni popis marki i čisti sve ovisne odabire ispod marke. */
   public void loadMakes() {
     try {
       view.state.setText("Učitavanje marki...");
@@ -76,6 +88,7 @@ public class VehicleFormController {
     }
   }
 
+  /** Učitava modele za odabranu marku te resetira godinu i varijantu. */
   private void loadModels() {
     String make = (String) view.make.getSelectedItem();
 
@@ -103,6 +116,7 @@ public class VehicleFormController {
     }
   }
 
+  /** Učitava dostupne godine za odabranu marku i model te resetira varijantu. */
   private void loadYears() {
     String make = (String) view.make.getSelectedItem();
     String model = (String) view.model.getSelectedItem();
@@ -131,6 +145,10 @@ public class VehicleFormController {
     }
   }
 
+  /**
+   * Učitava varijante koje odgovaraju odabranoj marki, modelu i godini te prikazuje detalj
+   * trenutno odabrane varijante.
+   */
   private void loadVariants() {
     String make = (String) view.make.getSelectedItem();
     String model = (String) view.model.getSelectedItem();
@@ -164,6 +182,7 @@ public class VehicleFormController {
     }
   }
 
+  /** Vraća cijelu formu vozila u početno stanje i ponovno učitava marke. */
   public void reset() {
     updating = true;
     view.reset();

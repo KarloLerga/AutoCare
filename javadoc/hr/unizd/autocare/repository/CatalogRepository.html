@@ -88,7 +88,10 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CatalogRepository</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">JPA dohvat kataloga vozila i standardnih zahvata.</div>
+<div class="block">Repository za čitanje kataloga varijanti vozila i standardnih radova.
+
+<p>Kataloški podaci u aplikaciji služe kao referentni skup iz kojeg korisnički tokovi biraju
+postojeće marke, modele, varijante i radove.</div>
 </div>
 </section>
 <section class="summary">
@@ -121,46 +124,36 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../domain/WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#allWorks()" class="member-name-link">allWorks</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Vraća cijeli informativni katalog standardnih radova.</div>
-</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../domain/VehicleVariant.html" title="class in hr.unizd.autocare.domain">VehicleVariant</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findVariant(int)" class="member-name-link">findVariant</a><wbr>(int&nbsp;id)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Dohvaća varijantu prema primarnom ključu.</div>
-</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../domain/WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findWork(int)" class="member-name-link">findWork</a><wbr>(int&nbsp;id)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Dohvaća standardni rad prema primarnom ključu.</div>
-</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#makes()" class="member-name-link">makes</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Vraća jedinstvene marke vozila iz kataloga.</div>
-</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#models(java.lang.String)" class="member-name-link">models</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;make)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Vraća modele za zadanu marku.</div>
-</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../domain/VehicleVariant.html" title="class in hr.unizd.autocare.domain">VehicleVariant</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#variants(java.lang.String,java.lang.String,int)" class="member-name-link">variants</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;make,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;model,
  int&nbsp;year)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Vraća kataloške varijante koje pokrivaju odabranu godinu.</div>
+<div class="block">Dohvaća varijante koje pokrivaju odabranu godinu.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../domain/WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#works(hr.unizd.autocare.domain.WorkCategory)" class="member-name-link">works</a><wbr>(<a href="../domain/WorkCategory.html" title="enum class in hr.unizd.autocare.domain">WorkCategory</a>&nbsp;category)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Vraća standardne radove zadane servisne kategorije.</div>
+<div class="block">Dohvaća radove određene vrste, primjerice samo radove održavanja.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#years(java.lang.String,java.lang.String)" class="member-name-link">years</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;make,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;model)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sastavlja sortirani popis godina koje pokrivaju varijante marke i modela.</div>
+<div class="block">Iz raspona godina kataloških varijanti izvodi godine dostupne za odabrani model.</div>
 </div>
 </div>
 </div>
@@ -205,10 +198,9 @@ loadScripts(document, 'script');</script>
 <h3>makes</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">makes</span>()</div>
-<div class="block">Vraća jedinstvene marke vozila iz kataloga.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>sortirane marke</dd>
+<dd>jedinstvene marke vozila sortirane za prikaz</dd>
 </dl>
 </div>
 </section>
@@ -218,12 +210,11 @@ loadScripts(document, 'script');</script>
 <h3>models</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">models</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;make)</span></div>
-<div class="block">Vraća modele za zadanu marku.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>make</code> - marka vozila</dd>
 <dt>Returns:</dt>
-<dd>sortirani modeli</dd>
+<dd>jedinstveni modeli odabrane marke</dd>
 </dl>
 </div>
 </section>
@@ -234,13 +225,13 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</span>&nbsp;<span class="element-name">years</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;make,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;model)</span></div>
-<div class="block">Sastavlja sortirani popis godina koje pokrivaju varijante marke i modela.</div>
+<div class="block">Iz raspona godina kataloških varijanti izvodi godine dostupne za odabrani model.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>make</code> - marka vozila</dd>
 <dd><code>model</code> - model vozila</dd>
 <dt>Returns:</dt>
-<dd>godine pokrivene kataloškim varijantama</dd>
+<dd>godine koje korisnik može odabrati</dd>
 </dl>
 </div>
 </section>
@@ -252,14 +243,14 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../domain/VehicleVariant.html" title="class in hr.unizd.autocare.domain">VehicleVariant</a>&gt;</span>&nbsp;<span class="element-name">variants</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;make,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;model,
  int&nbsp;year)</span></div>
-<div class="block">Vraća kataloške varijante koje pokrivaju odabranu godinu.</div>
+<div class="block">Dohvaća varijante koje pokrivaju odabranu godinu.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>make</code> - marka vozila</dd>
 <dd><code>model</code> - model vozila</dd>
-<dd><code>year</code> - godina proizvodnje</dd>
+<dd><code>year</code> - odabrana godina</dd>
 <dt>Returns:</dt>
-<dd>varijante koje pokrivaju godinu</dd>
+<dd>odgovarajuće varijante</dd>
 </dl>
 </div>
 </section>
@@ -269,12 +260,11 @@ loadScripts(document, 'script');</script>
 <h3>findVariant</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../domain/VehicleVariant.html" title="class in hr.unizd.autocare.domain">VehicleVariant</a></span>&nbsp;<span class="element-name">findVariant</span><wbr><span class="parameters">(int&nbsp;id)</span></div>
-<div class="block">Dohvaća varijantu prema primarnom ključu.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>id</code> - primarni ključ varijante</dd>
+<dd><code>id</code> - identifikator varijante</dd>
 <dt>Returns:</dt>
-<dd>varijanta ili <code>null</code> ako nije pronađena</dd>
+<dd>kataloška varijanta ili <code>null</code> ako ne postoji</dd>
 </dl>
 </div>
 </section>
@@ -284,12 +274,12 @@ loadScripts(document, 'script');</script>
 <h3>works</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../domain/WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a>&gt;</span>&nbsp;<span class="element-name">works</span><wbr><span class="parameters">(<a href="../domain/WorkCategory.html" title="enum class in hr.unizd.autocare.domain">WorkCategory</a>&nbsp;category)</span></div>
-<div class="block">Vraća standardne radove zadane servisne kategorije.</div>
+<div class="block">Dohvaća radove određene vrste, primjerice samo radove održavanja.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>category</code> - servisna kategorija</dd>
+<dd><code>category</code> - vrsta rada</dd>
 <dt>Returns:</dt>
-<dd>radovi poredani prema nazivu</dd>
+<dd>pripadajuće definicije radova</dd>
 </dl>
 </div>
 </section>
@@ -299,10 +289,9 @@ loadScripts(document, 'script');</script>
 <h3>allWorks</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../domain/WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a>&gt;</span>&nbsp;<span class="element-name">allWorks</span>()</div>
-<div class="block">Vraća cijeli informativni katalog standardnih radova.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>radovi poredani prema kategoriji i nazivu</dd>
+<dd>sve definicije radova koje čine informativni katalog</dd>
 </dl>
 </div>
 </section>
@@ -312,12 +301,11 @@ loadScripts(document, 'script');</script>
 <h3>findWork</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../domain/WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a></span>&nbsp;<span class="element-name">findWork</span><wbr><span class="parameters">(int&nbsp;id)</span></div>
-<div class="block">Dohvaća standardni rad prema primarnom ključu.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>id</code> - primarni ključ rada</dd>
+<dd><code>id</code> - identifikator standardnog rada</dd>
 <dt>Returns:</dt>
-<dd>rad ili <code>null</code> ako nije pronađen</dd>
+<dd>definicija rada ili <code>null</code> ako ne postoji</dd>
 </dl>
 </div>
 </section>

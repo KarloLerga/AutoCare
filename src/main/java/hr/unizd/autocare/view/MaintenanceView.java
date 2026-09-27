@@ -9,12 +9,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-/** Pregled održavanja koje se već prati iz stvarne servisne povijesti. */
+/** Swing tablični prikaz izračunatih intervala održavanja aktivnog vozila. */
 public class MaintenanceView extends JPanel {
   public final JTable table;
 
   private final DefaultTableModel tableModel;
 
+  /** Stvara read-only tablicu održavanja i njezine stupce. */
   public MaintenanceView() {
     super(new BorderLayout(12, 12));
     setOpaque(false);
@@ -40,6 +41,11 @@ public class MaintenanceView extends JPanel {
     add(Ui.hint("Informativne cijene i svi standardni zahvati nalaze se u Katalogu."), BorderLayout.SOUTH);
   }
 
+  /**
+   * Zamjenjuje sadržaj tablice aktualnim izračunima održavanja.
+   *
+   * @param values izračunati retci održavanja
+   */
   public void setRows(List<MaintenanceRow> values) {
     tableModel.setRowCount(0);
     for (MaintenanceRow row : values) {

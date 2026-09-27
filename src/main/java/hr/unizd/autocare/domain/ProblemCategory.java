@@ -1,6 +1,6 @@
 package hr.unizd.autocare.domain;
 
-/** Gruba kategorija korisnikovog problema, bez pokušaja dijagnostike kvara. */
+/** Gruba korisnička kategorija evidentiranog problema bez pokušaja automatske dijagnoze kvara. */
 public enum ProblemCategory {
   ENGINE("Motor"),
   BRAKES("Kočnice"),
@@ -11,6 +11,7 @@ public enum ProblemCategory {
 
   private final String displayName;
 
+  /** @param displayName naziv kategorije prikazan korisniku */
   ProblemCategory(String displayName) {
     this.displayName = displayName;
   }

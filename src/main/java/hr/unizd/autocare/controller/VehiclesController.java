@@ -14,7 +14,9 @@ import hr.unizd.autocare.view.components.Ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/** Upravlja prikazom, dodavanjem i odabirom korisnikovih vozila. */
+/**
+ * Upravlja pregledom, dodavanjem, promjenom kilometraže i aktiviranjem korisnikovih vozila.
+ */
 public class VehiclesController {
   private final MainFrame frame;
   private final VehicleService vehicleService;
@@ -22,6 +24,15 @@ public class VehiclesController {
   private final Session session;
   private final Subject subject;
 
+  /**
+   * Stvara Controller vozila i povezuje ga s Viewom, servisima, sesijom i Observer Subjectom.
+   *
+   * @param frame glavni prozor koji sadrži VehiclesView
+   * @param vehicleService servis za rad s korisnikovim vozilima
+   * @param catalogService servis kataloga potreban pri dodavanju vozila
+   * @param session zajednički korisnički kontekst
+   * @param subject Subject preko kojeg se objavljuju promjene vozila
+   */
   public VehiclesController(
       MainFrame frame,
       VehicleService vehicleService,
@@ -36,6 +47,7 @@ public class VehiclesController {
     registerListeners();
   }
 
+  /** Registrira akcije gumba za dodavanje vozila, promjenu kilometraže i aktiviranje vozila. */
   private void registerListeners() {
     frame.vehicles.add.addActionListener(new ActionListener() {
       @Override
@@ -59,6 +71,7 @@ public class VehiclesController {
     });
   }
 
+  /** Učitava sva vozila prijavljenog korisnika i označava trenutačno aktivno vozilo u Viewu. */
   public void load() {
     try {
       Integer activeVehicleId = null;
@@ -71,6 +84,11 @@ public class VehiclesController {
     }
   }
 
+  /**
+   * Vraća trenutno označeno vozilo ili prikazuje poruku ako ništa nije odabrano.
+   *
+   * @return odabrano vozilo ili {@code null} kada korisnik nije označio vozilo
+   */
   private Vehicle selected() {
     Vehicle vehicle = frame.vehicles.selected();
     if (vehicle == null) {
@@ -79,6 +97,12 @@ public class VehiclesController {
     return vehicle;
   }
 
+  /**
+   * Otvara dijalog za dodavanje novog vozila i povezuje njegovu VehicleForm s katalogom.
+   *
+   * <p>Nakon uspješnog spremanja zatvara dijalog, osvježava listu vozila i objavljuje događaj da
+   * su se podaci o vozilima promijenili.
+   */
   private void showAdd() {
     final VehicleDialog dialog = new VehicleDialog(frame);
     VehicleFormController formController = new VehicleFormController(dialog.form, catalogService);
@@ -116,6 +140,7 @@ public class VehiclesController {
     dialog.setVisible(true);
   }
 
+  /** Otvara dijalog za promjenu kilometraže odabranog vozila i sprema novu vrijednost kroz Service. */
   private void showMileageEditor() {
     Vehicle vehicle = selected();
     if (vehicle == null) {
@@ -147,6 +172,9 @@ public class VehiclesController {
     dialog.setVisible(true);
   }
 
+  /**
+   * Postavlja označeno vozilo kao aktivno vozilo korisnika i objavljuje promjenu aktivnog konteksta.
+   */
   private void activate() {
     Vehicle vehicle = selected();
     if (vehicle == null) {

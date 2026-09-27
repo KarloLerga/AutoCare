@@ -14,14 +14,14 @@ import javax.swing.UIManager;
 import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
 import org.kordamp.ikonli.swing.FontIcon;
 
-/** Prikazuje sažetak aktivnog vozila, troškova, problema i sljedećeg održavanja. */
+/** Prikazuje četiri sažeta pokazatelja aktivnog vozila: kilometražu, trošak, probleme i održavanje. */
 public class DashboardView extends JPanel {
   private final JLabel total = Ui.hint("-");
   private final JLabel maintenance = Ui.hint("-");
   private final JLabel problems = Ui.hint("-");
   private final JLabel mileage = Ui.hint("-");
 
-  /** Stvara prikaz sažetka aktivnog vozila. */
+  /** Stvara raspored Dashboard kartica i njihove početne vrijednosti. */
   public DashboardView() {
     super(new BorderLayout(16, 16));
     setOpaque(false);
@@ -40,6 +40,14 @@ public class DashboardView extends JPanel {
         BorderLayout.SOUTH);
   }
 
+  /**
+   * Dodaje jednu vizualno ujednačenu Dashboard karticu u mrežu.
+   *
+   * @param grid panel koji sadrži kartice
+   * @param title naslov kartice
+   * @param value labela čija će se vrijednost kasnije osvježavati
+   * @param iconCode ikona kartice
+   */
   private static void addCard(JPanel grid, String title, JLabel value, FontAwesomeSolid iconCode) {
     JPanel card = Ui.card();
     JPanel content = new JPanel(new GridLayout(3, 1, 0, 8));
@@ -61,6 +69,7 @@ public class DashboardView extends JPanel {
     grid.add(card);
   }
 
+  /** Stvara ikonu Dashboard kartice u zadanoj veličini. */
   private static FontIcon icon(FontAwesomeSolid iconCode, int size) {
     Color color = UIManager.getColor("Label.foreground");
     if (color == null) {
@@ -69,7 +78,11 @@ public class DashboardView extends JPanel {
     return FontIcon.of(iconCode, size, color);
   }
 
-  /** Ažurira kartice i sažetak prema podacima servisa Dashboard. */
+  /**
+   * Popunjava Dashboard vrijednostima iz pripremljenog modela.
+   *
+   * @param dashboard sažetak aktivnog vozila
+   */
   public void showDashboard(Dashboard dashboard) {
     total.setText(Ui.money(dashboard.getTotal()));
 
@@ -86,6 +99,12 @@ public class DashboardView extends JPanel {
     mileage.setText(Ui.km(dashboard.getVehicle().getCurrentMileage()));
   }
 
+  /**
+   * Pretvara podatke najbližeg održavanja u kratki korisnički tekst.
+   *
+   * @param row najbliže održavanje ili {@code null}
+   * @return tekst prikladan za Dashboard karticu
+   */
   private static String remaining(MaintenanceRow row) {
     String result = "";
 

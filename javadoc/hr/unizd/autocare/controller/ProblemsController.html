@@ -81,7 +81,10 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ProblemsController</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Spremanje i prikaz korisnikovih problema za aktivno vozilo.</div>
+<div class="block">Upravlja pregledom i unosom problema aktivnog vozila.
+
+<p>Problem se ovim Controllerom samo evidentira. Rješavanje problema vezano je uz spremanje
+konkretnog servisa, pa ovdje ne postoji zasebna akcija za ručno zatvaranje problema.</div>
 </div>
 </section>
 <section class="summary">
@@ -97,7 +100,9 @@ loadScripts(document, 'script');</script>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(hr.unizd.autocare.view.MainFrame,hr.unizd.autocare.service.ProblemService,hr.unizd.autocare.app.Session)" class="member-name-link">ProblemsController</a><wbr>(<a href="../view/MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a>&nbsp;frame,
  <a href="../service/ProblemService.html" title="class in hr.unizd.autocare.service">ProblemService</a>&nbsp;problemService,
  <a href="../app/Session.html" title="class in hr.unizd.autocare.app">Session</a>&nbsp;session)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Povezuje ProblemsView s ProblemServiceom i Sessionom.</div>
+</div>
 </div>
 </section>
 </li>
@@ -114,7 +119,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#load()" class="member-name-link">load</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Učitava probleme aktivnog vozila i prikazuje njihovo aktualno stanje.</div>
+</div>
 </div>
 </div>
 </div>
@@ -139,6 +146,13 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ProblemsController</span><wbr><span class="parameters">(<a href="../view/MainFrame.html" title="class in hr.unizd.autocare.view">MainFrame</a>&nbsp;frame,
  <a href="../service/ProblemService.html" title="class in hr.unizd.autocare.service">ProblemService</a>&nbsp;problemService,
  <a href="../app/Session.html" title="class in hr.unizd.autocare.app">Session</a>&nbsp;session)</span></div>
+<div class="block">Povezuje ProblemsView s ProblemServiceom i Sessionom.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>frame</code> - glavni prozor</dd>
+<dd><code>problemService</code> - servis za dohvat i spremanje problema</dd>
+<dd><code>session</code> - zajednički korisnički kontekst</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -155,6 +169,7 @@ loadScripts(document, 'script');</script>
 <h3>load</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">load</span>()</div>
+<div class="block">Učitava probleme aktivnog vozila i prikazuje njihovo aktualno stanje.</div>
 </div>
 </section>
 </li>

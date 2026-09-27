@@ -85,7 +85,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ServiceRecordRepository</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">JPA dohvat i spremanje servisne povijesti.</div>
+<div class="block">Repository za spremanje i čitanje servisne povijesti.</div>
 </div>
 </section>
 <section class="summary">
@@ -119,31 +119,32 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#add(hr.unizd.autocare.domain.ServiceRecord)" class="member-name-link">add</a><wbr>(<a href="../domain/ServiceRecord.html" title="class in hr.unizd.autocare.domain">ServiceRecord</a>&nbsp;serviceRecord)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Predaje novi servis persistence kontekstu; transakcijom upravlja pozivajući servisni sloj.</div>
+<div class="block">Dodaje novi servis u persistence context; povezane nove stavke spremaju se prema JPA cascade
+postavci entiteta.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../domain/ServiceRecord.html" title="class in hr.unizd.autocare.domain">ServiceRecord</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findForOwner(int,int)" class="member-name-link">findForOwner</a><wbr>(int&nbsp;ownerId,
  int&nbsp;serviceId)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Vraća servis samo ako pripada vozilu korisnika; inače vraća <code>null</code>.</div>
+<div class="block">Dohvaća jedan servis samo ako pripada vozilu zadanog korisnika.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../domain/ServiceItem.html" title="class in hr.unizd.autocare.domain">ServiceItem</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#historyItems(int,int)" class="member-name-link">historyItems</a><wbr>(int&nbsp;ownerId,
  int&nbsp;vehicleId)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Vraća servisne stavke vozila od najnovije prema najstarijoj.</div>
+<div class="block">Dohvaća servisne stavke potrebne za analizu povijesti održavanja vozila.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../domain/ServiceRecord.html" title="class in hr.unizd.autocare.domain">ServiceRecord</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#list(int,int)" class="member-name-link">list</a><wbr>(int&nbsp;ownerId,
  int&nbsp;vehicleId)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Vraća povijest servisa vozila ako ono pripada korisniku.</div>
+<div class="block">Dohvaća servisnu povijest vozila samo unutar vlasničkog konteksta korisnika.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#total(int,int)" class="member-name-link">total</a><wbr>(int&nbsp;ownerId,
  int&nbsp;vehicleId)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Vraća zbroj stvarno plaćenih cijena servisnih stavki vozila.</div>
+<div class="block">Računa zbroj stvarno plaćenih servisnih stavki za vozilo.</div>
 </div>
 </div>
 </div>
@@ -188,10 +189,11 @@ loadScripts(document, 'script');</script>
 <h3>add</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">add</span><wbr><span class="parameters">(<a href="../domain/ServiceRecord.html" title="class in hr.unizd.autocare.domain">ServiceRecord</a>&nbsp;serviceRecord)</span></div>
-<div class="block">Predaje novi servis persistence kontekstu; transakcijom upravlja pozivajući servisni sloj.</div>
+<div class="block">Dodaje novi servis u persistence context; povezane nove stavke spremaju se prema JPA cascade
+postavci entiteta.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>serviceRecord</code> - zapis koji treba spremiti</dd>
+<dd><code>serviceRecord</code> - novi servisni zapis</dd>
 </dl>
 </div>
 </section>
@@ -202,13 +204,13 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../domain/ServiceRecord.html" title="class in hr.unizd.autocare.domain">ServiceRecord</a>&gt;</span>&nbsp;<span class="element-name">list</span><wbr><span class="parameters">(int&nbsp;ownerId,
  int&nbsp;vehicleId)</span></div>
-<div class="block">Vraća povijest servisa vozila ako ono pripada korisniku.</div>
+<div class="block">Dohvaća servisnu povijest vozila samo unutar vlasničkog konteksta korisnika.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>ownerId</code> - primarni ključ vlasnika</dd>
-<dd><code>vehicleId</code> - primarni ključ vozila</dd>
+<dd><code>ownerId</code> - identifikator vlasnika</dd>
+<dd><code>vehicleId</code> - identifikator vozila</dd>
 <dt>Returns:</dt>
-<dd>servisni zapisi od najnovijeg prema najstarijem</dd>
+<dd>servisni zapisi vozila</dd>
 </dl>
 </div>
 </section>
@@ -219,13 +221,13 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../domain/ServiceRecord.html" title="class in hr.unizd.autocare.domain">ServiceRecord</a></span>&nbsp;<span class="element-name">findForOwner</span><wbr><span class="parameters">(int&nbsp;ownerId,
  int&nbsp;serviceId)</span></div>
-<div class="block">Vraća servis samo ako pripada vozilu korisnika; inače vraća <code>null</code>.</div>
+<div class="block">Dohvaća jedan servis samo ako pripada vozilu zadanog korisnika.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>ownerId</code> - primarni ključ vlasnika</dd>
-<dd><code>serviceId</code> - primarni ključ servisa</dd>
+<dd><code>ownerId</code> - identifikator vlasnika</dd>
+<dd><code>serviceId</code> - identifikator servisa</dd>
 <dt>Returns:</dt>
-<dd>servis vlasnika ili <code>null</code></dd>
+<dd>servis ili <code>null</code> ako nije pronađen u korisničkom kontekstu</dd>
 </dl>
 </div>
 </section>
@@ -236,13 +238,13 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../domain/ServiceItem.html" title="class in hr.unizd.autocare.domain">ServiceItem</a>&gt;</span>&nbsp;<span class="element-name">historyItems</span><wbr><span class="parameters">(int&nbsp;ownerId,
  int&nbsp;vehicleId)</span></div>
-<div class="block">Vraća servisne stavke vozila od najnovije prema najstarijoj.</div>
+<div class="block">Dohvaća servisne stavke potrebne za analizu povijesti održavanja vozila.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>ownerId</code> - primarni ključ vlasnika</dd>
-<dd><code>vehicleId</code> - primarni ključ vozila</dd>
+<dd><code>ownerId</code> - identifikator vlasnika</dd>
+<dd><code>vehicleId</code> - identifikator vozila</dd>
 <dt>Returns:</dt>
-<dd>stavke iz servisne povijesti</dd>
+<dd>povijesne servisne stavke sortirane tako da se najnovija izvedba rada može prepoznati</dd>
 </dl>
 </div>
 </section>
@@ -253,13 +255,13 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a></span>&nbsp;<span class="element-name">total</span><wbr><span class="parameters">(int&nbsp;ownerId,
  int&nbsp;vehicleId)</span></div>
-<div class="block">Vraća zbroj stvarno plaćenih cijena servisnih stavki vozila.</div>
+<div class="block">Računa zbroj stvarno plaćenih servisnih stavki za vozilo.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>ownerId</code> - primarni ključ vlasnika</dd>
-<dd><code>vehicleId</code> - primarni ključ vozila</dd>
+<dd><code>ownerId</code> - identifikator vlasnika</dd>
+<dd><code>vehicleId</code> - identifikator vozila</dd>
 <dt>Returns:</dt>
-<dd>ukupno evidentirani stvarni trošak ili nula</dd>
+<dd>ukupni evidentirani stvarni servisni trošak</dd>
 </dl>
 </div>
 </section>

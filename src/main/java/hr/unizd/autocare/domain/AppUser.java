@@ -6,9 +6,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
-/** Korisnički račun i njegovo aktivno vozilo. */
+/**
+ * Persistentni domenski objekt korisničkog računa.
+ *
+ * <p>Korisnik može posjedovati više vozila, a aktivno vozilo predstavlja trenutačno odabrani
+ * kontekst aplikacije i nije isto što i samo vlasništvo nad vozilom.
+ */
 @Entity
-/** Korisnički račun i veza prema trenutačno aktivnom vozilu. */
 public class AppUser {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,15 +25,16 @@ public class AppUser {
   @ManyToOne
   private Vehicle activeVehicle;
 
+  /** Konstruktor bez argumenata potreban JPA provideru pri učitavanju entiteta. */
   protected AppUser() {}
 
   /**
-   * Stvara račun nakon provjere imena, adrese e-pošte i lozinke.
+   * Stvara novi korisnički račun iz već validiranih podataka.
    *
    * @param name ime korisnika
-   * @param email adresa korisničkog računa
-   * @param password lozinka korisničkog računa
-   * @throws IllegalArgumentException ako je neko od podataka nevaljano
+   * @param email normalizirana e-mail adresa
+   * @param password lozinka korisnika
+   * @throws IllegalArgumentException ako neki podatak nije valjan
    */
   public AppUser(String name, String email, String password) {
     this.name = Checks.text(name, 100, "Ime");
@@ -38,7 +43,9 @@ public class AppUser {
   }
 
   /**
-   * Postavlja aktivno vozilo korisnika.
+   * Postavlja vozilo kao aktivno vozilo korisnika.
+   *
+   * <p>Service prije poziva provjerava da odabrano vozilo stvarno pripada tom korisniku.
    *
    * @param vehicle vozilo koje postaje aktivno
    * @throws IllegalArgumentException ako vozilo nije zadano

@@ -95,7 +95,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">DashboardView</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JPanel.html" title="class or interface in javax.swing" class="external-link">JPanel</a></span></div>
-<div class="block">Prikazuje sažetak aktivnog vozila, troškova, problema i sljedećeg održavanja.</div>
+<div class="block">Prikazuje četiri sažeta pokazatelja aktivnog vozila: kilometražu, trošak, probleme i održavanje.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -151,7 +151,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">DashboardView</a>()</code></div>
 <div class="col-last even-row-color">
-<div class="block">Stvara prikaz sažetka aktivnog vozila.</div>
+<div class="block">Stvara raspored Dashboard kartica i njihove početne vrijednosti.</div>
 </div>
 </div>
 </section>
@@ -170,7 +170,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#showDashboard(hr.unizd.autocare.model.Data.Dashboard)" class="member-name-link">showDashboard</a><wbr>(<a href="../model/Data.Dashboard.html" title="class in hr.unizd.autocare.model">Data.Dashboard</a>&nbsp;dashboard)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Ažurira kartice i sažetak prema podacima servisa Dashboard.</div>
+<div class="block">Popunjava Dashboard vrijednostima iz pripremljenog modela.</div>
 </div>
 </div>
 </div>
@@ -206,7 +206,7 @@ loadScripts(document, 'script');</script>
 <h3>DashboardView</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DashboardView</span>()</div>
-<div class="block">Stvara prikaz sažetka aktivnog vozila.</div>
+<div class="block">Stvara raspored Dashboard kartica i njihove početne vrijednosti.</div>
 </div>
 </section>
 </li>
@@ -223,7 +223,11 @@ loadScripts(document, 'script');</script>
 <h3>showDashboard</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">showDashboard</span><wbr><span class="parameters">(<a href="../model/Data.Dashboard.html" title="class in hr.unizd.autocare.model">Data.Dashboard</a>&nbsp;dashboard)</span></div>
-<div class="block">Ažurira kartice i sažetak prema podacima servisa Dashboard.</div>
+<div class="block">Popunjava Dashboard vrijednostima iz pripremljenog modela.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>dashboard</code> - sažetak aktivnog vozila</dd>
+</dl>
 </div>
 </section>
 </li>

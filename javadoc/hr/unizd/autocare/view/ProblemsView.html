@@ -105,7 +105,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ProblemsView</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JPanel.html" title="class or interface in javax.swing" class="external-link">JPanel</a></span></div>
-<div class="block">Problemi koje vlasnik želi zapamtiti za mehaničara.</div>
+<div class="block">Swing prikaz za evidentiranje problema i pregled njihovog otvorenog ili riješenog stanja.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -178,7 +178,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">ProblemsView</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Stvara formu opisa i kategorije problema te read-only tablicu evidentiranih problema.</div>
+</div>
 </div>
 </section>
 </li>
@@ -195,13 +197,17 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearEditor()" class="member-name-link">clearEditor</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Čisti polja unosa nakon uspješnog spremanja problema.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../domain/ProblemCategory.html" title="enum class in hr.unizd.autocare.domain">ProblemCategory</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#selectedCategory()" class="member-name-link">selectedCategory</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRows(java.util.List)" class="member-name-link">setRows</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../domain/Problem.html" title="class in hr.unizd.autocare.domain">Problem</a>&gt;&nbsp;values)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Zamjenjuje prikazane probleme aktualnim podacima vozila.</div>
+</div>
 </div>
 </div>
 </div>
@@ -276,6 +282,7 @@ loadScripts(document, 'script');</script>
 <h3>ProblemsView</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ProblemsView</span>()</div>
+<div class="block">Stvara formu opisa i kategorije problema te read-only tablicu evidentiranih problema.</div>
 </div>
 </section>
 </li>
@@ -292,6 +299,10 @@ loadScripts(document, 'script');</script>
 <h3>selectedCategory</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../domain/ProblemCategory.html" title="enum class in hr.unizd.autocare.domain">ProblemCategory</a></span>&nbsp;<span class="element-name">selectedCategory</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>kategorija problema trenutno odabrana u formi</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -300,6 +311,11 @@ loadScripts(document, 'script');</script>
 <h3>setRows</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRows</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../domain/Problem.html" title="class in hr.unizd.autocare.domain">Problem</a>&gt;&nbsp;values)</span></div>
+<div class="block">Zamjenjuje prikazane probleme aktualnim podacima vozila.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>values</code> - problemi aktivnog vozila</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -308,6 +324,7 @@ loadScripts(document, 'script');</script>
 <h3>clearEditor</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearEditor</span>()</div>
+<div class="block">Čisti polja unosa nakon uspješnog spremanja problema.</div>
 </div>
 </section>
 </li>

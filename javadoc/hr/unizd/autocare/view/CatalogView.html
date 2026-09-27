@@ -104,7 +104,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CatalogView</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.desktop/javax/swing/JPanel.html" title="class or interface in javax.swing" class="external-link">JPanel</a></span></div>
-<div class="block">Pretraživi informativni cjenik standardnih zahvata.</div>
+<div class="block">Swing prikaz informativnog kataloga standardnih radova s pretragom i filtrom kategorije.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -178,7 +178,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">CatalogView</a>()</code></div>
 <div class="col-last even-row-color">
-<div class="block">Stvara prikaz informativnog kataloga i filtara za pretraživanje.</div>
+<div class="block">Stvara kontrolu pretrage, odabir kategorije i read-only tablicu kataloga.</div>
 </div>
 </div>
 </section>
@@ -196,13 +196,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../domain/CatalogCategory.html" title="enum class in hr.unizd.autocare.domain">CatalogCategory</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#selectedCategory()" class="member-name-link">selectedCategory</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Vraća odabranu kategoriju ili <code>null</code> kada su prikazane sve kategorije.</div>
-</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRows(java.util.List)" class="member-name-link">setRows</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../domain/WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a>&gt;&nbsp;works)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Zamjenjuje retke tablice radovima dobivenima iz kataloga.</div>
+<div class="block">Prikazuje zadani skup standardnih radova u tablici kataloga.</div>
 </div>
 </div>
 </div>
@@ -278,7 +276,7 @@ loadScripts(document, 'script');</script>
 <h3>CatalogView</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CatalogView</span>()</div>
-<div class="block">Stvara prikaz informativnog kataloga i filtara za pretraživanje.</div>
+<div class="block">Stvara kontrolu pretrage, odabir kategorije i read-only tablicu kataloga.</div>
 </div>
 </section>
 </li>
@@ -295,7 +293,10 @@ loadScripts(document, 'script');</script>
 <h3>selectedCategory</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../domain/CatalogCategory.html" title="enum class in hr.unizd.autocare.domain">CatalogCategory</a></span>&nbsp;<span class="element-name">selectedCategory</span>()</div>
-<div class="block">Vraća odabranu kategoriju ili <code>null</code> kada su prikazane sve kategorije.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>trenutno odabrana kategorija kataloga ili <code>null</code> kada se prikazuju sve kategorije</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -304,7 +305,11 @@ loadScripts(document, 'script');</script>
 <h3>setRows</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRows</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../domain/WorkDefinition.html" title="class in hr.unizd.autocare.domain">WorkDefinition</a>&gt;&nbsp;works)</span></div>
-<div class="block">Zamjenjuje retke tablice radovima dobivenima iz kataloga.</div>
+<div class="block">Prikazuje zadani skup standardnih radova u tablici kataloga.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>works</code> - radovi nakon primjene filtra</dd>
+</dl>
 </div>
 </section>
 </li>

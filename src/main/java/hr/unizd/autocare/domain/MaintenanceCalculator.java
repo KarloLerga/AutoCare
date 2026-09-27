@@ -6,22 +6,28 @@ import hr.unizd.autocare.strategy.MileageMaintenanceStrategy;
 import hr.unizd.autocare.strategy.TimeMaintenanceStrategy;
 import java.time.LocalDate;
 
-/** Odabire strategiju prema vrsti servisnog intervala. */
+/**
+ * Domenski kalkulator koji odabire odgovarajuću Strategy implementaciju za servisni interval.
+ *
+ * <p>Kalkulator ne dohvaća podatke iz baze i ne poznaje Swing. Dobiva sve potrebne vrijednosti
+ * kroz parametre i odlučuje treba li računati prema kilometraži, vremenu ili kombinaciji oba
+ * kriterija.
+ */
 public class MaintenanceCalculator {
   private final MaintenanceStrategy mileageStrategy = new MileageMaintenanceStrategy();
   private final MaintenanceStrategy timeStrategy = new TimeMaintenanceStrategy();
   private final MaintenanceStrategy combinedStrategy = new CombinedMaintenanceStrategy();
 
   /**
-   * Izračunava udio preostalog intervala prema kilometraži, vremenu ili oboma.
+   * Računa relativni dio servisnog intervala koji je još preostao.
    *
-   * @param intervalKm interval održavanja u kilometrima, ako postoji
-   * @param intervalMonths interval održavanja u mjesecima, ako postoji
-   * @param lastDate datum posljednjeg evidentiranog rada
-   * @param lastMileage kilometraža posljednjeg evidentiranog rada
+   * @param intervalKm kilometarski interval ili {@code null} ako se ne koristi
+   * @param intervalMonths vremenski interval u mjesecima ili {@code null} ako se ne koristi
+   * @param lastDate datum posljednje izvedbe rada
+   * @param lastMileage kilometraža posljednje izvedbe rada
    * @param currentMileage trenutačna kilometraža vozila
-   * @param today datum na koji se računa preostali interval
-   * @return omjer preostalog i ukupnog intervala; manja vrijednost znači bliži rok
+   * @param today datum na koji se račun radi
+   * @return relativni preostali interval; vrijednost može pasti ispod nule kada je interval prošao
    */
   public double calculate(
       Integer intervalKm,

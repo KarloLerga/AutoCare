@@ -80,7 +80,10 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Checks</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Osnovne provjere korisničkog unosa.</div>
+<div class="block">Zajednička domenska pravila za validaciju i normalizaciju korisničkog unosa.
+
+<p>Metode vraćaju očišćenu vrijednost kada je unos valjan ili bacaju
+<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link"><code>IllegalArgumentException</code></a> s porukom prikladnom za korisničko sučelje.</div>
 </div>
 </section>
 <section class="summary">
@@ -99,7 +102,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#email(java.lang.String)" class="member-name-link">email</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Normalizira i provjerava osnovni oblik adrese e-pošte.</div>
+<div class="block">Normalizira e-mail u mala slova i provjerava osnovni oblik adrese.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mileage(int)" class="member-name-link">mileage</a><wbr>(int&nbsp;value)</code></div>
@@ -109,26 +112,26 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#money(java.math.BigDecimal)" class="member-name-link">money</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a>&nbsp;value)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Provjerava da je stvarna cijena zadana i nenegativna.</div>
+<div class="block">Provjerava stvarno plaćenu cijenu servisne stavke.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#optional(java.lang.String,int,java.lang.String)" class="member-name-link">optional</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value,
  int&nbsp;max,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;label)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Provjerava neobavezni tekst i vraća <code>null</code> za prazan unos.</div>
+<div class="block">Validira neobavezni tekst istim pravilima kao obavezni tekst kada je vrijednost unesena.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#password(java.lang.String)" class="member-name-link">password</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Provjerava minimalnu duljinu lozinke.</div>
+<div class="block">Provjerava minimalnu dopuštenu duljinu lozinke.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#text(java.lang.String,int,java.lang.String)" class="member-name-link">text</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value,
  int&nbsp;max,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;label)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Provjerava obavezni tekst, uklanja rubne razmake i ograničava duljinu.</div>
+<div class="block">Provjerava obavezni tekst, uklanja rubne razmake i ograničava najveću duljinu.</div>
 </div>
 </div>
 </div>
@@ -154,16 +157,16 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">text</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value,
  int&nbsp;max,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;label)</span></div>
-<div class="block">Provjerava obavezni tekst, uklanja rubne razmake i ograničava duljinu.</div>
+<div class="block">Provjerava obavezni tekst, uklanja rubne razmake i ograničava najveću duljinu.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>value</code> - uneseni tekst</dd>
 <dd><code>max</code> - najveći dopušteni broj znakova</dd>
-<dd><code>label</code> - naziv polja za poruku o pogrešci</dd>
+<dd><code>label</code> - naziv polja koji se koristi u poruci o pogrešci</dd>
 <dt>Returns:</dt>
 <dd>očišćeni tekst</dd>
 <dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako je tekst prazan ili predug</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako je vrijednost prazna ili preduga</dd>
 </dl>
 </div>
 </section>
@@ -175,7 +178,17 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">optional</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value,
  int&nbsp;max,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;label)</span></div>
-<div class="block">Provjerava neobavezni tekst i vraća <code>null</code> za prazan unos.</div>
+<div class="block">Validira neobavezni tekst istim pravilima kao obavezni tekst kada je vrijednost unesena.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - uneseni tekst</dd>
+<dd><code>max</code> - najveći dopušteni broj znakova</dd>
+<dd><code>label</code> - naziv polja</dd>
+<dt>Returns:</dt>
+<dd>očišćeni tekst ili <code>null</code> za prazan unos</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako uneseni neprazni tekst prelazi dopuštenu duljinu</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -184,7 +197,15 @@ loadScripts(document, 'script');</script>
 <h3>email</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">email</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value)</span></div>
-<div class="block">Normalizira i provjerava osnovni oblik adrese e-pošte.</div>
+<div class="block">Normalizira e-mail u mala slova i provjerava osnovni oblik adrese.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - unesena e-mail adresa</dd>
+<dt>Returns:</dt>
+<dd>normalizirana e-mail adresa</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako adresa nije u prihvatljivom obliku</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -194,6 +215,14 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">mileage</span><wbr><span class="parameters">(int&nbsp;value)</span></div>
 <div class="block">Provjerava da kilometraža nije negativna.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - kilometraža</dd>
+<dt>Returns:</dt>
+<dd>ista vrijednost kada je valjana</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako je kilometraža negativna</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -202,7 +231,15 @@ loadScripts(document, 'script');</script>
 <h3>money</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a></span>&nbsp;<span class="element-name">money</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/math/BigDecimal.html" title="class or interface in java.math" class="external-link">BigDecimal</a>&nbsp;value)</span></div>
-<div class="block">Provjerava da je stvarna cijena zadana i nenegativna.</div>
+<div class="block">Provjerava stvarno plaćenu cijenu servisne stavke.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - uneseni iznos</dd>
+<dt>Returns:</dt>
+<dd>isti iznos kada je valjan</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako iznos nije zadan ili je negativan</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -211,7 +248,15 @@ loadScripts(document, 'script');</script>
 <h3>password</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">password</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value)</span></div>
-<div class="block">Provjerava minimalnu duljinu lozinke.</div>
+<div class="block">Provjerava minimalnu dopuštenu duljinu lozinke.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - unesena lozinka</dd>
+<dt>Returns:</dt>
+<dd>ista lozinka kada zadovoljava pravilo</dd>
+<dt>Throws:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - ako je lozinka prekratka ili nije zadana</dd>
+</dl>
 </div>
 </section>
 </li>

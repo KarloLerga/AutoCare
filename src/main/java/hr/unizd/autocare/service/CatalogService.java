@@ -8,12 +8,17 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import java.util.List;
 
-/** Čitanje kataloga vozila i standardnih zahvata. */
+/**
+ * Pruža aplikacijskom sloju podatke kataloga vozila i standardnih radova.
+ *
+ * <p>Service skriva stvarni način dohvaćanja kataloga tako da Controlleri rade s jasnim metodama
+ * umjesto s EntityManagerom i JPQL upitima.
+ */
 public class CatalogService {
   private final EntityManagerFactory entityManagerFactory;
 
   /**
-   * Stvara servis za čitanje kataloga vozila i standardnih radova.
+   * Stvara servis kataloga.
    *
    * @param entityManagerFactory zajednička JPA tvornica
    */
@@ -22,9 +27,7 @@ public class CatalogService {
   }
 
   /**
-   * Vraća abecedno uređene marke dostupne u katalogu.
-   *
-   * @return popis marki
+   * @return sortirani popis dostupnih marki vozila iz kataloga
    */
   public List<String> makes() {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -36,10 +39,10 @@ public class CatalogService {
   }
 
   /**
-   * Vraća modele odabrane marke.
+   * Dohvaća modele dostupne za odabranu marku.
    *
    * @param make marka vozila
-   * @return modeli marke
+   * @return modeli te marke
    */
   public List<String> models(String make) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -51,11 +54,11 @@ public class CatalogService {
   }
 
   /**
-   * Vraća godine proizvodnje dostupne za marku i model.
+   * Dohvaća godine za koje postoji barem jedna kataloška varijanta odabranog modela.
    *
    * @param make marka vozila
    * @param model model vozila
-   * @return sortirane godine proizvodnje
+   * @return dostupne godine proizvodnje
    */
   public List<Integer> years(String make, String model) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -67,12 +70,12 @@ public class CatalogService {
   }
 
   /**
-   * Vraća varijante koje odgovaraju marki, modelu i godini.
+   * Dohvaća varijante vozila koje odgovaraju odabranoj marki, modelu i godini.
    *
    * @param make marka vozila
    * @param model model vozila
    * @param year godina proizvodnje
-   * @return odgovarajuće varijante
+   * @return odgovarajuće kataloške varijante
    */
   public List<VehicleVariant> variants(String make, String model, int year) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -84,10 +87,10 @@ public class CatalogService {
   }
 
   /**
-   * Vraća radove koji pripadaju zadanoj servisnoj kategoriji.
+   * Dohvaća standardne radove određene vrste.
    *
-   * @param category kategorija radova
-   * @return radovi u kategoriji
+   * @param category održavanje ili popravak
+   * @return radovi zadane vrste
    */
   public List<WorkDefinition> works(WorkCategory category) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -99,9 +102,7 @@ public class CatalogService {
   }
 
   /**
-   * Vraća sve standardne radove za informativni katalog.
-   *
-   * @return radovi poredani prema kategoriji kataloga i nazivu
+   * @return svi standardni radovi koji se prikazuju u informativnom katalogu
    */
   public List<WorkDefinition> catalog() {
     EntityManager entityManager = entityManagerFactory.createEntityManager();

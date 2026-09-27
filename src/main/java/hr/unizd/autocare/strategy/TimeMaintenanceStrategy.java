@@ -3,8 +3,19 @@ package hr.unizd.autocare.strategy;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-/** Računanje intervala koji ovisi o vremenu. */
+/** Strategy implementacija koja stanje održavanja računa prema proteklom vremenu. */
 public class TimeMaintenanceStrategy implements MaintenanceStrategy {
+  /**
+   * Uspoređuje datum posljednje izvedbe, vremenski interval i datum izračuna.
+   *
+   * @param intervalKm kilometarski interval koji ova strategija ne koristi
+   * @param intervalMonths vremenski interval u mjesecima
+   * @param lastDate datum posljednje izvedbe rada
+   * @param lastMileage kilometraža posljednje izvedbe koja se ovdje ne koristi
+   * @param currentMileage trenutačna kilometraža koja se ovdje ne koristi
+   * @param today datum na koji se izračun radi
+   * @return relativni dio vremenskog intervala koji je preostao
+   */
   @Override
   public double calculate(
       Integer intervalKm,
