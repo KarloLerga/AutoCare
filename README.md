@@ -18,14 +18,9 @@ java -jar target/autocare-1.0.0.jar
 
 Ulazna klasa je `hr.unizd.autocare.app.Main`. Za pokretanje aplikacije potrebna je dostupna Azure SQL baza.
 
-## Projektna dokumentacija
+## Dokumentacija
 
-- [Završna dokumentacija](docs/AutoCare_Zavrsna_Dokumentacija.md)
-- [UML dijagram i opis](diagrams/UML_AutoCare_FINAL.png) · [Mermaid izvor](diagrams/UML_AutoCare_FINAL.mmd) · [objašnjenje](docs/UML_OPIS.md)
-- [ERD dijagram i opis](diagrams/ERD_AutoCare_FINAL.png) · [Mermaid izvor](diagrams/ERD_AutoCare_FINAL.mmd) · [objašnjenje](docs/ERD_OPIS.md)
-- [Figma GUI wireframeovi](wireframes/AutoCare_GUI_Wireframes_FINAL.pdf) · [opis](docs/GUI_WIREFRAME_OPIS.md)
-- [Javadoc i Git graf](docs/JAVADOC_I_GIT_GRAF.md)
-- [Vanjske biblioteke](docs/VANJSKE_BIBLIOTEKE.md)
-- [Checklist predaje](docs/CHECKLIST_PREDAJE.md)
+- [Završna projektna dokumentacija](DOKUMENTACIJA.md)
+- [Generirani Javadoc](javadoc/index.html)
 
-UML i ERD PNG datoteke pohranjene su kao priložene. Mermaid izvori omogućuju čitanje i uređivanje tekstualnog modela; priložene slike nisu ponovno nacrtane.
+Javadoc se može ponovno generirati iz izvornog koda naredbom `.\mvnw.cmd javadoc:javadoc`.
