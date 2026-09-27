@@ -21,6 +21,6 @@ Ulazna klasa je `hr.unizd.autocare.app.Main`. Za pokretanje aplikacije potrebna 
 ## Dokumentacija
 
 - [Završna projektna dokumentacija](DOKUMENTACIJA.md)
-- [Generirani Javadoc](javadoc/index.html)
+- [**Otvori Javadoc u pregledniku ↗**](https://karlolerga.github.io/AutoCare/)
 
-Javadoc se može ponovno generirati iz izvornog koda naredbom `.\mvnw.cmd javadoc:javadoc`.
+Javadoc se automatski generira i objavljuje na GitHub Pages pri promjenama na grani `main`. Lokalno se može ponovno generirati naredbom `.\mvnw.cmd javadoc:javadoc`.

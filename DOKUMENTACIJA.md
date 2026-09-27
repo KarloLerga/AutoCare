@@ -217,13 +217,13 @@ Projekt ne koristi Hibernate kao zamjenu za vlastitu arhitekturu aplikacije. Hib
 
 ## 8. API dokumentacija - Javadoc
 
-Javadoc je HTML dokumentacija API-ja generirana iz komentara u Java kodu.
+Javadoc je HTML dokumentacija API-ja generirana iz komentara u Java kodu i objavljena na GitHub Pages.
 
-[Otvori Javadoc dokumentaciju](javadoc/index.html)
+[**Otvori Javadoc u pregledniku ↗**](https://karlolerga.github.io/AutoCare/)
 
 ## 9. Git aciklički graf povijesti repozitorija
 
-Git DAG prikazuje commitove i njihove međusobne veze u povijesti repozitorija. Generiran je iz Git povijesti i dodan u dokumentaciju kao SVG.
+Git DAG prikazuje commitove i njihove međusobne veze u povijesti repozitorija. Čita se odozgo prema dolje: najnoviji prikazani commit je na vrhu, a stariji slijede prema dnu. Poveznice prikazuju odnose između commitova. Graf je generiran iz Git povijesti i dodan u dokumentaciju kao SVG.
 
 ![Git DAG](assets/Git_DAG.svg)
 
@@ -234,4 +234,4 @@ Git DAG prikazuje commitove i njihove međusobne veze u povijesti repozitorija. 
 - [ERD baze podataka](assets/ERD.png)
 - [GUI wireframeovi (PDF)](assets/AutoCare_GUI_Wireframes_FINAL.pdf)
 - [Git DAG](assets/Git_DAG.svg)
-- [Javadoc HTML dokumentacija](javadoc/index.html)
+- [Javadoc HTML dokumentacija](https://karlolerga.github.io/AutoCare/)
