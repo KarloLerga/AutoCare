@@ -1,0 +1,85 @@
+* ad4a615 (HEAD -> main, reworded-main) docs: expand API documentation across application layers
+* 050086c docs: consolidate project documentation and diagrams
+* 9731dcb docs: include repository history graph
+* ea39f05 docs: add project documentation and Javadoc generation
+* 4105f94 refactor: standardize source organization and conventions
+* 01529a8 refactor: refine view data flow
+* e8c116f refactor: update domain model and reset application data
+* dd45799 refactor: consolidate repository access and update user workflows
+* dc89a47 feat: update registration and catalog interactions
+* ce10571 fix: arrange service item controls in separate row
+* 4159374 config: configure Azure SQL connection
+* 685a378 refactor: update runtime composition and persistence flow
+* 2d5561d refactor: integrate application patterns and runtime wiring
+* e02ae16 refactor: centralize database connection in JDBC URL
+* 93dd0f8 refactor: initialize database connection during application startup
+* f0459ce refactor: organize application runtime composition
+* e11acf4 docs: record runtime verification
+* b23d4a8 refactor: complete application runtime integration
+* 2faf7ec docs: link source review evidence
+* dbc92cb docs: record source review
+* 86c9d8b docs: record compatibility review
+* dd60633 refactor: define service boundaries for runtime workflows
+* 637dda1 docs: record runtime verification
+* 49c84e7 refactor: standardize runtime code conventions
+* daf046a docs: record runtime verification
+* 7b3f85a test: update checks for read-only catalog entities
+* de18722 refactor: integrate catalog model with runtime
+* c41d1dd docs: record verified Azure migration
+* 416c91f fix: make database migration compatible with existing schema
+* 24735fd fix: make database migration dry-run safe
+* 5a50a99 docs: update documentation for implemented project concept
+* 694a49f database: migrate catalog to price range model
+* 182074d data: add catalog price ranges and vehicle classes
+* 4522bab refactor: update notes and catalog workflow
+* df6ac59 docs: record application launch verification
+* c58fc22 docs: document implementation and verification
+* 23bf939 database: apply guarded catalogue cleanup migrations
+* cc53845 data: publish vehicle work catalogue
+* 191c9e5 runtime: integrate desktop workflows with vehicle catalogue
+* df53417 docs: record catalogue verification
+* a88cf88 ui: complete vehicle service and dashboard workflows
+* 4f189fd runtime: integrate maintenance and repair workflows
+* 60f1303 data: populate vehicle work catalogue
+* 72f8778 refactor: remove unused runtime helpers
+* f6dfd59 docs: record application verification
+* 35b310f docs: update runtime model
+* 1dd2d62 database: update account and vehicle columns
+* 7c5cffe catalog: update reference dataset
+* cd98bfc catalog: remove image metadata
+* db4454e ui: add navigation icons
+* 7a6322b auth: update account credential handling
+* 5e00959 docs: record application verification
+* 0c0dcba docs: update runtime notes
+* 9dcfdc5 service: update service record workflow
+* 00b44f2 validation: update input validation rules
+* 2c6ef6a ui: complete service entry workflow
+* 8af815e docs: record application verification
+* 5301543 docs: document application implementation
+* bef6c5c refactor: restructure service editor tables
+* 5613e90 database: add guarded cleanup migration
+* 3cb1fc6 chore: update setup tools for current schema
+* dd28615 test: update checks for runtime behavior
+* b02f51b refactor: restructure controllers and Swing views
+* a56224d refactor: refine transaction boundaries and mappings
+* eb678e5 docs: record Azure SQL validation
+* 2cec2ea test: validate Azure SQL runtime compatibility
+* 867fce8 docs: document runtime compatibility changes
+* 1f3ffe8 fix: update runtime mappings for existing Azure SQL schema
+* d9474e2 docs: record version 2 verification
+* 9d20b81 docs: update project documentation for current implementation
+* 23e4939 refactor: refine maintenance status calculation
+* 7829488 refactor: reorganize application service responsibilities
+* 1223716 refactor: reorganize repository access and transaction handling
+* 194f5e9 refactor: refine service history workflow
+* 1df4f47 refactor: refine service persistence workflow
+* 43e1b24 refactor: reorganize Swing task execution
+* d491ad4 ui: configure FlatLaf dark theme
+* 10aec53 docs: document cleanup mappings and verification
+* be8651c refactor: isolate setup tools and standardize JPA naming
+* bd38202 fix: preserve service transaction boundaries and original failures
+* 11c9021 feat: add local vehicle image fallbacks
+* 60c3154 docs: record verification baseline
+* 4553351 test: record Azure SQL seed verification
+* e04ed45 fix: support Windows execution in offline validation
+* c23d342 chore: initialize AutoCare project structure

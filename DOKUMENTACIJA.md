@@ -237,7 +237,7 @@ Git povijest projekta predstavlja usmjereni aciklički graf commitova. Svaki com
 
 Slika se generira nakon završnog uređivanja poruka commitova i provjere da je sadržaj projekta ostao isti. U dokumentaciji je prikazana kao SVG kako bi tekst commitova ostao čitljiv i pri povećavanju.
 
-<!-- GIT_DAG_IMAGE -->
+![Git DAG](assets/Git_DAG.svg)
 
 
 ## 10. Prilozi

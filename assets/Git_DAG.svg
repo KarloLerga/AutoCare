@@ -1,0 +1,344 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="2608" viewBox="0 0 980 2608">
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:13px;fill:#1f2328}.hash{fill:#57606a}.title{font-family:Arial,sans-serif;font-size:18px;font-weight:700}.edge{stroke:#8c959f;stroke-width:2;fill:none}.node{fill:#ffffff;stroke:#24292f;stroke-width:2}</style>
+<text class="title" x="18" y="23">AutoCare - Git DAG</text>
+<path class="edge" d="M 28 39 L 28 59"/>
+<path class="edge" d="M 28 69 L 28 89"/>
+<path class="edge" d="M 28 99 L 28 119"/>
+<path class="edge" d="M 28 129 L 28 149"/>
+<path class="edge" d="M 28 159 L 28 179"/>
+<path class="edge" d="M 28 189 L 28 209"/>
+<path class="edge" d="M 28 219 L 28 239"/>
+<path class="edge" d="M 28 249 L 28 269"/>
+<path class="edge" d="M 28 279 L 28 299"/>
+<path class="edge" d="M 28 309 L 28 329"/>
+<path class="edge" d="M 28 339 L 28 359"/>
+<path class="edge" d="M 28 369 L 28 389"/>
+<path class="edge" d="M 28 399 L 28 419"/>
+<path class="edge" d="M 28 429 L 28 449"/>
+<path class="edge" d="M 28 459 L 28 479"/>
+<path class="edge" d="M 28 489 L 28 509"/>
+<path class="edge" d="M 28 519 L 28 539"/>
+<path class="edge" d="M 28 549 L 28 569"/>
+<path class="edge" d="M 28 579 L 28 599"/>
+<path class="edge" d="M 28 609 L 28 629"/>
+<path class="edge" d="M 28 639 L 28 659"/>
+<path class="edge" d="M 28 669 L 28 689"/>
+<path class="edge" d="M 28 699 L 28 719"/>
+<path class="edge" d="M 28 729 L 28 749"/>
+<path class="edge" d="M 28 759 L 28 779"/>
+<path class="edge" d="M 28 789 L 28 809"/>
+<path class="edge" d="M 28 819 L 28 839"/>
+<path class="edge" d="M 28 849 L 28 869"/>
+<path class="edge" d="M 28 879 L 28 899"/>
+<path class="edge" d="M 28 909 L 28 929"/>
+<path class="edge" d="M 28 939 L 28 959"/>
+<path class="edge" d="M 28 969 L 28 989"/>
+<path class="edge" d="M 28 999 L 28 1019"/>
+<path class="edge" d="M 28 1029 L 28 1049"/>
+<path class="edge" d="M 28 1059 L 28 1079"/>
+<path class="edge" d="M 28 1089 L 28 1109"/>
+<path class="edge" d="M 28 1119 L 28 1139"/>
+<path class="edge" d="M 28 1149 L 28 1169"/>
+<path class="edge" d="M 28 1179 L 28 1199"/>
+<path class="edge" d="M 28 1209 L 28 1229"/>
+<path class="edge" d="M 28 1239 L 28 1259"/>
+<path class="edge" d="M 28 1269 L 28 1289"/>
+<path class="edge" d="M 28 1299 L 28 1319"/>
+<path class="edge" d="M 28 1329 L 28 1349"/>
+<path class="edge" d="M 28 1359 L 28 1379"/>
+<path class="edge" d="M 28 1389 L 28 1409"/>
+<path class="edge" d="M 28 1419 L 28 1439"/>
+<path class="edge" d="M 28 1449 L 28 1469"/>
+<path class="edge" d="M 28 1479 L 28 1499"/>
+<path class="edge" d="M 28 1509 L 28 1529"/>
+<path class="edge" d="M 28 1539 L 28 1559"/>
+<path class="edge" d="M 28 1569 L 28 1589"/>
+<path class="edge" d="M 28 1599 L 28 1619"/>
+<path class="edge" d="M 28 1629 L 28 1649"/>
+<path class="edge" d="M 28 1659 L 28 1679"/>
+<path class="edge" d="M 28 1689 L 28 1709"/>
+<path class="edge" d="M 28 1719 L 28 1739"/>
+<path class="edge" d="M 28 1749 L 28 1769"/>
+<path class="edge" d="M 28 1779 L 28 1799"/>
+<path class="edge" d="M 28 1809 L 28 1829"/>
+<path class="edge" d="M 28 1839 L 28 1859"/>
+<path class="edge" d="M 28 1869 L 28 1889"/>
+<path class="edge" d="M 28 1899 L 28 1919"/>
+<path class="edge" d="M 28 1929 L 28 1949"/>
+<path class="edge" d="M 28 1959 L 28 1979"/>
+<path class="edge" d="M 28 1989 L 28 2009"/>
+<path class="edge" d="M 28 2019 L 28 2039"/>
+<path class="edge" d="M 28 2049 L 28 2069"/>
+<path class="edge" d="M 28 2079 L 28 2099"/>
+<path class="edge" d="M 28 2109 L 28 2129"/>
+<path class="edge" d="M 28 2139 L 28 2159"/>
+<path class="edge" d="M 28 2169 L 28 2189"/>
+<path class="edge" d="M 28 2199 L 28 2219"/>
+<path class="edge" d="M 28 2229 L 28 2249"/>
+<path class="edge" d="M 28 2259 L 28 2279"/>
+<path class="edge" d="M 28 2289 L 28 2309"/>
+<path class="edge" d="M 28 2319 L 28 2339"/>
+<path class="edge" d="M 28 2349 L 28 2369"/>
+<path class="edge" d="M 28 2379 L 28 2399"/>
+<path class="edge" d="M 28 2409 L 28 2429"/>
+<path class="edge" d="M 28 2439 L 28 2459"/>
+<path class="edge" d="M 28 2469 L 28 2489"/>
+<path class="edge" d="M 28 2499 L 28 2519"/>
+<path class="edge" d="M 28 2529 L 28 2549"/>
+<circle class="node" cx="28" cy="34" r="5"/>
+<text class="hash" x="58" y="39">ad4a615c</text>
+<text x="136" y="39">docs: expand API documentation across application layers</text>
+<circle class="node" cx="28" cy="64" r="5"/>
+<text class="hash" x="58" y="69">050086cd</text>
+<text x="136" y="69">docs: consolidate project documentation and diagrams</text>
+<circle class="node" cx="28" cy="94" r="5"/>
+<text class="hash" x="58" y="99">9731dcb7</text>
+<text x="136" y="99">docs: include repository history graph</text>
+<circle class="node" cx="28" cy="124" r="5"/>
+<text class="hash" x="58" y="129">ea39f05c</text>
+<text x="136" y="129">docs: add project documentation and Javadoc generation</text>
+<circle class="node" cx="28" cy="154" r="5"/>
+<text class="hash" x="58" y="159">4105f94f</text>
+<text x="136" y="159">refactor: standardize source organization and conventions</text>
+<circle class="node" cx="28" cy="184" r="5"/>
+<text class="hash" x="58" y="189">01529a85</text>
+<text x="136" y="189">refactor: refine view data flow</text>
+<circle class="node" cx="28" cy="214" r="5"/>
+<text class="hash" x="58" y="219">e8c116f2</text>
+<text x="136" y="219">refactor: update domain model and reset application data</text>
+<circle class="node" cx="28" cy="244" r="5"/>
+<text class="hash" x="58" y="249">dd457994</text>
+<text x="136" y="249">refactor: consolidate repository access and update user workflows</text>
+<circle class="node" cx="28" cy="274" r="5"/>
+<text class="hash" x="58" y="279">dc89a479</text>
+<text x="136" y="279">feat: update registration and catalog interactions</text>
+<circle class="node" cx="28" cy="304" r="5"/>
+<text class="hash" x="58" y="309">ce105710</text>
+<text x="136" y="309">fix: arrange service item controls in separate row</text>
+<circle class="node" cx="28" cy="334" r="5"/>
+<text class="hash" x="58" y="339">41593746</text>
+<text x="136" y="339">config: configure Azure SQL connection</text>
+<circle class="node" cx="28" cy="364" r="5"/>
+<text class="hash" x="58" y="369">685a3786</text>
+<text x="136" y="369">refactor: update runtime composition and persistence flow</text>
+<circle class="node" cx="28" cy="394" r="5"/>
+<text class="hash" x="58" y="399">2d5561dc</text>
+<text x="136" y="399">refactor: integrate application patterns and runtime wiring</text>
+<circle class="node" cx="28" cy="424" r="5"/>
+<text class="hash" x="58" y="429">e02ae16f</text>
+<text x="136" y="429">refactor: centralize database connection in JDBC URL</text>
+<circle class="node" cx="28" cy="454" r="5"/>
+<text class="hash" x="58" y="459">93dd0f8c</text>
+<text x="136" y="459">refactor: initialize database connection during application startup</text>
+<circle class="node" cx="28" cy="484" r="5"/>
+<text class="hash" x="58" y="489">f0459ce6</text>
+<text x="136" y="489">refactor: organize application runtime composition</text>
+<circle class="node" cx="28" cy="514" r="5"/>
+<text class="hash" x="58" y="519">e11acf4b</text>
+<text x="136" y="519">docs: record runtime verification</text>
+<circle class="node" cx="28" cy="544" r="5"/>
+<text class="hash" x="58" y="549">b23d4a82</text>
+<text x="136" y="549">refactor: complete application runtime integration</text>
+<circle class="node" cx="28" cy="574" r="5"/>
+<text class="hash" x="58" y="579">2faf7ec7</text>
+<text x="136" y="579">docs: link source review evidence</text>
+<circle class="node" cx="28" cy="604" r="5"/>
+<text class="hash" x="58" y="609">dbc92cb7</text>
+<text x="136" y="609">docs: record source review</text>
+<circle class="node" cx="28" cy="634" r="5"/>
+<text class="hash" x="58" y="639">86c9d8b9</text>
+<text x="136" y="639">docs: record compatibility review</text>
+<circle class="node" cx="28" cy="664" r="5"/>
+<text class="hash" x="58" y="669">dd606330</text>
+<text x="136" y="669">refactor: define service boundaries for runtime workflows</text>
+<circle class="node" cx="28" cy="694" r="5"/>
+<text class="hash" x="58" y="699">637dda10</text>
+<text x="136" y="699">docs: record runtime verification</text>
+<circle class="node" cx="28" cy="724" r="5"/>
+<text class="hash" x="58" y="729">49c84e79</text>
+<text x="136" y="729">refactor: standardize runtime code conventions</text>
+<circle class="node" cx="28" cy="754" r="5"/>
+<text class="hash" x="58" y="759">daf046a9</text>
+<text x="136" y="759">docs: record runtime verification</text>
+<circle class="node" cx="28" cy="784" r="5"/>
+<text class="hash" x="58" y="789">7b3f85a9</text>
+<text x="136" y="789">test: update checks for read-only catalog entities</text>
+<circle class="node" cx="28" cy="814" r="5"/>
+<text class="hash" x="58" y="819">de18722c</text>
+<text x="136" y="819">refactor: integrate catalog model with runtime</text>
+<circle class="node" cx="28" cy="844" r="5"/>
+<text class="hash" x="58" y="849">c41d1ddc</text>
+<text x="136" y="849">docs: record verified Azure migration</text>
+<circle class="node" cx="28" cy="874" r="5"/>
+<text class="hash" x="58" y="879">416c91fe</text>
+<text x="136" y="879">fix: make database migration compatible with existing schema</text>
+<circle class="node" cx="28" cy="904" r="5"/>
+<text class="hash" x="58" y="909">24735fd6</text>
+<text x="136" y="909">fix: make database migration dry-run safe</text>
+<circle class="node" cx="28" cy="934" r="5"/>
+<text class="hash" x="58" y="939">5a50a99b</text>
+<text x="136" y="939">docs: update documentation for implemented project concept</text>
+<circle class="node" cx="28" cy="964" r="5"/>
+<text class="hash" x="58" y="969">694a49fb</text>
+<text x="136" y="969">database: migrate catalog to price range model</text>
+<circle class="node" cx="28" cy="994" r="5"/>
+<text class="hash" x="58" y="999">182074db</text>
+<text x="136" y="999">data: add catalog price ranges and vehicle classes</text>
+<circle class="node" cx="28" cy="1024" r="5"/>
+<text class="hash" x="58" y="1029">4522bab7</text>
+<text x="136" y="1029">refactor: update notes and catalog workflow</text>
+<circle class="node" cx="28" cy="1054" r="5"/>
+<text class="hash" x="58" y="1059">df6ac596</text>
+<text x="136" y="1059">docs: record application launch verification</text>
+<circle class="node" cx="28" cy="1084" r="5"/>
+<text class="hash" x="58" y="1089">c58fc22e</text>
+<text x="136" y="1089">docs: document implementation and verification</text>
+<circle class="node" cx="28" cy="1114" r="5"/>
+<text class="hash" x="58" y="1119">23bf9394</text>
+<text x="136" y="1119">database: apply guarded catalogue cleanup migrations</text>
+<circle class="node" cx="28" cy="1144" r="5"/>
+<text class="hash" x="58" y="1149">cc538452</text>
+<text x="136" y="1149">data: publish vehicle work catalogue</text>
+<circle class="node" cx="28" cy="1174" r="5"/>
+<text class="hash" x="58" y="1179">191c9e5c</text>
+<text x="136" y="1179">runtime: integrate desktop workflows with vehicle catalogue</text>
+<circle class="node" cx="28" cy="1204" r="5"/>
+<text class="hash" x="58" y="1209">df534172</text>
+<text x="136" y="1209">docs: record catalogue verification</text>
+<circle class="node" cx="28" cy="1234" r="5"/>
+<text class="hash" x="58" y="1239">a88cf88a</text>
+<text x="136" y="1239">ui: complete vehicle service and dashboard workflows</text>
+<circle class="node" cx="28" cy="1264" r="5"/>
+<text class="hash" x="58" y="1269">4f189fd3</text>
+<text x="136" y="1269">runtime: integrate maintenance and repair workflows</text>
+<circle class="node" cx="28" cy="1294" r="5"/>
+<text class="hash" x="58" y="1299">60f1303d</text>
+<text x="136" y="1299">data: populate vehicle work catalogue</text>
+<circle class="node" cx="28" cy="1324" r="5"/>
+<text class="hash" x="58" y="1329">72f87783</text>
+<text x="136" y="1329">refactor: remove unused runtime helpers</text>
+<circle class="node" cx="28" cy="1354" r="5"/>
+<text class="hash" x="58" y="1359">f6dfd598</text>
+<text x="136" y="1359">docs: record application verification</text>
+<circle class="node" cx="28" cy="1384" r="5"/>
+<text class="hash" x="58" y="1389">35b310f0</text>
+<text x="136" y="1389">docs: update runtime model</text>
+<circle class="node" cx="28" cy="1414" r="5"/>
+<text class="hash" x="58" y="1419">1dd2d62c</text>
+<text x="136" y="1419">database: update account and vehicle columns</text>
+<circle class="node" cx="28" cy="1444" r="5"/>
+<text class="hash" x="58" y="1449">7c5cffe0</text>
+<text x="136" y="1449">catalog: update reference dataset</text>
+<circle class="node" cx="28" cy="1474" r="5"/>
+<text class="hash" x="58" y="1479">cd98bfc4</text>
+<text x="136" y="1479">catalog: remove image metadata</text>
+<circle class="node" cx="28" cy="1504" r="5"/>
+<text class="hash" x="58" y="1509">db4454e8</text>
+<text x="136" y="1509">ui: add navigation icons</text>
+<circle class="node" cx="28" cy="1534" r="5"/>
+<text class="hash" x="58" y="1539">7a6322b6</text>
+<text x="136" y="1539">auth: update account credential handling</text>
+<circle class="node" cx="28" cy="1564" r="5"/>
+<text class="hash" x="58" y="1569">5e009595</text>
+<text x="136" y="1569">docs: record application verification</text>
+<circle class="node" cx="28" cy="1594" r="5"/>
+<text class="hash" x="58" y="1599">0c0dcba5</text>
+<text x="136" y="1599">docs: update runtime notes</text>
+<circle class="node" cx="28" cy="1624" r="5"/>
+<text class="hash" x="58" y="1629">9dcfdc56</text>
+<text x="136" y="1629">service: update service record workflow</text>
+<circle class="node" cx="28" cy="1654" r="5"/>
+<text class="hash" x="58" y="1659">00b44f2b</text>
+<text x="136" y="1659">validation: update input validation rules</text>
+<circle class="node" cx="28" cy="1684" r="5"/>
+<text class="hash" x="58" y="1689">2c6ef6ad</text>
+<text x="136" y="1689">ui: complete service entry workflow</text>
+<circle class="node" cx="28" cy="1714" r="5"/>
+<text class="hash" x="58" y="1719">8af815ef</text>
+<text x="136" y="1719">docs: record application verification</text>
+<circle class="node" cx="28" cy="1744" r="5"/>
+<text class="hash" x="58" y="1749">5301543e</text>
+<text x="136" y="1749">docs: document application implementation</text>
+<circle class="node" cx="28" cy="1774" r="5"/>
+<text class="hash" x="58" y="1779">bef6c5c2</text>
+<text x="136" y="1779">refactor: restructure service editor tables</text>
+<circle class="node" cx="28" cy="1804" r="5"/>
+<text class="hash" x="58" y="1809">5613e901</text>
+<text x="136" y="1809">database: add guarded cleanup migration</text>
+<circle class="node" cx="28" cy="1834" r="5"/>
+<text class="hash" x="58" y="1839">3cb1fc63</text>
+<text x="136" y="1839">chore: update setup tools for current schema</text>
+<circle class="node" cx="28" cy="1864" r="5"/>
+<text class="hash" x="58" y="1869">dd286153</text>
+<text x="136" y="1869">test: update checks for runtime behavior</text>
+<circle class="node" cx="28" cy="1894" r="5"/>
+<text class="hash" x="58" y="1899">b02f51b1</text>
+<text x="136" y="1899">refactor: restructure controllers and Swing views</text>
+<circle class="node" cx="28" cy="1924" r="5"/>
+<text class="hash" x="58" y="1929">a56224d2</text>
+<text x="136" y="1929">refactor: refine transaction boundaries and mappings</text>
+<circle class="node" cx="28" cy="1954" r="5"/>
+<text class="hash" x="58" y="1959">eb678e59</text>
+<text x="136" y="1959">docs: record Azure SQL validation</text>
+<circle class="node" cx="28" cy="1984" r="5"/>
+<text class="hash" x="58" y="1989">2cec2ea0</text>
+<text x="136" y="1989">test: validate Azure SQL runtime compatibility</text>
+<circle class="node" cx="28" cy="2014" r="5"/>
+<text class="hash" x="58" y="2019">867fce8d</text>
+<text x="136" y="2019">docs: document runtime compatibility changes</text>
+<circle class="node" cx="28" cy="2044" r="5"/>
+<text class="hash" x="58" y="2049">1f3ffe83</text>
+<text x="136" y="2049">fix: update runtime mappings for existing Azure SQL schema</text>
+<circle class="node" cx="28" cy="2074" r="5"/>
+<text class="hash" x="58" y="2079">d9474e2e</text>
+<text x="136" y="2079">docs: record version 2 verification</text>
+<circle class="node" cx="28" cy="2104" r="5"/>
+<text class="hash" x="58" y="2109">9d20b816</text>
+<text x="136" y="2109">docs: update project documentation for current implementation</text>
+<circle class="node" cx="28" cy="2134" r="5"/>
+<text class="hash" x="58" y="2139">23e49397</text>
+<text x="136" y="2139">refactor: refine maintenance status calculation</text>
+<circle class="node" cx="28" cy="2164" r="5"/>
+<text class="hash" x="58" y="2169">78294885</text>
+<text x="136" y="2169">refactor: reorganize application service responsibilities</text>
+<circle class="node" cx="28" cy="2194" r="5"/>
+<text class="hash" x="58" y="2199">1223716e</text>
+<text x="136" y="2199">refactor: reorganize repository access and transaction handling</text>
+<circle class="node" cx="28" cy="2224" r="5"/>
+<text class="hash" x="58" y="2229">194f5e96</text>
+<text x="136" y="2229">refactor: refine service history workflow</text>
+<circle class="node" cx="28" cy="2254" r="5"/>
+<text class="hash" x="58" y="2259">1df4f47a</text>
+<text x="136" y="2259">refactor: refine service persistence workflow</text>
+<circle class="node" cx="28" cy="2284" r="5"/>
+<text class="hash" x="58" y="2289">43e1b24c</text>
+<text x="136" y="2289">refactor: reorganize Swing task execution</text>
+<circle class="node" cx="28" cy="2314" r="5"/>
+<text class="hash" x="58" y="2319">d491ad4e</text>
+<text x="136" y="2319">ui: configure FlatLaf dark theme</text>
+<circle class="node" cx="28" cy="2344" r="5"/>
+<text class="hash" x="58" y="2349">10aec53c</text>
+<text x="136" y="2349">docs: document cleanup mappings and verification</text>
+<circle class="node" cx="28" cy="2374" r="5"/>
+<text class="hash" x="58" y="2379">be8651c3</text>
+<text x="136" y="2379">refactor: isolate setup tools and standardize JPA naming</text>
+<circle class="node" cx="28" cy="2404" r="5"/>
+<text class="hash" x="58" y="2409">bd38202f</text>
+<text x="136" y="2409">fix: preserve service transaction boundaries and original failures</text>
+<circle class="node" cx="28" cy="2434" r="5"/>
+<text class="hash" x="58" y="2439">11c9021d</text>
+<text x="136" y="2439">feat: add local vehicle image fallbacks</text>
+<circle class="node" cx="28" cy="2464" r="5"/>
+<text class="hash" x="58" y="2469">60c31543</text>
+<text x="136" y="2469">docs: record verification baseline</text>
+<circle class="node" cx="28" cy="2494" r="5"/>
+<text class="hash" x="58" y="2499">4553351b</text>
+<text x="136" y="2499">test: record Azure SQL seed verification</text>
+<circle class="node" cx="28" cy="2524" r="5"/>
+<text class="hash" x="58" y="2529">e04ed45b</text>
+<text x="136" y="2529">fix: support Windows execution in offline validation</text>
+<circle class="node" cx="28" cy="2554" r="5"/>
+<text class="hash" x="58" y="2559">c23d342e</text>
+<text x="136" y="2559">chore: initialize AutoCare project structure</text>
+</svg>
