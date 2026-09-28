@@ -18,10 +18,19 @@ import javax.swing.table.DefaultTableModel;
 
 /** Swing prikaz servisne povijesti aktivnog vozila i detalja odabranog servisa. */
 public class ServicesView extends JPanel {
+  /** Otvara editor za unos stvarnog servisnog zapisa aktivnog vozila. */
   public final JButton add = new JButton("Novi servis");
+
+  /** Otvara detalje servisnog retka označenog u tablici. */
   public final JButton detail = new JButton("Detalj");
+
+  /** Read-only tablica servisnih zapisa aktivnog vozila. */
   public final JTable table;
+
+  /** Tablični model sa sažetkom svakog servisnog zapisa. */
   private final DefaultTableModel tableModel;
+
+  /** Kopija redaka prikazanih u tablici, korištena za vraćanje odabranog retka. */
   private List<ServiceRow> services = new ArrayList<>();
 
   /** Stvara tablicu servisne povijesti i gumbe za novi servis i prikaz detalja. */

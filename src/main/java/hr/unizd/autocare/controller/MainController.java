@@ -26,14 +26,31 @@ import java.util.ArrayList;
  * nakon promjene vozila ili spremanja servisa mogao osvježiti zajednički aplikacijski kontekst.
  */
 public class MainController implements Observer {
+  /** Glavni Swing prozor za navigaciju, prikaz konteksta i pristup ekranima. */
   private final MainFrame frame;
+
+  /** Prijavljenog korisnika i trenutačno aktivno vozilo dijeli s ostalim Controllerima. */
   private final Session session;
+
+  /** Dohvaća i mijenja vozila pri prijavi i promjeni aktivnog vozila. */
   private final VehicleService vehicleService;
+
+  /** Priprema prikazne podatke Dashboarda za aktivno vozilo. */
   private final DashboardService dashboardService;
+
+  /** Controller za popis, dodavanje, aktiviranje i uređivanje vozila. */
   private final VehiclesController vehicles;
+
+  /** Controller informativnog kataloga radova. */
   private final CatalogController catalog;
+
+  /** Controller servisne povijesti aktivnog vozila. */
   private final ServicesController services;
+
+  /** Controller izračunatih intervala održavanja. */
   private final MaintenanceController maintenance;
+
+  /** Controller evidencije problema aktivnog vozila. */
   private final ProblemsController problems;
 
   /**

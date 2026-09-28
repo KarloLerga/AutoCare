@@ -14,14 +14,26 @@ import jakarta.persistence.ManyToOne;
  */
 @Entity
 public class AppUser {
+  /** Baza generira jedinstveni identifikator računa koji koriste veze i dohvat korisnika. */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
+  /** Ime prikazno povezano s korisničkim računom. */
   private String name;
+
+  /** Normalizirana e-mail adresa kojom se korisnik prijavljuje. */
   private String email;
+
+  /** Lozinka spremljena uz račun; autentikaciju provodi {@code AuthService}. */
   private String password;
 
+  /**
+   * Trenutačno odabrano vozilo korisnika, koje služi kao zadani kontekst u aplikaciji.
+   *
+   * <p>{@code ManyToOne} mapira vezu preko ključa vozila na strani računa; ovo polje bilježi
+   * odabir, dok se vlasništvo nad vozilom provjerava u Service sloju.
+   */
   @ManyToOne
   private Vehicle activeVehicle;
 
@@ -59,19 +71,23 @@ public class AppUser {
   }
 
 
+  /** @return identifikator koji je dodijelila baza */
   public Integer getId() {
     return id;
   }
 
 
+  /** @return e-mail adresa korištena za prijavu */
   public String getEmail() {
     return email;
   }
 
+  /** @return spremljena vrijednost lozinke korisnika */
   public String getPassword() {
     return password;
   }
 
+  /** @return odabrano aktivno vozilo ili {@code null} ako nije postavljeno */
   public Vehicle getActiveVehicle() {
     return activeVehicle;
   }

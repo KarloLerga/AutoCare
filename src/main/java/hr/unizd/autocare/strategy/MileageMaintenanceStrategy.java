@@ -2,7 +2,12 @@ package hr.unizd.autocare.strategy;
 
 import java.time.LocalDate;
 
-/** Strategy implementacija koja stanje održavanja računa isključivo prema prijeđenoj kilometraži. */
+/**
+ * Strategy implementacija koja stanje održavanja računa isključivo prema prijeđenoj kilometraži.
+ *
+ * <p>Rezultat je bezdimenzijski omjer preostalih kilometara prema punom intervalu: nula označava
+ * dospijeće, a negativna vrijednost da je interval prijeđen.
+ */
 public class MileageMaintenanceStrategy implements MaintenanceStrategy {
   /**
    * Uspoređuje kilometražu posljednje izvedbe, kilometarski interval i trenutačnu kilometražu.

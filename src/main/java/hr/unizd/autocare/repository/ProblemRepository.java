@@ -4,8 +4,14 @@ import hr.unizd.autocare.domain.Problem;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 
-/** Repository za persistence operacije nad problemima vozila. */
+/**
+ * Repository za JPA pristup evidentiranim problemima i njihovim vezama sa servisima.
+ *
+ * <p>Upiti ograničavaju dohvat vlasnikom vozila kako bi se podaci čitali samo u korisnikovu
+ * kontekstu. Transakcijsku koordinaciju obavlja Service.
+ */
 public class ProblemRepository {
+  /** EntityManager koji pozivajući Service koristi za upite i spremanje problema. */
   private final EntityManager entityManager;
 
   /**
@@ -18,7 +24,9 @@ public class ProblemRepository {
   }
 
   /**
-   * Dodaje novi problem u trenutačni persistence context.
+   * Dodaje novi problem u persistence context trenutačnog EntityManagera.
+   *
+   * <p>Spremanje u bazu potvrđuje transakcija koju pokreće Service.
    *
    * @param problem novi problem koji se dodaje u persistence context
    */
@@ -51,11 +59,11 @@ public class ProblemRepository {
   }
 
   /**
-   * Dohvaća probleme vozila.
+   * Dohvaća probleme vozila od najnovije evidentiranog prema starijima.
    *
    * @param ownerId identifikator vlasnika
    * @param vehicleId identifikator vozila
-   * @return evidentirani problemi
+   * @return evidentirani problemi u redoslijedu upita; prazna lista ako ih nema
    */
   public List<Problem> list(int ownerId, int vehicleId) {
     return entityManager
@@ -71,11 +79,11 @@ public class ProblemRepository {
   }
 
   /**
-   * Dohvaća tekstualne opise problema koji su riješeni određenim servisom.
+   * Dohvaća samo tekstualne opise problema koji su riješeni određenim servisom.
    *
    * @param ownerId identifikator vlasnika
    * @param serviceId identifikator servisa
-   * @return opisi problema riješenih tim servisom
+   * @return opisi sortirani po identifikatoru problema; prazna lista ako ih servis nije riješio
    */
   public List<String> resolvedDescriptions(int ownerId, int serviceId) {
     return entityManager
@@ -91,6 +99,9 @@ public class ProblemRepository {
 
   /**
    * Broji probleme vozila koji još nemaju povezan servis rješenja.
+   *
+   * <p>Agregatni JPQL upit vraća jednu skalaru vrijednost, uključujući nulu kada nema otvorenih
+   * problema.
    *
    * @param ownerId identifikator vlasnika
    * @param vehicleId identifikator vozila

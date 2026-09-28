@@ -15,8 +15,13 @@ import java.util.List;
  * varijante. Time View prikazuje samo kombinacije koje postoje u katalogu vozila.
  */
 public class VehicleFormController {
+  /** Swing forma čije ovisne odabire ovaj Controller učitava iz kataloga. */
   private final VehicleForm view;
+
+  /** Dohvaća marke, modele, godine i varijante za uzastopne izbore u formi. */
   private final CatalogService catalogService;
+
+  /** Sprječava da programsko punjenje ComboBoxova pokrene dodatne dohvatne listenere. */
   private boolean updating;
 
   /**

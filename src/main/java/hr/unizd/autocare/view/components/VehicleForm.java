@@ -16,12 +16,25 @@ import javax.swing.JTextField;
  * reagira na promjene odabira.
  */
 public class VehicleForm extends JPanel {
+  /** Marka vozila; izborom se pokreće dohvat dostupnih modela. */
   public final JComboBox<String> make = new JComboBox<>();
+
+  /** Model odabrane marke; izborom se pokreće dohvat dostupnih godina. */
   public final JComboBox<String> model = new JComboBox<>();
+
+  /** Godina proizvodnje; izborom se pokreće dohvat kataloških varijanti. */
   public final JComboBox<Integer> year = new JComboBox<>();
+
+  /** Točna kataloška varijanta vozila unutar izabrane marke, modela i godine. */
   public final JComboBox<VehicleVariant> variant = new JComboBox<>();
+
+  /** Trenutačna kilometraža konkretnog primjerka koju korisnik unosi. */
   public final JTextField mileage = new JTextField(12);
+
+  /** Kratki tehnički opis trenutačno odabrane varijante. */
   public final JLabel details = Ui.hint("Odaberite točnu varijantu.");
+
+  /** Uputa ili status kojim Controller opisuje trenutačni korak odabira. */
   public final JLabel state = Ui.hint("Odaberite marku, model, godinu i varijantu.");
 
   /** Stvara sva polja forme, detalj odabrane varijante i početne pomoćne poruke. */
@@ -127,7 +140,7 @@ public class VehicleForm extends JPanel {
     details.setText("Odaberite točnu varijantu.");
   }
 
-  /** @return trenutno odabrana kataloška varijanta ili {@code null} */
+  /** @return trenutno odabrana kataloška varijanta ili {@code null} ako nije odabrana */
   public VehicleVariant selectedVariant() {
     return (VehicleVariant) variant.getSelectedItem();
   }

@@ -13,9 +13,11 @@ import java.util.List;
  * Repository za čitanje kataloga varijanti vozila i standardnih radova.
  *
  * <p>Kataloški podaci u aplikaciji služe kao referentni skup iz kojeg korisnički tokovi biraju
- * postojeće marke, modele, varijante i radove.
+ * postojeće marke, modele, varijante i radove. Klasa sadrži JPQL i dohvat po primarnom ključu,
+ * ali ne otvara EntityManager ni ne koordinira transakcije.
  */
 public class CatalogRepository {
+  /** EntityManager koji Service sloj otvara za trenutačni katalog use-case. */
   private final EntityManager entityManager;
 
   /**
@@ -40,7 +42,7 @@ public class CatalogRepository {
 
   /**
    * @param make marka vozila
-   * @return jedinstveni modeli odabrane marke
+   * @return jedinstveni modeli odabrane marke sortirani po nazivu
    */
   public List<String> models(String make) {
     return entityManager
@@ -57,7 +59,7 @@ public class CatalogRepository {
    *
    * @param make marka vozila
    * @param model model vozila
-   * @return godine koje korisnik može odabrati
+   * @return sortirane godine koje korisnik može odabrati, bez ponavljanja
    */
   public List<Integer> years(String make, String model) {
     List<VehicleVariant> variants = entityManager
@@ -95,7 +97,8 @@ public class CatalogRepository {
    * @param make marka vozila
    * @param model model vozila
    * @param year odabrana godina
-   * @return odgovarajuće varijante
+   * @return varijante čiji raspon godina uključuje zadanu godinu, sortirane po generaciji,
+   *         oznaci motora i identifikatoru
    */
   public List<VehicleVariant> variants(String make, String model, int year) {
     return entityManager
@@ -112,6 +115,8 @@ public class CatalogRepository {
   }
 
   /**
+   * Dohvaća jednu katalošku varijantu po primarnom ključu.
+   *
    * @param id identifikator varijante
    * @return kataloška varijanta ili {@code null} ako ne postoji
    */
@@ -123,7 +128,7 @@ public class CatalogRepository {
    * Dohvaća radove određene vrste, primjerice samo radove održavanja.
    *
    * @param category vrsta rada
-   * @return pripadajuće definicije radova
+   * @return definicije radova sortirane po nazivu; prazna lista ako ih nema
    */
   public List<WorkDefinition> works(WorkCategory category) {
     return entityManager
@@ -135,6 +140,8 @@ public class CatalogRepository {
   }
 
   /**
+   * Dohvaća cijeli informativni katalog sortiran po grupi i nazivu rada.
+   *
    * @return sve definicije radova koje čine informativni katalog
    */
   public List<WorkDefinition> allWorks() {
@@ -146,6 +153,8 @@ public class CatalogRepository {
   }
 
   /**
+   * Dohvaća jednu katalošku definiciju rada po primarnom ključu.
+   *
    * @param id identifikator standardnog rada
    * @return definicija rada ili {@code null} ako ne postoji
    */

@@ -12,9 +12,11 @@ import java.util.List;
  * Pruža aplikacijskom sloju podatke kataloga vozila i standardnih radova.
  *
  * <p>Service skriva stvarni način dohvaćanja kataloga tako da Controlleri rade s jasnim metodama
- * umjesto s EntityManagerom i JPQL upitima.
+ * umjesto s EntityManagerom i JPQL upitima. Svaka metoda otvara EntityManager za svoj dohvat i
+ * zatvara ga u {@code finally} bloku.
  */
 public class CatalogService {
+  /** JPA tvornica, korištena za otvaranje zasebnog EntityManagera za svaki dohvat kataloga. */
   private final EntityManagerFactory entityManagerFactory;
 
   /**
@@ -27,7 +29,9 @@ public class CatalogService {
   }
 
   /**
-   * @return sortirani popis dostupnih marki vozila iz kataloga
+   * Dohvaća marke vozila koje postoje u katalogu.
+   *
+   * @return sortirani popis dostupnih marki; prazna lista ako nema kataloških varijanti
    */
   public List<String> makes() {
     EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -102,7 +106,9 @@ public class CatalogService {
   }
 
   /**
-   * @return svi standardni radovi koji se prikazuju u informativnom katalogu
+   * Dohvaća sve standardne radove koji se prikazuju u informativnom katalogu.
+   *
+   * @return kataloški radovi redom koji definira Repository upit
    */
   public List<WorkDefinition> catalog() {
     EntityManager entityManager = entityManagerFactory.createEntityManager();

@@ -25,9 +25,16 @@ public class AuthController {
     void loggedIn(int ownerId);
   }
 
+  /** Glavni prozor s LoginViewom i RegistrationViewom kojima ovaj Controller povezuje akcije. */
   private final MainFrame frame;
+
+  /** Provodi provjere vjerodajnica i use-case registracije izvan GUI sloja. */
   private final AuthService authService;
+
+  /** Obavještava pozivatelja, najčešće MainController, nakon uspješne prijave. */
   private final LoginListener loginListener;
+
+  /** Registracijski prikaz čiji unos i akcije obrađuje ovaj Controller. */
   private final RegistrationView registrationView;
 
   /**

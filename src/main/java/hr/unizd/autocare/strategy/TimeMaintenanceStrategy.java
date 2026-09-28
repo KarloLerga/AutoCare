@@ -3,7 +3,12 @@ package hr.unizd.autocare.strategy;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-/** Strategy implementacija koja stanje održavanja računa prema proteklom vremenu. */
+/**
+ * Strategy implementacija koja stanje održavanja računa prema proteklom vremenu.
+ *
+ * <p>Izračun koristi broj dana između zadnjeg i sljedećeg servisnog datuma te broj preostalih dana;
+ * rezultat je omjer, nula označava dospijeće, a negativna vrijednost da je datum prošao.
+ */
 public class TimeMaintenanceStrategy implements MaintenanceStrategy {
   /**
    * Uspoređuje datum posljednje izvedbe, vremenski interval i datum izračuna.

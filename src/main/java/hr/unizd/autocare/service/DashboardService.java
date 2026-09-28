@@ -15,12 +15,16 @@ import java.util.List;
  * Priprema sažetak podataka koji Dashboard prikazuje za aktivno vozilo.
  *
  * <p>Service spaja podatke iz vozila, servisne povijesti, problema i izračuna održavanja u jedan
- * jednostavan Dashboard objekt spreman za prikaz.
+ * jednostavan Dashboard objekt spreman za prikaz. Dohvate koordinira jednim EntityManagerom koji
+ * zatvara nakon sastavljanja rezultata.
  */
 public class DashboardService {
+  /** JPA tvornica iz koje se otvara EntityManager za sastavljanje jednog sažetka nadzorne ploče. */
   private final EntityManagerFactory entityManagerFactory;
 
   /**
+   * Stvara servis koji sastavlja prikazne podatke nadzorne ploče iz persistence sloja.
+   *
    * @param entityManagerFactory zajednička JPA tvornica
    */
   public DashboardService(EntityManagerFactory entityManagerFactory) {
@@ -33,7 +37,7 @@ public class DashboardService {
    * @param ownerId identifikator vlasnika
    * @param vehicleId identifikator vozila
    * @return sažetak vozila, stvarnih troškova, otvorenih problema i najbližeg održavanja
-   * @throws IllegalArgumentException ako vozilo ne pripada korisniku
+   * @throws IllegalArgumentException ako vozilo ne postoji ili ne pripada korisniku
    */
   public Dashboard get(int ownerId, int vehicleId) {
     EntityManager entityManager = entityManagerFactory.createEntityManager();

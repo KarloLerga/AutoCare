@@ -16,11 +16,19 @@ import javax.swing.table.DefaultTableModel;
 
 /** Swing prikaz za evidentiranje problema i pregled njihovog otvorenog ili riješenog stanja. */
 public class ProblemsView extends JPanel {
+  /** Kategorija za novi problem; Controller predaje odabir u ProblemService. */
   public final JComboBox<ProblemCategory> category = new JComboBox<>(ProblemCategory.values());
+
+  /** Korisnički opis simptoma novog problema. */
   public final JTextArea description = new JTextArea(3, 36);
+
+  /** Predaje opis i kategoriju Controlleru za spremanje novog problema. */
   public final JButton add = new JButton("Spremi problem");
+
+  /** Read-only tablica problema aktivnog vozila i njihovog statusa. */
   public final JTable table;
 
+  /** Model tablice čiji redci predstavljaju evidentirane probleme. */
   private final DefaultTableModel tableModel;
 
   /** Stvara formu opisa i kategorije problema te read-only tablicu evidentiranih problema. */

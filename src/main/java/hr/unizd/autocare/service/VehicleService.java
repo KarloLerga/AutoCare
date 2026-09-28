@@ -11,8 +11,15 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import java.util.List;
 
-/** Provodi use-caseove vezane uz korisnikova vozila i aktivno vozilo. */
+/**
+ * Koordinira čitanje, dodavanje i izmjene korisnikovih vozila.
+ *
+ * <p>Za čitanje otvara i zatvara EntityManager bez transakcije; dodavanje vozila i izmjene
+ * kilometraže ili aktivnog vozila grupira u resource-local transakcije. Repositoryji obavljaju
+ * JPA dohvat i spremanje, dok ovaj Service provodi vlasničke i use-case provjere.
+ */
 public class VehicleService {
+  /** JPA tvornica iz koje se za svaki use-case stvara njegov EntityManager. */
   private final EntityManagerFactory entityManagerFactory;
 
   /**

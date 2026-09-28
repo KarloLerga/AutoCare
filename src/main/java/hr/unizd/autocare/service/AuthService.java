@@ -14,6 +14,7 @@ import jakarta.persistence.EntityTransaction;
  * validacijska pravila prije nego rezultat vrati Controlleru.
  */
 public class AuthService {
+  /** Zajednička JPA tvornica iz koje se za prijavu ili registraciju otvara EntityManager. */
   private final EntityManagerFactory entityManagerFactory;
 
   /**

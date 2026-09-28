@@ -16,58 +16,78 @@ import java.math.BigDecimal;
  */
 @Entity
 public class WorkDefinition {
+  /** Identifikator kataloške definicije rada koji dodjeljuje baza. */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
+  /** Naziv standardnog rada prikazan korisniku. */
   private String name;
 
+  /** Razlikuje planirano održavanje od popravka; {@code STRING} pohranjuje naziv enum vrijednosti. */
   @Enumerated(EnumType.STRING)
   private WorkCategory category;
 
+  /** Kategorija koja grupira rad u katalogu; {@code STRING} pohranjuje naziv enum vrijednosti. */
   @Enumerated(EnumType.STRING)
   private CatalogCategory catalogCategory;
 
+  /** Kilometarski interval održavanja ili {@code null} ako rad nema takav interval. */
   private Integer intervalKm;
+
+  /** Vremenski interval održavanja u mjesecima ili {@code null} ako se ne koristi. */
   private Integer intervalMonths;
+
+  /** Donja granica informativnog raspona cijene, ne stvarni trošak servisa. */
   private BigDecimal minPrice;
+
+  /** Gornja granica informativnog raspona cijene, ne stvarni trošak servisa. */
   private BigDecimal maxPrice;
 
   /** Konstruktor bez argumenata potreban JPA provideru. */
   protected WorkDefinition() {}
 
+  /** @return identifikator kataloške definicije rada */
   public Integer getId() {
     return id;
   }
 
+  /** @return naziv standardnog rada */
   public String getName() {
     return name;
   }
 
+  /** @return vrsta rada, odnosno održavanje ili popravak */
   public WorkCategory getCategory() {
     return category;
   }
 
+  /** @return korisnička kategorija kataloga */
   public CatalogCategory getCatalogCategory() {
     return catalogCategory;
   }
 
+  /** @return kilometarski servisni interval ili {@code null} ako nije zadan */
   public Integer getIntervalKm() {
     return intervalKm;
   }
 
+  /** @return vremenski servisni interval u mjesecima ili {@code null} ako nije zadan */
   public Integer getIntervalMonths() {
     return intervalMonths;
   }
 
+  /** @return informativna najniža cijena ili {@code null} ako nije navedena */
   public BigDecimal getMinPrice() {
     return minPrice;
   }
 
+  /** @return informativna najviša cijena ili {@code null} ako nije navedena */
   public BigDecimal getMaxPrice() {
     return maxPrice;
   }
 
+  /** @return naziv rada prikladan za tekstualni prikaz */
   @Override
   public String toString() {
     return name;

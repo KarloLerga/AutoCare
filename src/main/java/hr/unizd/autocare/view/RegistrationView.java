@@ -10,11 +10,22 @@ import javax.swing.JTextField;
 
 /** Swing forma za izradu novog korisničkog računa. */
 public class RegistrationView extends JPanel {
+  /** Ime koje će se spremiti uz novi korisnički račun. */
   public final JTextField name = new JTextField(25);
+
+  /** E-mail adresa za novi račun i buduću prijavu. */
   public final JTextField email = new JTextField(25);
+
+  /** Unesena lozinka novog računa; vrijednost čita AuthController. */
   public final JPasswordField password = new JPasswordField(25);
+
+  /** Ponovljena lozinka koju Controller uspoređuje s {@code password}. */
   public final JPasswordField repeat = new JPasswordField(25);
+
+  /** Potvrđuje unos i pokreće registraciju kroz AuthController. */
   public final JButton finish = new JButton("Kreiraj račun");
+
+  /** Odustaje od unosa i vraća korisnika na prijavu. */
   public final JButton cancel = new JButton("Odustani");
 
   /** Stvara polja registracije i gumbe za potvrdu ili odustajanje. */

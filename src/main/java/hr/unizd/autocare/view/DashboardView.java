@@ -16,9 +16,16 @@ import org.kordamp.ikonli.swing.FontIcon;
 
 /** Prikazuje četiri sažeta pokazatelja aktivnog vozila: kilometražu, trošak, probleme i održavanje. */
 public class DashboardView extends JPanel {
+  /** Prikaz ukupnog stvarnog troška evidentiranih servisa. */
   private final JLabel total = Ui.hint("-");
+
+  /** Prikaz najbližeg ili već dospjelog održavanja. */
   private final JLabel maintenance = Ui.hint("-");
+
+  /** Broj otvorenih problema aktivnog vozila. */
   private final JLabel problems = Ui.hint("-");
+
+  /** Trenutačna kilometraža aktivnog vozila. */
   private final JLabel mileage = Ui.hint("-");
 
   /** Stvara raspored Dashboard kartica i njihove početne vrijednosti. */
@@ -69,7 +76,13 @@ public class DashboardView extends JPanel {
     grid.add(card);
   }
 
-  /** Stvara ikonu Dashboard kartice u zadanoj veličini. */
+  /**
+   * Stvara ikonu Dashboard kartice u zadanoj veličini.
+   *
+   * @param iconCode ikona iz FontAwesome skupa
+   * @param size željena veličina ikone u pikselima
+   * @return Swing ikona s bojom teksta trenutačne teme
+   */
   private static FontIcon icon(FontAwesomeSolid iconCode, int size) {
     Color color = UIManager.getColor("Label.foreground");
     if (color == null) {

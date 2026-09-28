@@ -10,9 +10,13 @@ import hr.unizd.autocare.domain.Vehicle;
  * svih ekrana.
  */
 public class Session {
+  /** Jedina instanca aplikacijskog korisničkog konteksta koju dijele Controlleri. */
   private static Session instance;
 
+  /** Identifikator prijavljenog korisnika; vrijednost nula označava odjavljenu sesiju. */
   private int ownerId;
+
+  /** Vozilo odabrano za trenutačni prikaz ili {@code null} dok nije odabrano. */
   private Vehicle activeVehicle;
 
   /** Privatni konstruktor osigurava da se Session koristi kao Singleton. */
@@ -53,12 +57,12 @@ public class Session {
     activeVehicle = null;
   }
 
-  /** Vraća identifikator prijavljenog korisnika. */
+  /** @return identifikator prijavljenog korisnika ili nula nakon odjave */
   public int getOwnerId() {
     return ownerId;
   }
 
-  /** Vraća trenutačno aktivno vozilo, ako je odabrano. */
+  /** @return trenutačno aktivno vozilo ili {@code null} ako ga sesija nema */
   public Vehicle getActiveVehicle() {
     return activeVehicle;
   }

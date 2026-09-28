@@ -10,6 +10,7 @@ import java.util.List;
  * događaj bez izravnog poznavanja Controllera koji se nakon toga trebaju osvježiti.
  */
 public class Subject {
+  /** Observeri koji će sinkrono primiti svaki događaj objavljen ovim Subjectom. */
   private final List<Observer> observers = new ArrayList<>();
 
   /**

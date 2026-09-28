@@ -33,22 +33,52 @@ import javax.swing.table.DefaultTableModel;
  * {@link ServiceInput} predaje Controlleru.
  */
 public class ServiceEditorDialog extends JDialog {
+  /** Datum stvarno obavljenog servisa. */
   public final JTextField date = new JTextField(Ui.date(LocalDate.now()), 12);
+
+  /** Kilometraža vozila pri servisu, početno postavljena trenutačnom kilometražom. */
   public final JTextField mileage;
+
+  /** Neobavezna napomena koja se sprema uz servis. */
   public final JTextArea note = new JTextArea(3, 25);
+
+  /** Filtar radova prema tome radi li se o održavanju ili popravku. */
   public final JComboBox<String> type = new JComboBox<>(new String[] {"Održavanje", "Popravak"});
+
+  /** Odabir standardnog rada koji se dodaje kao servisna stavka. */
   public final JComboBox<WorkDefinition> work = new JComboBox<>();
+
+  /** Stvarna cijena odabranog rada, ne informativna kataloška cijena. */
   public final JTextField actualPrice = new JTextField(12);
+
+  /** Dodaje odabrani rad i cijenu u privremeni popis stavki. */
   public final JButton addItem = new JButton("Dodaj stavku");
+
+  /** Uklanja označenu stavku iz privremenog popisa. */
   public final JButton remove = new JButton("Ukloni odabranu stavku");
+
+  /** Predaje sastavljeni unos Controlleru na spremanje. */
   public final JButton save = new JButton("Spremi servis");
+
+  /** Zatvara editor bez spremanja unosa. */
   public final JButton cancel = new JButton("Odustani");
+
+  /** Tablica privremeno dodanih radova i njihovih stvarnih cijena. */
   public final JTable itemTable;
 
+  /** Otvoreni problemi prikazani kao izbori za povezivanje s novim servisom. */
   private final List<Problem> problems;
+
+  /** Model stavki servisa koji puni {@link #refreshItems()}. */
   private final DefaultTableModel itemTableModel;
+
+  /** Model problema čiji prvi stupac omogućuje korisniku označiti riješene probleme. */
   private final DefaultTableModel problemsTableModel;
+
+  /** Privremeni radovi i cijene prije nego ih {@link #input()} pretvori u ServiceInput. */
   private final List<AddedItem> items = new ArrayList<>();
+
+  /** Katalog radova koji se filtrira prema odabranoj vrsti. */
   private final List<WorkDefinition> availableWorks = new ArrayList<>();
 
   /**
@@ -175,7 +205,7 @@ public class ServiceEditorDialog extends JDialog {
     }
   }
 
-  /** @return trenutno odabrani standardni rad ili {@code null} */
+  /** @return trenutno odabrani standardni rad ili {@code null} ako odabir ne postoji */
   public WorkDefinition selectedWork() {
     return (WorkDefinition) work.getSelectedItem();
   }
@@ -201,7 +231,7 @@ public class ServiceEditorDialog extends JDialog {
     refreshItems();
   }
 
-  /** Uklanja trenutno označenu privremenu servisnu stavku iz editora. */
+  /** Uklanja trenutno označenu privremenu servisnu stavku iz editora; bez odabira ne mijenja popis. */
   public void removeSelectedItem() {
     int row = itemTable.getSelectedRow();
     if (row >= 0) {
@@ -210,7 +240,7 @@ public class ServiceEditorDialog extends JDialog {
     }
   }
 
-  /** Ponovno gradi retke tablice servisnih stavki iz internog popisa AddedItem objekata. */
+  /** Ponovno gradi retke tablice servisnih stavki iz internog popisa {@code AddedItem} objekata. */
   private void refreshItems() {
     itemTableModel.setRowCount(0);
     for (AddedItem item : items) {
@@ -246,10 +276,15 @@ public class ServiceEditorDialog extends JDialog {
 
   /** Privremeno povezuje odabrani rad i stvarno plaćenu cijenu prije spremanja servisa. */
   private static final class AddedItem {
+    /** Kataloški rad odabran za trenutačni servis. */
     private final WorkDefinition work;
+
+    /** Stvarna cijena unesena za izvedbu rada. */
     private final BigDecimal price;
 
     /**
+     * Čuva jedan odabrani rad i njegovu stvarnu cijenu dok se servis ne pretvori u ulazni model.
+     *
      * @param work odabrani standardni rad
      * @param price stvarno plaćena cijena unesena u editoru
      */

@@ -28,6 +28,7 @@ import java.util.List;
  * riješio.
  */
 public class ServiceRecordService {
+  /** JPA tvornica iz koje se otvara EntityManager za svaki servisni use-case. */
   private final EntityManagerFactory entityManagerFactory;
 
   /**

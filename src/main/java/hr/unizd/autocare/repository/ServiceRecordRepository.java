@@ -6,8 +6,14 @@ import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.util.List;
 
-/** Repository za spremanje i čitanje servisne povijesti. */
+/**
+ * Repository za JPA pristup servisnim zapisima, stavkama i agregatnim troškovima.
+ *
+ * <p>Upiti servisnu povijest ograničavaju identifikatorima vozila i vlasnika. Repository ne otvara
+ * EntityManager ni transakcije; koristi kontekst koji mu preda Service sloj.
+ */
 public class ServiceRecordRepository {
+  /** EntityManager trenutačnog Service use-casea kroz koji se izvode upiti i spremanje. */
   private final EntityManager entityManager;
 
   /**
@@ -20,8 +26,10 @@ public class ServiceRecordRepository {
   }
 
   /**
-   * Dodaje novi servis u persistence context; povezane nove stavke spremaju se prema JPA cascade
-   * postavci entiteta.
+   * Dodaje novi servis u persistence context trenutačnog EntityManagera.
+   *
+   * <p>Povezane nove stavke prate postojeću JPA postavku {@code CascadeType.PERSIST} na servisu, pa
+   * ih Service ne mora zasebno spremati.
    *
    * @param serviceRecord novi servisni zapis
    */
@@ -32,9 +40,12 @@ public class ServiceRecordRepository {
   /**
    * Dohvaća servisnu povijest vozila samo unutar vlasničkog konteksta korisnika.
    *
+   * <p>Rezultati su poredani po datumu servisa, kilometraži i ID-u, silazno, tako da se najnoviji
+   * zapisi pojavljuju prvi.
+   *
    * @param ownerId identifikator vlasnika
    * @param vehicleId identifikator vozila
-   * @return servisni zapisi vozila
+   * @return servisni zapisi u redoslijedu upita; prazna lista ako vozilo nema povijest
    */
   public List<ServiceRecord> list(int ownerId, int vehicleId) {
     return entityManager
@@ -51,11 +62,11 @@ public class ServiceRecordRepository {
   }
 
   /**
-   * Dohvaća jedan servis samo ako pripada vozilu zadanog korisnika.
+   * Dohvaća najviše jedan servis samo ako pripada vozilu zadanog korisnika.
    *
    * @param ownerId identifikator vlasnika
    * @param serviceId identifikator servisa
-   * @return servis ili {@code null} ako nije pronađen u korisničkom kontekstu
+   * @return servis ili {@code null} ako ne postoji ili ne pripada korisniku
    */
   public ServiceRecord findForOwner(int ownerId, int serviceId) {
     List<ServiceRecord> serviceRecords = entityManager
@@ -99,6 +110,9 @@ public class ServiceRecordRepository {
 
   /**
    * Računa zbroj stvarno plaćenih servisnih stavki za vozilo.
+   *
+   * <p>{@code SUM} upit daje jednu skalarnu vrijednost; kada nema stavki, rezultat može biti
+   * {@code null}, što pozivatelj pretvara u nulu.
    *
    * @param ownerId identifikator vlasnika
    * @param vehicleId identifikator vozila

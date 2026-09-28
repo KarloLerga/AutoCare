@@ -14,11 +14,22 @@ import javax.swing.table.DefaultTableModel;
 
 /** Swing prikaz svih vozila prijavljenog korisnika i osnovnih akcija nad odabranim vozilom. */
 public class VehiclesView extends JPanel {
+  /** Otvara dijalog za unos vozila prijavljenog korisnika. */
   public final JButton add = new JButton("Dodaj vozilo");
+
+  /** Otvara uređivanje kilometraže trenutno označenog vozila. */
   public final JButton edit = new JButton("Promijeni kilometražu");
+
+  /** Postavlja označeno vozilo kao trenutačno aktivno. */
   public final JButton activate = new JButton("Aktiviraj");
+
+  /** Read-only tablica vozila korisnika; odabir određuje akcije uređivanja i aktiviranja. */
   public final JTable table;
+
+  /** Model koji prikazuje osnovne podatke i odbija izravno uređivanje ćelija. */
   private final DefaultTableModel tableModel;
+
+  /** Kopija vozila redom prikazanih u tablici, korištena za dohvat odabranog objekta. */
   private List<Vehicle> vehicles = new ArrayList<>();
 
   /** Stvara tablicu vozila i gumbe za dodavanje, promjenu kilometraže i aktiviranje. */

@@ -10,9 +10,17 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Upravlja prikazom i filtriranjem informativnog kataloga standardnih radova. */
+/**
+ * Upravlja prikazom i filtriranjem informativnog kataloga standardnih radova.
+ *
+ * <p>Service dohvati katalog, a ovaj Controller primjenjuje tekstualni i kategorijski filter prije
+ * predaje redaka Viewu; filtriranje se zato odvija u aplikacijskom sloju, ne u upitu Repositoryja.
+ */
 public class CatalogController {
+  /** Glavni prozor koji sadrži CatalogView i prikazuje eventualne pogreške. */
   private final MainFrame frame;
+
+  /** Dohvaća kataloške definicije standardnih radova. */
   private final CatalogService catalogService;
 
   /**

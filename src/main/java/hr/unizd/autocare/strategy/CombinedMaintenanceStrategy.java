@@ -8,7 +8,10 @@ import java.time.LocalDate;
  * <p>Računa oba kriterija i vraća onaj koji ranije dospijeva, odnosno manji preostali omjer.
  */
 public class CombinedMaintenanceStrategy implements MaintenanceStrategy {
+  /** Izračunava preostali omjer kilometarskog intervala. */
   private final MileageMaintenanceStrategy mileageStrategy = new MileageMaintenanceStrategy();
+
+  /** Izračunava preostali omjer vremenskog intervala. */
   private final TimeMaintenanceStrategy timeStrategy = new TimeMaintenanceStrategy();
 
   /**

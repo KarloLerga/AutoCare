@@ -11,8 +11,13 @@ import javax.swing.JTextField;
 
 /** Modalni dijalog za unos nove trenutačne kilometraže odabranog vozila. */
 public class MileageDialog extends JDialog {
+  /** Polje nove kilometraže koju Controller validira i šalje VehicleServiceu. */
   public final JTextField mileage;
+
+  /** Potvrđuje unos nove kilometraže. */
   public final JButton save = new JButton("Spremi");
+
+  /** Zatvara dijalog bez predaje nove vrijednosti servisu. */
   public final JButton cancel = new JButton("Odustani");
 
   /**

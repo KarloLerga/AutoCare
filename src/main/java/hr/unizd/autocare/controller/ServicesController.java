@@ -19,13 +19,29 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Upravlja servisnom poviješću, detaljem servisa i unosom novog servisa aktivnog vozila. */
+/**
+ * Upravlja servisnom poviješću, detaljem servisa i unosom novog servisa aktivnog vozila.
+ *
+ * <p>Controller povezuje akcije Viewa s servisima za zapise, katalog i probleme. Nakon uspješnog
+ * spremanja šalje Observer događaj kako bi ovisni prikazi mogli ponovno učitati podatke.
+ */
 public class ServicesController {
+  /** Glavni prozor kroz koji Controller dohvaća ServicesView i otvara modalni editor. */
   private final MainFrame frame;
+
+  /** Service use-caseovi za dohvat servisne povijesti, detalja i spremanje servisa. */
   private final ServiceRecordService serviceRecordService;
+
+  /** Dohvaća katalog radova koji se mogu dodati u novi servis. */
   private final CatalogService catalogService;
+
+  /** Dohvaća otvorene probleme koje korisnik može povezati s novim servisom. */
   private final ProblemService problemService;
+
+  /** Daje Controlleru ID prijavljenog korisnika i trenutačno aktivno vozilo. */
   private final Session session;
+
+  /** Objavljuje događaj nakon spremanja kako bi se osvježili ovisni ekrani. */
   private final Subject subject;
 
   /**

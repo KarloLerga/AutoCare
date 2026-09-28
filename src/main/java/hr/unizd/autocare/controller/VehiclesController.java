@@ -18,10 +18,19 @@ import java.awt.event.ActionListener;
  * Upravlja pregledom, dodavanjem, promjenom kilometraže i aktiviranjem korisnikovih vozila.
  */
 public class VehiclesController {
+  /** Glavni prozor koji sadrži popis vozila i dijaloge za unos njihovih podataka. */
   private final MainFrame frame;
+
+  /** Obavlja use-caseove dohvata, spremanja i izmjene korisnikovih vozila. */
   private final VehicleService vehicleService;
+
+  /** Dohvaća kataloške vrijednosti potrebne pri unosu vozila. */
   private final CatalogService catalogService;
+
+  /** Daje identitet prijavljenog korisnika i aktivni kontekst sučelja. */
   private final Session session;
+
+  /** Obavještava druge dijelove aplikacije nakon promjene ili odabira vozila. */
   private final Subject subject;
 
   /**

@@ -17,11 +17,19 @@ import javax.swing.table.DefaultTableModel;
 
 /** Swing prikaz informativnog kataloga standardnih radova s pretragom i filtrom kategorije. */
 public class CatalogView extends JPanel {
+  /** Tekst koji Controller koristi za naziv rada pretraživan bez obzira na velika slova. */
   public final JTextField search = new JTextField(24);
+
+  /** Kategorijski filtar; prva stavka predstavlja prikaz svih kategorija. */
   public final JComboBox<String> category = new JComboBox<>();
+
+  /** Pokreće ponovno učitavanje kataloga s trenutačnim filtrima. */
   public final JButton searchButton = new JButton("Pretraži");
+
+  /** Read-only tablica informativnih standardnih radova i njihovih intervala/cijena. */
   public final JTable table;
 
+  /** Model tablice koji puni {@link #setRows(List)} i odbija uređivanje ćelija. */
   private final DefaultTableModel tableModel;
 
   /** Stvara kontrolu pretrage, odabir kategorije i read-only tablicu kataloga. */

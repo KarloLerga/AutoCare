@@ -14,8 +14,13 @@ import java.awt.event.ActionListener;
  * konkretnog servisa, pa ovdje ne postoji zasebna akcija za ručno zatvaranje problema.
  */
 public class ProblemsController {
+  /** Glavni prozor koji sadrži prikaz i unos problema aktivnog vozila. */
   private final MainFrame frame;
+
+  /** Dohvaća probleme te sprema nove zapise kroz Service sloj. */
   private final ProblemService problemService;
+
+  /** Daje prijavljenog vlasnika i aktivno vozilo za sva servisna pozivanja. */
   private final Session session;
 
   /**

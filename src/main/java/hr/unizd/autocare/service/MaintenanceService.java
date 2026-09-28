@@ -23,9 +23,11 @@ import java.util.Map;
  *
  * <p>Servisna povijest je izvor istine: održavanje se prati tek kada za standardni rad postoji
  * stvarno evidentirana servisna stavka. Service priprema podatke, a izračun preostalog intervala
- * delegira domenskom {@code MaintenanceCalculatoru}.
+ * delegira domenskom {@code MaintenanceCalculatoru}. Za javni dohvat otvara i zatvara jedan
+ * EntityManager te provjerava vlasnički kontekst vozila.
  */
 public class MaintenanceService {
+  /** JPA tvornica za čitanje vozila, kataloških intervala i servisne povijesti. */
   private final EntityManagerFactory entityManagerFactory;
 
   /**

@@ -14,17 +14,35 @@ import jakarta.persistence.ManyToOne;
  */
 @Entity
 public class Vehicle {
+  /** Identifikator konkretnog vozila koji dodjeljuje baza. */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
+  /**
+   * Korisnik koji posjeduje ovo vozilo.
+   *
+   * <p>Svako vozilo ima jednog vlasnika, a jedan korisnik može imati više vozila.
+   * {@code ManyToOne} smješta strani ključ vlasnika u retku vozila; servisni upiti koriste tu vezu
+   * za ograničavanje podataka na prijavljenog korisnika.
+   */
   @ManyToOne
   private AppUser owner;
 
+  /**
+   * Kataloška varijanta kojoj konkretno vozilo pripada.
+   *
+   * <p>Svako vozilo referencira jednu varijantu, a jedna varijanta može opisivati više vozila.
+   * Strani ključ varijante nalazi se na strani vozila; varijanta opisuje tehničku konfiguraciju,
+   * a ne vlasnikov pojedinačni primjerak.
+   */
   @ManyToOne
   private VehicleVariant variant;
 
+  /** Godina proizvodnje konkretnog primjerka, provjerena prema rasponu njegove varijante. */
   private int productionYear;
+
+  /** Zadnja poznata kilometraža koja se koristi u izračunima održavanja. */
   private int currentMileage;
 
   /** Konstruktor bez argumenata potreban JPA provideru. */
@@ -70,22 +88,27 @@ public class Vehicle {
     currentMileage = mileage;
   }
 
+  /** @return identifikator vozila dodijeljen u bazi */
   public Integer getId() {
     return id;
   }
 
+  /** @return korisnik kojem vozilo pripada */
   public AppUser getOwner() {
     return owner;
   }
 
+  /** @return kataloška varijanta ovog vozila */
   public VehicleVariant getVariant() {
     return variant;
   }
 
+  /** @return godina proizvodnje konkretnog vozila */
   public int getProductionYear() {
     return productionYear;
   }
 
+  /** @return trenutačno evidentirana kilometraža u kilometrima */
   public int getCurrentMileage() {
     return currentMileage;
   }

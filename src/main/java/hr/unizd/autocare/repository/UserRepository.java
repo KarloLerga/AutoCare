@@ -5,11 +5,14 @@ import jakarta.persistence.EntityManager;
 import java.util.List;
 
 /**
- * Repository za persistence operacije nad korisničkim računima.
+ * Repository za dohvat i spremanje persistentnih korisničkih računa.
  *
- * <p>Klasa radi s EntityManagerom koji joj predaje Service, pa ne otvara vlastite transakcije.
+ * <p>Klasa radi s EntityManagerom koji joj predaje Service, pa ne otvara vlastite EntityManagere
+ * ni transakcije. JPQL dohvat po e-mailu vraća najviše jedan račun, a dohvat po ID-u koristi JPA
+ * {@code find}.
  */
 public class UserRepository {
+  /** EntityManager kojim Service izvodi dohvat i spremanje računa u trenutačnoj operaciji. */
   private final EntityManager entityManager;
 
   /**
@@ -22,7 +25,9 @@ public class UserRepository {
   }
 
   /**
-   * Traži korisnika prema e-mail adresi.
+   * Traži najviše jednog korisnika prema e-mail adresi.
+   *
+   * <p>Upit ograničava broj rezultata na jedan; prazna lista se pretvara u {@code null}.
    *
    * @param email e-mail adresa
    * @return pronađeni korisnik ili {@code null} ako račun ne postoji
@@ -41,7 +46,7 @@ public class UserRepository {
   }
 
   /**
-   * Dohvaća korisnika prema primarnom ključu.
+   * Dohvaća korisnika prema primarnom ključu kroz JPA {@code find}.
    *
    * @param id primarni ključ korisnika
    * @return korisnik ili {@code null} ako nije pronađen
@@ -51,7 +56,9 @@ public class UserRepository {
   }
 
   /**
-   * Predaje novi korisnički račun persistence kontekstu.
+   * Predaje novi korisnički račun persistence kontekstu trenutačnog EntityManagera.
+   *
+   * <p>Repository ne pokreće transakciju; nju otvara Service koji koordinira registraciju.
    *
    * @param user račun koji treba spremiti
    */

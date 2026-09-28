@@ -28,29 +28,70 @@ import org.kordamp.ikonli.swing.FontIcon;
  * vozila prikazuje u zajedničkom kontekstu navigacije.
  */
 public class MainFrame extends JFrame {
+  /** Prikaz za prijavu koji koristi AuthController za unos vjerodajnica. */
   public final LoginView login = new LoginView();
+
+  /** Prikaz registracije kojim AuthController stvara novi račun. */
   public final RegistrationView registration = new RegistrationView();
+
+  /** Sažetak vozila, troškova, problema i najbližeg održavanja. */
   public final DashboardView dashboard = new DashboardView();
+
+  /** Popis i akcije nad vozilima prijavljenog korisnika. */
   public final VehiclesView vehicles = new VehiclesView();
+
+  /** Prikazuje izračunate intervale održavanja aktivnog vozila. */
   public final MaintenanceView maintenance = new MaintenanceView();
+
+  /** Prikazuje informativne definicije standardnih radova. */
   public final CatalogView catalog = new CatalogView();
+
+  /** Prikazuje servisnu povijest i detalje izvedenih servisa. */
   public final ServicesView services = new ServicesView();
+
+  /** Prikazuje i omogućuje evidentiranje problema aktivnog vozila. */
   public final ProblemsView problems = new ProblemsView();
 
+  /** Navigacijski gumb za sažetak aktivnog vozila. */
   public final JButton dashboardButton = new JButton("Dashboard");
+
+  /** Navigacijski gumb za pregled i uređivanje vozila. */
   public final JButton vehiclesButton = new JButton("Vozila");
+
+  /** Navigacijski gumb za izračunato održavanje aktivnog vozila. */
   public final JButton maintenanceButton = new JButton("Održavanje");
+
+  /** Navigacijski gumb za informativni katalog radova. */
   public final JButton catalogButton = new JButton("Katalog");
+
+  /** Navigacijski gumb za servisnu povijest aktivnog vozila. */
   public final JButton servicesButton = new JButton("Servisi");
+
+  /** Navigacijski gumb za probleme aktivnog vozila. */
   public final JButton problemsButton = new JButton("Problemi");
+
+  /** Gumb kojim Controller odjavljuje korisnika i vraća prikaz na prijavu. */
   public final JButton logoutButton = new JButton("Odjava");
 
+  /** CardLayout koji izmjenjuje autentikacijski dio i glavni aplikacijski shell. */
   private final CardLayout roots = new CardLayout();
+
+  /** CardLayout koji prikazuje jednu od funkcionalnih stranica aplikacije. */
   private final CardLayout pages = new CardLayout();
+
+  /** Korijenski panel u kojem se izmjenjuju prijava, registracija i aplikacijski shell. */
   private final JPanel root = new JPanel(roots);
+
+  /** Sadržajni panel navigacijskih stranica kojim upravlja {@code pages}. */
   private final JPanel content = new JPanel(pages);
+
+  /** Bočni naslov aktivnog vozila ili obavijest da vozilo još nije odabrano. */
   private final JLabel vehicleName = new JLabel("AutoCare");
+
+  /** Dodatni kontekst aktivnog vozila, poput godine i kilometraže. */
   private final JLabel vehicleDetails = new JLabel(" ");
+
+  /** Naziv funkcionalne stranice koju {@link #showPage(String)} trenutačno prikazuje. */
   private String page = "Dashboard";
 
   /** Stvara glavni prozor, njegove View panele, bočnu navigaciju i CardLayout strukturu. */

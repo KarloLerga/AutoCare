@@ -17,20 +17,37 @@ import java.time.LocalDate;
  */
 @Entity
 public class Problem {
+  /** Baza generira identifikator zapisa problema. */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
+  /**
+   * Vozilo na kojem je problem zabilježen.
+   *
+   * <p>Svaki problem pripada jednom vozilu, dok vozilo može imati više problema. Veza
+   * {@code ManyToOne} sprema strani ključ vozila u retku problema, pa se povijest problema može
+   * dohvatiti za konkretno vozilo i provjeriti kroz njegova vlasnika.
+   */
   @ManyToOne
   private Vehicle vehicle;
 
+  /** Opis simptoma koji je korisnik unio; sam opis ne predstavlja automatsku dijagnozu. */
   private String description;
 
+  /** Kategorija koju je korisnik odabrao za lakše razvrstavanje; {@code STRING} sprema naziv enum vrijednosti. */
   @Enumerated(EnumType.STRING)
   private ProblemCategory category;
 
+  /** Datum na koji je problem evidentiran. */
   private LocalDate createdAt;
 
+  /**
+   * Servisni zapis kojim je problem označen riješenim.
+   *
+   * <p>{@code ManyToOne} pohranjuje strani ključ servisa u retku problema; više problema može
+   * biti povezano s istim servisom, a {@code null} znači da problem još nije zatvoren.
+   */
   @ManyToOne
   private ServiceRecord resolvedByService;
 
@@ -84,18 +101,22 @@ public class Problem {
     resolvedByService = serviceRecord;
   }
 
+  /** @return identifikator problema dodijeljen u bazi */
   public Integer getId() {
     return id;
   }
 
+  /** @return korisnički uneseni opis problema */
   public String getDescription() {
     return description;
   }
 
+  /** @return odabrana kategorija problema */
   public ProblemCategory getCategory() {
     return category;
   }
 
+  /** @return datum evidentiranja problema */
   public LocalDate getCreatedAt() {
     return createdAt;
   }

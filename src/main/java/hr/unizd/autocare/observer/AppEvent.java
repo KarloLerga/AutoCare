@@ -2,10 +2,10 @@ package hr.unizd.autocare.observer;
 
 /** Događaji koji mogu zahtijevati osvježavanje zajedničkog stanja ili prikaza aplikacije. */
 public enum AppEvent {
-  /** Promijenjen je popis ili podatak vozila. */
+  /** Promijenjeni su podaci ili popis vozila; objavljuje se nakon uspješne promjene vozila. */
   VEHICLE_CHANGED,
-  /** Promijenjeno je vozilo koje predstavlja aktivni kontekst. */
+  /** Promijenjeno je trenutačno vozilo koje određuje kontekst prikazanih podataka. */
   ACTIVE_VEHICLE_CHANGED,
-  /** Spremljen je novi servis i ovisni prikazi trebaju osvježavanje. */
+  /** Novi servis je spremljen pa prikazi servisne povijesti i održavanja trebaju osvježavanje. */
   SERVICE_SAVED
 }

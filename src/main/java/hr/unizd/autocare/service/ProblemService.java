@@ -18,9 +18,12 @@ import java.util.List;
  * ServiceRecordService poveže sa servisom koji ga je riješio.
  */
 public class ProblemService {
+  /** JPA tvornica iz koje se otvara EntityManager za dohvat ili stvaranje problema. */
   private final EntityManagerFactory entityManagerFactory;
 
   /**
+   * Stvara servis koji koordinira dohvat i evidentiranje problema vozila.
+   *
    * @param entityManagerFactory zajednička JPA tvornica
    */
   public ProblemService(EntityManagerFactory entityManagerFactory) {

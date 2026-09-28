@@ -11,8 +11,10 @@ import javax.swing.table.DefaultTableModel;
 
 /** Swing tablični prikaz izračunatih intervala održavanja aktivnog vozila. */
 public class MaintenanceView extends JPanel {
+  /** Tablica redaka izračunatih intervala koje priprema MaintenanceService. */
   public final JTable table;
 
+  /** Read-only model redaka koji {@link #setRows(List)} zamjenjuje pri osvježavanju. */
   private final DefaultTableModel tableModel;
 
   /** Stvara read-only tablicu održavanja i njezine stupce. */

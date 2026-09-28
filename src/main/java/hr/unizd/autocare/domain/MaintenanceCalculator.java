@@ -14,8 +14,13 @@ import java.time.LocalDate;
  * kriterija.
  */
 public class MaintenanceCalculator {
+  /** Računa preostali omjer kada se interval prati samo prema kilometraži. */
   private final MaintenanceStrategy mileageStrategy = new MileageMaintenanceStrategy();
+
+  /** Računa preostali omjer kada se interval prati samo prema vremenu. */
   private final MaintenanceStrategy timeStrategy = new TimeMaintenanceStrategy();
+
+  /** Uspoređuje kilometarski i vremenski interval te odabire onaj koji prije dospijeva. */
   private final MaintenanceStrategy combinedStrategy = new CombinedMaintenanceStrategy();
 
   /**

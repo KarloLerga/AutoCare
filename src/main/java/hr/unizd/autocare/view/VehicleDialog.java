@@ -11,8 +11,13 @@ import javax.swing.JPanel;
 
 /** Modalni dijalog za dodavanje novog vozila pomoću zajedničke VehicleForm komponente. */
 public class VehicleDialog extends JDialog {
+  /** Zajednička forma za izbor marke, modela, godine, varijante i početne kilometraže. */
   public final VehicleForm form = new VehicleForm();
+
+  /** Predaje odabrane vrijednosti Controlleru na spremanje. */
   public final JButton save = new JButton("Spremi vozilo");
+
+  /** Zatvara dijalog bez dodavanja vozila. */
   public final JButton cancel = new JButton("Odustani");
 
   /**

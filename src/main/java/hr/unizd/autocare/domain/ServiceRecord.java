@@ -20,17 +20,36 @@ import java.util.List;
  */
 @Entity
 public class ServiceRecord {
+  /** Identifikator servisnog zapisa koji dodjeljuje baza. */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
+  /**
+   * Vozilo kojem je servis obavljen.
+   *
+   * <p>{@code ManyToOne} pohranjuje strani ključ vozila u retku servisa; jedno vozilo zato može
+   * imati više zapisa u servisnoj povijesti.
+   */
   @ManyToOne
   private Vehicle vehicle;
 
+  /** Datum stvarnog obavljanja servisa. */
   private LocalDate serviceDate;
+
+  /** Kilometraža vozila zabilježena pri ovom servisu. */
   private int mileage;
+
+  /** Neobavezna napomena koju je korisnik unio uz servis. */
   private String note;
 
+  /**
+   * Izvedene stavke koje čine sadržaj i trošak servisa.
+   *
+   * <p>{@code mappedBy = "serviceRecord"} označava da je vlasnička strana veze polje
+   * {@code ServiceItem.serviceRecord}, gdje se nalazi strani ključ. {@code CascadeType.PERSIST}
+   * omogućuje da spremanje novog servisa spremi i njegove nove stavke.
+   */
   @OneToMany(mappedBy = "serviceRecord", cascade = CascadeType.PERSIST)
   private List<ServiceItem> items = new ArrayList<>();
 
@@ -90,26 +109,32 @@ public class ServiceRecord {
     return total;
   }
 
+  /** @return identifikator servisnog zapisa dodijeljen u bazi */
   public Integer getId() {
     return id;
   }
 
+  /** @return servisirano vozilo */
   public Vehicle getVehicle() {
     return vehicle;
   }
 
+  /** @return datum obavljanja servisa */
   public LocalDate getServiceDate() {
     return serviceDate;
   }
 
+  /** @return kilometraža vozila pri servisu */
   public int getMileage() {
     return mileage;
   }
 
+  /** @return napomena servisa ili {@code null} ako nije unesena */
   public String getNote() {
     return note;
   }
 
+  /** @return stavke koje pripadaju ovom servisu */
   public List<ServiceItem> getItems() {
     return items;
   }
