@@ -225,7 +225,12 @@ public class MainFrame extends JFrame {
   }
 
   /**
-   * Ažurira zajednički prikaz aktivnog vozila u navigacijskom dijelu prozora.
+   * Ažurira navigaciju i zaglavlje prema aktivnom vozilu.
+   *
+   * <p>Kada je vozilo {@code null}, onemogućuje stranice koje ovise o vozilu, ali ostavlja Vozila
+   * i Katalog dostupnima te prikazuje uputu za dodavanje vozila. Inače omogućuje stranice Dashboard,
+   * Održavanje, Servisi i Problemi te prikaže marku, model, godinu i kilometražu odabranog vozila.
+   * Metoda mijenja samo prikaz i dostupnost navigacije; ne dohvaća i ne sprema podatke.
    *
    * @param vehicle aktivno vozilo ili {@code null} ako vozilo nije odabrano
    */

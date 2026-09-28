@@ -72,8 +72,11 @@ public class VehicleService {
   /**
    * Dodaje novo vozilo korisniku na temelju odabrane kataloške varijante.
    *
-   * <p>Provjerava postojanje korisnika i varijante, valjanost godine za odabranu varijantu te
-   * kilometražu. Novo vozilo sprema se u transakciji.
+   * <p>U jednoj transakciji otvara EntityManager i Repositoryje koji ga dijele. Provjerava
+   * postojanje vlasnika i kataloške varijante, a konstruktor {@link Vehicle} provjerava godinu
+   * varijante i kilometražu. Novo vozilo se sprema; ako korisnik još nema aktivno vozilo, upravo
+   * dodano vozilo postaje aktivno u istoj transakciji. Runtime pogreška uzrokuje rollback, a
+   * EntityManager se zatvara u svakom slučaju.
    *
    * @param ownerId identifikator vlasnika
    * @param variantId identifikator kataloške varijante
@@ -117,7 +120,11 @@ public class VehicleService {
   }
 
   /**
-   * Mijenja kilometražu vozila koje pripada zadanom korisniku.
+   * Ažurira kilometražu vozila nakon provjere vlasništva i domenskog pravila.
+   *
+   * <p>Owner-filterirani Repository dohvaća vozilo unutar nove transakcije. {@link Vehicle#updateMileage(int)}
+   * odbija negativnu ili manju kilometražu; uspjeh se potvrđuje commitom. Kod RuntimeExceptiona
+   * aktivna transakcija se vraća, iznimka se prosljeđuje Controlleru, a EntityManager se zatvara.
    *
    * @param ownerId identifikator vlasnika
    * @param vehicleId identifikator vozila
@@ -146,7 +153,14 @@ public class VehicleService {
   }
 
   /**
-   * Postavlja jedno od korisnikovih vozila kao aktivno vozilo.
+   * Postavlja jedno od korisnikovih vozila kao jedinstveni aktivni kontekst.
+   *
+   * <p>Unutar jedne transakcije učitava korisnika po ID-u i vozilo kroz upit koji istodobno
+   * provjerava {@code ownerId} i {@code vehicleId}. Tek ako oba zapisa postoje, poziva
+   * {@link AppUser#activate(Vehicle)} i potvrđuje promjenu. Ta provjera poslovno osigurava da
+   * aktivno vozilo pripada korisniku; JPA {@code OneToOne} i filtered unique index zasebno
+   * osiguravaju da isto vozilo nije aktivno kod drugog korisnika. Pogreška uzrokuje rollback,
+   * a EntityManager se uvijek zatvara.
    *
    * @param ownerId identifikator vlasnika
    * @param vehicleId identifikator vozila

@@ -35,7 +35,12 @@ public class ProblemRepository {
   }
 
   /**
-   * Dohvaća problem samo ako pripada vozilu zadanog korisnika.
+   * Dohvaća problem po ID-u samo ako pripada vozilu zadanog vlasnika.
+   *
+   * <p>Upit istodobno filtrira primarni ključ problema i vlasnika njegova vozila, pa se entitet
+   * drugog korisnika ne vraća pozivatelju. Rezultat je cijeli {@link Problem}, potreban Serviceu
+   * za domensku provjeru i eventualno povezivanje sa servisom. {@code setMaxResults(1)} ograničava
+   * dohvat na jedan zapis; prazna lista se pretvara u {@code null}.
    *
    * @param ownerId identifikator vlasnika
    * @param problemId identifikator problema
@@ -79,7 +84,11 @@ public class ProblemRepository {
   }
 
   /**
-   * Dohvaća samo tekstualne opise problema koji su riješeni određenim servisom.
+   * Dohvaća opise problema koje je riješio određeni servis unutar korisničkog konteksta.
+   *
+   * <p>JPQL projicira samo {@code problem.description}, filtrira po ID-u servisa i vlasniku
+   * vozila te poredava opise po ID-u problema. Cijeli entiteti nisu potrebni za detaljni prikaz;
+   * ako servis nije riješio nijedan problem, JPA vraća praznu listu.
    *
    * @param ownerId identifikator vlasnika
    * @param serviceId identifikator servisa

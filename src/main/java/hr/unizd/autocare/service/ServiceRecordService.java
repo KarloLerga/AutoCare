@@ -41,11 +41,15 @@ public class ServiceRecordService {
   }
 
   /**
-   * Sprema novi servis i sve povezane promjene u jednoj transakciji.
+   * Spremi novi servis i sve njegove domenske posljedice kao jednu transakcijsku operaciju.
    *
-   * <p>Metoda validira ulaz, provjerava da vozilo pripada korisniku, pretvara odabrane katalog
-   * radove u ServiceItem stavke sa stvarnim cijenama, sprema servis, po potrebi povećava trenutačnu
-   * kilometražu vozila te odabrane probleme povezuje s tim servisom.
+   * <p>Osnovni ulaz provjerava prije otvaranja persistence resursa. Zatim otvara jedan
+   * {@link EntityManager} i transakciju, a sve Repository objekte stvara s tim istim managerom.
+   * Unutar transakcije provjerava vlasništvo nad vozilom i godinu servisa, razrješava ID-jeve
+   * kataloških radova u entitete, stvara stavke stvarnih cijena te sprema servis. Ako je unesena
+   * kilometraža veća od postojeće, ažurira i vozilo; označene probleme povezuje s tim servisom.
+   * Promjene se potvrđuju zajedno. Runtime pogreška uzrokuje rollback ako je transakcija aktivna,
+   * a EntityManager se zatvara u svakom slučaju.
    *
    * @param ownerId identifikator vlasnika
    * @param vehicleId identifikator servisiranog vozila
@@ -105,8 +109,10 @@ public class ServiceRecordService {
   /**
    * Povezuje odabrane otvorene probleme s upravo spremljenim servisom.
    *
-   * <p>Za svaki ID provjerava da problem pripada istom korisniku i vozilu prije poziva domenske
-   * metode {@code Problem.resolve}.
+   * <p>Za svaki ID Repository najprije provjerava korisnički kontekst. Zatim
+   * {@link Problem#resolve(ServiceRecord)} provjerava da problem još nije riješen i da servis
+   * pripada istom vozilu. Ako bilo koja provjera ne uspije, iznimka prekida use-case i vanjska
+   * transakcija vraća sve njegove promjene.
    *
    * @param problemRepository repository za dohvat problema
    * @param vehicle vozilo na kojem je servis izveden
@@ -149,7 +155,11 @@ public class ServiceRecordService {
   }
 
   /**
-   * Dohvaća servisnu povijest vozila i pretvara zapise u retke spremne za prikaz.
+   * Dohvaća servisnu povijest vozila i pretvara entitete u prikazne retke.
+   *
+   * <p>Otvara jedan EntityManager, delegira owner/vehicle filtriranje i redoslijed Repositoryju,
+   * zatim svaki zapis pretvara u sažetak naziva radova, datuma, kilometraže, napomene i ukupnog
+   * stvarnog troška. Ova je operacija samo čitanje; manager se zatvara u {@code finally} bloku.
    *
    * @param ownerId identifikator vlasnika
    * @param vehicleId identifikator vozila
@@ -171,7 +181,12 @@ public class ServiceRecordService {
   }
 
   /**
-   * Dohvaća puni detalj jednog servisa koji pripada korisniku.
+   * Dohvaća detaljni prikaz servisa samo u kontekstu zadanog korisnika.
+   *
+   * <p>Jedan EntityManager dijele ServiceRecordRepository i ProblemRepository. Ako servis nije
+   * pronađen među zapisima korisnika, metoda baca iznimku; inače kopira njegove stavke u prikazni
+   * model, dohvaća scalar opise problema riješenih tim servisom i sastavlja {@link ServiceDetail}.
+   * Manager se zatvara i na uspješnom i na neuspješnom izlazu.
    *
    * @param ownerId identifikator vlasnika
    * @param serviceId identifikator servisa
@@ -207,7 +222,9 @@ public class ServiceRecordService {
   /**
    * Pretvara persistentni ServiceRecord u jednostavan prikazni ServiceRow.
    *
-   * <p>Sažima nazive radova i računa ukupni stvarni trošak preko domenskog zapisa.
+   * <p>Prolazi kroz stavke servisa da sažme njihove nazive, a ukupni stvarni trošak dobiva
+   * zbrajanjem cijena kroz domensku metodu {@link ServiceRecord#total()}. Rezultat odvaja podatke
+   * tablice od JPA entiteta.
    *
    * @param serviceRecord servisni zapis iz baze
    * @return redak spreman za prikaz

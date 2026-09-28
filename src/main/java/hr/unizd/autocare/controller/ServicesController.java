@@ -83,7 +83,12 @@ public class ServicesController {
     });
   }
 
-  /** Učitava servisnu povijest trenutačno aktivnog vozila i predaje retke ServicesViewu. */
+  /**
+   * Dohvaća servisnu povijest trenutačno aktivnog vozila i predaje je tablici.
+   *
+   * <p>Prosljeđuje korisnika i aktivno vozilo u {@link ServiceRecordService#list}; Service vraća
+   * prikazne retke, a pogreške se prikazuju uz ServicesView.
+   */
   public void load() {
     try {
       frame.services.setRows(serviceRecordService.list(session.getOwnerId(), session.getActiveVehicle().getId()));
@@ -92,7 +97,13 @@ public class ServicesController {
     }
   }
 
-  /** Dohvaća detalj odabranog servisa i prikazuje njegove stavke, ukupni trošak i riješene probleme. */
+  /**
+   * Dohvaća i prikazuje detalj odabranog servisnog retka.
+   *
+   * <p>Ako redak nije odabran, prikazuje uputu i ne šalje upit. Inače dohvaća pojedinosti u
+   * korisničkom kontekstu preko {@link ServiceRecordService#detail} te ih predaje ServicesViewu.
+   * Grešku dohvaćanja prikazuje zajednički UI mehanizam.
+   */
   private void detail() {
     ServiceRow selectedService = frame.services.selected();
     if (selectedService == null) {
@@ -109,11 +120,12 @@ public class ServicesController {
   }
 
   /**
-   * Pokreće unos novog servisa za aktivno vozilo.
+   * Priprema unos novog servisa za trenutačno aktivno vozilo.
    *
-   * <p>Učitava katalog radova i otvorene probleme, otvara ServiceEditorDialog te nakon potvrde
-   * sprema jedan ServiceInput kroz ServiceRecordService. Nakon uspjeha osvježava servisnu povijest
-   * i objavljuje SERVICE_SAVED događaj.
+   * <p>Najprije sačuva ID-jeve vlasnika i vozila te početnu kilometražu iz {@link Session}. Zatim
+   * učita radove za održavanje i popravak te iz problema vozila zadrži samo još otvorene zapise.
+   * Te podatke preda modalnom {@link ServiceEditorDialog}u. Pogreške pripreme prikazuje uz glavni
+   * prozor; samo potvrda u dijalogu pokreće spremanje.
    */
   private void create() {
     int ownerId = session.getOwnerId();
@@ -148,8 +160,12 @@ public class ServicesController {
   /**
    * Stvara i konfigurira modalni editor novog servisa.
    *
-   * <p>Metoda povezuje promjenu vrste rada, dodavanje i uklanjanje stavki, odustajanje i završno
-   * spremanje sa ServiceEditorDialogom.
+   * <p>Metoda kopira popis radova u dijalog i povezuje vrstu rada s filtriranjem te gumbe za
+   * dodavanje/uklanjanje sa stavkama koje još nisu spremljene. Spremanje pretvara stanje forme u
+   * {@code ServiceInput}, predaje ga {@link ServiceRecordService#create}, zatvara dijalog i
+   * objavljuje {@link AppEvent#SERVICE_SAVED}; glavni Controller zatim osvježava ovisne prikaze.
+   * Runtime pogreške unosa ili spremanja prikazuje u dijalogu. Odustajanje zatvara dijalog bez
+   * poziva Servicea.
    *
    * @param ownerId identifikator prijavljenog korisnika
    * @param vehicleId identifikator aktivnog vozila

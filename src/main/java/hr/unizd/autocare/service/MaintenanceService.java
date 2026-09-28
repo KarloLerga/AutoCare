@@ -40,7 +40,12 @@ public class MaintenanceService {
   }
 
   /**
-   * Dohvaća vozilo i vraća izračunate intervale održavanja na temelju njegove servisne povijesti.
+   * Dohvaća korisnikovo vozilo i priprema njegove izračunate intervale održavanja.
+   *
+   * <p>Otvara jedan EntityManager, dohvaća vozilo kroz owner-filterirani Repository upit te odbija
+   * zahtjev ako vozilo ne pripada korisniku. Isti manager predaje Repositoryjima kataloga i
+   * servisne povijesti koji se koriste u izračunu. Ne mijenja bazu i zatvara manager u svakom
+   * slučaju.
    *
    * @param ownerId identifikator vlasnika
    * @param vehicleId identifikator vozila
@@ -66,11 +71,13 @@ public class MaintenanceService {
   }
 
   /**
-   * Računa MaintenanceRow rezultate koristeći katalog održavanja i povijesne servisne stavke.
+   * Sastavlja retke trenutačnog održavanja iz kataloga i servisne povijesti vozila.
    *
-   * <p>Za svaki rad održavanja pronalazi posljednju izvedenu stavku, računa sljedeći datum i/ili
-   * kilometražu, preostale dane i kilometre te relativni preostali interval. Radovi bez prethodno
-   * evidentirane izvedbe ne prikazuju se kao praćeno održavanje.
+   * <p>Najprije gradi mapu posljednje izvedene stavke po ID-u kataloškog rada. Zatim prolazi radove
+   * kategorije održavanja i preskače one koji još nemaju evidentiranu izvedbu. Za ostale računa
+   * sljedeći datum i/ili kilometražu, preostale dane i kilometre te relativni omjer preko
+   * {@link MaintenanceCalculator}. Metoda koristi Repositoryje i vozilo koje je pozivatelj već
+   * učitao; novu transakciju ni EntityManager ne otvara.
    *
    * @param catalogRepository repository standardnih radova
    * @param serviceRecordRepository repository servisne povijesti
@@ -123,7 +130,11 @@ public class MaintenanceService {
   }
 
   /**
-   * Za svaki kataloški rad pronalazi najnoviju servisnu stavku u povijesti vozila.
+   * Odabire najnoviju evidentiranu stavku za svaki standardni rad.
+   *
+   * <p>{@code historyItems} vraća stavke owner/vehicle filtrirane i poredane od najnovijeg zapisa.
+   * Petlja zato sprema samo prvi susret svakog work ID-a; mapa na kraju povezuje ID rada s njegovom
+   * posljednjom izvedbom, koju koristi {@link #calculate}.
    *
    * @param serviceRecordRepository repository servisne povijesti
    * @param ownerId identifikator vlasnika

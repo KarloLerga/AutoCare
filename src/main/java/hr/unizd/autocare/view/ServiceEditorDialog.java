@@ -175,7 +175,10 @@ public class ServiceEditorDialog extends JDialog {
 
 
   /**
-   * Postavlja sve radove dostupne editoru i inicijalno prikazuje radove održavanja.
+   * Kopira radove koji se mogu dodati i postavlja početni prikaz na održavanje.
+   *
+   * <p>Popis se kopira u interni izvorni skup kako filtriranje ne bi mijenjalo kolekciju pozivatelja.
+   * Zatim se odabire prva vrsta rada i {@link #filterWorks()} popunjava odgovarajući ComboBox.
    *
    * @param works dostupne definicije radova
    */
@@ -186,7 +189,13 @@ public class ServiceEditorDialog extends JDialog {
     filterWorks();
   }
 
-  /** Filtrira combo box radova prema trenutno odabranoj vrsti: održavanje ili popravak. */
+  /**
+   * Prikazuje samo radove koji odgovaraju trenutačno odabranoj vrsti.
+   *
+   * <p>Indeks nula predstavlja održavanje, a druga ponuđena vrsta popravak. Metoda očisti postojeće
+   * opcije, doda podudarne radove iz {@code availableWorks} i odabere prvi ako postoji; ne mijenja
+   * izvorni popis radova.
+   */
   public void filterWorks() {
     WorkCategory selectedCategory = WorkCategory.REPAIR;
     if (type.getSelectedIndex() == 0) {
@@ -212,6 +221,10 @@ public class ServiceEditorDialog extends JDialog {
 
   /**
    * Dodaje odabrani rad u privremeni popis stavki servisa sa stvarno plaćenom cijenom iz forme.
+   *
+   * <p>Prije dodavanja provjerava da isti kataloški rad već nije unesen. Cijenu parsira kao novčani
+   * iznos, sprema je uz rad u internom popisu, čisti polje cijene, vraća izbor rada na početak i
+   * osvježava tablicu.
    *
    * @param selected rad koji se dodaje
    * @throws IllegalArgumentException ako je isti rad već dodan ili cijena nije valjana
@@ -251,10 +264,12 @@ public class ServiceEditorDialog extends JDialog {
   /**
    * Pretvara trenutačno stanje forme u ServiceInput za ServiceRecordService.
    *
-   * <p>Parsira datum, kilometražu i cijene te iz označenih redaka skuplja ID-eve problema koje
-   * korisnik smatra riješenima tim servisom.
+   * <p>Iz označenih redaka tablice problema prikuplja ID-eve za rješavanje, a privremene radove
+   * pretvara u {@link ItemInput} vrijednosti. Datum i kilometražu parsira iz polja forme, napomenu
+   * preuzima kao tekst te sve vrijednosti kopira u {@link ServiceInput}; ova metoda ne pristupa
+   * bazi.
    *
-   * @return cjeloviti ulaz za spremanje servisa
+   * @return neovisni ulazni objekt novog servisa
    * @throws IllegalArgumentException ako datum, kilometraža ili neka druga parsirana vrijednost nije valjana
    */
   public ServiceInput input() {

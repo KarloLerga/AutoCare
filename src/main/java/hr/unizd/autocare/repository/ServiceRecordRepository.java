@@ -87,7 +87,12 @@ public class ServiceRecordRepository {
   }
 
   /**
-   * Dohvaća servisne stavke potrebne za analizu povijesti održavanja vozila.
+   * Dohvaća servisne stavke za analizu održavanja jednog vozila u korisničkom kontekstu.
+   *
+   * <p>JPQL ograničava rezultate i po vlasniku vozila i po konkretnom vozilu, a vraća cijele
+   * {@link ServiceItem} entitete jer izračun treba doći do rada, datuma i kilometraže servisa.
+   * Sortiranje po datumu, kilometraži i ID-u silazno osigurava da se najnoviji rad iste vrste
+   * pojavi prvi u {@code MaintenanceService.latestItems}.
    *
    * @param ownerId identifikator vlasnika
    * @param vehicleId identifikator vozila

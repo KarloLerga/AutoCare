@@ -53,7 +53,12 @@ public class AuthService {
   }
 
   /**
-   * Validira podatke novog računa i sprema korisnika u jednoj transakciji.
+   * Validira i registrira novi korisnički račun u jednoj transakciji.
+   *
+   * <p>Stvara EntityManager i započinje transakciju, zatim {@link AppUser} konstruktor provjerava
+   * ime, e-mail i lozinku. Repository provjerava je li normalizirana adresa već zauzeta; ako nije,
+   * korisnik se persistira i ID vraća nakon commita. Svaka RuntimeException vraća aktivnu
+   * transakciju prije prosljeđivanja pogreške, a EntityManager se zatvara u svakom slučaju.
    *
    * @param name ime korisnika
    * @param email e-mail adresa koja mora biti jedinstvena

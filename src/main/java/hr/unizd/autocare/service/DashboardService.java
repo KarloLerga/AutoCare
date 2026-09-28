@@ -32,7 +32,13 @@ public class DashboardService {
   }
 
   /**
-   * Dohvaća sva četiri glavna Dashboard pokazatelja za vozilo.
+   * Sastavlja sažetak Dashboarda iz vozila, troškova, problema i održavanja.
+   *
+   * <p>Jedan EntityManager i četiri Repository objekta dijele se tijekom čitanja. Metoda prvo
+   * provjerava da vozilo pripada korisniku; zatim MaintenanceService priprema intervale, a
+   * ServiceRecordRepository i ProblemRepository daju ukupni stvarni trošak i broj otvorenih
+   * problema. Najbliže održavanje bira se po najmanjem preostalom omjeru, uz naziv kao sekundarni
+   * kriterij. Rezultat se vraća kao {@link Dashboard}; EntityManager se zatvara i kod pogreške.
    *
    * @param ownerId identifikator vlasnika
    * @param vehicleId identifikator vozila

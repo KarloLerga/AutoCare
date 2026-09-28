@@ -176,10 +176,13 @@ public class MainController implements Observer {
   }
 
   /**
-   * Ponovno učitava aktivno vozilo i zajednički kontekst glavnog prozora.
+   * Ponovno učitava korisnikovo aktivno vozilo i sinkronizira zajedničko stanje aplikacije.
    *
-   * <p>Ako korisnik nema vozilo, otvara ekran Vozila. Ako aktivno vozilo postoji, po potrebi
-   * otvara Dashboard i zatim učitava sadržaj trenutačno vidljivog ekrana.
+   * <p>Ako nitko nije prijavljen, metoda ne pokreće dohvat. Inače dohvaća aktivno vozilo kroz
+   * {@link VehicleService}, ažurira {@link Session} i zaglavlje prozora te prikazuje aplikacijski
+   * dio sučelja. Ako vozilo nije odabrano, otvara stranicu Vozila; ako je pozivatelj zatražio
+   * Dashboard, otvara njega. Na kraju učitava podatke stranice koja je tada vidljiva. Runtime
+   * pogreške prikazuje zajedničkim {@link Ui#error} dijalogom.
    *
    * @param showDashboard treba li nakon osvježavanja aktivnog vozila otvoriti Dashboard
    */
@@ -217,10 +220,12 @@ public class MainController implements Observer {
   }
 
   /**
-   * Učitava podatke samo za ekran koji je trenutačno vidljiv.
+   * Učitava podatke samo za stranicu koju trenutačno prikazuje {@link MainFrame}.
    *
-   * <p>Vozila i Katalog mogu se otvoriti bez aktivnog vozila. Dashboard, Servisi, Održavanje i
-   * Problemi učitavaju se samo ako Session sadrži aktivno vozilo.
+   * <p>Stranice Vozila i Katalog učitavaju se neovisno o aktivnom vozilu. Za Dashboard, Servise,
+   * Održavanje i Probleme najprije zahtijeva da ga {@link Session} sadrži; zatim delegira dohvat
+   * odgovarajućem Controlleru. Tako se ne šalju upiti koji ovise o vozilu dok korisnik još nije
+   * odabrao kontekst.
    */
   private void loadVisible() {
     String page = frame.page();
@@ -247,7 +252,11 @@ public class MainController implements Observer {
     }
   }
 
-  /** Dohvaća Dashboard podatke za aktivno vozilo i predaje ih DashboardViewu. */
+  /**
+   * Dohvaća sažetak aktivnog vozila kroz {@link DashboardService} i predaje ga DashboardViewu.
+   *
+   * <p>Runtime pogreške dohvatnog toka prikazuje uz Dashboard, bez promjene trenutačne stranice.
+   */
   private void loadDashboard() {
     try {
       frame.dashboard.showDashboard(dashboardService.get(session.getOwnerId(), session.getActiveVehicle().getId()));
@@ -257,10 +266,11 @@ public class MainController implements Observer {
   }
 
   /**
-   * Reagira na događaj koji je objavio Subject.
+   * Reagira na događaj promjene koji je objavio {@link Subject}.
    *
    * <p>Promjena aktivnog vozila zahtijeva potpuno ponovno učitavanje konteksta i otvaranje
-   * Dashboarda, dok ostale promjene osvježavaju podatke bez prisilne promjene stranice.
+   * Dashboarda, dok ostale promjene osvježavaju aktivni kontekst i vidljive podatke bez prisilne
+   * promjene stranice.
    *
    * @param event aplikacijski događaj koji je potrebno obraditi
    */

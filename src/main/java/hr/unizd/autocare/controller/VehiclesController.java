@@ -56,7 +56,12 @@ public class VehiclesController {
     registerListeners();
   }
 
-  /** Registrira akcije gumba za dodavanje vozila, promjenu kilometraže i aktiviranje vozila. */
+  /**
+   * Veže tri akcije u VehiclesView uz njihove Controller tokove.
+   *
+   * <p>Gumbi za dodavanje, promjenu kilometraže i aktiviranje delegiraju na imenovane metode, koje
+   * zatim obavljaju validaciju, poziv Servicea i prikaz rezultata ili pogreške.
+   */
   private void registerListeners() {
     frame.vehicles.add.addActionListener(new ActionListener() {
       @Override
@@ -80,7 +85,12 @@ public class VehiclesController {
     });
   }
 
-  /** Učitava sva vozila prijavljenog korisnika i označava trenutačno aktivno vozilo u Viewu. */
+  /**
+   * Dohvaća vozila prijavljenog korisnika i označava aktivno vozilo u tablici.
+   *
+   * <p>ID trenutačnog aktivnog vozila uzima iz {@link Session}; ako ga nema, prosljeđuje
+   * {@code null}. Dohvat i pogreške obrađuje na granici Controller–Service–View.
+   */
   public void load() {
     try {
       Integer activeVehicleId = null;
@@ -107,10 +117,13 @@ public class VehiclesController {
   }
 
   /**
-   * Otvara dijalog za dodavanje novog vozila i povezuje njegovu VehicleForm s katalogom.
+   * Otvara i obrađuje dijalog za dodavanje vozila prijavljenog korisnika.
    *
-   * <p>Nakon uspješnog spremanja zatvara dijalog, osvježava listu vozila i objavljuje događaj da
-   * su se podaci o vozilima promijenili.
+   * <p>Stvara {@link VehicleDialog}, povezuje njegovu {@link VehicleFormController} s katalogom i
+   * prije prikaza učitava marke. Listener gumba Spremi zahtijeva odabranu varijantu, zatim predaje
+   * vlasnika, varijantu, godinu i kilometražu u {@link VehicleService#add}; nakon uspjeha zatvara
+   * dijalog i objavljuje {@link AppEvent#VEHICLE_CHANGED}, čime se osvježavaju ovisni prikazi.
+   * Runtime pogreške prikazuje unutar dijaloga, a Odustani ga zatvara bez spremanja.
    */
   private void showAdd() {
     final VehicleDialog dialog = new VehicleDialog(frame);
@@ -149,7 +162,15 @@ public class VehiclesController {
     dialog.setVisible(true);
   }
 
-  /** Otvara dijalog za promjenu kilometraže odabranog vozila i sprema novu vrijednost kroz Service. */
+  /**
+   * Uređuje kilometražu prethodno odabranog vozila.
+   *
+   * <p>Ako tablica nema odabran redak, {@link #selected()} prikaže uputu i metoda završava.
+   * Inače otvara dijalog s postojećom kilometražom. Spremanje parsira unos kroz {@link Ui#mileage},
+   * predaje ga {@link VehicleService#updateMileage}, zatvara dijalog i objavljuje
+   * {@link AppEvent#VEHICLE_CHANGED}. Service provodi vlasničku i domensku provjeru; pogreške se
+   * prikazuju u dijalogu. Odustajanje ne mijenja vozilo.
+   */
   private void showMileageEditor() {
     Vehicle vehicle = selected();
     if (vehicle == null) {
