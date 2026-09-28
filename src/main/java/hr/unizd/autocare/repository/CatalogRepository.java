@@ -6,8 +6,9 @@ import hr.unizd.autocare.domain.WorkDefinition;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Repository za čitanje kataloga varijanti vozila i standardnih radova.
@@ -30,6 +31,12 @@ public class CatalogRepository {
   }
 
   /**
+   * Dohvaća opcije marki iz kataloških varijanti vozila.
+   *
+   * <p>Upit vraća samo scalar {@code String} vrijednosti, uklanja ponavljanja jer više varijanti
+   * može pripadati istoj marki te sortira nazive za prikaz u prvom koraku {@code VehicleForm}.
+   * Cijeli {@code VehicleVariant} entiteti u ovom koraku nisu potrebni.
+   *
    * @return jedinstvene marke vozila sortirane za prikaz
    */
   public List<String> makes() {
@@ -41,8 +48,14 @@ public class CatalogRepository {
   }
 
   /**
-   * @param make marka vozila
-   * @return jedinstveni modeli odabrane marke sortirani po nazivu
+   * Dohvaća modele koji postoje u katalogu za odabranu marku.
+   *
+   * <p>JPQL filtrira varijante prema marki, vraća različite nazive modela i sortira ih. Rezultat
+   * je lista naziva, a ne entiteta, jer je formi u ovom koraku potreban samo sljedeći izbor u
+   * kaskadi marka, model, godina i varijanta.
+   *
+   * @param make marka prema kojoj se filtrira katalog
+   * @return jedinstveni nazivi modela odabrane marke, sortirani za prikaz
    */
   public List<String> models(String make) {
     return entityManager
@@ -56,6 +69,12 @@ public class CatalogRepository {
 
   /**
    * Iz raspona godina kataloških varijanti izvodi godine dostupne za odabrani model.
+   *
+   * <p>Najprije dohvaća odgovarajuće varijante, a zatim proširuje svaki njihov raspon do godine
+   * završetka ili tekuće godine ako je raspon otvoren. Rasponi različitih varijanti mogu se
+   * preklapati; {@link TreeSet} uklanja tako nastale duplikate i održava prirodni sortirani
+   * poredak. Na kraju se vrijednosti vraćaju kao {@code List}, kako bi ih postojeći View mogao
+   * prikazati kao opcije.
    *
    * @param make marka vozila
    * @param model model vozila
@@ -71,7 +90,7 @@ public class CatalogRepository {
             .setParameter("model", model)
             .getResultList();
 
-    List<Integer> years = new ArrayList<>();
+    Set<Integer> years = new TreeSet<>();
     int currentYear = LocalDate.now().getYear();
 
     for (VehicleVariant variant : variants) {
@@ -81,18 +100,20 @@ public class CatalogRepository {
       }
 
       for (int year = variant.getYearFrom(); year <= lastYear; year++) {
-        if (!years.contains(year)) {
-          years.add(year);
-        }
+        years.add(year);
       }
     }
 
-    Collections.sort(years);
-    return years;
+    return new ArrayList<>(years);
   }
 
   /**
-   * Dohvaća varijante koje pokrivaju odabranu godinu.
+   * Dohvaća entitete varijanti koje pokrivaju zadanu marku, model i godinu.
+   *
+   * <p>JPQL filtrira po marki i modelu te zahtijeva da {@code yearFrom} ne bude kasniji od
+   * odabrane godine, a {@code yearTo} bude prazan ili ne raniji od nje. Vraća cijele
+   * {@link VehicleVariant} entitete jer sljedeći UI korak treba i motor, gorivo, snagu i mjenjač;
+   * rezultati su stabilno poredani po generaciji, oznaci motora i ID-u.
    *
    * @param make marka vozila
    * @param model model vozila

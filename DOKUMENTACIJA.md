@@ -138,7 +138,7 @@ Persistentni model sadrži sedam glavnih tablica: `APP_USER`, `VEHICLE`, `VEHICL
 
 ### 5.1. APP_USER
 
-`APP_USER` predstavlja korisnički račun. Primarni ključ je `id`. `name`, `email` i `password` čuvaju podatke računa. `active_vehicle_id` je strani ključ prema `VEHICLE` i predstavlja vozilo koje je korisnik trenutačno odabrao kao aktivno.
+`APP_USER` predstavlja korisnički račun. Primarni ključ je `id`. `name`, `email` i `password` čuvaju podatke računa. Nullable `active_vehicle_id` je strani ključ prema `VEHICLE` i predstavlja vozilo koje je korisnik trenutačno odabrao kao aktivni kontekst. U JPA modelu je to `OneToOne` veza: korisnik može imati najviše jedno aktivno vozilo, a isto konkretno vozilo ne može biti aktivno za više korisnika. SQL Server filtered unique index `UX_app_user_active_vehicle` provodi jedinstvenost samo za vrijednosti koje nisu `NULL`, pa više korisnika može biti bez aktivnog vozila. Service dodatno provjerava da odabrano vozilo pripada tom korisniku.
 
 ### 5.2. VEHICLE_VARIANT
 
@@ -148,7 +148,7 @@ Persistentni model sadrži sedam glavnih tablica: `APP_USER`, `VEHICLE`, `VEHICL
 
 `VEHICLE` predstavlja konkretno vozilo korisnika. `owner_id` povezuje vozilo s vlasnikom, a `variant_id` s kataloškom varijantom. `production_year` je godina konkretnog vozila, dok `current_mileage` predstavlja trenutačno evidentiranu kilometražu.
 
-Veza `APP_USER -> VEHICLE` označena s `owns` predstavlja vlasništvo: jedan korisnik može imati više vozila, a svako vozilo pripada jednom korisniku. Veza `activeVehicle` ima drugu svrhu: `APP_USER.active_vehicle_id` pokazuje koje je od korisnikovih vozila trenutačno aktivno u aplikaciji.
+Veza vlasništva ide od `VEHICLE.owner` prema `APP_USER`: svako vozilo ima jednog vlasnika, a jedan korisnik može imati više vozila, zato je `Vehicle.owner` `ManyToOne`. Odvojena veza `APP_USER.active_vehicle_id` je `OneToOne` izbor jednog od korisnikovih vozila kao trenutačnog konteksta. Vlasništvo i aktivni odabir zato nisu ista relacija. Jedinstvenost aktivnog vozila u bazi provodi filtered unique index; migracija je spremljena u `database/2026-09-28-active-vehicle-one-to-one.sql`.
 
 ### 5.4. WORK_DEFINITION
 

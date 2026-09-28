@@ -61,11 +61,10 @@ public class Data {
 
     /** Neobavezna napomena uz servis. */
     private final String note;
-
     /** Radovi i stvarne cijene koje treba pretvoriti u ServiceItem entitete. */
     private final List<ItemInput> items;
 
-    /** Identifikatori otvorenih problema koje korisnik želi povezati s ovim servisom. */
+    /** Kopija ID-jeva otvorenih problema koje korisnik želi povezati s ovim servisom. */
     private final List<Integer> resolvedProblemIds;
 
     /**
@@ -105,14 +104,22 @@ public class Data {
       return note;
     }
 
-    /** @return stavke servisa koje je unio korisnik */
+    /**
+     * Vraća kopiju stavki kako pozivatelj ne bi mogao mijenjati spremljeni ulaz kroz listu.
+     *
+     * @return nova lista unesenih servisnih stavki
+     */
     public List<ItemInput> getItems() {
-      return items;
+      return new ArrayList<>(items);
     }
 
-    /** @return identifikatori problema koje ovaj servis treba označiti riješenima */
+    /**
+     * Vraća kopiju ID-jeva problema kako izmjene rezultata ne bi mijenjale ulaz servisa.
+     *
+     * @return nova lista ID-jeva problema odabranih za rješavanje
+     */
     public List<Integer> getResolvedProblemIds() {
-      return resolvedProblemIds;
+      return new ArrayList<>(resolvedProblemIds);
     }
   }
 
@@ -218,14 +225,22 @@ public class Data {
       return header;
     }
 
-    /** @return kopija popisa servisnih stavki za detaljni prikaz */
+    /**
+     * Vraća kopiju stavki spremljenih u servisu.
+     *
+     * @return nova lista servisnih stavki
+     */
     public List<ServiceItem> getItems() {
-      return items;
+      return new ArrayList<>(items);
     }
 
-    /** @return opisi problema riješenih servisom */
+    /**
+     * Vraća kopiju opisa problema riješenih servisom.
+     *
+     * @return nova lista opisa riješenih problema
+     */
     public List<String> getResolvedProblems() {
-      return resolvedProblems;
+      return new ArrayList<>(resolvedProblems);
     }
   }
 

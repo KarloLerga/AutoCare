@@ -4,7 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 
 /**
  * Persistentni domenski objekt korisničkog računa.
@@ -29,12 +30,19 @@ public class AppUser {
   private String password;
 
   /**
-   * Trenutačno odabrano vozilo korisnika, koje služi kao zadani kontekst u aplikaciji.
+   * Trenutačno odabrano vozilo korisnika koje određuje kontekst Dashboarda, servisa, održavanja i
+   * problema.
    *
-   * <p>{@code ManyToOne} mapira vezu preko ključa vozila na strani računa; ovo polje bilježi
-   * odabir, dok se vlasništvo nad vozilom provjerava u Service sloju.
+   * <p>Ova veza nije isto što i vlasništvo. Vlasništvo je definirano preko {@link Vehicle#getOwner()},
+   * gdje jedan korisnik može imati više vozila. Ovdje svaki korisnik može imati najviše jedno
+   * aktivno vozilo, a isto konkretno vozilo ne smije biti aktivno za više različitih korisnika.
+   *
+   * <p>Strani ključ nalazi se u stupcu {@code APP_USER.active_vehicle_id}. Vrijednost može biti
+   * {@code null} dok korisnik nema aktivno vozilo. Baza jedinstvenost ne-null vrijednosti osigurava
+   * filtered unique indexom, a Service dodatno provjerava da vozilo pripada korisniku.
    */
-  @ManyToOne
+  @OneToOne
+  @JoinColumn(name = "active_vehicle_id")
   private Vehicle activeVehicle;
 
   /** Konstruktor bez argumenata potreban JPA provideru pri učitavanju entiteta. */

@@ -44,7 +44,7 @@ public class ServiceRecord {
   private String note;
 
   /**
-   * Izvedene stavke koje čine sadržaj i trošak servisa.
+   * Stavke ovog servisa čine njegov sadržaj i stvarni trošak.
    *
    * <p>{@code mappedBy = "serviceRecord"} označava da je vlasnička strana veze polje
    * {@code ServiceItem.serviceRecord}, gdje se nalazi strani ključ. {@code CascadeType.PERSIST}
@@ -134,8 +134,13 @@ public class ServiceRecord {
     return note;
   }
 
-  /** @return stavke koje pripadaju ovom servisu */
+  /**
+   * Vraća kopiju stavki kako se agregat ne bi mijenjao izvan {@link #addItem(WorkDefinition,
+   * BigDecimal)}.
+   *
+   * @return nova lista servisnih stavki
+   */
   public List<ServiceItem> getItems() {
-    return items;
+    return new ArrayList<>(items);
   }
 }
