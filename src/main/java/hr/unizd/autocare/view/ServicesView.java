@@ -41,6 +41,7 @@ public class ServicesView extends JPanel {
         new DefaultTableModel(
             new Object[][] {},
             new String[] {"Datum", "Km", "Radovi", "Stvarni trošak", "Napomena"}) {
+          /** Ostavlja servisnu povijest samo za čitanje kako se spremljeni zapisi ne bi mijenjali u tablici. */
           @Override
           public boolean isCellEditable(int row, int column) {
             return false;
@@ -78,7 +79,10 @@ public class ServicesView extends JPanel {
     }
   }
 
-  /** @return servisni redak označen u tablici ili {@code null} ako nema odabira */
+  /** Dohvaća servis odabran u povijesti za prikaz njegovih detalja.
+   *
+   * @return servisni redak označen u tablici ili {@code null} ako nema odabira
+   */
   public ServiceRow selected() {
     int selectedRow = table.getSelectedRow();
     if (selectedRow < 0) {

@@ -109,27 +109,42 @@ public class ServiceRecord {
     return total;
   }
 
-  /** @return identifikator servisnog zapisa dodijeljen u bazi */
+  /** Dohvaća bazni identifikator servisnog događaja.
+   *
+   * @return identifikator servisnog zapisa dodijeljen u bazi
+   */
   public Integer getId() {
     return id;
   }
 
-  /** @return servisirano vozilo */
+  /** Dohvaća vozilo čijoj servisnoj povijesti ovaj zapis pripada.
+   *
+   * @return servisirano vozilo
+   */
   public Vehicle getVehicle() {
     return vehicle;
   }
 
-  /** @return datum obavljanja servisa */
+  /** Dohvaća datum stvarnog obavljanja servisa.
+   *
+   * @return datum obavljanja servisa
+   */
   public LocalDate getServiceDate() {
     return serviceDate;
   }
 
-  /** @return kilometraža vozila pri servisu */
+  /** Dohvaća kilometražu zabilježenu za vozilo u trenutku servisa.
+   *
+   * @return kilometraža vozila pri servisu
+   */
   public int getMileage() {
     return mileage;
   }
 
-  /** @return napomena servisa ili {@code null} ako nije unesena */
+  /** Dohvaća korisnikovu dodatnu napomenu uz servis.
+   *
+   * @return napomena servisa ili {@code null} ako nije unesena
+   */
   public String getNote() {
     return note;
   }

@@ -25,6 +25,7 @@ public class MaintenanceView extends JPanel {
         new DefaultTableModel(
             new Object[][] {},
             new String[] {"Rad", "Zadnji datum", "Zadnji km", "Sljedeći datum", "Sljedeći km"}) {
+          /** Sprječava izravno mijenjanje izračunatih vrijednosti održavanja u tablici. */
           @Override
           public boolean isCellEditable(int row, int column) {
             return false;

@@ -140,7 +140,10 @@ public class VehicleForm extends JPanel {
     details.setText("Odaberite točnu varijantu.");
   }
 
-  /** @return trenutno odabrana kataloška varijanta ili {@code null} ako nije odabrana */
+  /** Dohvaća preciznu varijantu odabranu nakon izbora marke, modela i godine.
+   *
+   * @return trenutno odabrana kataloška varijanta ili {@code null} ako nije odabrana
+   */
   public VehicleVariant selectedVariant() {
     return (VehicleVariant) variant.getSelectedItem();
   }

@@ -41,12 +41,18 @@ public enum CatalogCategory {
     this.displayName = displayName;
   }
 
-  /** @return naziv kategorije namijenjen prikazu u sučelju */
+  /** Dohvaća lokalizirani naziv kategorije koji se prikazuje korisniku.
+   *
+   * @return naziv kategorije namijenjen prikazu u sučelju
+   */
   public String getDisplayName() {
     return displayName;
   }
 
-  /** @return korisnički naziv kategorije */
+  /** Vraća naziv kategorije za JComboBox i ostale tekstualne prikaze.
+   *
+   * @return korisnički naziv kategorije
+   */
   @Override
   public String toString() {
     return displayName;

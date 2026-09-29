@@ -21,9 +21,12 @@ import java.util.ArrayList;
 /**
  * Središnji Controller za navigaciju i zajednički kontekst AutoCare aplikacije.
  *
- * <p>Klasa stvara funkcionalne Controllere, povezuje navigacijske gumbe, reagira na prijavu,
- * učitava aktivno vozilo i određuje koji ekran treba osvježiti. Implementira Observer kako bi
- * nakon promjene vozila ili spremanja servisa mogao osvježiti zajednički aplikacijski kontekst.
+ * <p>Pripada presentation sloju: prima događaje iz {@link MainFrame}, delegira rad specijaliziranim
+ * Controllerima i koristi {@link Session} za identitet korisnika i aktivno vozilo. Na početku rada
+ * sastavlja Controller kompoziciju, uključujući autentikaciju, te registrira sebe kao Observer
+ * aplikacijskih promjena. Ne sadrži poslovna pravila ni JPQL; njih provode Service i Repository
+ * slojevi. Nakon promjene vozila ili spremanja servisa osvježava samo prikaz koji ovisi o novom
+ * kontekstu.
  */
 public class MainController implements Observer {
   /** Glavni Swing prozor za navigaciju, prikaz konteksta i pristup ekranima. */
@@ -54,11 +57,21 @@ public class MainController implements Observer {
   private final ProblemsController problems;
 
   /**
-   * Povezuje glavni prozor sa svim Service objektima i Controllerima aplikacije.
+   * Controller prijave i registracije. MainController ga zadržava kao eksplicitni dio svoje
+   * Controller kompozicije, jednako kao ostale funkcionalne Controllere.
+   */
+  private final AuthController authController;
+
+  /**
+   * Sastavlja glavnu Controller kompoziciju i povezuje je s prozorom, sesijom i Observerom.
    *
-   * <p>Konstruktor stvara funkcionalne Controllere, konfigurira AuthController callback,
-   * registrira navigacijske listenere i prijavljuje MainController kao Observer na zajednički
-   * Subject. Po završetku prikazuje ekran za prijavu.
+   * <p>Najprije sprema prozor, sesiju i Service objekte koje MainController izravno koristi.
+   * Zatim stvara Controllere za vozila, katalog, servise, održavanje i probleme te ih predaje
+   * potrebnim Serviceima, Sessionu i Subjectu. AuthController se također sprema u field kako bi
+   * njegovu ulogu u kompoziciji bilo jasno vidjeti; njegov {@link AuthController.LoginListener}
+   * prosljeđuje uspješnu prijavu u {@link #enter(int)}. Nakon toga registriraju se navigacijski
+   * listeneri, MainController se prijavljuje na Subject kao Observer i prozor se postavlja na
+   * autentikacijski prikaz. Konstruktor povezuje objekte, a poslovne operacije ostavlja Serviceima.
    *
    * @param frame glavni prozor aplikacije
    * @param session zajednička korisnička sesija
@@ -93,10 +106,11 @@ public class MainController implements Observer {
     catalog = new CatalogController(frame, catalogService);
     problems = new ProblemsController(frame, problemService, session);
 
-    new AuthController(
+    this.authController = new AuthController(
         frame,
         authService,
         new AuthController.LoginListener() {
+          /** Nastavlja prijavni tok u glavnom Controlleru s ID-em potvrđenog korisnika. */
           @Override
           public void loggedIn(int ownerId) {
             enter(ownerId);
@@ -116,6 +130,7 @@ public class MainController implements Observer {
    */
   private void activateForm() {
     frame.dashboardButton.addActionListener(new ActionListener() {
+      /** Otvara Dashboard i učitava sažetak aktivnog vozila. */
       @Override
       public void actionPerformed(ActionEvent event) {
         navigate("Dashboard");
@@ -123,6 +138,7 @@ public class MainController implements Observer {
     });
 
     frame.vehiclesButton.addActionListener(new ActionListener() {
+      /** Otvara popis vozila prijavljenog korisnika. */
       @Override
       public void actionPerformed(ActionEvent event) {
         navigate("Vozila");
@@ -130,6 +146,7 @@ public class MainController implements Observer {
     });
 
     frame.maintenanceButton.addActionListener(new ActionListener() {
+      /** Otvara izračunate intervale održavanja aktivnog vozila. */
       @Override
       public void actionPerformed(ActionEvent event) {
         navigate("Održavanje");
@@ -137,6 +154,7 @@ public class MainController implements Observer {
     });
 
     frame.catalogButton.addActionListener(new ActionListener() {
+      /** Otvara informativni katalog standardnih radova. */
       @Override
       public void actionPerformed(ActionEvent event) {
         navigate("Katalog");
@@ -144,6 +162,7 @@ public class MainController implements Observer {
     });
 
     frame.servicesButton.addActionListener(new ActionListener() {
+      /** Otvara servisnu povijest aktivnog vozila. */
       @Override
       public void actionPerformed(ActionEvent event) {
         navigate("Servisi");
@@ -151,6 +170,7 @@ public class MainController implements Observer {
     });
 
     frame.problemsButton.addActionListener(new ActionListener() {
+      /** Otvara popis problema aktivnog vozila. */
       @Override
       public void actionPerformed(ActionEvent event) {
         navigate("Problemi");
@@ -158,6 +178,7 @@ public class MainController implements Observer {
     });
 
     frame.logoutButton.addActionListener(new ActionListener() {
+      /** Briše korisnički kontekst i vraća aplikaciju na prijavu. */
       @Override
       public void actionPerformed(ActionEvent event) {
         logout();
@@ -167,6 +188,10 @@ public class MainController implements Observer {
 
   /**
    * Otvara aplikacijski dio nakon uspješne prijave.
+   *
+   * <p>Najprije sprema dobiveni ID u zajedničku Session, čime postaje dostupan funkcionalnim
+   * Controllerima. Zatim ponovno učita korisnikovo aktivno vozilo i zatraži otvaranje Dashboarda;
+   * ako aktivnog vozila nema, {@link #refreshContext(boolean)} umjesto toga otvori stranicu Vozila.
    *
    * @param ownerId identifikator prijavljenog korisnika
    */
@@ -211,6 +236,10 @@ public class MainController implements Observer {
 
   /**
    * Mijenja aktivnu aplikacijsku stranicu i odmah učitava njezin aktualni sadržaj.
+   *
+   * <p>Predaje naziv {@link MainFrame}u radi zamjene CardLayout kartice i ažuriranja označenog
+   * navigacijskog gumba, a zatim poziva {@link #loadVisible()} da Controller baš te stranice
+   * osvježi podatke. Dohvat i obrada pogrešaka ostaju u odgovarajućem funkcionalnom Controlleru.
    *
    * @param pageName naziv stranice registriran u MainFrame CardLayoutu
    */

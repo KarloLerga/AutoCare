@@ -26,6 +26,11 @@ public class MaintenanceCalculator {
   /**
    * Računa relativni dio servisnog intervala koji je još preostao.
    *
+   * <p>Odabire algoritam prema tome koji intervali postoje: kada su zadani i kilometarski i
+   * vremenski kriterij, delegira kombiniranoj strategiji koja uspoređuje oba; samo kilometarski
+   * interval ide strategiji kilometraže, a u ostalim slučajevima delegira vremenskoj strategiji.
+   * Kalkulator prosljeđuje podatke nepromijenjene i ne obavlja sam izračun formule.
+   *
    * @param intervalKm kilometarski interval ili {@code null} ako se ne koristi
    * @param intervalMonths vremenski interval u mjesecima ili {@code null} ako se ne koristi
    * @param lastDate datum posljednje izvedbe rada

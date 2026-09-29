@@ -29,6 +29,12 @@ public class AuthService {
   /**
    * Provjerava vjerodajnice i vraća identifikator pronađenog korisnika.
    *
+   * <p>E-mail normalizira i provjerava s {@link Checks#email(String)} prije otvaranja persistence
+   * resursa. Zatim otvara EntityManager, traži račun kroz UserRepository i odbija prijavu ako
+   * račun nedostaje, spremljena vrijednost nije dostupna ili lozinka ne odgovara. U svim tim
+   * slučajevima koristi se ista poruka za nevaljane vjerodajnice. Kod uspjeha vraća ID korisnika;
+   * EntityManager se zatvara u {@code finally} i za uspješan i neuspješan pokušaj.
+   *
    * @param email unesena e-mail adresa
    * @param password unesena lozinka
    * @return identifikator prijavljenog korisnika

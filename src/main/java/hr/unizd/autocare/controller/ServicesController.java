@@ -69,6 +69,7 @@ public class ServicesController {
     this.subject = subject;
 
     frame.services.add.addActionListener(new ActionListener() {
+      /** Otvara pripremu i editor novog servisnog zapisa. */
       @Override
       public void actionPerformed(ActionEvent event) {
         create();
@@ -76,6 +77,7 @@ public class ServicesController {
     });
 
     frame.services.detail.addActionListener(new ActionListener() {
+      /** Dohvaća detalje trenutno odabranog servisa. */
       @Override
       public void actionPerformed(ActionEvent event) {
         detail();
@@ -183,6 +185,7 @@ public class ServicesController {
     dialog.setWorks(new ArrayList<>(works));
 
     dialog.type.addActionListener(new ActionListener() {
+      /** Ograničava izbornik radova prema odabranoj vrsti rada. */
       @Override
       public void actionPerformed(ActionEvent event) {
         dialog.filterWorks();
@@ -190,6 +193,7 @@ public class ServicesController {
     });
 
     dialog.addItem.addActionListener(new ActionListener() {
+      /** Provjerava izbor i dodaje rad s unesenom stvarnom cijenom u dijalog. */
       @Override
       public void actionPerformed(ActionEvent event) {
         try {
@@ -205,6 +209,7 @@ public class ServicesController {
     });
 
     dialog.remove.addActionListener(new ActionListener() {
+      /** Uklanja označenu privremenu stavku iz servisnog unosa. */
       @Override
       public void actionPerformed(ActionEvent event) {
         dialog.removeSelectedItem();
@@ -212,6 +217,7 @@ public class ServicesController {
     });
 
     dialog.save.addActionListener(new ActionListener() {
+      /** Pretvara unos u ServiceInput, sprema servis i objavljuje događaj uspjeha. */
       @Override
       public void actionPerformed(ActionEvent event) {
         try {
@@ -225,6 +231,7 @@ public class ServicesController {
     });
 
     dialog.cancel.addActionListener(new ActionListener() {
+      /** Zatvara editor bez spremanja privremenih stavki. */
       @Override
       public void actionPerformed(ActionEvent event) {
         dialog.dispose();

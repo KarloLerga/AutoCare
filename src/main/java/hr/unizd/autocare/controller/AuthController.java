@@ -8,11 +8,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Upravlja korisničkim tokovima prijave i registracije.
+ * Upravlja korisničkim tokovima prijave i registracije u presentation sloju.
  *
- * <p>Controller čita vrijednosti iz Login i Registration Viewova, poziva {@code AuthService},
- * prikazuje validacijske pogreške preko zajedničkog UI helpera te nakon uspješne prijave javlja
- * {@code LoginListeneru} identifikator prijavljenog korisnika.
+ * <p>Čita vrijednosti iz {@link hr.unizd.autocare.view.LoginView} i
+ * {@link RegistrationView}, delegira provjeru vjerodajnica i stvaranje računa u
+ * {@link AuthService}, a greške prikazuje preko {@link Ui}. Ne odlučuje kako se korisnički kontekst
+ * učitava nakon prijave: uspjeh vraća pozivatelju kroz {@link LoginListener}, koji u glavnoj
+ * kompoziciji predaje ID prijavljenog korisnika u {@code MainController}.
  */
 public class AuthController {
   /** Callback kojim AuthController obavještava ostatak aplikacije da je prijava završila uspješno. */
@@ -40,6 +42,10 @@ public class AuthController {
   /**
    * Stvara Controller za prijavu i registraciju te povezuje akcije odgovarajućih Viewova.
    *
+   * <p>Čuva prozor, Service, callback i RegistrationView, a zatim postavlja listenere za prijavu,
+   * otvaranje registracije, potvrdu registracije i odustajanje. Listeneri delegiraju na imenovane
+   * metode kako bi čitanje forme, poziv Servicea i obrada grešaka ostali u Controlleru.
+   *
    * @param frame glavni prozor koji sadrži login i registration prikaze
    * @param authService servis koji provodi prijavu i registraciju
    * @param loginListener callback koji preuzima kontrolu nakon uspješne prijave
@@ -51,6 +57,7 @@ public class AuthController {
     registrationView = frame.registration;
 
     frame.login.login.addActionListener(new ActionListener() {
+      /** Predaje akciju gumba za prijavu toku {@link AuthController#login()}. */
       @Override
       public void actionPerformed(ActionEvent event) {
         login();
@@ -58,6 +65,7 @@ public class AuthController {
     });
 
     frame.login.register.addActionListener(new ActionListener() {
+      /** Otvara registracijski prikaz nakon zahtjeva korisnika. */
       @Override
       public void actionPerformed(ActionEvent event) {
         openRegistration();
@@ -65,6 +73,7 @@ public class AuthController {
     });
 
     registrationView.finish.addActionListener(new ActionListener() {
+      /** Pokreće validaciju i spremanje podataka registracije. */
       @Override
       public void actionPerformed(ActionEvent event) {
         finishRegistration();
@@ -72,6 +81,7 @@ public class AuthController {
     });
 
     registrationView.cancel.addActionListener(new ActionListener() {
+      /** Čisti osjetljive vrijednosti registracijske forme i odustaje od registracije. */
       @Override
       public void actionPerformed(ActionEvent event) {
         cancelRegistration();
@@ -82,9 +92,10 @@ public class AuthController {
   /**
    * Pokušava prijaviti korisnika podacima iz LoginViewa.
    *
-   * <p>Lozinku čita neposredno prije poziva Servicea. Nakon uspješne prijave čisti polje lozinke
-   * i prosljeđuje ID korisnika LoginListeneru. Validacijska ili persistence pogreška prikazuje se
-   * korisniku bez rušenja aplikacije.
+   * <p>Čita e-mail i lozinku iz LoginViewa i delegira provjeru AuthServiceu. Nakon uspjeha čisti
+   * polje lozinke te preko LoginListenera predaje ID MainControlleru, koji otvara korisnički
+   * kontekst. Runtime pogrešku iz validacije ili persistence sloja prikazuje uz glavni prozor, a
+   * ne prosljeđuje je Swingovom event loopu.
    */
   private void login() {
     try {
@@ -105,8 +116,10 @@ public class AuthController {
   /**
    * Provjerava podatke registracijske forme i stvara novi korisnički račun.
    *
-   * <p>Controller dodatno provjerava podudaranje unesene i ponovljene lozinke, zatim poziva
-   * AuthService. Nakon uspješne registracije vraća korisnika na prijavu.
+   * <p>Prvo uspoređuje lozinku s njezinom potvrdom, a zatim predaje ime, e-mail i lozinku
+   * AuthServiceu. Nakon uspješnog spremanja čisti polja lozinke i predaje novi ID kroz isti
+   * LoginListener kao i uspješna prijava, pa se novoregistrirani korisnik odmah otvara u
+   * aplikacijskom kontekstu. Pogreška se prikazuje uz registracijsku formu.
    */
   private void finishRegistration() {
     try {

@@ -46,6 +46,7 @@ public class CatalogView extends JPanel {
         new DefaultTableModel(
             new Object[][] {},
             new String[] {"Zahvat", "Kategorija", "Vrsta", "Okvirna cijena", "Interval"}) {
+          /** Katalog referentnih radova ostaje samo za čitanje u sučelju. */
           @Override
           public boolean isCellEditable(int row, int column) {
             return false;
@@ -67,7 +68,10 @@ public class CatalogView extends JPanel {
         BorderLayout.SOUTH);
   }
 
-  /** @return trenutno odabrana kategorija kataloga ili {@code null} kada se prikazuju sve kategorije */
+  /** Dohvaća kategorijski filtar koji je korisnik odabrao iznad kataloške tablice.
+   *
+   * @return trenutno odabrana kategorija kataloga ili {@code null} kada se prikazuju sve kategorije
+   */
   public CatalogCategory selectedCategory() {
     int index = category.getSelectedIndex();
     if (index <= 0) {

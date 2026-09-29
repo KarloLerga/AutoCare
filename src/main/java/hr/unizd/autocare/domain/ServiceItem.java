@@ -58,17 +58,26 @@ public class ServiceItem {
     this.actualPrice = Checks.money(actualPrice);
   }
 
-  /** @return servisni zapis kojem stavka pripada */
+  /** Dohvaća servisni zapis koji je vlasnik ove izvedene stavke.
+   *
+   * @return servisni zapis kojem stavka pripada
+   */
   public ServiceRecord getServiceRecord() {
     return serviceRecord;
   }
 
-  /** @return kataloška definicija izvedenog rada */
+  /** Dohvaća standardni kataloški rad opisan ovom stavkom.
+   *
+   * @return kataloška definicija izvedenog rada
+   */
   public WorkDefinition getWork() {
     return work;
   }
 
-  /** @return stvarno plaćena cijena stavke */
+  /** Dohvaća stvarni iznos plaćen za rad u ovom konkretnom servisu.
+   *
+   * @return stvarno plaćena cijena stavke
+   */
   public BigDecimal getActualPrice() {
     return actualPrice;
   }

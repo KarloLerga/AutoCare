@@ -57,12 +57,18 @@ public class Session {
     activeVehicle = null;
   }
 
-  /** @return identifikator prijavljenog korisnika ili nula nakon odjave */
+  /** Dohvaća ID koji je spremljen nakon uspješne prijave i potreban je za vlasničke upite.
+   *
+   * @return identifikator prijavljenog korisnika ili nula nakon odjave
+   */
   public int getOwnerId() {
     return ownerId;
   }
 
-  /** @return trenutačno aktivno vozilo ili {@code null} ako ga sesija nema */
+  /** Dohvaća trenutačno odabrano vozilo, ako ga je prijavljeni korisnik postavio.
+   *
+   * @return trenutačno aktivno vozilo ili {@code null} ako ga sesija nema
+   */
   public Vehicle getActiveVehicle() {
     return activeVehicle;
   }

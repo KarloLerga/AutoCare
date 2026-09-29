@@ -79,23 +79,35 @@ public class AppUser {
   }
 
 
-  /** @return identifikator koji je dodijelila baza */
+  /** Dohvaća identifikator računa koji koriste vlasničke veze i aplikacijska sesija.
+   *
+   * @return identifikator koji je dodijelila baza
+   */
   public Integer getId() {
     return id;
   }
 
 
-  /** @return e-mail adresa korištena za prijavu */
+  /** Dohvaća normaliziranu adresu kojom AuthService traži korisnički račun.
+   *
+   * @return e-mail adresa korištena za prijavu
+   */
   public String getEmail() {
     return email;
   }
 
-  /** @return spremljena vrijednost lozinke korisnika */
+  /** Dohvaća vrijednost lozinke pohranjenu na ovom korisničkom entitetu.
+   *
+   * @return spremljena vrijednost lozinke korisnika
+   */
   public String getPassword() {
     return password;
   }
 
-  /** @return odabrano aktivno vozilo ili {@code null} ako nije postavljeno */
+  /** Dohvaća vozilo koje određuje trenutačni kontekst korisnikova rada u aplikaciji.
+   *
+   * @return odabrano aktivno vozilo ili {@code null} ako nije postavljeno
+   */
   public Vehicle getActiveVehicle() {
     return activeVehicle;
   }

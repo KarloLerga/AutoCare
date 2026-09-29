@@ -47,47 +47,74 @@ public class WorkDefinition {
   /** Konstruktor bez argumenata potreban JPA provideru. */
   protected WorkDefinition() {}
 
-  /** @return identifikator kataloške definicije rada */
+  /** Dohvaća bazni identifikator koji povezuje rad s njegovim referencama u katalogu i servisima.
+   *
+   * @return identifikator kataloške definicije rada
+   */
   public Integer getId() {
     return id;
   }
 
-  /** @return naziv standardnog rada */
+  /** Dohvaća naziv rada koji se prikazuje u katalogu i povijesti servisa.
+   *
+   * @return naziv standardnog rada
+   */
   public String getName() {
     return name;
   }
 
-  /** @return vrsta rada, odnosno održavanje ili popravak */
+  /** Dohvaća razvrstavanje rada na održavanje ili popravak.
+   *
+   * @return vrsta rada, odnosno održavanje ili popravak
+   */
   public WorkCategory getCategory() {
     return category;
   }
 
-  /** @return korisnička kategorija kataloga */
+  /** Dohvaća kategoriju kojom se rad grupira u korisničkom katalogu.
+   *
+   * @return korisnička kategorija kataloga
+   */
   public CatalogCategory getCatalogCategory() {
     return catalogCategory;
   }
 
-  /** @return kilometarski servisni interval ili {@code null} ako nije zadan */
+  /** Dohvaća preporučeni kilometarski razmak između izvedbi ovog rada.
+   *
+   * @return kilometarski servisni interval ili {@code null} ako nije zadan
+   */
   public Integer getIntervalKm() {
     return intervalKm;
   }
 
-  /** @return vremenski servisni interval u mjesecima ili {@code null} ako nije zadan */
+  /** Dohvaća preporučeni vremenski razmak između izvedbi ovog rada.
+   *
+   * @return vremenski servisni interval u mjesecima ili {@code null} ako nije zadan
+   */
   public Integer getIntervalMonths() {
     return intervalMonths;
   }
 
-  /** @return informativna najniža cijena ili {@code null} ako nije navedena */
+  /** Dohvaća donju granicu informativne cijene iz kataloga, ne stvarni trošak servisa.
+   *
+   * @return informativna najniža cijena ili {@code null} ako nije navedena
+   */
   public BigDecimal getMinPrice() {
     return minPrice;
   }
 
-  /** @return informativna najviša cijena ili {@code null} ako nije navedena */
+  /** Dohvaća gornju granicu informativne cijene iz kataloga, ne stvarni trošak servisa.
+   *
+   * @return informativna najviša cijena ili {@code null} ako nije navedena
+   */
   public BigDecimal getMaxPrice() {
     return maxPrice;
   }
 
-  /** @return naziv rada prikladan za tekstualni prikaz */
+  /** Vraća naziv rada kako bi se objekt mogao prikazati u tekstualnom izboru.
+   *
+   * @return naziv rada prikladan za tekstualni prikaz
+   */
   @Override
   public String toString() {
     return name;

@@ -44,6 +44,7 @@ public class VehicleFormController {
     this.catalogService = catalogService;
 
     view.make.addActionListener(new ActionListener() {
+      /** Učitava modele kada korisnik promijeni marku, osim tijekom programskog punjenja. */
       @Override
       public void actionPerformed(ActionEvent event) {
         if (!updating) {
@@ -53,6 +54,7 @@ public class VehicleFormController {
     });
 
     view.model.addActionListener(new ActionListener() {
+      /** Učitava godine nakon korisnikova odabira modela. */
       @Override
       public void actionPerformed(ActionEvent event) {
         if (!updating) {
@@ -62,6 +64,7 @@ public class VehicleFormController {
     });
 
     view.year.addActionListener(new ActionListener() {
+      /** Učitava varijante nakon korisnikova odabira godine. */
       @Override
       public void actionPerformed(ActionEvent event) {
         if (!updating) {
@@ -71,6 +74,7 @@ public class VehicleFormController {
     });
 
     view.variant.addActionListener(new ActionListener() {
+      /** Prikazuje tehničke detalje tek nakon izričitog odabira varijante. */
       @Override
       public void actionPerformed(ActionEvent event) {
         if (!updating) {

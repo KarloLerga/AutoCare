@@ -94,7 +94,14 @@ public class MainFrame extends JFrame {
   /** Naziv funkcionalne stranice koju {@link #showPage(String)} trenutačno prikazuje. */
   private String page = "Dashboard";
 
-  /** Stvara glavni prozor, njegove View panele, bočnu navigaciju i CardLayout strukturu. */
+  /**
+   * Stvara glavni prozor i sastavlja početnu navigacijsku strukturu.
+   *
+   * <p>Priprema odvojene korijenske kartice za prijavu, registraciju i aplikacijski shell, zatim
+   * dodaje funkcionalne View panele u unutarnji CardLayout. Bočna traka dobiva gumbe koji se
+   * povezuju s tim panelima, dok MainController naknadno dodaje njihove akcijske listenere.
+   * Konstruktor samo gradi GUI i ne učitava podatke niti otvara persistence resurse.
+   */
   public MainFrame() {
     super("AutoCare");
     setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -219,7 +226,10 @@ public class MainFrame extends JFrame {
     button.setFont(button.getFont().deriveFont(style));
   }
 
-  /** @return naziv trenutačno aktivne aplikacijske stranice */
+  /** Dohvaća naziv zadnje funkcionalne stranice prikazane kroz CardLayout.
+   *
+   * @return naziv trenutačno aktivne aplikacijske stranice
+   */
   public String page() {
     return page;
   }

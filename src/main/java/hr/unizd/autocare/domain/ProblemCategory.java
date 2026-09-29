@@ -27,7 +27,10 @@ public enum ProblemCategory {
     this.displayName = displayName;
   }
 
-  /** @return naziv kategorije prikladan za prikaz */
+  /** Vraća ljudima čitljiv naziv enum vrijednosti za prikaz u sučelju.
+   *
+   * @return naziv kategorije prikladan za prikaz
+   */
   @Override
   public String toString() {
     return displayName;

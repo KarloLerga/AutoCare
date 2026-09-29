@@ -88,27 +88,42 @@ public class Vehicle {
     currentMileage = mileage;
   }
 
-  /** @return identifikator vozila dodijeljen u bazi */
+  /** Dohvaća bazni identifikator ovog konkretnog korisnikova vozila.
+   *
+   * @return identifikator vozila dodijeljen u bazi
+   */
   public Integer getId() {
     return id;
   }
 
-  /** @return korisnik kojem vozilo pripada */
+  /** Dohvaća vlasnika vozila, korištenog i za provjeru pristupa podacima.
+   *
+   * @return korisnik kojem vozilo pripada
+   */
   public AppUser getOwner() {
     return owner;
   }
 
-  /** @return kataloška varijanta ovog vozila */
+  /** Dohvaća tehničku katalošku varijantu konkretnog vozila.
+   *
+   * @return kataloška varijanta ovog vozila
+   */
   public VehicleVariant getVariant() {
     return variant;
   }
 
-  /** @return godina proizvodnje konkretnog vozila */
+  /** Dohvaća godinu proizvodnje ovog primjerka, a ne cijeli raspon kataloške varijante.
+   *
+   * @return godina proizvodnje konkretnog vozila
+   */
   public int getProductionYear() {
     return productionYear;
   }
 
-  /** @return trenutačno evidentirana kilometraža u kilometrima */
+  /** Dohvaća zadnju evidentiranu kilometražu konkretnog vozila.
+   *
+   * @return trenutačno evidentirana kilometraža u kilometrima
+   */
   public int getCurrentMileage() {
     return currentMileage;
   }

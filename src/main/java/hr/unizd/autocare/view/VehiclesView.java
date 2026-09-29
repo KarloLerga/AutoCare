@@ -40,6 +40,7 @@ public class VehiclesView extends JPanel {
         new DefaultTableModel(
             new Object[][] {},
             new String[] {"Vozilo", "Godina", "Motor", "Kilometraža", "Aktivno"}) {
+          /** Ostavlja retke vozila samo za čitanje; izmjene prolaze kroz formu i VehicleService. */
           @Override
           public boolean isCellEditable(int row, int column) {
             return false;
@@ -80,7 +81,10 @@ public class VehiclesView extends JPanel {
     }
   }
 
-  /** @return vozilo označeno u tablici ili {@code null} ako nema odabira */
+  /** Dohvaća odabrani redak kako bi Controller znao na kojem vozilu izvršiti akciju.
+   *
+   * @return vozilo označeno u tablici ili {@code null} ako nema odabira
+   */
   public Vehicle selected() {
     int selectedRow = table.getSelectedRow();
     if (selectedRow < 0) {

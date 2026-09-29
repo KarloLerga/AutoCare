@@ -38,6 +38,7 @@ public class ProblemsView extends JPanel {
     tableModel =
         new DefaultTableModel(
             new Object[][] {}, new String[] {"Kategorija", "Problem", "Status", "Datum"}) {
+          /** Sprječava izravno uređivanje; problemi se mijenjaju kroz Controller tok. */
           @Override
           public boolean isCellEditable(int row, int column) {
             return false;
@@ -68,7 +69,10 @@ public class ProblemsView extends JPanel {
     add(new JScrollPane(table), BorderLayout.CENTER);
   }
 
-  /** @return kategorija problema trenutno odabrana u formi */
+  /** Dohvaća kategoriju koju će Controller proslijediti pri spremanju novog problema.
+   *
+   * @return kategorija problema trenutno odabrana u formi
+   */
   public ProblemCategory selectedCategory() {
     return (ProblemCategory) category.getSelectedItem();
   }

@@ -37,12 +37,18 @@ public class Data {
       this.actualPrice = actualPrice;
     }
 
-    /** @return identifikator odabranog kataloškog rada */
+    /** Dohvaća rad na koji se ova ulazna stavka odnosi, prije stvaranja JPA entiteta.
+     *
+     * @return identifikator odabranog kataloškog rada
+     */
     public int getWorkId() {
       return workId;
     }
 
-    /** @return stvarna cijena unesena za stavku */
+    /** Dohvaća iznos iz korisničke forme koji se sprema kao stvarna cijena stavke.
+     *
+     * @return stvarna cijena unesena za stavku
+     */
     public BigDecimal getActualPrice() {
       return actualPrice;
     }
@@ -89,17 +95,26 @@ public class Data {
       this.resolvedProblemIds = new ArrayList<>(resolvedProblemIds);
     }
 
-    /** @return datum servisa */
+    /** Dohvaća datum koji ServiceRecordService treba spremiti u servisnu povijest.
+     *
+     * @return datum servisa
+     */
     public LocalDate getDate() {
       return date;
     }
 
-    /** @return kilometraža pri servisu */
+    /** Dohvaća stanje kilometraže uneseno za servisni događaj.
+     *
+     * @return kilometraža pri servisu
+     */
     public int getMileage() {
       return mileage;
     }
 
-    /** @return napomena ili {@code null} ako nije unesena */
+    /** Dohvaća neobaveznu napomenu koja se sprema uz servis.
+     *
+     * @return napomena ili {@code null} ako nije unesena
+     */
     public String getNote() {
       return note;
     }
@@ -165,32 +180,50 @@ public class Data {
       this.note = note;
     }
 
-    /** @return identifikator servisnog zapisa */
+    /** Dohvaća ID koji View koristi za povezivanje prikazanog retka s detaljima servisa.
+     *
+     * @return identifikator servisnog zapisa
+     */
     public int getId() {
       return id;
     }
 
-    /** @return datum servisa */
+    /** Dohvaća datum koji se prikazuje u retku servisne povijesti.
+     *
+     * @return datum servisa
+     */
     public LocalDate getDate() {
       return date;
     }
 
-    /** @return kilometraža pri servisu */
+    /** Dohvaća kilometražu koja se prikazuje za ovaj servisni događaj.
+     *
+     * @return kilometraža pri servisu
+     */
     public int getMileage() {
       return mileage;
     }
 
-    /** @return sažeti popis naziva izvedenih radova */
+    /** Dohvaća već sastavljeni popis radova za kompaktnu tabličnu ćeliju.
+     *
+     * @return sažeti popis naziva izvedenih radova
+     */
     public String getNames() {
       return names;
     }
 
-    /** @return stvarni ukupni trošak servisa */
+    /** Dohvaća zbroj stvarno plaćenih cijena prikazanih stavki servisa.
+     *
+     * @return stvarni ukupni trošak servisa
+     */
     public BigDecimal getTotal() {
       return total;
     }
 
-    /** @return napomena servisa ili {@code null} ako je nema */
+    /** Dohvaća dodatnu napomenu vidljivu u retku servisne povijesti.
+     *
+     * @return napomena servisa ili {@code null} ako je nema
+     */
     public String getNote() {
       return note;
     }
@@ -220,7 +253,10 @@ public class Data {
       this.resolvedProblems = new ArrayList<>(resolvedProblems);
     }
 
-    /** @return sažetak servisa koji čini zaglavlje detaljnog prikaza */
+    /** Dohvaća sažetak prikazan u zaglavlju prozora detalja servisa.
+     *
+     * @return sažetak servisa koji čini zaglavlje detaljnog prikaza
+     */
     public ServiceRow getHeader() {
       return header;
     }
@@ -306,42 +342,66 @@ public class Data {
       this.remainingRatio = remainingRatio;
     }
 
-    /** @return naziv rada */
+    /** Dohvaća naziv rada koji se prati u prikazu održavanja.
+     *
+     * @return naziv rada
+     */
     public String getName() {
       return name;
     }
 
-    /** @return datum posljednje izvedbe ili {@code null} */
+    /** Dohvaća posljednji datum izvedbe ako ga servisna povijest sadrži.
+     *
+     * @return datum posljednje izvedbe ili {@code null}
+     */
     public LocalDate getLastDate() {
       return lastDate;
     }
 
-    /** @return kilometraža posljednje izvedbe ili {@code null} */
+    /** Dohvaća kilometražu posljednje izvedbe ako je zabilježena.
+     *
+     * @return kilometraža posljednje izvedbe ili {@code null}
+     */
     public Integer getLastMileage() {
       return lastMileage;
     }
 
-    /** @return sljedeći ciljani datum ili {@code null} */
+    /** Dohvaća izračunati ciljani datum sljedeće izvedbe, kada postoji vremenski interval.
+     *
+     * @return sljedeći ciljani datum ili {@code null}
+     */
     public LocalDate getNextDate() {
       return nextDate;
     }
 
-    /** @return sljedeća ciljana kilometraža ili {@code null} */
+    /** Dohvaća izračunatu kilometražu sljedeće izvedbe, kada postoji kilometarski interval.
+     *
+     * @return sljedeća ciljana kilometraža ili {@code null}
+     */
     public Integer getNextMileage() {
       return nextMileage;
     }
 
-    /** @return preostali kilometri ili {@code null} */
+    /** Dohvaća kilometre preostale do cilja, ako taj kriterij vrijedi za rad.
+     *
+     * @return preostali kilometri ili {@code null}
+     */
     public Integer getRemainingKm() {
       return remainingKm;
     }
 
-    /** @return preostali kalendarski dani ili {@code null} */
+    /** Dohvaća kalendarske dane preostale do cilja, ako taj kriterij vrijedi za rad.
+     *
+     * @return preostali kalendarski dani ili {@code null}
+     */
     public Long getRemainingDays() {
       return remainingDays;
     }
 
-    /** @return relativni dio intervala koji je ostao; negativna vrijednost znači da je prošao */
+    /** Dohvaća omjer preostalog intervala koji se koristi za procjenu hitnosti održavanja.
+     *
+     * @return relativni dio intervala koji je ostao; negativna vrijednost znači da je prošao
+     */
     public double getRemainingRatio() {
       return remainingRatio;
     }
@@ -376,22 +436,34 @@ public class Data {
       this.nextMaintenance = nextMaintenance;
     }
 
-    /** @return vozilo sažetka */
+    /** Dohvaća vozilo na koje se odnose svi podaci ovog dashboard sažetka.
+     *
+     * @return vozilo sažetka
+     */
     public Vehicle getVehicle() {
       return vehicle;
     }
 
-    /** @return ukupni stvarno evidentirani servisni trošak */
+    /** Dohvaća zbroj stvarnih troškova evidentiranih za aktivno vozilo.
+     *
+     * @return ukupni stvarno evidentirani servisni trošak
+     */
     public BigDecimal getTotal() {
       return total;
     }
 
-    /** @return broj otvorenih problema */
+    /** Dohvaća koliko problema vozila još nije povezano sa servisom rješenja.
+     *
+     * @return broj otvorenih problema
+     */
     public long getOpenProblems() {
       return openProblems;
     }
 
-    /** @return najbliži rad održavanja ili {@code null} ako nije izračunat */
+    /** Dohvaća sljedeći rad održavanja koji Dashboard ističe, ako ga je Service izračunao.
+     *
+     * @return najbliži rad održavanja ili {@code null} ako nije izračunat
+     */
     public MaintenanceRow getNextMaintenance() {
       return nextMaintenance;
     }

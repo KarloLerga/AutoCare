@@ -65,57 +65,90 @@ public class VehicleVariant {
     return true;
   }
 
-  /** @return identifikator kataloške varijante */
+  /** Dohvaća bazni identifikator kojim vozila referenciraju ovu katalošku varijantu.
+   *
+   * @return identifikator kataloške varijante
+   */
   public Integer getId() {
     return id;
   }
 
-  /** @return marka vozila */
+  /** Dohvaća marku navedenu u katalogu varijanti.
+   *
+   * @return marka vozila
+   */
   public String getMake() {
     return make;
   }
 
-  /** @return model vozila */
+  /** Dohvaća model unutar kataloške marke.
+   *
+   * @return model vozila
+   */
   public String getModel() {
     return model;
   }
 
-  /** @return generacijska oznaka */
+  /** Dohvaća oznaku generacije koja razlikuje izvedbe modela.
+   *
+   * @return generacijska oznaka
+   */
   public String getGeneration() {
     return generation;
   }
 
-  /** @return oznaka motora */
+  /** Dohvaća katalošku oznaku motora.
+   *
+   * @return oznaka motora
+   */
   public String getEngineLabel() {
     return engineLabel;
   }
 
-  /** @return vrsta goriva */
+  /** Dohvaća vrstu goriva navedenu za ovu izvedbu.
+   *
+   * @return vrsta goriva
+   */
   public String getFuelType() {
     return fuelType;
   }
 
-  /** @return snaga u konjskim snagama ili {@code null} ako nije poznata */
+  /** Dohvaća katalošku snagu motora kada je ona poznata.
+   *
+   * @return snaga u konjskim snagama ili {@code null} ako nije poznata
+   */
   public Integer getPowerHp() {
     return powerHp;
   }
 
-  /** @return vrsta mjenjača */
+  /** Dohvaća vrstu mjenjača navedenu u katalogu.
+   *
+   * @return vrsta mjenjača
+   */
   public String getTransmission() {
     return transmission;
   }
 
-  /** @return prva godina raspona proizvodnje */
+  /** Dohvaća prvu godinu pokrivenu ovom varijantom.
+   *
+   * @return prva godina raspona proizvodnje
+   */
   public int getYearFrom() {
     return yearFrom;
   }
 
-  /** @return zadnja godina raspona ili {@code null} za otvoreni raspon */
+  /** Dohvaća zadnju godinu pokrivenu ovom varijantom, ako je raspon zatvoren.
+   *
+   * @return zadnja godina raspona ili {@code null} za otvoreni raspon
+   */
   public Integer getYearTo() {
     return yearTo;
   }
 
-  /** @return sažeti naziv varijante za prikaz u izborima i drugim tekstualnim kontekstima */
+  /** Sastavlja kratak opis varijante za JComboBox i druge tekstualne prikaze.
+   *
+   * @return sažeti naziv varijante za prikaz u izborima i drugim tekstualnim kontekstima
+   */
   @Override
   public String toString() {
     return generation + " / " + engineLabel + " / " + fuelType;

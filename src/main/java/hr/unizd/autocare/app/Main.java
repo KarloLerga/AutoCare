@@ -39,6 +39,7 @@ public class Main {
    */
   public static void main(String[] arguments) {
     SwingUtilities.invokeLater(new Runnable() {
+      /** Pokreće sastavljanje sučelja na Swingovu Event Dispatch Threadu. */
       @Override
       public void run() {
         startApplication();
@@ -49,10 +50,12 @@ public class Main {
   /**
    * Sastavlja i prikazuje cijelu aplikaciju.
    *
-   * <p>Metoda postavlja izgled, otvara vezu prema persistence sloju, stvara Service objekte,
-   * glavni prozor, zajedničku sesiju i Subject te ih predaje {@code MainControlleru}. Ako
-   * inicijalizacija baze ne uspije, zatvara eventualno otvoreni {@code EntityManagerFactory}
-   * i korisniku prikazuje razumljivu poruku o pogrešci.
+   * <p>Na Event Dispatch Threadu postavlja temu i otvara zajednički {@code EntityManagerFactory}.
+   * Isti factory predaje svim Service objektima, zatim stvara prozor, Singleton sesiju i Subject te
+   * ih povezuje kroz {@link MainController}. Nakon registracije zatvaranja persistence resursa
+   * prikazuje prozor. Ako se pokretanje ne dovrši zbog runtime pogreške, zatvara factory ako je
+   * već otvoren i prikazuje korisniku opću poruku o nedostupnoj bazi; detalje povezivanja ne
+   * prikazuje u dijalogu.
    */
   private static void startApplication() {
     initializeLookAndFeel();
@@ -103,11 +106,16 @@ public class Main {
   /**
    * Registrira zatvaranje persistence resursa zajedno s glavnim prozorom aplikacije.
    *
+   * <p>Swingov listener čeka događaj zatvaranja prozora, zatim uklanja prozor i zatvara zajednički
+   * {@link EntityManagerFactory}. Factory ostaje otvoren dok aplikacija radi jer ga koriste svi
+   * Service objekti.
+   *
    * @param frame glavni Swing prozor
    * @param entityManagerFactory zajednička JPA tvornica koju treba zatvoriti pri izlasku
    */
   private static void closeDatabaseWhenWindowCloses(MainFrame frame, EntityManagerFactory entityManagerFactory) {
     frame.addWindowListener(new WindowAdapter() {
+      /** Zatvara prozor i zajednički JPA factory nakon korisnikova zahtjeva za izlaskom. */
       @Override
       public void windowClosing(WindowEvent event) {
         frame.dispose();
@@ -120,7 +128,8 @@ public class Main {
    * Postavlja FlatLaf temu i zajedničke Swing vrijednosti izgleda.
    *
    * <p>Na jednom mjestu definira osnovni font, zaobljenja komponenti i visinu redaka tablica
-   * kako bi svi ekrani imali dosljedan izgled.
+   * kako bi svi ekrani imali dosljedan izgled. Ova inicijalizacija se poziva prije stvaranja
+   * Viewova, tako da Swing komponente preuzmu postavljenu temu i font.
    */
   private static void initializeLookAndFeel() {
     FlatDarkLaf.setup();

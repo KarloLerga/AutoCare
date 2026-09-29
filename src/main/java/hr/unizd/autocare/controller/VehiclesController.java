@@ -64,6 +64,7 @@ public class VehiclesController {
    */
   private void registerListeners() {
     frame.vehicles.add.addActionListener(new ActionListener() {
+      /** Otvara obrazac za dodavanje vozila. */
       @Override
       public void actionPerformed(ActionEvent event) {
         showAdd();
@@ -71,6 +72,7 @@ public class VehiclesController {
     });
 
     frame.vehicles.edit.addActionListener(new ActionListener() {
+      /** Otvara uređivanje kilometraže odabranog vozila. */
       @Override
       public void actionPerformed(ActionEvent event) {
         showMileageEditor();
@@ -78,6 +80,7 @@ public class VehiclesController {
     });
 
     frame.vehicles.activate.addActionListener(new ActionListener() {
+      /** Aktivira vozilo označeno u tablici. */
       @Override
       public void actionPerformed(ActionEvent event) {
         activate();
@@ -131,6 +134,7 @@ public class VehiclesController {
     formController.loadMakes();
 
     dialog.save.addActionListener(new ActionListener() {
+      /** Validira odabranu varijantu i predaje novo vozilo VehicleServiceu. */
       @Override
       public void actionPerformed(ActionEvent event) {
         try {
@@ -153,6 +157,7 @@ public class VehiclesController {
     });
 
     dialog.cancel.addActionListener(new ActionListener() {
+      /** Zatvara dijalog za dodavanje bez promjene podataka. */
       @Override
       public void actionPerformed(ActionEvent event) {
         dialog.dispose();
@@ -180,6 +185,7 @@ public class VehiclesController {
     final MileageDialog dialog = new MileageDialog(frame, vehicle.getCurrentMileage());
 
     dialog.save.addActionListener(new ActionListener() {
+      /** Validira i sprema novu kilometražu odabranog vozila. */
       @Override
       public void actionPerformed(ActionEvent event) {
         try {
@@ -193,6 +199,7 @@ public class VehiclesController {
     });
 
     dialog.cancel.addActionListener(new ActionListener() {
+      /** Zatvara dijalog za kilometražu bez spremanja. */
       @Override
       public void actionPerformed(ActionEvent event) {
         dialog.dispose();

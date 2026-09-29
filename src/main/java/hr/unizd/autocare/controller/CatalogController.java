@@ -34,18 +34,21 @@ public class CatalogController {
     this.catalogService = catalogService;
 
     frame.catalog.searchButton.addActionListener(new ActionListener() {
+      /** Ponovno dohvaća i filtrira katalog nakon klika na gumb za pretraživanje. */
       @Override
       public void actionPerformed(ActionEvent event) {
         load();
       }
     });
     frame.catalog.search.addActionListener(new ActionListener() {
+      /** Pokreće isto pretraživanje kada korisnik potvrdi unos tipkovnicom. */
       @Override
       public void actionPerformed(ActionEvent event) {
         load();
       }
     });
     frame.catalog.category.addActionListener(new ActionListener() {
+      /** Primjenjuje novi kategorijski filtar na prikazane radove. */
       @Override
       public void actionPerformed(ActionEvent event) {
         load();
@@ -64,6 +67,11 @@ public class CatalogController {
 
   /**
    * Filtrira dohvaćene radove prema tekstu pretrage i odabranoj kategoriji.
+   *
+   * <p>Tekst iz polja pretvara u prazan niz ako nedostaje, zatim uklanja rubne razmake i uspoređuje
+   * nazive bez obzira na velika i mala slova. Prolazi sve dohvaćene radove, preskače one izvan
+   * odabrane kategorije ili one čiji naziv ne sadrži pretraživani tekst, a preostale predaje
+   * CatalogViewu. Prazan tekst ili kategorija bez odabira ne ograničavaju odgovarajući filtar.
    *
    * @param allWorks svi radovi dohvaćeni iz kataloga
    */

@@ -95,6 +95,7 @@ public class ServiceEditorDialog extends JDialog {
 
     itemTableModel =
         new DefaultTableModel(new Object[][] {}, new String[] {"Rad", "Stvarno plaćeno"}) {
+          /** Privremene stavke ostaju samo za čitanje; dodaju se i uklanjaju gumbima dijaloga. */
           @Override
           public boolean isCellEditable(int row, int column) {
             return false;
@@ -109,6 +110,7 @@ public class ServiceEditorDialog extends JDialog {
     problemsTableModel =
         new DefaultTableModel(
             new Object[][] {}, new String[] {"Riješen", "Problem riješen ovim servisom"}) {
+          /** Prvu kolonu problema određuje kao potvrdni okvir, a drugu kao običan tekst. */
           @Override
           public Class<?> getColumnClass(int column) {
             if (column == 0) {
@@ -117,6 +119,7 @@ public class ServiceEditorDialog extends JDialog {
             return String.class;
           }
 
+          /** Dopušta označiti problem riješenim, ali ne i uređivati njegov opis. */
           @Override
           public boolean isCellEditable(int row, int column) {
             return column == 0;
@@ -214,7 +217,10 @@ public class ServiceEditorDialog extends JDialog {
     }
   }
 
-  /** @return trenutno odabrani standardni rad ili {@code null} ako odabir ne postoji */
+  /** Dohvaća kataloški rad koji će se dodati u privremeni popis servisnih stavki.
+   *
+   * @return trenutno odabrani standardni rad ili {@code null} ako odabir ne postoji
+   */
   public WorkDefinition selectedWork() {
     return (WorkDefinition) work.getSelectedItem();
   }

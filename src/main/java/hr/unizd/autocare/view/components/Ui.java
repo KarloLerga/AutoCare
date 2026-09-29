@@ -35,7 +35,10 @@ public class Ui {
   /** Sprječava stvaranje instance utility klase. */
   private Ui() {}
 
-  /** @return panel konfiguriran za vertikalno slaganje komponenti */
+  /** Stvara proziran panel koji raspoređuje dodane komponente jednu ispod druge.
+   *
+   * @return panel konfiguriran za vertikalno slaganje komponenti
+   */
   public static JPanel column() {
     JPanel panel = new JPanel();
     panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -73,7 +76,10 @@ public class Ui {
     return panel;
   }
 
-  /** @return panel stiliziran kao sadržajna kartica aplikacije */
+  /** Stvara sadržajnu karticu s obrubom, unutarnjim razmakom i BorderLayoutom.
+   *
+   * @return panel stiliziran kao sadržajna kartica aplikacije
+   */
   public static JPanel card() {
     JPanel panel = new JPanel(new BorderLayout(12, 12));
     panel.setBorder(BorderFactory.createCompoundBorder(
@@ -108,7 +114,10 @@ public class Ui {
     return label;
   }
 
-  /** @return panel s GridBagLayoutom pripremljen za labela-polje raspored forme */
+  /** Stvara proziran panel za redove forme koje metoda {@link #field} popunjava.
+   *
+   * @return panel s GridBagLayoutom pripremljen za labela-polje raspored forme
+   */
   public static JPanel form() {
     JPanel panel = new JPanel(new GridBagLayout());
     panel.setOpaque(false);

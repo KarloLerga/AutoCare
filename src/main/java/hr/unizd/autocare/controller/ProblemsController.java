@@ -36,6 +36,7 @@ public class ProblemsController {
     this.session = session;
 
     frame.problems.add.addActionListener(new ActionListener() {
+      /** Predaje gumbu za spremanje problema njegovu Controller obradu. */
       @Override
       public void actionPerformed(ActionEvent event) {
         save();
@@ -43,7 +44,13 @@ public class ProblemsController {
     });
   }
 
-  /** Učitava probleme aktivnog vozila i prikazuje njihovo aktualno stanje. */
+  /**
+   * Učitava probleme aktivnog vozila i prikazuje njihovo aktualno stanje.
+   *
+   * <p>Prosljeđuje ID vlasnika i vozila iz Sessiona ProblemServiceu, a rezultat predaje ProblemsViewu.
+   * ProblemService i Repository dodatno ograničavaju dohvat vlasničkim kontekstom. Runtime
+   * pogreške prikazuju se uz View i ne prekidaju Swingov event loop.
+   */
   public void load() {
     try {
       frame.problems.setRows(problemService.list(session.getOwnerId(), session.getActiveVehicle().getId()));
@@ -55,7 +62,9 @@ public class ProblemsController {
   /**
    * Sprema novi problem koristeći opis i kategoriju unesenu u ProblemsView.
    *
-   * <p>Nakon uspješnog spremanja čisti formu i ponovno učitava listu problema.
+   * <p>Predaje Serviceu prijavljenog vlasnika, aktivno vozilo i vrijednosti forme. Tek nakon
+   * uspješnog spremanja čisti editor i ponovno učitava listu; u slučaju pogreške zadržava unos te
+   * prikazuje poruku uz ProblemsView.
    */
   private void save() {
     try {

@@ -101,22 +101,34 @@ public class Problem {
     resolvedByService = serviceRecord;
   }
 
-  /** @return identifikator problema dodijeljen u bazi */
+  /** Dohvaća bazni identifikator kojim se problem povezuje s prikazom i servisom rješenja.
+   *
+   * @return identifikator problema dodijeljen u bazi
+   */
   public Integer getId() {
     return id;
   }
 
-  /** @return korisnički uneseni opis problema */
+  /** Dohvaća opis simptoma koji je korisnik evidentirao.
+   *
+   * @return korisnički uneseni opis problema
+   */
   public String getDescription() {
     return description;
   }
 
-  /** @return odabrana kategorija problema */
+  /** Dohvaća korisnikovu kategoriju za razvrstavanje problema.
+   *
+   * @return odabrana kategorija problema
+   */
   public ProblemCategory getCategory() {
     return category;
   }
 
-  /** @return datum evidentiranja problema */
+  /** Dohvaća datum kada je problem zabilježen.
+   *
+   * @return datum evidentiranja problema
+   */
   public LocalDate getCreatedAt() {
     return createdAt;
   }
