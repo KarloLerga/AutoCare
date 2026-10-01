@@ -2,58 +2,52 @@ package hr.unizd.autocare.app;
 
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
-/**
- * Centralizira konfiguraciju potrebnu za otvaranje JPA persistence sloja prema
- * Azure SQL bazi.
- *
- * <p>Klasa sastavlja SQL Server JDBC URL, dodaje korisničke podatke u JPA properties i vraća
- * {@link EntityManagerFactory}. Time Service i Repository klase ne moraju poznavati detalje
- * povezivanja s bazom. Sama klasa ne otvara pojedinačne EntityManagere niti pokreće upite.
- */
+/** Učitava lokalne postavke baze i otvara JPA persistence sloj. */
 public class DatabaseConfig {
-  /** Host SQL Server poslužitelja kojem se persistence sloj povezuje. */
-  private static final String HOST = "auto-care.database.windows.net";
 
-  /** TCP priključak SQL Server JDBC veze. */
-  private static final String PORT = "1433";
-
-  /** Naziv baze koji se postavlja u JDBC URL. */
-  private static final String DATABASE = "free-sql-db-0650603";
-
-  /** Korisničko ime koje JDBC driver predaje poslužitelju pri povezivanju. */
-  private static final String USERNAME = "karlolerga";
-
-  /** Lozinka JDBC računa; vrijednost se namjerno ne ponavlja u dokumentaciji. */
-  private static final String PASSWORD = "autocare_123";
-
-  /**
-   * Sprječava stvaranje instance jer se konfiguracija koristi isključivo kroz statičku metodu
-   * {@link #open()}.
-   */
   private DatabaseConfig() {
   }
 
-  /**
-   * Otvara zajednički {@link EntityManagerFactory} za AutoCare persistence unit.
-   *
-   * <p>Metoda sastavlja JDBC URL za Azure SQL, postavlja korisničko ime i lozinku kao JPA
-   * properties te pokreće bootstrap preko {@link Persistence}. JPA učitava persistence unit
-   * naziva {@code autocare}; ne stvara se EntityManager dok Service ne pokrene pojedinu operaciju.
-   *
-   * @return otvoreni EntityManagerFactory koji Service sloj koristi tijekom rada aplikacije
-   * @throws jakarta.persistence.PersistenceException ako se persistence unit ne može inicijalizirati
-   */
+  /** Otvara EntityManagerFactory koristeći postavke iz database.properties u rootu projekta. */
   public static EntityManagerFactory open() {
-    String jdbcUrl = "jdbc:sqlserver://" + HOST + ":" + PORT + ";databaseName=" + DATABASE
+    Properties settings = new Properties();
+
+    try (FileInputStream input = new FileInputStream("database.properties")) {
+      settings.load(input);
+    } catch (IOException exception) {
+      throw new IllegalStateException(
+          "Ne mogu učitati database.properties iz root mape projekta.", exception);
+    }
+
+    String host = settings.getProperty("database.host");
+    String port = settings.getProperty("database.port");
+    String database = settings.getProperty("database.name");
+    String username = settings.getProperty("database.username");
+    String password = settings.getProperty("database.password");
+
+    if (host == null || host.isBlank()
+        || port == null || port.isBlank()
+        || database == null || database.isBlank()
+        || username == null || username.isBlank()
+        || password == null || password.isBlank()) {
+      throw new IllegalStateException(
+          "Nedostaju postavke baze u database.properties.");
+    }
+
+    String jdbcUrl = "jdbc:sqlserver://" + host + ":" + port
+        + ";databaseName=" + database
         + ";encrypt=true;trustServerCertificate=false;";
 
-    Map<String, Object> properties = new HashMap<>();
+    Map<String, Object> properties = new HashMap<String, Object>();
     properties.put("jakarta.persistence.jdbc.url", jdbcUrl);
-    properties.put("jakarta.persistence.jdbc.user", USERNAME);
-    properties.put("jakarta.persistence.jdbc.password", PASSWORD);
+    properties.put("jakarta.persistence.jdbc.user", username);
+    properties.put("jakarta.persistence.jdbc.password", password);
 
     return Persistence.createEntityManagerFactory("autocare", properties);
   }

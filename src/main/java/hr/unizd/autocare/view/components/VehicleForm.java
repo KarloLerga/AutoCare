@@ -49,13 +49,8 @@ public class VehicleForm extends JPanel {
     Ui.field(form, 3, "Varijanta", variant);
     Ui.field(form, 4, "Trenutna kilometraža", mileage);
 
-    JPanel information = Ui.column();
-    information.add(details);
-    information.add(state);
-
     add(form, BorderLayout.NORTH);
-    add(information, BorderLayout.SOUTH);
-    setPreferredSize(new Dimension(700, 250));
+    setPreferredSize(new Dimension(700, 205));
 
     make.setMaximumRowCount(18);
     model.setMaximumRowCount(18);

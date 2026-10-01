@@ -4,7 +4,11 @@ AutoCare je Java Swing aplikacija za vođenje vozila, servisne povijesti, stvarn
 
 ## Pokretanje
 
-Potreban je JDK 25. Projekt se gradi Maven Wrapperom:
+Potreban je JDK 25. Prije prvog pokretanja kopiraj `database.properties.example` u
+`database.properties` u rootu projekta i unesi lokalne podatke za bazu. Stvarna
+`database.properties` datoteka ignorira se Gitom i ne objavljuje se.
+
+Projekt se gradi Maven Wrapperom:
 
 ```powershell
 .\mvnw.cmd --no-transfer-progress clean package

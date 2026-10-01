@@ -35,7 +35,7 @@ public class VehicleDialog extends JDialog {
 
     setContentPane(root);
     setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-    setSize(820, 440);
+    setSize(820, 360);
     setLocationRelativeTo(owner);
     getRootPane().setDefaultButton(save);
   }
